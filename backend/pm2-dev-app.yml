@@ -1,0 +1,7 @@
+apps:
+  - script: ./dist/index.js
+    name: 'my-node-bootstrap'
+    node_args: '--inspect'
+    watch:
+      - 'dist'
+    log_date_format: 'YYYY-MM-DDTHH:mm:ssZ'

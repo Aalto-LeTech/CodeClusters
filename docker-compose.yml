@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+    restart: always
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - 9600:8600 
+    environment:
+      NODE_ENV: production
+      PORT: 8600
+      LOG_LEVEL: info
+      JWT_SECRET: verylongrandomstring
+      DB_HOST: host.docker.internal
+      DB_PORT: 5600
+      DB_USER: pg-user
+      DB_PASSWORD: my-pg-password
+      DB_NAME: my_postgres_db
+    restart: always
+  flyway_migration:
+    image: flyway/flyway:6.1.3-alpine
+    entrypoint: ["sh", "-c", "/flyway/wait-for-it.sh postgres:5432 -- /flyway/flyway migrate"]
+    volumes:
+    - ./db/migrations:/flyway/sql
+    - ./db/seed/afterMigrate.sql:/flyway/sql/afterMigrate.sql # Should I do this automatically or as another docker job?
+    - ./db/scripts/wait-for-it.sh:/flyway/wait-for-it.sh
+    environment:
+      FLYWAY_PASSWORD: my-pg-password
+      FLYWAY_USER: pg-user
+      FLYWAY_URL: jdbc:postgresql://postgres:5432/my_postgres_db
+      FLYWAY_CONNECT_RETRIES: 180
+  postgres:
+    image: postgres:11.6-alpine
+    ports:
+      - 5600:5432
+    environment:
+      POSTGRES_PASSWORD: my-pg-password
+      POSTGRES_USER: pg-user
+      POSTGRES_DB: my_postgres_db
+    restart: always

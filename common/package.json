@@ -1,0 +1,16 @@
+{
+  "name": "common",
+  "version": "0.0.0",
+  "description": "Shared code between frontend and backend eg type definitions",
+  "types": "common.d.ts",
+  "scripts": {
+    "test": "exit 0"
+  },
+  "files": [
+    "dist/*",
+    "common.d.ts"
+  ],
+  "keywords": [],
+  "author": "https://github.com/teemukoivisto",
+  "license": "MIT"
+}
