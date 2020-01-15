@@ -12,8 +12,17 @@ INSERT INTO student (name, username) VALUES ('Esko Ukkonen', 'e_ukkonen');
 INSERT INTO course_students (course_id, student_id) VALUES (1, 1);
 INSERT INTO course_students (course_id, student_id) VALUES (1, 2);
 
-INSERT INTO submission (course_id, exercise_id, student_id, code) VALUES (1, 1, 1, '#include <stdio.h>\nvoid main() {\n  printf(''Hello There'');\n}');
-INSERT INTO submission (course_id, exercise_id, student_id, code) VALUES (1, 1, 2, '#include <stdio.h>\nint main() {\n  printf(''Hello There'');\n  return 0;\n }');
+INSERT INTO submission (course_id, exercise_id, student_id, code) VALUES (1, 1, 1,
+'#include <stdio.h>
+void main() {
+  printf(''Hello There'');
+}');
+INSERT INTO submission (course_id, exercise_id, student_id, code) VALUES (1, 1, 2,
+'#include <stdio.h>
+int main() {
+  printf(''Hello There'');
+  return 0;
+}');
 
 INSERT INTO report (submission_id, message) VALUES (1, 'Tarkista funktion tyyppi. Tarkista tulostus!');
 INSERT INTO report (submission_id, message) VALUES (2, 'Tarkista tulostus!');
