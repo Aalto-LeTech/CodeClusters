@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-    # "db:add": "sh ./db/scripts/add-test-data.sh",
-    # "db:connect": "./db/scripts/connect-to-db.sh",
-    # "db:docker": "docker exec -it db_my_postgres_1 bash",
-    # "db:migrate": "docker-compose -f ./db/docker-compose.yml up migrate",
-    # "db:reset": "sh ./db/scripts/reset-db.sh",
-    # "db:start": "docker-compose -f ./db/docker-compose.yml up",
-    # "db:stop": "docker-compose -f ./db/docker-compose.yml down",
-
 DB_HOST=localhost
 DB_PORT=5600
 DB_USER=pg-user
