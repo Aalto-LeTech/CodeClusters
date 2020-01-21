@@ -1,6 +1,6 @@
-export interface IReport {
+export interface IReview {
   user_id: string
-  report_id: string
+  review_id: string
   course: string
   exercise: string
   code: string

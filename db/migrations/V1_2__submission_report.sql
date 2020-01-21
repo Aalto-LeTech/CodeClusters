@@ -7,8 +7,10 @@ CREATE TABLE submission (
 	timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE report (
-	id SERIAL PRIMARY KEY,
+CREATE TABLE review (
+	review_id SERIAL PRIMARY KEY,
 	submission_id INTEGER NOT NULL REFERENCES submission,
-	message TEXT NOT NULL
+	message TEXT NOT NULL,
+	metadata TEXT NOT NULL,
+	timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

@@ -1,14 +1,20 @@
 type OmitProp<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
 declare module 'common' {
-  export interface IReportWithDate extends SubmissionWithoutId {
-    report_id: number
-    message: string
+  export interface IReviewWithDate extends IReview {
     date: Date
   }
-  export interface IReport extends SubmissionWithoutId {
-    report_id: number
+  export interface IReview {
+    review_id: number
+    submission_id: number
+    timestamp: string
     message: string
+    metadata: string
+  }
+  export interface IReviewCreateParams {
+    submission_id: number
+    message: string
+    metadata: string
   }
   type SubmissionWithoutId = OmitProp<ISubmission, 'id'>
   export interface ISubmissionCreateParams {

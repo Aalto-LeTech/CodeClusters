@@ -4,7 +4,7 @@ import { validateBody } from '../middlewares/validateBody'
 import { authenticate } from '../middlewares/authMiddleware'
 
 import * as userCtrl from './user/user.ctrl'
-import * as reportCtrl from './report/report.ctrl'
+import * as reviewCtrl from './review/review.ctrl'
 import * as submissionCtrl from './submission/submission.ctrl'
 
 const router: Router = Router()
@@ -21,13 +21,13 @@ router.post('/user',
   validateBody(userCtrl.USER_CREATE_SCHEMA),
   userCtrl.createUser)
 
-router.get('/reports',
+router.get('/reviews',
   authenticate,
-  reportCtrl.getReports)
-router.post('/report',
+  reviewCtrl.getReviews)
+router.post('/review',
   authenticate,
-  validateBody(reportCtrl.REPORT_CREATE_SCHEMA),
-  reportCtrl.createReport)
+  validateBody(reviewCtrl.REVIEW_CREATE_SCHEMA),
+  reviewCtrl.createReview)
 
 router.get('/submissions',
   authenticate,

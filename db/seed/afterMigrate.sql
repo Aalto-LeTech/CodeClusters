@@ -24,5 +24,6 @@ int main() {
   return 0;
 }');
 
-INSERT INTO report (submission_id, message) VALUES (1, 'Tarkista funktion tyyppi. Tarkista tulostus!');
-INSERT INTO report (submission_id, message) VALUES (2, 'Tarkista tulostus!');
+INSERT INTO review (submission_id, message, metadata) VALUES (1, 'Tarkista funktion tyyppi. Tarkista tulostus!',
+  'Hah');
+INSERT INTO review (submission_id, message, metadata) VALUES (2, 'Tarkista tulostus!', 'Höh');

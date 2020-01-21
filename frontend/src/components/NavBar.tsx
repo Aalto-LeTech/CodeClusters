@@ -23,7 +23,8 @@ export const NavBar = inject('authStore')(observer((props: IProps) => {
     <NavContainer className={className}>
       <MainLinks>
         <Link to="/">Frontpage</Link>
-        <Link to="/reports">Reports</Link>
+        <Link to="/reviews">Reviews</Link>
+        <Link to="/review">Review</Link>
         <Link to="/submissions">Submissions</Link>
         <Link to="/submit">Submit</Link>
       </MainLinks>
