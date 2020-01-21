@@ -9,10 +9,13 @@ export interface IThemeColor {
   bg: string
   white: string
   primary: string
+  primaryDark: string
   secondary: string
   red: string
   yellow: string
 }
+
+export type Intent = 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info'
 
 export interface ITheme {
   color: IThemeColor

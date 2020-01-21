@@ -11,6 +11,12 @@ declare module 'common' {
     message: string
   }
   type SubmissionWithoutId = OmitProp<ISubmission, 'id'>
+  export interface ISubmissionCreateParams {
+    student_id: number
+    course_id: number
+    exercise_id: number
+    code: string
+  }
   export interface ISubmission {
     id: number
     student_id: number

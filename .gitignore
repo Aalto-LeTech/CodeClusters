@@ -3,6 +3,7 @@ node_modules
 dist
 tmp
 db/data
+db/migrations/afterMigrate.sql
 .vscode
 .env
 .vs

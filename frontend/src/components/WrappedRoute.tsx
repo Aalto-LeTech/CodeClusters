@@ -5,18 +5,20 @@ import styled from '../theme/styled'
 import { NavBar } from './NavBar'
 import { Toaster } from './Toaster'
 
+type ReactComponent = React.ComponentClass<any> | React.StatelessComponent<any>
+
 interface IWrappedRoute extends RouteProps {
-  component: React.ComponentClass<any>
+  component: ReactComponent
 }
 
-const renderNoMainContainerWrapper = (Component: React.ComponentClass) => (props: RouteComponentProps<any>) =>
+const renderNoMainContainerWrapper = (Component: ReactComponent) => (props: RouteComponentProps<any>) =>
   <MainWrapper>
     <NavBar {...props}/>
     <Toaster />
     <Component {...props}/>
   </MainWrapper>
 
-const renderWrapper = (Component: React.ComponentClass) => (props: RouteComponentProps<any>) =>
+const renderWrapper = (Component: ReactComponent) => (props: RouteComponentProps<any>) =>
   <MainWrapper>
     <NavBar {...props}/>
     <Toaster />

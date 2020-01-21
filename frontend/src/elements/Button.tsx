@@ -1,12 +1,14 @@
 import React from 'react'
-import styled from '../theme/styled'
+import styled, { getIntentColor, getIntentTextColor } from '../theme/styled'
 
 import { Spinner } from './Spinner'
+
+import { Intent } from '../types/theme'
 
 interface IProps {
   children?: React.ReactNode
   className?: string
-  intent?: 'primary' | 'secondary'
+  intent?: Intent
   type?: 'button' | 'submit' | 'reset' | 'link'
   disabled?: boolean
   href?: string
@@ -46,10 +48,10 @@ function ButtonEl(props: IProps) {
 
 export const Button = styled(ButtonEl)<IProps>`
   align-items: center;
-  background-color: ${({ theme }) => theme.color.secondary};
+  background-color: ${({ theme, intent }) => getIntentColor(theme, intent)};
   border: 1px solid ${({ theme }) => theme.color.textDark};
   border-radius: 4px;
-  color: ${({ theme }) => theme.color.textDark};
+  color: ${({ theme, intent }) => getIntentTextColor(theme, intent)};
   cursor: pointer;
   display: flex;
   font-size: ${({ theme }) => theme.fontSize.medium};

@@ -24,6 +24,7 @@ export const NavBar = inject('authStore')(observer((props: IProps) => {
       <MainLinks>
         <Link to="/">Frontpage</Link>
         <Link to="/reports">Reports</Link>
+        <Link to="/submit">Submit</Link>
       </MainLinks>
       { isAuthenticated ?
       <Link to="#" role="button" onClick={handleLogout}>Logout</Link> :
