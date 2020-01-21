@@ -17,6 +17,9 @@ declare module 'common' {
     exercise_id: number
     code: string
   }
+  export interface ISubmissionWithDate extends ISubmission {
+    date: Date
+  }
   export interface ISubmission {
     id: number
     student_id: number
