@@ -10,14 +10,14 @@ interface IProps {
 }
 
 export const SubmissionsPage = inject('submissionStore')(observer((props: IProps) => {
-  const { submissions } = props.submissionStore
+  const { submissionStore } = props
   const [loading, setLoading] = useState(false)
   useEffect(() => {
     setLoading(true)
-    props.submissionStore.getSubmissions().then(() => {
+    submissionStore.getSubmissions().then(() => {
       setLoading(false)
     })
-  }, [])
+  }, [submissionStore])
   return (
     <Container>
       <header>
@@ -25,7 +25,7 @@ export const SubmissionsPage = inject('submissionStore')(observer((props: IProps
       </header>
       { loading ? 'Loading' :
       <SubmissionsList>
-        { submissions.map((submission: ISubmissionWithDate, i: number) =>
+        { submissionStore.submissions.map((submission: ISubmissionWithDate, i: number) =>
         <SubmissionsListItem key={i}>
           <p>Course id: {submission.course_id}</p>
           <p>Exercise id: {submission.exercise_id}</p>

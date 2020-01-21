@@ -37,6 +37,7 @@ const createRequest = <T>(path: string, options: any) : Promise<Maybe<T>> => {
               stores.toastStore!.createToast('401 Your session has expired, please re-login.', 'error')
               return undefined
             }
+            break
           case 403:
             stores.toastStore!.createToast('403 You do not have privileges for that action', 'error')
             return undefined

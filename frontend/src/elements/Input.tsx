@@ -4,6 +4,8 @@ import styled from '../theme/styled'
 interface IProps {
   className?: string
   value?: string | number
+  name?: string
+  autocomplete?: 'on' | 'off'
   type?: 'email' | 'password' | 'text' | 'number' | 'textarea'
   icon?: React.ReactNode
   iconPadding?: string
@@ -17,6 +19,7 @@ interface IProps {
 }
 
 InputEl.defaultProps = {
+  autocomplete: 'off',
   required: false,
   type: 'text',
   disabled: false,
@@ -27,7 +30,7 @@ function InputEl(props: IProps) {
     !disabled && props.onChange!(event.target.value)
   }
   const {
-    className, value, type, icon, iconPadding, placeholder, disabled, required, fullWidth, onFocus, onBlur
+    className, value, type, name, autocomplete, icon, iconPadding, placeholder, disabled, required, fullWidth, onFocus, onBlur
   } = props
   return (
     <Container className={className} fullWidth={fullWidth}>
@@ -35,6 +38,7 @@ function InputEl(props: IProps) {
       { type === 'textarea' ?
         <StyledTextarea
           value={value}
+          name={name}
           placeholder={placeholder}
           disabled={disabled}
           required={required}
@@ -46,6 +50,8 @@ function InputEl(props: IProps) {
         <StyledInput
           value={value}
           type={type}
+          name={name}
+          autocomplete={autocomplete}
           iconPadding={iconPadding}
           placeholder={placeholder}
           disabled={disabled}

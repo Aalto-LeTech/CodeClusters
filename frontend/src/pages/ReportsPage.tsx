@@ -6,18 +6,18 @@ import { ReportStore } from '../stores/ReportStore'
 import { IReportWithDate } from 'common'
 
 interface IProps {
-  reportStore?: ReportStore,
+  reportStore: ReportStore,
 }
 
 export const ReportsPage = inject('reportStore')(observer((props: IProps) => {
-  const { reports } = props.reportStore!
+  const { reportStore } = props
   const [loading, setLoading] = useState(false)
   useEffect(() => {
     setLoading(true)
-    props.reportStore!.getReports().then(() => {
+    reportStore.getReports().then(() => {
       setLoading(false)
     })
-  }, [])
+  }, [reportStore])
   return (
     <Container>
       <header>
@@ -25,7 +25,7 @@ export const ReportsPage = inject('reportStore')(observer((props: IProps) => {
       </header>
       { loading ? 'Loading' :
       <ReportsList>
-        { reports.map((report: IReportWithDate, i: number) =>
+        { reportStore.reports.map((report: IReportWithDate, i: number) =>
         <ReportsListItem key={i}>
           <p>Course id: {report.course_id}</p>
           <p>Exercise id: {report.exercise_id}</p>

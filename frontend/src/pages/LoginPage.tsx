@@ -94,8 +94,10 @@ function LoginFormEl(props: IFormProps) {
         <label htmlFor="email">Email</label>
         <Input
           required
-          placeholder={'Email'}
           type="email"
+          name="current-email"
+          autocomplete="on"
+          placeholder={'Email'}
           icon={<MdEmail size={24}/>}
           iconPadding="38px"
           fullWidth
@@ -107,6 +109,8 @@ function LoginFormEl(props: IFormProps) {
         <Input
           required
           type="password"
+          name="current-password"
+          autocomplete="on"
           placeholder="********"
           icon={<MdLock size={24}/>}
           iconPadding="38px"
