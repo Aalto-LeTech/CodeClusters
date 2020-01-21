@@ -15,19 +15,17 @@ If you make changes to the schemas and want to re-migrate, use `./db.sh reset &&
 
 ## Backend
 
-First off you should go to the `common`-folder and install the module locally: `yarn link`. 
-
 1. Go to the `backend`-folder and install dependencies: `yarn`
 2. Copy the example environment variables: `cp .example.env .env`
-3. Link the common module: `yarn link common`
-4. Start the TypeScript compiler: `yarn ts:watch`
-5. Open another terminal and start the server with: `yarn dev`
+3. Start the TypeScript compiler: `yarn ts:watch`
+4. Open another terminal and start the server with: `yarn dev`
 
 ## Frontend
 
-You should have the `common`-module installed as with the backend.
-
 1. Go to the `frontend`-folder and install dependencies: `yarn`
 2. Copy the example environment variables: `cp .example.env .env`
-3. Link the common module: `yarn link common`
-4. Start the Webpack bundler & dev-server: `yarn start`
+3. Start the Webpack bundler & dev-server: `yarn start`
+
+## Common
+
+Common module contains the shared code between frontend and backend. Currently only holds the type definitions for the database objects.
