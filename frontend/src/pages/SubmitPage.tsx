@@ -81,7 +81,6 @@ const SubmitForm = styled((props: IFormProps) => {
           type="number"
           value={exercise}
           onChange={(val: number) => setExercise(val)}
-          fullWidth
         ></Input>
       </FormField>
       <FormField>

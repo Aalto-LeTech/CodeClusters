@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { BrowserRouter, Redirect, Switch } from 'react-router-dom'
 
-import { WrappedRoute } from './components/WrappedRoute'
+import { WrappedRoute, NoMainContainerRoute } from './components/WrappedRoute'
 import { AuthHOC } from './components/AuthHOC'
 
 import { FrontPage } from './pages/FrontPage'
@@ -17,7 +17,7 @@ export const Routes = () : React.ReactElement<any> => (
       <WrappedRoute exact path="/" component={FrontPage}/>
       <WrappedRoute exact path="/login" component={LoginPage}/>
       <WrappedRoute exact path="/reviews" component={AuthHOC(ReviewsPage)}/>
-      <WrappedRoute exact path="/review" component={AuthHOC(ReviewPage)}/>
+      <NoMainContainerRoute exact path="/review" component={AuthHOC(ReviewPage)}/>
       <WrappedRoute exact path="/submissions" component={AuthHOC(SubmissionsPage)}/>
       <WrappedRoute exact path="/submit" component={SubmitPage}/>
       <Redirect to="/" />
