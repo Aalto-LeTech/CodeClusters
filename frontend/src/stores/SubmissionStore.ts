@@ -1,7 +1,7 @@
 import { action, runInAction, observable } from 'mobx'
 import * as submitApi from '../api/submission.api'
 
-import { ISubmissionWithDate, ISubmissionCreateParams } from 'common'
+import { ISubmissionWithDate, ISubmissionCreateParams } from 'shared'
 import { ToastStore } from './ToastStore'
 
 export class SubmissionStore {

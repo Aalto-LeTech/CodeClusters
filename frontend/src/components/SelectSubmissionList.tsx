@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react'
 import styled from '../theme/styled'
 
 import { SubmissionStore } from '../stores/SubmissionStore'
-import { ISubmissionWithDate } from 'common'
+import { ISubmissionWithDate } from 'shared'
 
 interface IProps {
   className?: string

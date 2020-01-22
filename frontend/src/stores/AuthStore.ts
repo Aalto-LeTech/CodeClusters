@@ -1,7 +1,7 @@
 import { action, computed, runInAction, observable } from 'mobx'
 import * as userApi from '../api/auth.api'
 
-import { IUser, ILoginCredentials, IJwt } from '../types/user'
+import { IUser, ILoginCredentials, IJwt } from 'shared'
 
 const EMPTY_USER = {
   name: '',

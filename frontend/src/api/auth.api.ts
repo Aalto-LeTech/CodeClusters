@@ -1,4 +1,4 @@
-import { ILoginCredentials, ILoginResponse } from '../types/user'
+import { ILoginCredentials, ILoginResponse } from 'shared'
 
 import {
   post

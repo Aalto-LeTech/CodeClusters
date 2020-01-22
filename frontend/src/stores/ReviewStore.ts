@@ -1,7 +1,7 @@
 import { action, runInAction, observable } from 'mobx'
 import * as reviewApi from '../api/review.api'
 
-import { IReviewWithDate, IReviewCreateParams } from 'common'
+import { IReviewWithDate, IReviewCreateParams } from 'shared'
 import { ToastStore } from './ToastStore'
 
 export class ReviewStore {
@@ -14,6 +14,16 @@ export class ReviewStore {
 
   @action getReviews = async () => {
     const result = await reviewApi.getReviews()
+    runInAction(() => {
+      if (result) {
+        this.reviews = result.reviews.map(r => ({ ...r, date: new Date(r.timestamp) }))
+      }
+    })
+    return result
+  }
+
+  @action getUserReviews = async (userId: number) => {
+    const result = await reviewApi.getUserReviews(userId)
     runInAction(() => {
       if (result) {
         this.reviews = result.reviews.map(r => ({ ...r, date: new Date(r.timestamp) }))

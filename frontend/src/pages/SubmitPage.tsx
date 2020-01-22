@@ -6,7 +6,7 @@ import { Button } from '../elements/Button'
 import { Input } from '../elements/Input'
 
 import { SubmissionStore } from '../stores/SubmissionStore'
-import { ISubmission, ISubmissionCreateParams } from 'common'
+import { ISubmission, ISubmissionCreateParams } from 'shared'
 
 interface IProps {
   submissionStore: SubmissionStore,

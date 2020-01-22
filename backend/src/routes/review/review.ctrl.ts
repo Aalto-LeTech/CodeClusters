@@ -5,7 +5,7 @@ import { reviewService } from './review.service'
 // import { CustomError } from '../../common'
 
 import { IAuthRequest } from '../../types/auth'
-import { IReviewCreateParams } from 'common'
+import { IReviewCreateParams } from 'shared'
 
 export const REVIEW_CREATE_SCHEMA = Joi.object({
   submission_id: Joi.number().integer().required(),

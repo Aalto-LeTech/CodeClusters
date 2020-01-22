@@ -1,6 +1,7 @@
 
-declare module 'common' {
+declare module 'shared' {
   export type OmitProp<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+
   export interface IReviewWithDate extends IReview {
     date: Date
   }
@@ -16,6 +17,7 @@ declare module 'common' {
     message: string
     metadata: string
   }
+
   type SubmissionWithoutId = OmitProp<ISubmission, 'id'>
   export interface ISubmissionCreateParams {
     student_id: number
@@ -34,11 +36,25 @@ declare module 'common' {
     code: string
     timestamp: string
   }
+
   export interface IUser {
     id: number
     name: string
     email: string
-    privileges: Privileges
+    rolez: string
+    role: Role
   }
-  export type Privileges = 'ADMIN' | 'USER'
+  export type Role = 'ADMIN' | 'TEACHER' | 'STUDENT'
+  export interface ILoginCredentials {
+    email: string
+    password: string
+  }
+  export interface ILoginResponse {
+    user: IUser
+    jwt: IJwt
+  }
+  export interface IJwt {
+    expires: number
+    token: string
+  }
 }

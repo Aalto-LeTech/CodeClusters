@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react'
 import styled from '../theme/styled'
 
 import { ReviewStore } from '../stores/ReviewStore'
-import { IReviewWithDate } from 'common'
+import { IReviewWithDate } from 'shared'
 
 interface IProps {
   reviewStore: ReviewStore,

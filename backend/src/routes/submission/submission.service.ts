@@ -1,6 +1,6 @@
 import { dbService } from '../../db/db.service'
 
-import { ISubmission } from 'common'
+import { ISubmission } from 'shared'
 import { ISubmissionCreateParams } from './submission.types'
 
 export const submissionService = {

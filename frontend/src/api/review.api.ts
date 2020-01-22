@@ -1,4 +1,4 @@
-import { IReview, IReviewCreateParams } from 'common'
+import { IReview, IReviewCreateParams } from 'shared'
 
 import {
   authenticatedHeaders,
@@ -11,4 +11,3 @@ export const addReview = (payload: IReviewCreateParams) =>
 
 export const getReviews = () =>
   get<{reviews: IReview[]}>('reviews', authenticatedHeaders())
-

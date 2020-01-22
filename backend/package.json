@@ -26,7 +26,6 @@
     "typescript": "^3.7.4"
   },
   "dependencies": {
-    "common": "file:../common",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "joi": "14.3.1",

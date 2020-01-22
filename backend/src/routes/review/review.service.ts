@@ -1,6 +1,6 @@
 import { dbService } from '../../db/db.service'
 
-import { IReview, IReviewCreateParams } from 'common'
+import { IReview, IReviewCreateParams } from 'shared'
 
 export const reviewService = {
   getReviews: async () : Promise<IReview[] | undefined> => {

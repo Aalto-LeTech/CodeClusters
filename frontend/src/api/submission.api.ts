@@ -1,4 +1,4 @@
-import { ISubmission, ISubmissionCreateParams } from 'common'
+import { ISubmission, ISubmissionCreateParams } from 'shared'
 
 import {
   authenticatedHeaders,
