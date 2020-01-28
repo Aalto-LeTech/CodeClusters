@@ -4,7 +4,7 @@ import * as jwt from 'jsonwebtoken'
 import { config } from './config'
 import { CustomError } from './error'
 
-import { IUser } from '../types/user'
+import { IUser } from 'shared'
 import { IJwtPayload } from '../types/auth'
 
 const SECRET = config.JWT.SECRET

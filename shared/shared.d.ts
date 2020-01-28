@@ -41,7 +41,6 @@ declare module 'shared' {
     id: number
     name: string
     email: string
-    rolez: string
     role: Role
   }
   export type Role = 'ADMIN' | 'TEACHER' | 'STUDENT'
@@ -56,5 +55,11 @@ declare module 'shared' {
   export interface IJwt {
     expires: number
     token: string
+  }
+  export interface IUserCreateParams {
+    name: string
+    email: string
+    password: string
+    role: Role
   }
 }

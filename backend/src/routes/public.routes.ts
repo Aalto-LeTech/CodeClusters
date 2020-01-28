@@ -1,7 +1,6 @@
 import { Router } from 'express'
 
-import { validateBody } from '../middlewares/validateBody'
-import { authenticate } from '../middlewares/authMiddleware'
+import { validateBody, authenticate, parseQueryParams } from '../middlewares'
 
 import * as userCtrl from './user/user.ctrl'
 import * as reviewCtrl from './review/review.ctrl'
@@ -23,6 +22,7 @@ router.post('/user',
 
 router.get('/reviews',
   authenticate,
+  parseQueryParams(reviewCtrl.REVIEW_LIST_QUERY_PARAMS),
   reviewCtrl.getReviews)
 router.post('/review',
   authenticate,

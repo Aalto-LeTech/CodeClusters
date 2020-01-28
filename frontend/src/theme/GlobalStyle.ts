@@ -23,8 +23,6 @@ export const GlobalStyle = createGlobalStyle`
     padding: 0;
   }
   a, a:visited {
-    color: inherit;
-    text-decoration: none;
   }
   html.scroll-lock {
     overflow: hidden;

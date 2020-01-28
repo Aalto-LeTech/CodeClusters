@@ -39,7 +39,7 @@ export class LoginPage extends React.Component<IProps, IState> {
       this.props.history.push('')
     }
   }
-  handleSetDefaultValues = (type: 'admin' | 'user') => () => {
+  handleSetDefaultValues = (type: 'admin' | 'student') => () => {
     let newValues: ILoginCredentials
     if (type === 'admin') {
       newValues = {
@@ -60,7 +60,7 @@ export class LoginPage extends React.Component<IProps, IState> {
       <section>
         <ShortcutButtonsContainer>
           <Button onClick={this.handleSetDefaultValues('admin')}>Admin login</Button>
-          <Button onClick={this.handleSetDefaultValues('user')}>User login</Button>
+          <Button onClick={this.handleSetDefaultValues('student')}>Student login</Button>
         </ShortcutButtonsContainer>
         <LoginFormEl defaultValues={defaultValues} onSubmit={this.handleLoginSubmit}/>
       </section>

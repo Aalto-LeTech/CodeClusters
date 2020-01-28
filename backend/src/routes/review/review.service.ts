@@ -3,7 +3,14 @@ import { dbService } from '../../db/db.service'
 import { IReview, IReviewCreateParams } from 'shared'
 
 export const reviewService = {
-  getReviews: async () : Promise<IReview[] | undefined> => {
+  getReviews: async (studentId?: number) : Promise<IReview[] | undefined> => {
+    if (studentId) {
+      return await dbService.queryMany<IReview>(`
+        SELECT review_id, submission_id, message, metadata, review.timestamp FROM review
+        JOIN submission ON submission_id = submission.id
+        WHERE submission.student_id = $1
+      `, [studentId])
+    }
     return await dbService.queryMany<IReview>(`
       SELECT review_id, submission_id, message, metadata, timestamp FROM review
     `)

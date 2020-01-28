@@ -5,8 +5,9 @@ import { jwtService } from '../../common/jwt.service'
 
 import { CustomError } from '../../common'
 
-import { IUser, ILoginCredentials, ILoginResponse, IUserCreateParams } from '../../types/user'
+import { IUser, ILoginResponse, IUserCreateParams } from 'shared'
 import { IAuthRequest } from '../../types/auth'
+import { ILoginCredentials } from './user.types'
 
 export const USER_CREDENTIALS_SCHEMA = Joi.object({
   email: Joi.string().email().required(),
@@ -17,14 +18,14 @@ export const USER_CREATE_SCHEMA = Joi.object({
   name: Joi.string().min(1).max(255).required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(8).max(255).required(),
-  privileges: Joi.string().min(1).max(255).required(),
+  role: Joi.string().min(1).max(255).required(),
 })
 
 export const USER_SCHEMA = Joi.object({
   id: Joi.number().integer(),
   name: Joi.string().min(1).max(255).required(),
   email: Joi.string().email().required(),
-  privileges: Joi.string().min(1).max(255).required(),
+  role: Joi.string().min(1).max(255).required(),
 })
 
 function createLoginResponse(user: IUser) {

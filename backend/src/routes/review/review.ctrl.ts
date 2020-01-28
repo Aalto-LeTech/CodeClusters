@@ -6,6 +6,7 @@ import { reviewService } from './review.service'
 
 import { IAuthRequest } from '../../types/auth'
 import { IReviewCreateParams } from 'shared'
+import { IReviewListQueryParams } from './review.types'
 
 export const REVIEW_CREATE_SCHEMA = Joi.object({
   submission_id: Joi.number().integer().required(),
@@ -19,9 +20,13 @@ export const REVIEW_SCHEMA = Joi.object({
   timestamp: Joi.string().min(1).max(20).required(),
 })
 
-export const getReviews = async (req: IAuthRequest<{}>, res: Response, next: NextFunction) => {
+export const REVIEW_LIST_QUERY_PARAMS = Joi.object({
+  user_id: Joi.number().integer(),
+})
+
+export const getReviews = async (req: IAuthRequest<{}, IReviewListQueryParams>, res: Response, next: NextFunction) => {
   try {
-    const reviews = await reviewService.getReviews()
+    const reviews = await reviewService.getReviews(req.queryParams.user_id)
     res.json({ reviews })
   } catch (err) {
     next(err)

@@ -1,5 +1,6 @@
-INSERT INTO app_user (name, email, password, privileges) VALUES ('Admin', 'admin@asdf.fi', 'qwertyui', 'ADMIN');
-INSERT INTO app_user (name, email, password, privileges) VALUES ('Morty', 'morty@asdf.fi', 'asdfasdf', 'USER');
+INSERT INTO app_user (name, email, password, role) VALUES ('Admin', 'admin@asdf.fi', 'qwertyui', 'ADMIN');
+INSERT INTO app_user (name, email, password, role) VALUES ('Mestari Tikku', 'tikku@asdf.fi', 'asdfasdf', 'TEACHER');
+INSERT INTO app_user (name, email, password, role) VALUES ('Morty', 'morty@asdf.fi', 'asdfasdf', 'STUDENT');
 
 INSERT INTO course (name) VALUES ('Ohjelmoinnin Perusteet');
 INSERT INTO exercise (name) VALUES ('1. Hello World');

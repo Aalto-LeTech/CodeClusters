@@ -17,7 +17,7 @@ export class FrontPage extends React.PureComponent<IProps> {
     return (
       <Container>
         <header>
-          <h1>Code Clusters</h1>
+          <h1><a href="https://github.com/Aalto-LeTech/CodeClusters">Code Clusters</a></h1>
           <p><i>The tool to solve all your problems...</i></p>
         </header>
         <ImgContainer>

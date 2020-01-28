@@ -1,12 +1,13 @@
 import { Request } from 'express'
-import { IUser } from './user'
+import { IUser } from 'shared'
 
 export interface IJwtPayload {
   expires: number
   user: IUser
 }
 
-export interface IAuthRequest<P = {}> extends Request {
+export interface IAuthRequest<T = {}, P = {}> extends Request {
   user: IUser
-  body: P
+  body: T
+  queryParams: P
 }

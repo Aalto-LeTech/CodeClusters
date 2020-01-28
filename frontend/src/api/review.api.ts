@@ -11,3 +11,6 @@ export const addReview = (payload: IReviewCreateParams) =>
 
 export const getReviews = () =>
   get<{reviews: IReview[]}>('reviews', authenticatedHeaders())
+
+export const getUserReviews = (userId: number) =>
+  get<{reviews: IReview[]}>(`reviews?user_id=${userId}`, authenticatedHeaders())

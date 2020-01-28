@@ -6,6 +6,7 @@ import styled from '../theme/styled'
 import { AuthStore } from '../stores/AuthStore'
 
 import { RouteComponentProps } from 'react-router'
+import { IUser } from 'shared'
 
 interface IProps extends RouteComponentProps<{}> {
   className?: string
@@ -15,18 +16,14 @@ interface IProps extends RouteComponentProps<{}> {
 export const NavBar = inject('authStore')(observer((props: IProps) => {
   function handleLogout(e : React.MouseEvent<HTMLElement>) {
     authStore!.logout()
-    history.push('')
+    history.push('/')
   }
   const { className, authStore, history } = props
-  const { isAuthenticated } = authStore!
+  const { user, isAuthenticated } = authStore!
   return (
     <NavContainer className={className}>
       <MainLinks>
-        <Link to="/">Frontpage</Link>
-        <Link to="/reviews">Reviews</Link>
-        <Link to="/review">Review</Link>
-        <Link to="/submissions">Submissions</Link>
-        <Link to="/submit">Submit</Link>
+        <NavLinks isAuthenticated={isAuthenticated} user={user}/>
       </MainLinks>
       { isAuthenticated ?
       <Link to="#" role="button" onClick={handleLogout}>Logout</Link> :
@@ -35,6 +32,32 @@ export const NavBar = inject('authStore')(observer((props: IProps) => {
     </NavContainer>
   )
 }))
+
+function NavLinks(props: { isAuthenticated: boolean, user: IUser }) {
+  const { isAuthenticated, user } = props
+  if (!isAuthenticated) {
+    return (
+      <Link to="/">Frontpage</Link>
+    )
+  }
+  if (user.role === 'STUDENT') {
+    return (
+      <>
+        <Link to="/">Frontpage</Link>
+        <Link to="/review/1">My reviews</Link>
+      </>
+    )
+  }
+  return (
+    <>
+      <Link to="/">Frontpage</Link>
+      <Link to="/reviews">Reviews</Link>
+      <Link to="/review/create">Review</Link>
+      <Link to="/submissions">Submissions</Link>
+      <Link to="/submit">Submit</Link>
+    </>
+  )
+}
 
 const NavContainer = styled.nav`
   align-items: center;
