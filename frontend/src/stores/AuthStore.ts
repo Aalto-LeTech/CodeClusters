@@ -3,17 +3,13 @@ import * as userApi from '../api/auth.api'
 
 import { IUser, ILoginCredentials, IJwt } from 'shared'
 
-const EMPTY_USER = {
-  name: '',
-  email: '',
-} as IUser
 const EMPTY_JWT = {
   expires: -1,
   token: ''
-} as IJwt
+}
 
 export class AuthStore {
-  @observable user: IUser = EMPTY_USER
+  @observable user?: IUser = undefined
   @observable jwt: IJwt = EMPTY_JWT
   resetFn: () => void
 
@@ -28,7 +24,7 @@ export class AuthStore {
   }
 
   @action reset() {
-    this.user = EMPTY_USER
+    this.user = undefined
     this.jwt = EMPTY_JWT
     localStorage.setItem('user', '')
     localStorage.setItem('jwt', '')
@@ -53,6 +49,6 @@ export class AuthStore {
 
   @computed
   get isAuthenticated() {
-    return this.user.name !== ''
+    return this.user !== undefined
   }
 }

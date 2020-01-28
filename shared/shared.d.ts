@@ -43,6 +43,7 @@ declare module 'shared' {
     id: number
     name: string
     email: string
+    student_id: number | null
     role: Role
   }
   export type Role = 'ADMIN' | 'TEACHER' | 'STUDENT'
@@ -62,6 +63,7 @@ declare module 'shared' {
     name: string
     email: string
     password: string
+    student_id: number | null
     role: Role
   }
 }

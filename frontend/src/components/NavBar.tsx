@@ -23,7 +23,7 @@ export const NavBar = inject('authStore')(observer((props: IProps) => {
   return (
     <NavContainer className={className}>
       <MainLinks>
-        <NavLinks isAuthenticated={isAuthenticated} user={user}/>
+        <NavLinks user={user}/>
       </MainLinks>
       { isAuthenticated ?
       <Link to="#" role="button" onClick={handleLogout}>Logout</Link> :
@@ -33,18 +33,19 @@ export const NavBar = inject('authStore')(observer((props: IProps) => {
   )
 }))
 
-function NavLinks(props: { isAuthenticated: boolean, user: IUser }) {
-  const { isAuthenticated, user } = props
-  if (!isAuthenticated) {
+function NavLinks(props: { user?: IUser }) {
+  const { user } = props
+  if (!user) {
     return (
       <Link to="/">Frontpage</Link>
     )
   }
   if (user.role === 'STUDENT') {
+    const reviewUrl = `/review/${user.student_id}`
     return (
       <>
         <Link to="/">Frontpage</Link>
-        <Link to="/review/1">My reviews</Link>
+        <Link to={reviewUrl}>My reviews</Link>
       </>
     )
   }

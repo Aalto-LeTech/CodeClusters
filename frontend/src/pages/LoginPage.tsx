@@ -39,18 +39,10 @@ export class LoginPage extends React.Component<IProps, IState> {
       this.props.history.push('')
     }
   }
-  handleSetDefaultValues = (type: 'admin' | 'student') => () => {
-    let newValues: ILoginCredentials
-    if (type === 'admin') {
-      newValues = {
-        email: 'admin@asdf.fi',
-        password: 'qwertyui',
-      }
-    } else {
-      newValues = {
-        email: 'morty@asdf.fi',
-        password: 'asdfasdf',
-      }
+  handleSetDefaultValues = (name: string) => () => {
+    const newValues = {
+      email: `${name}@asdf.fi`,
+      password: 'asdfasdf'
     }
     this.setState((oldState) => ({ ...oldState, defaultValues: newValues }))
   }
@@ -60,7 +52,9 @@ export class LoginPage extends React.Component<IProps, IState> {
       <section>
         <ShortcutButtonsContainer>
           <Button onClick={this.handleSetDefaultValues('admin')}>Admin login</Button>
-          <Button onClick={this.handleSetDefaultValues('student')}>Student login</Button>
+          <Button onClick={this.handleSetDefaultValues('tikku')}>Teacher login</Button>
+          <Button onClick={this.handleSetDefaultValues('morty')}>Student 1 login</Button>
+          <Button onClick={this.handleSetDefaultValues('linus')}>Student 2 login</Button>
         </ShortcutButtonsContainer>
         <LoginFormEl defaultValues={defaultValues} onSubmit={this.handleLoginSubmit}/>
       </section>
