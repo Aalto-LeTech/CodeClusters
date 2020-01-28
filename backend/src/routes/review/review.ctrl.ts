@@ -5,7 +5,7 @@ import { reviewService } from './review.service'
 // import { CustomError } from '../../common'
 
 import { IAuthRequest } from '../../types/auth'
-import { IReviewCreateParams } from 'shared'
+import { IReview, IUserReview, IReviewCreateParams } from 'shared'
 import { IReviewListQueryParams } from './review.types'
 
 export const REVIEW_CREATE_SCHEMA = Joi.object({
@@ -26,7 +26,12 @@ export const REVIEW_LIST_QUERY_PARAMS = Joi.object({
 
 export const getReviews = async (req: IAuthRequest<{}, IReviewListQueryParams>, res: Response, next: NextFunction) => {
   try {
-    const reviews = await reviewService.getReviews(req.queryParams.user_id)
+    let reviews = [] as IReview[] | IUserReview[]
+    if (req.queryParams.user_id) {
+      reviews = await reviewService.getUserReviews(req.queryParams.user_id)
+    } else {
+      reviews = await reviewService.getReviews()
+    }
     res.json({ reviews })
   } catch (err) {
     next(err)

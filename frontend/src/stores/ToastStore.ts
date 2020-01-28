@@ -6,6 +6,10 @@ export class ToastStore {
   @observable toasts: IToast[] = []
   idCounter: number = 0
 
+  @action reset() {
+    this.toasts = []
+  }
+
   @action createToast = (message: string, type: string = 'success', duration: number = 5000) => {
     const newToast = {
       id: this.idCounter,

@@ -219,14 +219,14 @@ const MoreReviewItem = styled.li<{ selected: boolean }>`
   margin-right: 1rem;
 `
 const MoreReviewButton = styled.button<{ selected: boolean }>`
-  border: 1px solid transparent;
+  border: 0;
   border-radius: 0.1rem;
   color: #222;
   cursor: pointer;
   font-size: 1rem;
   padding: 0.5rem;
   &:hover {
-    border: 1px solid black;
+    background: #ededed;
   }
 `
 const AddReviewButton = styled.button`

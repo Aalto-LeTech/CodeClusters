@@ -12,6 +12,10 @@ export class SubmissionStore {
     this.toastStore = props
   }
 
+  @action reset() {
+    this.submissions = []
+  }
+
   @action getSubmissions = async () => {
     const result = await submitApi.getSubmissions()
     runInAction(() => {

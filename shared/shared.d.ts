@@ -2,6 +2,8 @@
 declare module 'shared' {
   export type OmitProp<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
+  export type IUserReviewWithDate = OmitProp<IReviewWithDate, 'metadata'>
+  export type IUserReview = OmitProp<IReview, 'metadata'>
   export interface IReviewWithDate extends IReview {
     date: Date
   }

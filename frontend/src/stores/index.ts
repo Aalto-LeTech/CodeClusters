@@ -11,8 +11,15 @@ export class Stores {
 
   constructor() {
     this.toastStore = new ToastStore()
-    this.authStore = new AuthStore()
+    this.authStore = new AuthStore(this.reset)
     this.reviewStore = new ReviewStore(this.toastStore)
     this.submissionStore = new SubmissionStore(this.toastStore)
+  }
+
+  reset = () => {
+    this.authStore.reset()
+    this.toastStore.reset()
+    this.reviewStore.reset()
+    this.submissionStore.reset()
   }
 }

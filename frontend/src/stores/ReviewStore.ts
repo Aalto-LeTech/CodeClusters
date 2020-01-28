@@ -12,6 +12,10 @@ export class ReviewStore {
     this.toastStore = props
   }
 
+  @action reset() {
+    this.reviews = []
+  }
+
   @action getReviews = async () => {
     const result = await reviewApi.getReviews()
     runInAction(() => {

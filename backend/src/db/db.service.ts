@@ -13,7 +13,10 @@ const pool = new Pool({
 export const dbService = {
   async queryOne<T>(query: string, params?: any[]) {
     const { rows } = await pool.query(query, params)
-    return rows[0] as T
+    if (rows.length > 0) {
+      return rows[0] as T
+    }
+    return undefined
   },
   async queryMany<T>(query: string, params?: any[]) {
     const { rows } = await pool.query(query, params)
