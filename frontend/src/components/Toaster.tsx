@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { memo, useState } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../theme/styled'
 import { FiAlertCircle, FiAlertTriangle, FiCheckCircle, FiXOctagon, FiX } from 'react-icons/fi'
@@ -14,7 +14,7 @@ interface IToastProps {
   toast: IToast
   removeToast: (id: number) => void
 }
-function Toast(props: IToastProps) {
+const Toast = memo((props: IToastProps) => {
   const { className, toast, removeToast } = props
   const [inProgress, setInProgress] = useState(false)
   useTimeout(() => {
@@ -33,7 +33,7 @@ function Toast(props: IToastProps) {
       <Progress type={toast.type} duration={toast.duration} inProgress={inProgress}/>
     </ToastItem>
   )
-}
+})
 
 interface IProps {
   className?: string
@@ -94,16 +94,21 @@ const SvgAction = styled.button`
   }
 `
 const ToastsList = styled.ul`
-  align-items: center;
-  bottom: 50px;
+  align-items: start;
+  bottom: 20px;
   display: flex;
   flex-direction: column-reverse;
-  left: 0;
+  left: 20px;
   list-style: none;
+  max-width: 600px;
   padding: 10px;
   position: fixed;
-  width: 100%;
+  width: 50vw;
   z-index: 10;
+  @media only screen and (max-width: ${({ theme }) => theme.breakpoints.TABLET_WIDTH}) {
+    bottom: 0;
+    left: 0;
+  }
 `
 type ToastItemProps = { type: string }
 const ToastItem = styled.li<ToastItemProps>`

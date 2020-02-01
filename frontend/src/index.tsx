@@ -10,6 +10,7 @@ import { defaultTheme } from './theme/defaultTheme'
 import { GlobalStyle } from './theme/GlobalStyle'
 
 import { Routes } from './routes'
+import { Toaster } from './components/Toaster'
 
 confMobx()
 
@@ -20,6 +21,7 @@ render(
     <ThemeProvider theme={defaultTheme}>
       <>
         <Routes />
+        <Toaster />
         <GlobalStyle />
       </>
     </ThemeProvider>

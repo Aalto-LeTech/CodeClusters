@@ -1,5 +1,13 @@
 import { ITheme } from '../types/theme'
 
+export const breakpoints = {
+  LARGER_DISPLAY_WIDTH: '1600px',
+  LARGE_DISPLAY_WIDTH: '1280px',
+  DEFAULT_WIDTH: '980px',
+  TABLET_WIDTH: '768px',
+  MOBILE_WIDTH: '480px'
+}
+
 export const defaultTheme : ITheme = {
   color: {
     bg: '#fff',
@@ -29,5 +37,6 @@ export const defaultTheme : ITheme = {
   },
   transitions: {
     bezier: 'cubic-bezier(0.55, 0.085, 0.68, 0.53)',
-  }
+  },
+  breakpoints
 }

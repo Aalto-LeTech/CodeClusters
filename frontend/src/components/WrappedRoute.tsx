@@ -14,14 +14,12 @@ interface IWrappedRoute extends RouteProps {
 const renderNoMainContainerWrapper = (Component: ReactComponent) => (props: RouteComponentProps<any>) =>
   <MainWrapper>
     <NavBar {...props}/>
-    <Toaster />
     <Component {...props}/>
   </MainWrapper>
 
 const renderWrapper = (Component: ReactComponent) => (props: RouteComponentProps<any>) =>
   <MainWrapper>
     <NavBar {...props}/>
-    <Toaster />
     <MainContainer>
       <Component {...props}/>
     </MainContainer>

@@ -19,6 +19,9 @@ export class ToastStore {
     }
     this.idCounter += 1
     this.toasts.push(newToast)
+    if (this.toasts.length > 2) {
+      this.toasts = this.toasts.slice(-2)
+    }
   }
  
   @action removeToast = (id: number) => {

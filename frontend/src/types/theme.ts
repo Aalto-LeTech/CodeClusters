@@ -15,6 +15,14 @@ export interface IThemeColor {
   yellow: string
 }
 
+export interface IBreakpoints {
+  LARGER_DISPLAY_WIDTH: string
+  LARGE_DISPLAY_WIDTH: string
+  DEFAULT_WIDTH: string
+  TABLET_WIDTH: string
+  MOBILE_WIDTH: string
+}
+
 export type Intent = 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info'
 
 export interface ITheme {
@@ -32,4 +40,5 @@ export interface ITheme {
   transitions: {
     bezier: string
   }
+  breakpoints: IBreakpoints
 }
