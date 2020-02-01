@@ -5,6 +5,7 @@ import { validateBody, authenticate, parseQueryParams } from '../middlewares'
 import * as userCtrl from './user/user.ctrl'
 import * as reviewCtrl from './review/review.ctrl'
 import * as submissionCtrl from './submission/submission.ctrl'
+import * as modelCtrl from './model/model.ctrl'
 
 const router: Router = Router()
 
@@ -36,5 +37,13 @@ router.post('/submission',
   authenticate,
   validateBody(submissionCtrl.SUBMISSION_CREATE_SCHEMA),
   submissionCtrl.createSubmission)
+
+router.get('/model/clusters',
+  authenticate,
+  modelCtrl.getClusters)
+router.post('/model/cluster',
+  authenticate,
+  validateBody(modelCtrl.RUN_CLUSTERING_SCHEMA),
+  modelCtrl.runClustering)
 
 export default router

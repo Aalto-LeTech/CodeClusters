@@ -66,4 +66,15 @@ declare module 'shared' {
     student_id: number | null
     role: Role
   }
+  export interface IRunClusteringParams {
+    course_id: number
+    exercise_id: number
+  }
+  export interface IRunClusteringResponse {
+    clusters: { cluster: number, submission_id: number }[]
+    // job_id: number
+    // documents_used: number
+    // status_url: string
+  }
+  
 }
