@@ -34,3 +34,8 @@ Shared module contains the shared code between frontend and backend. Currently o
 2. Install dependencies: `yarn`
 3. Copy the example environment variables: `cp .example.env .env`
 4. Start the Webpack bundler & dev-server: `yarn start`
+
+## Test data generator
+
+1. Go to the `db/generator`-folder and install dependencies: `npm`
+2. Either run the script directly or using `db.sh`: `npm start` or `./db.sh testdata`

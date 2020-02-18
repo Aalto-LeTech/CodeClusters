@@ -9,12 +9,17 @@ INSERT INTO app_user (name, email, password, role, student_id)
   VALUES ('Linus Torvals', 'linus@asdf.fi', 'asdfasdf', 'STUDENT', 2);
 
 INSERT INTO course (name) VALUES ('Ohjelmoinnin Perusteet');
-INSERT INTO exercise (name) VALUES ('1. Hello World');
-INSERT INTO exercise (name) VALUES ('2. Joulukuusi');
-INSERT INTO exercise (name) VALUES ('3. Matopeli');
+INSERT INTO course (name) VALUES ('mooc-2017-ohjelmointi');
+
+INSERT INTO exercise (course_id, name) VALUES (1, '1. Hello World');
+INSERT INTO exercise (course_id, name) VALUES (1, '2. Joulukuusi');
+INSERT INTO exercise (course_id, name) VALUES (1, '3. Matopeli');
+INSERT INTO exercise (course_id, name) VALUES (2, 'osa02-Osa02_16.MarsinLampotilanKeskiarvo');
 
 INSERT INTO course_students (course_id, student_id) VALUES (1, 1);
 INSERT INTO course_students (course_id, student_id) VALUES (1, 2);
+INSERT INTO course_students (course_id, student_id) VALUES (2, 1);
+INSERT INTO course_students (course_id, student_id) VALUES (2, 2);
 
 INSERT INTO submission (course_id, exercise_id, student_id, code) VALUES (1, 1, 1,
 '#include <stdio.h>

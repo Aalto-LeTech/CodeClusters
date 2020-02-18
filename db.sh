@@ -29,6 +29,9 @@ EOF
   stop)
     docker-compose stop postgres
     ;;
+  testdata)
+    cd ./db/generator && npm start
+    ;;
   *)
     echo $"Usage: $0 connect|migrate|reset|start|stop"
     exit 1
