@@ -1,6 +1,8 @@
 import { action, computed, runInAction, observable } from 'mobx'
 import * as userApi from '../api/auth.api'
 
+import { persist } from './persist'
+
 import { IUser, ILoginCredentials, IJwt } from 'shared'
 
 const EMPTY_JWT = {
@@ -14,20 +16,14 @@ export class AuthStore {
   resetFn: () => void
 
   constructor(resetFn: () => void) {
-    const savedUser = localStorage.getItem('user')
-    const savedJwt = localStorage.getItem('jwt')
-    if (savedUser && savedJwt && savedUser.length > 0 && savedJwt.length > 0) {
-      this.user = JSON.parse(savedUser)
-      this.jwt = JSON.parse(savedJwt)
-    }
     this.resetFn = resetFn
+    persist(() => this.user, (val: any) => this.user = val, 'auth.user')
+    persist(() => this.jwt, (val: any) => this.jwt = val, 'auth.jwt')
   }
 
   @action reset() {
     this.user = undefined
     this.jwt = EMPTY_JWT
-    localStorage.setItem('user', '')
-    localStorage.setItem('jwt', '')
   }
 
   @action logInUser = async (credentials: ILoginCredentials) => {
@@ -36,8 +32,6 @@ export class AuthStore {
       if (result) {
         this.user = result.user
         this.jwt = result.jwt
-        localStorage.setItem('user', JSON.stringify(this.user))
-        localStorage.setItem('jwt', JSON.stringify(this.jwt))
       }
     })
     return result
