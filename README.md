@@ -2,6 +2,8 @@
 
 Work in progress.
 
+[Model repository](https://github.com/Aalto-LeTech/CodeClustersModeling)
+
 # How to install
 
 Requires: Docker, DockerCompose, Node.js (preferably installed with nvm), yarn installed globally
@@ -12,7 +14,6 @@ Requires: Docker, DockerCompose, Node.js (preferably installed with nvm), yarn i
 2. Migrate and seed the data: `./db.sh migrate`
 
 If you make changes to the schemas and want to re-migrate, use `./db.sh reset && ./db.sh migrate` to recreate the tables.
-
 
 ## Shared
 
@@ -39,3 +40,9 @@ Shared module contains the shared code between frontend and backend. Currently o
 
 1. Go to the `db/generator`-folder and install dependencies: `npm`
 2. Either run the script directly or using `db.sh`: `npm start` or `./db.sh testdata`
+
+## Model server
+
+Git clone https://github.com/Aalto-LeTech/CodeClustersModeling. Follow its instructions for starting the model-server. Then launch the app.
+
+It should reside in http://localhost:8500. If you want to change it, remember to change the MODEL_SERVER_URL in backend's `.env`.
