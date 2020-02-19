@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../theme/styled'
 
-import { MdKeyboardArrowRight, MdKeyboardArrowUp } from 'react-icons/md'
+import { MdKeyboardArrowRight } from 'react-icons/md'
 
 import { SelectSubmissionList } from '../components/SelectSubmissionList'
+import { SelectItem } from '../elements/SelectItem'
 import { Button } from '../elements/Button'
 import { Input } from '../elements/Input'
 import { Icon } from '../elements/Icon'
@@ -36,6 +37,9 @@ export const ReviewCreatePage = inject('reviewStore')(observer((props: IProps) =
   }
   function handleAddReview() {
     setReviews([...reviews, EMPTY_REVIEW_FORM_PARAMS])
+  }
+  function handleSelectReview(i: number) {
+    setCurrentReviewIdx(i)
   }
   function handleDeleteReview() {
     if (reviews.length === 1) {
@@ -72,19 +76,12 @@ export const ReviewCreatePage = inject('reviewStore')(observer((props: IProps) =
           </SubmissionList>
           <Review>
             <Header noTopMargin>Add review(s)</Header>
-            <MoreReviewsList>
-              { reviews.map((r, i) =>
-              <MoreReviewItem key={i} selected={i === currentReviewIdx}>
-                <MoreReviewButton selected={i === currentReviewIdx} onClick={() => setCurrentReviewIdx(i)}>
-                  {i + 1}
-                </MoreReviewButton>
-                <ReviewSelectedIcon className={i === currentReviewIdx ? '' : 'hidden'}>
-                  <MdKeyboardArrowUp size={24}/>
-                </ReviewSelectedIcon>
-              </MoreReviewItem>
-              )}
-              <div><AddReviewButton onClick={handleAddReview}>New</AddReviewButton></div>
-            </MoreReviewsList>
+            <SelectItem
+              currentItemIdx={currentReviewIdx}
+              itemsCount={reviews.length}
+              onAddItem={handleAddReview}
+              onSelectItem={handleSelectReview}
+            />
             <ReviewForm
               data={reviews[currentReviewIdx]}
               onUpdateReview={handleUpdateReview}
@@ -205,47 +202,6 @@ const SubmissionAndReview = styled.section`
 const SubmissionList = styled.div`
   margin-right: 1rem;
   width: 50%;
-`
-const MoreReviewsList = styled.ul`
-  display: flex;
-  list-style: none;
-  padding: 0;
-`
-const MoreReviewItem = styled.li<{ selected: boolean }>`  
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-right: 1rem;
-`
-const MoreReviewButton = styled.button<{ selected: boolean }>`
-  border: 0;
-  border-radius: 0.1rem;
-  color: #222;
-  cursor: pointer;
-  font-size: 1rem;
-  padding: 0.5rem;
-  &:hover {
-    background: #ededed;
-  }
-`
-const AddReviewButton = styled.button`
-  background: ${({ theme }) => theme.color.primary};
-  border: 0;
-  border-radius: 0.1rem;
-  color: #fff;
-  cursor: pointer;
-  font-size: 1rem;
-  padding: 0.25rem 0.5rem;
-  &:hover {
-    background: ${({ theme }) => theme.color.secondary};
-  }
-`
-const ReviewSelectedIcon = styled.span`
-  margin-top: -4px;
-  &.hidden {
-    visibility: hidden;
-  }
 `
 const Review = styled.div`
   width: 50%;
