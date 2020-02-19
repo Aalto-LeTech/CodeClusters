@@ -69,12 +69,26 @@ declare module 'shared' {
   export interface IRunClusteringParams {
     course_id: number
     exercise_id: number
+    word_filters: string[]
   }
   export interface IRunClusteringResponse {
-    clusters: { cluster: number, submission_id: number }[]
+    ngram: {
+      clusters: {[key: number]: number[]}
+      labels: number[]
+      params: {
+        ngrams: number[]
+        n_components: number
+      }
+    }
+    filter: {
+      filters: string[]
+      ids: number[]
+      matches: number[][]
+      counts: number[]
+      score: number[]
+    } | {}
     // job_id: number
     // documents_used: number
     // status_url: string
   }
-  
 }

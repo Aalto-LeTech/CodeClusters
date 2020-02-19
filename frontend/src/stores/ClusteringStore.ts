@@ -30,7 +30,7 @@ export class ClusteringStore {
     const result = await clusterApi.runClustering(payload)
     if (result) {
       runInAction(() => {
-        this.toastStore.createToast('Clustering job started', 'success')
+        // this.toastStore.createToast('Clustering job started', 'success')
         this.clusterings.push(result)
       })
     }

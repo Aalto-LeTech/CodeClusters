@@ -14,10 +14,10 @@ const ClusteringsListEl = observer((props: IProps) => {
   return (
     <ClusteringsListUl className={className}>
       { clusterings.map((res: IRunClusteringResponse) =>
-        res.clusters.map((clust, i) =>
-        <ClusteringsListItem key={i}>
-          <p>Submission id: {clust.submission_id}</p>
-          <p>Cluster: {clust.cluster}</p>
+        Object.keys(res.ngram.clusters).map((key) =>
+        <ClusteringsListItem key={key}>
+          <p>Cluster: {key}</p>
+          <p>Submissions: <span>[{res.ngram.clusters[key].join(', ')}]</span></p>
         </ClusteringsListItem>  
         )
       )}

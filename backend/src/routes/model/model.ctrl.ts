@@ -10,6 +10,7 @@ import { IRunClusteringParams } from 'shared'
 export const RUN_CLUSTERING_SCHEMA = Joi.object({
   course_id: Joi.number().integer().required(),
   exercise_id: Joi.number().integer().required(),
+  word_filters: Joi.array().items(Joi.string()).required()
 })
 
 export const runClustering = async (req: IAuthRequest<IRunClusteringParams>, res: Response, next: NextFunction) => {
