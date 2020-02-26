@@ -55,7 +55,9 @@ const StyledInput = styled(Input)`
   border: 0;
   & > input {
     border: 0;
+    font-size: 1.2rem;
     outline: 0;
+    padding: 1rem;
   }
 `
 const IconWrapper = styled.div`
