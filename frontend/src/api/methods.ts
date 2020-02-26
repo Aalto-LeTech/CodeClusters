@@ -61,7 +61,10 @@ const createRequest = <T>(path: string, options: any) : Promise<Maybe<T>> => {
 
 type Maybe<T> = T | undefined
 
-export const get = <T>(path: string, params?: any, headers = defaultHeaders) =>
+export const get = <T>(path: string, headers = defaultHeaders) =>
+  createRequest<T>(path, { headers, method: 'GET' })
+
+export const getWithQuery = <T>(path: string, params: any, headers = defaultHeaders) =>
   createRequest<T>(path, { headers, params, method: 'GET' })
 
 export const post = <T>(path: string, data: any, headers = defaultHeaders) =>

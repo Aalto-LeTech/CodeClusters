@@ -2,9 +2,9 @@ import { ISearchParams, ISearchResponse } from 'shared'
 
 import {
   authenticatedHeaders,
-  get,
+  getWithQuery,
 } from './methods'
 
 
 export const search = (payload: ISearchParams) =>
-  get<ISearchResponse>('search', payload, authenticatedHeaders())
+  getWithQuery<ISearchResponse>('search', payload, authenticatedHeaders())
