@@ -66,6 +66,27 @@ declare module 'shared' {
     student_id: number | null
     role: Role
   }
+  export interface ISearchParams {
+    q: string
+    course_id?: number
+    exercise_id?: number
+    filters?: string[]
+    case_sensitive?: boolean
+    regex?: boolean
+    whole_words?: boolean
+    page?: number
+  }
+  export interface ISearchResponse {
+    results: ISubmission[]
+  }
+  export interface ISearchResult {
+    id: number
+    student_id: number
+    course_id: number
+    exercise_id: number
+    code: string
+    date: Date
+  }
   export interface IRunClusteringParams {
     course_id: number
     exercise_id: number

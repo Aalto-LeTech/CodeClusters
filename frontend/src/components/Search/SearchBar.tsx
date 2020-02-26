@@ -2,9 +2,9 @@ import React, { memo, useState } from 'react'
 import styled from 'styled-components'
 import { FiSearch } from 'react-icons/fi'
 
-import { Input } from '../elements/Input'
+import { Input } from '../../elements/Input'
 
-import { useDebouncedCallback } from '../hooks/useDebounce'
+import { useDebouncedCallback } from '../../hooks/useDebounce'
 
 interface IProps {
   className?: string

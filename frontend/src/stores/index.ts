@@ -2,6 +2,7 @@ import { AuthStore } from './AuthStore'
 import { ReviewStore } from './ReviewStore'
 import { SubmissionStore } from './SubmissionStore'
 import { ClusteringStore } from './ClusteringStore'
+import { SearchStore } from './SearchStore'
 import { ToastStore } from './ToastStore'
 
 export class Stores {
@@ -9,6 +10,7 @@ export class Stores {
   reviewStore: ReviewStore
   submissionStore: SubmissionStore
   clusteringStore: ClusteringStore
+  searchStore: SearchStore
   toastStore: ToastStore
 
   constructor() {
@@ -17,6 +19,7 @@ export class Stores {
     this.reviewStore = new ReviewStore(this.toastStore)
     this.submissionStore = new SubmissionStore(this.toastStore)
     this.clusteringStore = new ClusteringStore(this.toastStore)
+    this.searchStore = new SearchStore(this.toastStore)
   }
 
   reset = () => {
@@ -25,5 +28,6 @@ export class Stores {
     this.reviewStore.reset()
     this.submissionStore.reset()
     this.clusteringStore.reset()
+    this.searchStore.reset()
   }
 }

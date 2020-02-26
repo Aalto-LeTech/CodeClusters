@@ -2,7 +2,7 @@ import React from 'react'
 import { inject } from 'mobx-react'
 import styled from '../theme/styled'
 
-import { SearchConsole } from '../components/SearchConsole'
+import { SearchView } from '../components/Search'
 
 import { Stores } from '../stores'
 import { AuthStore } from '../stores/AuthStore'
@@ -18,7 +18,7 @@ export class FrontPage extends React.PureComponent<IProps> {
   render() {
     return (
       <Container>
-        <SearchConsole />
+        <SearchView />
         <header>
           <h1><a href="https://github.com/Aalto-LeTech/CodeClusters">Code Clusters</a></h1>
           <p><i>The tool to solve all your problems...</i></p>

@@ -2,10 +2,11 @@ import { Router } from 'express'
 
 import { validateBody, authenticate, parseQueryParams } from '../middlewares'
 
-import * as userCtrl from './user/user.ctrl'
-import * as reviewCtrl from './review/review.ctrl'
-import * as submissionCtrl from './submission/submission.ctrl'
 import * as modelCtrl from './model/model.ctrl'
+import * as reviewCtrl from './review/review.ctrl'
+import * as searchCtrl from './search/search.ctrl'
+import * as submissionCtrl from './submission/submission.ctrl'
+import * as userCtrl from './user/user.ctrl'
 
 const router: Router = Router()
 
@@ -13,13 +14,13 @@ router.post('/login',
   validateBody(userCtrl.USER_CREDENTIALS_SCHEMA),
   userCtrl.loginUser)
 
-router.get('/users',
+router.get('/model/clusters',
   authenticate,
-  userCtrl.getUsers)
-router.post('/user',
+  modelCtrl.getClusters)
+router.post('/model/cluster',
   authenticate,
-  validateBody(userCtrl.USER_CREATE_SCHEMA),
-  userCtrl.createUser)
+  validateBody(modelCtrl.RUN_CLUSTERING_SCHEMA),
+  modelCtrl.runClustering)
 
 router.get('/reviews',
   authenticate,
@@ -30,6 +31,11 @@ router.post('/review',
   validateBody(reviewCtrl.REVIEW_CREATE_SCHEMA),
   reviewCtrl.createReview)
 
+router.get('/search',
+  authenticate,
+  parseQueryParams(searchCtrl.SEARCH_QUERY_PARAMS),
+  searchCtrl.searchSubmissions)
+
 router.get('/submissions',
   authenticate,
   submissionCtrl.getSubmissions)
@@ -38,12 +44,12 @@ router.post('/submission',
   validateBody(submissionCtrl.SUBMISSION_CREATE_SCHEMA),
   submissionCtrl.createSubmission)
 
-router.get('/model/clusters',
+router.get('/users',
   authenticate,
-  modelCtrl.getClusters)
-router.post('/model/cluster',
+  userCtrl.getUsers)
+router.post('/user',
   authenticate,
-  validateBody(modelCtrl.RUN_CLUSTERING_SCHEMA),
-  modelCtrl.runClustering)
+  validateBody(userCtrl.USER_CREATE_SCHEMA),
+  userCtrl.createUser)
 
 export default router

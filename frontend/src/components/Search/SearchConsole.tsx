@@ -1,19 +1,23 @@
 import React, { memo, useRef, useState } from 'react'
 import styled from 'styled-components'
+import { inject, observer } from 'mobx-react'
 
 import { SearchBar } from './SearchBar'
-import { CheckBox } from '../elements/CheckBox'
-import { Input } from '../elements/Input'
-import { MultiInput } from '../elements/MultiInput'
+import { CheckBox } from '../../elements/CheckBox'
+import { Input } from '../../elements/Input'
+import { MultiInput } from '../../elements/MultiInput'
+
+import { SearchStore } from '../../stores/SearchStore'
+import { ISearchParams, ISearchResponse } from 'shared'
 
 interface IProps {
   className?: string
-  // onSubmit: (data: IRunClusteringParams) => Promise<IRunClusteringResponse | undefined>
+  searchStore?: SearchStore,
 }
 
-const SearchConsoleEl = (props: IProps) => {
+const SearchConsoleEl = inject('searchStore')(observer((props: IProps) => {
   const {
-    className
+    className, searchStore
   } = props
   const [course, setCourse] = useState(2)
   const [exercise, setExercise] = useState(1)
@@ -37,25 +41,28 @@ const SearchConsoleEl = (props: IProps) => {
   }
   async function handleSearch(val: string) { // e: React.FormEvent
     if (hasNoError()) {
-      console.log(val)
-      // let filters = wordFilters
-      // if (filterText.length > 0) {
-      //   filters = [...wordFilters, filterText]
-      //   setWordFilters(filters)
-      //   setFilterText('')
-      // }
-      // const payload = {
-      //   course_id: course,
-      //   exercise_id: exercise,
-      //   word_filters: filters,
-      // }
-      // setSubmitInProgress(true)
-      // const result = await props.onSubmit(payload)
-      // if (result) {
-      //   setSubmitInProgress(false)
-      // } else {
-      //   setSubmitInProgress(false)
-      // }
+      let filters = wordFilters
+      if (filterText.length > 0) {
+        filters = [...wordFilters, filterText]
+        setWordFilters(filters)
+        setFilterText('')
+      }
+      const payload = {
+        q: val,
+        course_id: course,
+        exercise_id: exercise,
+        filters: filters,
+        case_sensitive: caseSensitive,
+        regex: useRegex,
+        whole_words: useWholeWords
+      }
+      setSubmitInProgress(true)
+      const result = await searchStore!.search(payload)
+      if (result) {
+        setSubmitInProgress(false)
+      } else {
+        setSubmitInProgress(false)
+      }
     }
   }
   return (
@@ -114,12 +121,13 @@ const SearchConsoleEl = (props: IProps) => {
       </Form>
     </Container>
   )
-}
+}))
 
 const Container = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
+  margin-bottom: 2rem;
 `
 const Form = styled.form`
   align-items: center;
