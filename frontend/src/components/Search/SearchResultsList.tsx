@@ -2,11 +2,12 @@ import React, { useState } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../../theme/styled'
 
+import { ResultItem } from './ResultItem'
+
 import { Button } from '../../elements/Button'
 import { SelectItem } from '../../elements/SelectItem'
 
 import { SearchStore } from '../../stores/SearchStore'
-import { ISearchResult } from 'shared'
 
 interface IProps {
   className?: string
@@ -24,12 +25,8 @@ const SearchResultsListEl = inject('searchStore')(observer((props: IProps) => {
       { resultsCount !== 0 && <p>Showing {resultsCount} results</p> }
       <ResultList className={className}>
         { searchStore!.searchResults.map((result) =>
-          <SearchResultsListItem key={result.id} onClick={() => handleResultClick(result.id)}>
-            <p>Student id: {result.student_id}</p>
-            <p>{result.date.toISOString()}</p>
-            <pre className="code">{result.code}</pre>
-            <div className="controls">
-            </div>
+          <SearchResultsListItem key={result.id}>
+            <ResultItem result={result} latestQuery={searchStore!.latestQuery}/>
           </SearchResultsListItem>  
         )}
       </ResultList>

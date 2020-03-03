@@ -88,22 +88,7 @@ const SearchConsoleEl = inject('searchStore')(observer((props: IProps) => {
             ></Input>
           </FormField>
         </TopRow>
-        <SearchBar onSearch={handleSearch}/>
         <MiddleRow>
-          <CheckBoxField>
-            <CheckBox checked={caseSensitive} onChange={(val: boolean) => setCaseSensitive(val)}/>
-            <CheckBoxText>Case sensitive</CheckBoxText>
-          </CheckBoxField>
-          <CheckBoxField>
-            <CheckBox checked={useRegex} onChange={(val: boolean) => setUseRegex(val)}/>
-            <CheckBoxText>Use regex</CheckBoxText>
-          </CheckBoxField>
-          <CheckBoxField>
-            <CheckBox checked={useWholeWords} onChange={(val: boolean) => setUseWholeWords(val)}/>
-            <CheckBoxText>Whole words</CheckBoxText>
-          </CheckBoxField>
-        </MiddleRow>
-        <BottomRow>
           <FormField>
             <label>Filters</label>
             <MultiInput
@@ -117,6 +102,24 @@ const SearchConsoleEl = inject('searchStore')(observer((props: IProps) => {
               onRemoveItem={handleWordRemove}
             ></MultiInput>
           </FormField>
+        </MiddleRow>
+        <SearchRow>
+          <label>Search</label>
+          <SearchBar onSearch={handleSearch}/>
+        </SearchRow>
+        <BottomRow>
+          <CheckBoxField>
+            <CheckBox checked={caseSensitive} onChange={(val: boolean) => setCaseSensitive(val)}/>
+            <CheckBoxText>Case sensitive</CheckBoxText>
+          </CheckBoxField>
+          <CheckBoxField>
+            <CheckBox checked={useRegex} onChange={(val: boolean) => setUseRegex(val)}/>
+            <CheckBoxText>Use regex</CheckBoxText>
+          </CheckBoxField>
+          <CheckBoxField>
+            <CheckBox checked={useWholeWords} onChange={(val: boolean) => setUseWholeWords(val)}/>
+            <CheckBoxText>Whole words</CheckBoxText>
+          </CheckBoxField>
         </BottomRow>
       </Form>
     </Container>
@@ -135,9 +138,6 @@ const Form = styled.form`
   flex-direction: column;
   & > * {
     margin-top: 1rem;
-  }
-  & > ${SearchBar} {
-    width: 600px;
   }
 `
 const FormField = styled.div`
@@ -163,18 +163,21 @@ const TopRow = styled.div`
   }
 `
 const MiddleRow = styled.div`
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-  margin-top: 1.5rem;
-  width: 400px;
-`
-const BottomRow = styled.div`
   display: flex;
   width: 600px;
   & > ${FormField} {
     width: 100%;
   }
+`
+const SearchRow = styled.div`
+  width: 600px;
+`
+const BottomRow = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  width: 400px;
 `
 
 export const SearchConsole = styled(SearchConsoleEl)`

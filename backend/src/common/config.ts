@@ -19,5 +19,6 @@ export const config = {
   JWT: {
     SECRET: process.env.JWT_SECRET || 'verylongrandomstring',
   },
-  MODEL_SERVER_URL: process.env.MODEL_SERVER_URL
+  MODEL_SERVER_URL: process.env.MODEL_SERVER_URL,
+  SOLR_URL: process.env.SOLR_URL
 }

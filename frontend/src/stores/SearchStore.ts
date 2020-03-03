@@ -3,11 +3,22 @@ import * as searchApi from '../api/search.api'
 
 // import { persist } from './persist'
 
-import { ISearchParams, ISearchResult } from 'shared'
+import { ISearchParams, ISolrSubmissionWithDate } from 'shared'
 import { ToastStore } from './ToastStore'
 
+const EMPTY_QUERY = {
+  q: '',
+  course_id: undefined,
+  exercise_id: undefined,
+  filters: [],
+  case_sensitive: false,
+  regex: false,
+  whole_words: false
+} as ISearchParams
+
 export class SearchStore {
-  @observable searchResults: ISearchResult[] = []
+  @observable searchResults: ISolrSubmissionWithDate[] = []
+  @observable latestQuery: ISearchParams = EMPTY_QUERY
   toastStore: ToastStore
 
   constructor(props: ToastStore) {
@@ -20,9 +31,10 @@ export class SearchStore {
 
   @action search = async (payload: ISearchParams) => {
     const result = await searchApi.search(payload)
+    this.latestQuery = payload
     if (result) {
       runInAction(() => {
-        this.searchResults = result.results.map(r => ({ ...r, date: new Date(r.timestamp) }))
+        this.searchResults = result.response.docs.map(r => ({ ...r, date: new Date(r.timestamp) }))
       })
     }
     return result

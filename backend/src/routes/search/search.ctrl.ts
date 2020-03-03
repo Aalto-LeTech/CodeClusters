@@ -20,8 +20,12 @@ export const SEARCH_QUERY_PARAMS = Joi.object({
 
 export const searchSubmissions = async (req: IAuthRequest<{}, ISearchParams>, res: Response, next: NextFunction) => {
   try {
-    const results = await searchService.searchSubmissions(req.queryParams)
-    res.json({ results })
+    const result = await searchService.searchSubmissions(req.queryParams)
+    if (result) {
+      res.json(result)
+    } else {
+      res.status(400).json({ message: 'Bad query' })
+    }
   } catch (err) {
     next(err)
   }

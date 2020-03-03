@@ -63,7 +63,7 @@ const StyledInput = styled(Input)`
 const IconWrapper = styled.div`
   display: flex; // Center the search icon
   height: 18px;
-  padding: 0 4px 0 8px;
+  padding: 0 0 0 1rem;
 `
 const SearchIcon = styled(FiSearch)`
   vertical-align: middle;

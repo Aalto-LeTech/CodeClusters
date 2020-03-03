@@ -112,4 +112,43 @@ declare module 'shared' {
     // documents_used: number
     // status_url: string
   }
+  export interface ISolrSubmissionResponse {
+    responseHeader: {
+      status: number
+      QTime: number
+      params: {
+        _: number
+        q: string
+        id?: number
+        student_id?: number
+        course_id?: number
+        exercise_id?: number
+        code?: string
+        timestamp?: string
+      }
+    }
+    response: {
+      numFound: number
+      start: number
+      docs: ISolrSubmission[]
+    }
+  }
+  export interface ISolrSubmission {
+    _version_: number
+    id: number
+    student_id: number
+    course_id: number
+    exercise_id: number
+    code: string[]
+    timestamp: string
+  }
+  export interface ISolrSubmissionWithDate {
+    _version_: number
+    id: number
+    student_id: number
+    course_id: number
+    exercise_id: number
+    code: string[]
+    date: Date
+  }
 }

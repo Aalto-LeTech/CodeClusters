@@ -1,9 +1,13 @@
-import { dbService } from '../../db/db.service'
+import { config, axiosService } from '../../common'
 
-import { ISubmission, ISearchParams } from 'shared'
+import { ISearchParams, ISolrSubmissionResponse } from 'shared'
+
+function url(path: string) {
+  return `${config.SOLR_URL}/${path}`
+}
 
 export const searchService = {
-  searchSubmissions: (params: ISearchParams) : Promise<ISubmission[] | undefined> => {
+  searchSubmissions: (params: ISearchParams) : Promise<ISolrSubmissionResponse | undefined> => {
     const {
       q,
       course_id,
@@ -14,17 +18,7 @@ export const searchService = {
       // whole_words,
       // page
     } = params
-    if (course_id && exercise_id) {
-      return dbService.queryMany<ISubmission>(`
-        SELECT id, student_id, course_id, exercise_id, code, timestamp FROM submission
-        WHERE code LIKE $1 AND submission.course_id = $2 AND submission.student_id = $3
-        LIMIT 20
-      `, [`%${q}%`, course_id, exercise_id])
-    }
-    return dbService.queryMany<ISubmission>(`
-      SELECT id, student_id, course_id, exercise_id, code, timestamp FROM submission
-      WHERE code LIKE $1
-      LIMIT 20
-    `, [`%${q}%`, course_id, exercise_id])
-  },
+    const query = `_=1583238245848&q=${q}&course_id${course_id}&exercise_id=${exercise_id}`
+    return axiosService.get<ISolrSubmissionResponse>(url(`solr/gettingstarted/select?${query}`))
+  }
 }
