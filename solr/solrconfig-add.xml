@@ -1,0 +1,8 @@
+  <requestHandler name="/dataimport" class="org.apache.solr.handler.dataimport.DataImportHandler">
+    <lst name="defaults">
+      <str name="config">data-config.xml</str>
+    </lst>
+  </requestHandler>
+
+  <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-dataimporthandler-\d.*\.jar" />
+  <lib dir="${solr.install.dir:../../../..}/contrib/dataimporthandler/" regex=".*\.jar" />

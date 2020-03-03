@@ -1,0 +1,20 @@
+<dataConfig>
+  <dataSource
+    type="JdbcDataSource"
+    name="postgres-submissions"
+    driver="org.postgresql.Driver"
+    url="jdbc:postgresql://host.docker.internal:5600/my_postgres_db" 
+    user="pg-user" 
+    password="my-pg-password"
+  />
+  <document name="code_source">
+    <entity name="submission" query="SELECT id, course_id, exercise_id, student_id, code, timestamp FROM submission">
+      <field column="id" name="id"/>
+      <field column="course_id" name="course_id"/>
+      <field column="exercise_id" name="exercise_id"/>
+      <field column="student_id" name="student_id"/>
+      <field column="code" name="code"/>
+      <field column="timestamp" name="timestamp"/>
+    </entity>
+  </document>
+</dataConfig> 

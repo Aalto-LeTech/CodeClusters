@@ -42,3 +42,12 @@ services:
       POSTGRES_USER: pg-user
       POSTGRES_DB: my_postgres_db
     restart: always
+  solr:
+    image: solr:8.4
+    ports:
+      - 8983:8983
+    volumes:
+      - ./solr/data:/var/solr
+    command:
+      - solr-precreate
+      - gettingstarted
