@@ -3,10 +3,10 @@ import * as searchApi from '../api/search.api'
 
 // import { persist } from './persist'
 
-import { ISearchParams, ISolrSubmissionWithDate } from 'shared'
+import { ISearchParams, ISolrSubmissionResponse, ISolrSubmissionWithDate } from 'shared'
 import { ToastStore } from './ToastStore'
 
-const EMPTY_QUERY = {
+const EMPTY_QUERY: ISearchParams = {
   q: '',
   course_id: undefined,
   exercise_id: undefined,
@@ -14,10 +14,20 @@ const EMPTY_QUERY = {
   case_sensitive: false,
   regex: false,
   whole_words: false
-} as ISearchParams
+}
+const EMPTY_RESULT = {
+  numFound: undefined,
+  start: undefined,
+  docs: []
+} as {
+  numFound?: number
+  start?: number
+  docs: ISolrSubmissionWithDate[]
+}
 
 export class SearchStore {
   @observable searchResults: ISolrSubmissionWithDate[] = []
+  @observable searchResult = EMPTY_RESULT
   @observable latestQuery: ISearchParams = EMPTY_QUERY
   toastStore: ToastStore
 
@@ -31,10 +41,16 @@ export class SearchStore {
 
   @action search = async (payload: ISearchParams) => {
     const result = await searchApi.search(payload)
-    this.latestQuery = payload
+    runInAction(() => {
+      this.latestQuery = payload
+    })
     if (result) {
       runInAction(() => {
-        this.searchResults = result.response.docs.map(r => ({ ...r, date: new Date(r.timestamp) }))
+        const docs = result.response.docs.map(r => ({ ...r, date: new Date(r.timestamp) }))
+        this.searchResult = {
+          ...result.response,
+          docs
+        }
       })
     }
     return result

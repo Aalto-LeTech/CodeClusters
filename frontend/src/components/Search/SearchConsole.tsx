@@ -47,8 +47,9 @@ const SearchConsoleEl = inject('searchStore')(observer((props: IProps) => {
         setWordFilters(filters)
         setFilterText('')
       }
+      const q = val.length > 0 ? val : '*'
       const payload = {
-        q: val,
+        q,
         course_id: course,
         exercise_id: exercise,
         filters: filters,

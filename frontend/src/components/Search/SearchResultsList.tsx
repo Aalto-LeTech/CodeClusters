@@ -3,6 +3,7 @@ import { inject, observer } from 'mobx-react'
 import styled from '../../theme/styled'
 
 import { ResultItem } from './ResultItem'
+import { Pagination } from './Pagination'
 
 import { Button } from '../../elements/Button'
 import { SelectItem } from '../../elements/SelectItem'
@@ -16,20 +17,23 @@ interface IProps {
 
 const SearchResultsListEl = inject('searchStore')(observer((props: IProps) => {
   const { className, searchStore } = props
-  const resultsCount = searchStore!.searchResults.length
+  const resultsCount = searchStore!.searchResult.docs.length
+  const totalCount = searchStore!.searchResult.numFound || 0
   function handleResultClick(id: number) {
 
   }
   return (
     <Container>
-      { resultsCount !== 0 && <p>Showing {resultsCount} results</p> }
+      { resultsCount !== 0 && <p>Showing {resultsCount} of {totalCount} results</p> }
+      <Pagination pages={10}/>
       <ResultList className={className}>
-        { searchStore!.searchResults.map((result) =>
+        { searchStore!.searchResult.docs.map((result) =>
           <SearchResultsListItem key={result.id}>
             <ResultItem result={result} latestQuery={searchStore!.latestQuery}/>
           </SearchResultsListItem>  
         )}
       </ResultList>
+      <Pagination pages={10}/>
     </Container>
   )
 }))

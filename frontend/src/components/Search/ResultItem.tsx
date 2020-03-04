@@ -19,8 +19,8 @@ const ResultItemEl = memo((props: IProps) => {
       <p>Student id: {result.student_id}</p>
       <p>{result.date.toISOString()}</p>
       <pre className="code">
-        {result.code[0].split("\n").map(line =>
-        <CodeLine>{line}</CodeLine>  
+        {result.code[0].split("\n").map((line, i) =>
+        <CodeLine key={`c-${i}`}>{line}</CodeLine>  
         )}
       </pre>
       <div className="controls">

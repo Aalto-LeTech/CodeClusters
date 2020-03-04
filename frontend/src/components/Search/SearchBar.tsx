@@ -49,6 +49,10 @@ const SearchWrapper = styled.div`
   justify-content: space-between;
   &:hover, &:active, &:focus {
     border-color: #40a9ff;
+    color: ${({ theme }) => theme.color.textDark};
+    outline: auto 5px;
+    outline-color: rgba(0, 103, 244, 0.247);
+    outline-offset: -1px;
   }
 `
 const StyledInput = styled(Input)`

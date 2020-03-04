@@ -131,6 +131,11 @@ declare module 'shared' {
       numFound: number
       start: number
       docs: ISolrSubmission[]
+      highlighting: {
+        [id: string]: {
+          code: string
+        }
+      }
     }
   }
   export interface ISolrSubmission {

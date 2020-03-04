@@ -21,10 +21,12 @@ const createRequest = <T>(url: string, options: any) : Promise<T> => {
     .then(res => res.data)
     .catch((err: AxiosError) => {
       if (err.response) {
+        const data = err.response.data
         if (config.ENV === 'development') {
-          console.error(err.response.data.stack)
+          console.error(data)
         }
-        throw new Error(err.response.data.message || err.response.data)
+        const msg = data!.error!.msg // Solr errors are in this path
+        throw new Error(msg || data)
       }
       throw err
     })

@@ -18,7 +18,11 @@ export const searchService = {
       // whole_words,
       // page
     } = params
-    const query = `_=1583238245848&q=${q}&course_id${course_id}&exercise_id=${exercise_id}`
+    // Fields used in the Solr results (required for the highlighting)
+    const fields = 'fl=id,+code,+student_id,+course_id,+timestamp'
+    // Highlighted fields
+    const hlfields = 'hl.fl=code'
+    const query = `q=${q}&course_id=${course_id}&exercise_id=${exercise_id}&hl=on&${fields}&${hlfields}`
     return axiosService.get<ISolrSubmissionResponse>(url(`solr/gettingstarted/select?${query}`))
   }
 }
