@@ -3,7 +3,7 @@ import * as searchApi from '../api/search.api'
 
 // import { persist } from './persist'
 
-import { ISearchParams, ISolrSubmissionResponse, ISolrSubmissionWithDate } from 'shared'
+import { ISearchParams, ISolrSearchResponse, ISolrSubmissionWithDate } from 'shared'
 import { ToastStore } from './ToastStore'
 
 const EMPTY_QUERY: ISearchParams = {

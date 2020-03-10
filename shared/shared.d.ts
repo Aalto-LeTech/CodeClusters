@@ -76,17 +76,6 @@ declare module 'shared' {
     whole_words?: boolean
     page?: number
   }
-  export interface ISearchResponse {
-    results: ISubmission[]
-  }
-  export interface ISearchResult {
-    id: number
-    student_id: number
-    course_id: number
-    exercise_id: number
-    code: string
-    date: Date
-  }
   export interface IRunClusteringParams {
     course_id: number
     exercise_id: number
@@ -112,7 +101,7 @@ declare module 'shared' {
     // documents_used: number
     // status_url: string
   }
-  export interface ISolrSubmissionResponse {
+  export interface ISolrSearchResponse {
     responseHeader: {
       status: number
       QTime: number
@@ -123,7 +112,6 @@ declare module 'shared' {
         student_id?: number
         course_id?: number
         exercise_id?: number
-        code?: string
         timestamp?: string
       }
     }
@@ -144,7 +132,6 @@ declare module 'shared' {
     student_id: number
     course_id: number
     exercise_id: number
-    code: string[]
     timestamp: string
   }
   export interface ISolrSubmissionWithDate {
@@ -153,8 +140,20 @@ declare module 'shared' {
     student_id: number
     course_id: number
     exercise_id: number
-    code: string[]
     highlighted: string[]
+    date: Date
+  }
+  export interface ISearchResponse {
+    numFound: number
+    start: number
+    results: ISearchResult[]
+  }
+  export interface ISearchResult {
+    id: number
+    student_id: number
+    course_id: number
+    exercise_id: number
+    code: string
     date: Date
   }
 }
