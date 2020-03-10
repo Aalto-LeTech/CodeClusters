@@ -2,6 +2,7 @@ import React, { memo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { inject, observer } from 'mobx-react'
 import { useForm } from 'react-hook-form'
+import { withRouter, RouteComponentProps } from 'react-router'
 
 import { SearchBar } from './SearchBar'
 import { CheckBox } from '../../elements/CheckBox'
@@ -11,14 +12,18 @@ import { MultiInput } from '../../elements/MultiInput'
 import { SearchStore } from '../../stores/SearchStore'
 import { ISearchParams, ISearchResponse } from 'shared'
 
-interface IProps {
+function createQueryParams(obj: {[key: string]: string | number}) {
+  return Object.keys(obj).reduce((acc, cur, i) => `${acc}&${cur}=${obj[cur]}`, `?q=${obj.q}`)
+}
+
+interface IProps extends RouteComponentProps {
   className?: string
   searchStore?: SearchStore,
 }
 
-const SearchConsoleEl = inject('searchStore')(observer((props: IProps) => {
+const SearchConsoleEl = inject('searchStore')(observer(withRouter((props: IProps) => {
   const {
-    className, searchStore
+    className, history, searchStore
   } = props
   const { register, handleSubmit } = useForm({
     defaultValues: {
@@ -50,8 +55,16 @@ const SearchConsoleEl = inject('searchStore')(observer((props: IProps) => {
     if (payload.q === undefined || payload.q === '') {
       payload.q = '*'
     }
+    // Remove checkbox values that are false from the payload (as it's their default value)
+    Object.keys(payload).forEach(key => {
+      if (payload[key] === false) {
+        delete payload[key]
+      }
+    })
+    console.log(payload)
     setSubmitInProgress(true)
     const result = await searchStore!.search(payload)
+    history.push(createQueryParams(payload))
     if (result) {
       setSubmitInProgress(false)
     } else {
@@ -128,7 +141,7 @@ const SearchConsoleEl = inject('searchStore')(observer((props: IProps) => {
       </Form>
     </Container>
   )
-}))
+})))
 
 const Container = styled.div`
   align-items: center;
