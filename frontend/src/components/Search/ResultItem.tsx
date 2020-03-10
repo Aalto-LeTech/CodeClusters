@@ -12,18 +12,24 @@ interface IProps {
 const ResultItemEl = memo((props: IProps) => {
   const { className, result, latestQuery } = props
   const [codeLines, setCodeLines] = useState([] as string[])
+  const [matches, setMatches] = useState(0)
   useEffect(() => {
-    // let lines = result.code[0].split("\n")
-    const hl = result.highlighted[0].split("\n")
-    setCodeLines(hl)
+    const hl = result.highlighted[0]
+    setCodeLines(hl.split("\n"))
+    setMatches((hl.match(/<mark>/g) || []).length)
   }, [result])
   function handleResultClick(id: number) {
 
   }
   return (
     <Container className={className}>
-      <p>Student id: {result.student_id}</p>
-      <p>{result.date.toISOString()}</p>
+      <CodeHeader>
+        <div>
+          <div>Student id: {result.student_id}</div>
+          <div>{result.date.toISOString()}</div>
+        </div>
+        <div>{matches} matches</div>
+      </CodeHeader>
       <pre className="code">
         {codeLines.map((line, i) =>
         <CodeLine key={`c-${i}`} dangerouslySetInnerHTML={{ __html: line }}></CodeLine>  
@@ -44,9 +50,6 @@ const Container = styled.div`
   flex-direction: column;
   margin: 0 0 10px 0;
   padding: 1rem;
-  & > p {
-    margin: 0 10px 0 0;
-  }
   .code {
     background: #222;
     color: #fff;
@@ -61,6 +64,11 @@ const Container = styled.div`
   .controls {
     margin-top: 1rem;
   }
+`
+const CodeHeader = styled.div`
+  align-items: flex-end;
+  display: flex;
+  justify-content: space-between;
 `
 const CodeLine = styled.div`
   & > mark {

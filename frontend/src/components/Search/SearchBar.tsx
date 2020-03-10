@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react'
+import React, { memo, forwardRef } from 'react'
 import styled from 'styled-components'
 import { FiSearch } from 'react-icons/fi'
 
@@ -8,18 +8,17 @@ import { useDebouncedCallback } from '../../hooks/useDebounce'
 
 interface IProps {
   className?: string
+  name: string
   onSearch: (val: string) => void
 }
 
-const SearchBarEl = memo((props: IProps) => {
+const SearchBarEl = memo(forwardRef((props: IProps, ref) => {
   const {
-    className, onSearch
+    className, name, onSearch
   } = props
-  const [searchText, setSearchText] = useState('')
   const debouncedSearch = useDebouncedCallback(onSearch, 500)
 
   function handleChange(newVal: string) {
-    setSearchText(newVal)
     debouncedSearch(newVal)
   }
   return (
@@ -29,17 +28,18 @@ const SearchBarEl = memo((props: IProps) => {
           <SearchIcon size={18} />
         </IconWrapper>
         <StyledInput
-          type="text"
-          value={searchText}
-          placeholder={"Search"}
           fullWidth
+          type="text"
+          placeholder={"Search"}
           autocomplete="off"
+          name={name}
+          ref={ref}
           onChange={handleChange}
         />
       </SearchWrapper>
     </div>
   )
-})
+}))
 
 const SearchWrapper = styled.div`
   display: flex;

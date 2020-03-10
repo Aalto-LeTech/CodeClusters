@@ -1,22 +1,25 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import styled from '../theme/styled'
 
 interface IProps {
   className?: string
-  checked: boolean
+  checked?: boolean
   disabled?: boolean
   required?: boolean
-  onChange: (val: boolean) => void
+  name?: string
+  onChange?: (val: boolean) => void
 }
 
-function CheckBoxEl(props: IProps) {
-  const { className, checked, disabled, required, onChange } = props
+const CheckBoxEl = forwardRef((props: IProps, ref?: any) => {
+  const { className, name, checked, disabled, required, onChange } = props
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-    !disabled && onChange(event.target.checked)
+    !disabled && onChange && onChange(event.target.checked)
   }
   return (
     <Wrapper className={className}>
       <input
+        ref={ref}
+        name={name}
         type="checkbox"
         checked={checked}
         disabled={disabled}
@@ -26,7 +29,7 @@ function CheckBoxEl(props: IProps) {
       <CheckMark className="checkmark" ></CheckMark>
     </Wrapper>
   )
-}
+})
 
 const CheckMark = styled.div`
   position: absolute;

@@ -1,6 +1,7 @@
 import React, { memo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { inject, observer } from 'mobx-react'
+import { useForm } from 'react-hook-form'
 
 import { SearchBar } from './SearchBar'
 import { CheckBox } from '../../elements/CheckBox'
@@ -19,17 +20,17 @@ const SearchConsoleEl = inject('searchStore')(observer((props: IProps) => {
   const {
     className, searchStore
   } = props
-  const [course, setCourse] = useState(2)
-  const [exercise, setExercise] = useState(1)
-  const [caseSensitive, setCaseSensitive] = useState(false)
-  const [useRegex, setUseRegex] = useState(false)
-  const [useWholeWords, setUseWholeWords] = useState(false)
+  const { register, handleSubmit } = useForm({
+    defaultValues: {
+      course_id: 2,
+      exercise_id: 1,
+    }
+  })
   const [filterText, setFilterText] = useState('')
   const [wordFilters, setWordFilters] = useState([] as string[])
   const [submitInProgress, setSubmitInProgress] = useState(false)
-  function hasNoError() {
-    return true
-  }
+  const submitButtonRef = useRef<HTMLButtonElement>(null)
+
   function handleFilterTextChange(val: string) {
     setFilterText(val)
   }
@@ -39,44 +40,35 @@ const SearchConsoleEl = inject('searchStore')(observer((props: IProps) => {
   function handleWordRemove(item: string) {
     setWordFilters(wordFilters.filter(w => w !== item))
   }
-  async function handleSearch(val: string) { // e: React.FormEvent
-    if (hasNoError()) {
-      let filters = wordFilters
-      if (filterText.length > 0) {
-        filters = [...wordFilters, filterText]
-        setWordFilters(filters)
-        setFilterText('')
-      }
-      const q = val.length > 0 ? val : '*'
-      const payload = {
-        q,
-        course_id: course,
-        exercise_id: exercise,
-        filters: filters,
-        case_sensitive: caseSensitive,
-        regex: useRegex,
-        whole_words: useWholeWords
-      }
-      setSubmitInProgress(true)
-      const result = await searchStore!.search(payload)
-      if (result) {
-        setSubmitInProgress(false)
-      } else {
-        setSubmitInProgress(false)
-      }
+  function handleSearch(val: string) {
+    if (submitButtonRef && submitButtonRef.current) {
+      submitButtonRef.current.click()
+    }
+  }
+  const onSubmit = async (data: any, e?: React.BaseSyntheticEvent) => {
+    const payload = data
+    if (payload.q === undefined || payload.q === '') {
+      payload.q = '*'
+    }
+    setSubmitInProgress(true)
+    const result = await searchStore!.search(payload)
+    if (result) {
+      setSubmitInProgress(false)
+    } else {
+      setSubmitInProgress(false)
     }
   }
   return (
     <Container className={className}>
-      <Form>
+      <Form id="search-form" onSubmit={handleSubmit(onSubmit)}>
         <TopRow>
           <FormField>
             <label>Course</label>
             <Input
               fullWidth
               type="number"
-              value={course}
-              onChange={(val: number) => setCourse(val)}
+              name="course_id"
+              ref={register}
             ></Input>
           </FormField>
           <FormField>
@@ -84,8 +76,8 @@ const SearchConsoleEl = inject('searchStore')(observer((props: IProps) => {
             <Input
               fullWidth
               type="number"
-              value={exercise}
-              onChange={(val: number) => setExercise(val)}
+              name="exercise_id"
+              ref={register}
             ></Input>
           </FormField>
         </TopRow>
@@ -93,11 +85,12 @@ const SearchConsoleEl = inject('searchStore')(observer((props: IProps) => {
           <FormField>
             <label>Filters</label>
             <MultiInput
-              type="text"
               fullWidth
+              type="text"
+              name="filters"
+              placeholder="Eg. while"
               value={filterText}
               items={wordFilters}
-              placeholder="Eg. while"
               onChange={handleFilterTextChange}
               onAddItem={handleWordAdd}
               onRemoveItem={handleWordRemove}
@@ -106,22 +99,32 @@ const SearchConsoleEl = inject('searchStore')(observer((props: IProps) => {
         </MiddleRow>
         <SearchRow>
           <label>Search</label>
-          <SearchBar onSearch={handleSearch}/>
+          <SearchBar name="q" ref={register} onSearch={handleSearch}/>
         </SearchRow>
         <BottomRow>
           <CheckBoxField>
-            <CheckBox checked={caseSensitive} onChange={(val: boolean) => setCaseSensitive(val)}/>
+            <CheckBox
+              name="case_sensitive"
+              ref={register}
+            />
             <CheckBoxText>Case sensitive</CheckBoxText>
           </CheckBoxField>
           <CheckBoxField>
-            <CheckBox checked={useRegex} onChange={(val: boolean) => setUseRegex(val)}/>
+            <CheckBox
+              name="regex"
+              ref={register}
+            />
             <CheckBoxText>Use regex</CheckBoxText>
           </CheckBoxField>
           <CheckBoxField>
-            <CheckBox checked={useWholeWords} onChange={(val: boolean) => setUseWholeWords(val)}/>
+            <CheckBox
+              name="whole_words"
+              ref={register}
+            />
             <CheckBoxText>Whole words</CheckBoxText>
           </CheckBoxField>
         </BottomRow>
+        <HiddenSubmitButton type="submit" ref={submitButtonRef}></HiddenSubmitButton>
       </Form>
     </Container>
   )
@@ -179,6 +182,10 @@ const BottomRow = styled.div`
   justify-content: space-between;
   margin-top: 1.5rem;
   width: 400px;
+`
+const HiddenSubmitButton = styled.button`
+  display: none;
+  visibility: none;
 `
 
 export const SearchConsole = styled(SearchConsoleEl)`

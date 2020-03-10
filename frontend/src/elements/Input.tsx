@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { forwardRef } from 'react'
 import styled from '../theme/styled'
 
 interface IProps {
@@ -13,21 +13,14 @@ interface IProps {
   disabled?: boolean
   placeholder?: string
   required?: boolean
-  onChange: (value: any) => void // Basically one of: string | number | file
+  onChange?: (value: any) => void // Basically one of: string | number | file
   onFocus?: () => void
   onBlur?: () => void
 }
 
-InputEl.defaultProps = {
-  autocomplete: 'off',
-  required: false,
-  type: 'text',
-  disabled: false,
-}
-
-function InputEl(props: IProps) {
+const InputEl = forwardRef((props: IProps, ref?: any) => {
   function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    !disabled && props.onChange!(event.target.value)
+    !disabled && props.onChange && props.onChange(event.target.value)
   }
   const {
     className, value, type, name, autocomplete, icon, iconPadding, placeholder, disabled, required, fullWidth, onFocus, onBlur
@@ -37,6 +30,7 @@ function InputEl(props: IProps) {
       { icon }
       { type === 'textarea' ?
         <StyledTextarea
+          ref={ref}
           value={value}
           name={name}
           placeholder={placeholder}
@@ -48,6 +42,7 @@ function InputEl(props: IProps) {
         />
         :
         <StyledInput
+          ref={ref}
           value={value}
           type={type}
           name={name}
@@ -63,6 +58,13 @@ function InputEl(props: IProps) {
       }
     </Container>
   )
+})
+
+InputEl.defaultProps = {
+  autocomplete: 'off',
+  required: false,
+  type: 'text',
+  disabled: false,
 }
 
 type ContainerProps = { fullWidth?: boolean }
