@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react'
+import React, { memo, useState, useEffect } from 'react'
 import styled from '../../theme/styled'
 
 import { ISearchParams, ISolrSubmissionWithDate } from 'shared'
@@ -11,6 +11,12 @@ interface IProps {
 
 const ResultItemEl = memo((props: IProps) => {
   const { className, result, latestQuery } = props
+  const [codeLines, setCodeLines] = useState([] as string[])
+  useEffect(() => {
+    // let lines = result.code[0].split("\n")
+    const hl = result.highlighted[0].split("\n")
+    setCodeLines(hl)
+  }, [result])
   function handleResultClick(id: number) {
 
   }
@@ -19,8 +25,8 @@ const ResultItemEl = memo((props: IProps) => {
       <p>Student id: {result.student_id}</p>
       <p>{result.date.toISOString()}</p>
       <pre className="code">
-        {result.code[0].split("\n").map((line, i) =>
-        <CodeLine key={`c-${i}`}>{line}</CodeLine>  
+        {codeLines.map((line, i) =>
+        <CodeLine key={`c-${i}`} dangerouslySetInnerHTML={{ __html: line }}></CodeLine>  
         )}
       </pre>
       <div className="controls">
@@ -56,6 +62,10 @@ const Container = styled.div`
     margin-top: 1rem;
   }
 `
-const CodeLine = styled.div``
+const CodeLine = styled.div`
+  & > mark {
+    background: yellow;
+  }
+`
 
 export const ResultItem = styled(ResultItemEl)``

@@ -46,7 +46,11 @@ export class SearchStore {
     })
     if (result) {
       runInAction(() => {
-        const docs = result.response.docs.map(r => ({ ...r, date: new Date(r.timestamp) }))
+        const docs = result.response.docs.map(r => ({
+          ...r,
+          date: new Date(r.timestamp),
+          highlighted: result.highlighting[r.id].code
+        }))
         this.searchResult = {
           ...result.response,
           docs

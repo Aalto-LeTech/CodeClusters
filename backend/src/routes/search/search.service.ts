@@ -21,7 +21,7 @@ export const searchService = {
     // Fields used in the Solr results (required for the highlighting)
     const fields = 'fl=id,+code,+student_id,+course_id,+timestamp'
     // Highlighted fields
-    const hlfields = 'hl.fl=code'
+    const hlfields = 'hl.fl=code&hl.simple.pre=<mark>&hl.simple.post=</mark>&hl.fragsize=200'
     const query = `q=${q}&course_id=${course_id}&exercise_id=${exercise_id}&hl=on&${fields}&${hlfields}`
     return axiosService.get<ISolrSubmissionResponse>(url(`solr/gettingstarted/select?${query}`))
   }

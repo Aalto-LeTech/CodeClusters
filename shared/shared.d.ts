@@ -131,10 +131,10 @@ declare module 'shared' {
       numFound: number
       start: number
       docs: ISolrSubmission[]
-      highlighting: {
-        [id: string]: {
-          code: string
-        }
+    }
+    highlighting: {
+      [id: string]: {
+        code: string[]
       }
     }
   }
@@ -154,6 +154,7 @@ declare module 'shared' {
     course_id: number
     exercise_id: number
     code: string[]
+    highlighted: string[]
     date: Date
   }
 }
