@@ -9,6 +9,8 @@ import { CheckBox } from '../../elements/CheckBox'
 import { Input } from '../../elements/Input'
 import { MultiInput } from '../../elements/MultiInput'
 
+import { useDebouncedCallback } from '../../hooks/useDebounce'
+
 import { SearchStore } from '../../stores/SearchStore'
 import { ISearchParams, ISearchResponse } from 'shared'
 
@@ -35,7 +37,11 @@ const SearchConsoleEl = inject('searchStore')(observer(withRouter((props: IProps
   const [wordFilters, setWordFilters] = useState([] as string[])
   const [submitInProgress, setSubmitInProgress] = useState(false)
   const submitButtonRef = useRef<HTMLButtonElement>(null)
+  const debouncedSearch = useDebouncedCallback(handleSearch, 500)
 
+  function handleChange() {
+    debouncedSearch()
+  }
   function handleFilterTextChange(val: string) {
     setFilterText(val)
   }
@@ -45,7 +51,7 @@ const SearchConsoleEl = inject('searchStore')(observer(withRouter((props: IProps
   function handleWordRemove(item: string) {
     setWordFilters(wordFilters.filter(w => w !== item))
   }
-  function handleSearch(val: string) {
+  function handleSearch() {
     if (submitButtonRef && submitButtonRef.current) {
       submitButtonRef.current.click()
     }
@@ -62,7 +68,6 @@ const SearchConsoleEl = inject('searchStore')(observer(withRouter((props: IProps
         delete payload[key]
       }
     })
-    console.log(payload)
     setSubmitInProgress(true)
     const result = await searchStore!.search(payload)
     history.push(createQueryParams(payload))
@@ -83,6 +88,7 @@ const SearchConsoleEl = inject('searchStore')(observer(withRouter((props: IProps
               type="number"
               name="course_id"
               ref={register}
+              onChange={handleChange}
             ></Input>
           </FormField>
           <FormField>
@@ -92,6 +98,7 @@ const SearchConsoleEl = inject('searchStore')(observer(withRouter((props: IProps
               type="number"
               name="exercise_id"
               ref={register}
+              onChange={handleChange}
             ></Input>
           </FormField>
         </TopRow>
@@ -104,6 +111,7 @@ const SearchConsoleEl = inject('searchStore')(observer(withRouter((props: IProps
               name="num_results"
               placeholder="20"
               ref={register}
+              onChange={handleChange}
             ></Input>
           </FormField>
           <FormField>
@@ -114,6 +122,7 @@ const SearchConsoleEl = inject('searchStore')(observer(withRouter((props: IProps
               name="num_lines"
               placeholder="0 - return all the lines"
               ref={register}
+              onChange={handleChange}
             ></Input>
           </FormField>
         </TopRow>
@@ -142,6 +151,7 @@ const SearchConsoleEl = inject('searchStore')(observer(withRouter((props: IProps
             <CheckBox
               name="case_sensitive"
               ref={register}
+              onChange={handleChange}
             />
             <CheckBoxText>Case sensitive</CheckBoxText>
           </CheckBoxField>
@@ -149,6 +159,7 @@ const SearchConsoleEl = inject('searchStore')(observer(withRouter((props: IProps
             <CheckBox
               name="regex"
               ref={register}
+              onChange={handleChange}
             />
             <CheckBoxText>Use regex</CheckBoxText>
           </CheckBoxField>
@@ -156,6 +167,7 @@ const SearchConsoleEl = inject('searchStore')(observer(withRouter((props: IProps
             <CheckBox
               name="whole_words"
               ref={register}
+              onChange={handleChange}
             />
             <CheckBoxText>Whole words</CheckBoxText>
           </CheckBoxField>
