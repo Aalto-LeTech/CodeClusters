@@ -11,11 +11,13 @@ export const SEARCH_QUERY_PARAMS = Joi.object({
   q: Joi.string().min(1).max(256).required(),
   course_id: Joi.number().integer(),
   exercise_id: Joi.number().integer(),
+  num_results: Joi.number().integer(),
+  num_lines: Joi.number().integer(),
+  results_start: Joi.number().integer(),
   filters: Joi.array().items(Joi.string()),
   case_sensitive: Joi.boolean(),
   regex: Joi.boolean(),
   whole_words: Joi.boolean(),
-  page: Joi.number().integer()
 })
 
 export const searchSubmissions = async (req: IAuthRequest<{}, ISearchParams>, res: Response, next: NextFunction) => {

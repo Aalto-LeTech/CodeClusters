@@ -13,7 +13,7 @@ import { SearchStore } from '../../stores/SearchStore'
 import { ISearchParams, ISearchResponse } from 'shared'
 
 function createQueryParams(obj: {[key: string]: string | number}) {
-  return Object.keys(obj).reduce((acc, cur, i) => `${acc}&${cur}=${obj[cur]}`, `?q=${obj.q}`)
+  return Object.keys(obj).reduce((acc, cur, i) => cur !== 'q' ? `${acc}&${cur}=${obj[cur]}` : acc, `?q=${obj.q}`)
 }
 
 interface IProps extends RouteComponentProps {
@@ -55,9 +55,10 @@ const SearchConsoleEl = inject('searchStore')(observer(withRouter((props: IProps
     if (payload.q === undefined || payload.q === '') {
       payload.q = '*'
     }
-    // Remove checkbox values that are false from the payload (as it's their default value)
+    // Remove false, undefined and empty values since they are their default values
+    // to keep the URL from being cluttered with redundant parameters
     Object.keys(payload).forEach(key => {
-      if (payload[key] === false) {
+      if (!payload[key] || payload[key] === '') {
         delete payload[key]
       }
     })
@@ -73,10 +74,10 @@ const SearchConsoleEl = inject('searchStore')(observer(withRouter((props: IProps
   }
   return (
     <Container className={className}>
-      <Form id="search-form" onSubmit={handleSubmit(onSubmit)}>
+      <Form onSubmit={handleSubmit(onSubmit)}>
         <TopRow>
           <FormField>
-            <label>Course</label>
+            <label htmlFor="course_id">Course</label>
             <Input
               fullWidth
               type="number"
@@ -85,11 +86,33 @@ const SearchConsoleEl = inject('searchStore')(observer(withRouter((props: IProps
             ></Input>
           </FormField>
           <FormField>
-            <label>Exercise</label>
+            <label htmlFor="exercise_id">Exercise</label>
             <Input
               fullWidth
               type="number"
               name="exercise_id"
+              ref={register}
+            ></Input>
+          </FormField>
+        </TopRow>
+        <TopRow>
+          <FormField>
+            <label htmlFor="num_results">Results per page</label>
+            <Input
+              fullWidth
+              type="number"
+              name="num_results"
+              placeholder="20"
+              ref={register}
+            ></Input>
+          </FormField>
+          <FormField>
+            <label htmlFor="num_lines">Lines per result</label>
+            <Input
+              fullWidth
+              type="number"
+              name="num_lines"
+              placeholder="0 - return all the lines"
               ref={register}
             ></Input>
           </FormField>
@@ -111,7 +134,7 @@ const SearchConsoleEl = inject('searchStore')(observer(withRouter((props: IProps
           </FormField>
         </MiddleRow>
         <SearchRow>
-          <label>Search</label>
+          <label htmlFor="q">Search</label>
           <SearchBar name="q" ref={register} onSearch={handleSearch}/>
         </SearchRow>
         <BottomRow>

@@ -70,11 +70,13 @@ declare module 'shared' {
     q: string
     course_id?: number
     exercise_id?: number
+    num_results?: number
+    num_lines?: number
+    result_start?: number
     filters?: string[]
     case_sensitive?: boolean
     regex?: boolean
     whole_words?: boolean
-    page?: number
   }
   export interface IRunClusteringParams {
     course_id: number
