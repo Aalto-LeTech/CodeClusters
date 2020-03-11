@@ -16,7 +16,7 @@ import { SubmitPage } from './pages/SubmitPage'
 export const Routes = () : React.ReactElement<any> => (
   <BrowserRouter>
     <Switch>
-      <WrappedRoute exact path="/" component={FrontPage}/>
+      <NoMainContainerRoute exact path="/" component={FrontPage}/>
       <WrappedRoute exact path="/login" component={LoginPage}/>
       <WrappedRoute exact path="/reviews" component={AuthHOC(ReviewsPage)}/>
       <NoMainContainerRoute exact path="/review/create" component={AuthHOC(ReviewCreatePage)}/>

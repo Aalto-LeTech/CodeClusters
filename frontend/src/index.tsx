@@ -11,6 +11,7 @@ import { GlobalStyle } from './theme/GlobalStyle'
 
 import { Routes } from './routes'
 import { Toaster } from './components/Toaster'
+import { FloatingMenu } from './components/FloatingMenu'
 
 confMobx()
 
@@ -22,6 +23,7 @@ render(
       <>
         <Routes />
         <Toaster />
+        <FloatingMenu />
         <GlobalStyle />
       </>
     </ThemeProvider>

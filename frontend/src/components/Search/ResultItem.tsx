@@ -1,6 +1,8 @@
 import React, { memo, useState, useEffect } from 'react'
 import styled from '../../theme/styled'
 
+import { Button } from '../../elements/Button'
+
 import { ISearchParams, ISolrSubmissionWithDate } from 'shared'
 
 interface IProps {
@@ -35,8 +37,14 @@ const ResultItemEl = memo((props: IProps) => {
         <CodeLine key={`c-${i}`} dangerouslySetInnerHTML={{ __html: line }}></CodeLine>  
         )}
       </pre>
-      <div className="controls">
-      </div>
+      <Controls>
+        <h3>Review</h3>
+        <Buttons>
+          <Button intent="success">Select</Button>
+          <Button intent="danger">Discard</Button>
+          <Button intent="info">Examine</Button>
+        </Buttons>
+      </Controls>
     </Container>
   )
 })
@@ -48,31 +56,40 @@ const Container = styled.div`
   border-radius: 0.25rem;
   display: flex;
   flex-direction: column;
-  margin: 0 0 10px 0;
-  padding: 1rem;
   .code {
     background: #222;
-    color: #fff;
-    padding: 10px;
     border-radius: 0.25rem;
+    color: #fff;
+    margin: 0;
+    padding: 10px;
   }
   .message {
     background: rgba(255, 0, 0, 0.4);
     padding: 1rem;
     border-radius: 0.25rem;
   }
-  .controls {
-    margin-top: 1rem;
-  }
 `
 const CodeHeader = styled.div`
   align-items: flex-end;
   display: flex;
   justify-content: space-between;
+  margin-bottom: 1rem;
 `
 const CodeLine = styled.div`
   & > mark {
     background: yellow;
+  }
+`
+const Controls = styled.div`
+  margin-top: 1rem;
+  & > h3 {
+    margin: 0 0 0.5rem 0;
+  }
+`
+const Buttons = styled.div`
+  display: flex;
+  & > ${Button} {
+    margin-right: 0.5rem;
   }
 `
 

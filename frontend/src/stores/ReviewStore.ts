@@ -1,11 +1,12 @@
 import { action, runInAction, observable } from 'mobx'
 import * as reviewApi from '../api/review.api'
 
-import { IReviewWithDate, IReviewCreateParams } from 'shared'
+import { IReviewWithDate, IReviewCreateParams, ISolrSubmissionWithDate } from 'shared'
 import { ToastStore } from './ToastStore'
 
 export class ReviewStore {
   @observable reviews: IReviewWithDate[] = []
+  @observable selectedSubmissions: ISolrSubmissionWithDate[] = []
   toastStore: ToastStore
 
   constructor(props: ToastStore) {
