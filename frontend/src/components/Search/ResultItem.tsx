@@ -19,6 +19,7 @@ const ResultItemEl = inject('reviewStore')(observer((props: IProps) => {
   const { className, result, latestQuery, reviewStore } = props
   const [codeLines, setCodeLines] = useState([] as string[])
   const [matches, setMatches] = useState(0)
+  const [isActive, setIsActive] = useState(false)
   const [lineReviewMenuOpenTo, setLineReviewMenuOpenTo] = useState(-1)
   useEffect(() => {
     const hl = result.highlighted[0]
@@ -34,7 +35,7 @@ const ResultItemEl = inject('reviewStore')(observer((props: IProps) => {
     return false
   }
   function handleLineClick(idx: number) {
-    if (lineReviewMenuOpenTo !== idx) {
+    if (!isReviewOpenOnLine(idx)) {
       const selection = codeLines.reduce((acc, cur, i) => {
         if (i < idx) {
           acc[1] += cur.length + 2
@@ -51,25 +52,28 @@ const ResultItemEl = inject('reviewStore')(observer((props: IProps) => {
   return (
     <Container className={className}>
       <CodeHeader>
-        <div>
+        <HeaderLeft>
           <div>Student id: {result.student_id}</div>
           <div>{result.date.toISOString()}</div>
-        </div>
-        <div>{matches} matches</div>
+        </HeaderLeft>
+        <HeaderRight>
+          <div>0 reviews</div>
+          <div>{matches} matches</div>
+        </HeaderRight>
       </CodeHeader>
       <pre className="code">
         {codeLines.map((line, i) =>
-        <>
-        <ReviewMenuWrapper key={`w-${i}`}>
-          { isReviewOpenOnLine(i) && <FloatingReviewMenu />}
-        </ReviewMenuWrapper>
+        <CodeLineWrapper key={`c-${i}`}>
+        { isReviewOpenOnLine(i) &&
+        <ReviewMenuWrapper>
+           <FloatingReviewMenu />
+        </ReviewMenuWrapper>}
         <CodeLine
-          key={`c-${i}`}
           active={isReviewOpenOnLine(i)}
           dangerouslySetInnerHTML={{ __html: line }}
           onClick={() => handleLineClick(i)}
         />
-        </>
+        </CodeLineWrapper>
         )}
       </pre>
       <Controls>
@@ -110,15 +114,18 @@ const CodeHeader = styled.div`
   justify-content: space-between;
   margin-bottom: 1rem;
 `
+const HeaderLeft = styled.div``
+const HeaderRight = styled.div``
 const ReviewMenuWrapper = styled.div`
   position: relative;
   & > ${FloatingReviewMenu} {
-    left: -303px;
+    left: -300px;
     position: absolute;
     top: 0;
     width: 288px;
   }
 `
+const CodeLineWrapper = styled.div``
 const CodeLine = styled.div<{ active?: boolean }>`
   background: ${({ active, theme }) => active ? '#666' : '#222'};
   cursor: pointer;

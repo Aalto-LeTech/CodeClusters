@@ -38,16 +38,16 @@ const FloatingReviewMenuEl = inject('reviewStore')(observer((props: IProps) => {
   function handleDeleteReview() {
     reviewStore!.setOpenSubmission()
   }
-  async function handleSubmit(data: IReviewFormParams, onSuccess: () => void, onEnd: () => void) {
+  async function handleSubmit(data: IReviewFormParams, onSuccess: () => void, onError: () => void) {
     const submission_id = reviewStore!.openSubmission!.id
     // const selection = reviewStore!.openSelection
     const payload = { ...data, submission_id }
     const result = await reviewStore!.addReview(payload)
     if (result) {
-      reviewStore!.setOpenSubmission()
       onSuccess()
+      reviewStore!.setOpenSubmission()
     } else {
-      onEnd()
+      onError()
     }
   }
   return (
@@ -69,9 +69,6 @@ const FloatingReviewMenuEl = inject('reviewStore')(observer((props: IProps) => {
   )
 }))
 
-const SvgWrapper = styled.span`
-  display: flex;
-`
 const Title = styled.h4`
   margin: 0;
 `
@@ -96,13 +93,6 @@ const Header = styled.div`
   margin: 0 0 1rem 0;
   width: 100%;
 `
-const Number = styled.span`
-  background: #222;
-  border-radius: 20px;
-  color: #fff;
-  margin-right: 0.5rem;
-  padding: 8px 13px;
-`
 const Body = styled.div`
   display: flex;
   justify-content: space-around;
@@ -113,7 +103,7 @@ interface IFormProps {
   className?: string
   data: IReviewFormParams
   onUpdateReview: (data: IReviewFormParams) => void
-  onSubmit: (data: IReviewFormParams, onSuccess: () => void, onEnd: () => void) => void
+  onSubmit: (data: IReviewFormParams, onSuccess: () => void, onError: () => void) => void
   onDelete: () => void
 }
 
@@ -147,16 +137,15 @@ const ReviewForm = styled((props: IFormProps) => {
         metadata,
       }
       setSubmitInProgress(true)
-      onSubmit(payload, onSuccess, onEnd)
+      onSubmit(payload, onSuccess, onError)
     }
   }
   function onSuccess() {
     setSubmitInProgress(false)
-    onDelete()
     setMessage('')
     setMetadata('')
   }
-  function onEnd() {
+  function onError() {
     setSubmitInProgress(false)
   }
   return (

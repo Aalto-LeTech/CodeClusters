@@ -17,13 +17,16 @@ interface IProps {
 }
 export const FloatingMenu = inject('reviewStore')(observer((props: IProps) => {
   const { className, reviewStore } = props
+  function handleTrashClick() {
+    reviewStore!.reset()
+  }
   return (
     <Wrapper className={className}>
       <Container>
         <Title>Currently selected: {reviewStore!.selectedSubmissions.length}</Title>
         <Body>
           <Button intent="success">Review</Button>
-          <Icon><FiTrash size={18}/></Icon>
+          <Icon button onClick={handleTrashClick}><FiTrash size={18}/></Icon>
         </Body>
       </Container>
     </Wrapper>

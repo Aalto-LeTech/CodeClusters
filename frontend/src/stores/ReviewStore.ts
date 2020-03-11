@@ -17,9 +17,20 @@ export class ReviewStore {
 
   @action reset() {
     this.reviews = []
+    this.selectedSubmissions = []
+    this.openSubmission = undefined
+    this.openSelection = [0, 0, 0]
   }
 
   @action setOpenSubmission(s?: ISolrSubmissionWithDate, selection: [number, number, number] = [0, 0, 0]) {
+    if (s) {
+      const found = this.selectedSubmissions.find(ss => ss.id === s.id)
+      if (!found) {
+        this.selectedSubmissions.push(s)
+      }
+    } else {
+      this.selectedSubmissions = this.selectedSubmissions.filter(s => s.id === this.openSubmission!.id)
+    }
     this.openSubmission = s
     this.openSelection = selection
   }
