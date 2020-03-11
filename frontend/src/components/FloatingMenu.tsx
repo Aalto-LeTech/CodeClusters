@@ -1,11 +1,12 @@
 import React, { memo, useState } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../theme/styled'
-import { FiAlertCircle, FiAlertTriangle, FiCheckCircle, FiXOctagon, FiX } from 'react-icons/fi'
+import { FiTrash } from 'react-icons/fi'
 
 import useTimeout from '../hooks/useTimeout'
 
 import { Button } from '../elements/Button'
+import { Icon } from '../elements/Icon'
 
 import { ReviewStore } from '../stores/ReviewStore'
 import { ITheme } from '../types/theme'
@@ -19,10 +20,10 @@ export const FloatingMenu = inject('reviewStore')(observer((props: IProps) => {
   return (
     <Wrapper className={className}>
       <Container>
-        <Title>Currently selected</Title>
+        <Title>Currently selected: {reviewStore!.selectedSubmissions.length}</Title>
         <Body>
-          <Number>{reviewStore!.selectedSubmissions.length}</Number>
           <Button intent="success">Review</Button>
+          <Icon><FiTrash size={18}/></Icon>
         </Body>
       </Container>
     </Wrapper>

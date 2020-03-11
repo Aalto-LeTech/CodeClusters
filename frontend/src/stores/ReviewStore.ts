@@ -7,6 +7,8 @@ import { ToastStore } from './ToastStore'
 export class ReviewStore {
   @observable reviews: IReviewWithDate[] = []
   @observable selectedSubmissions: ISolrSubmissionWithDate[] = []
+  @observable openSubmission?: ISolrSubmissionWithDate
+  @observable openSelection: [number, number, number] = [0, 0, 0]
   toastStore: ToastStore
 
   constructor(props: ToastStore) {
@@ -15,6 +17,11 @@ export class ReviewStore {
 
   @action reset() {
     this.reviews = []
+  }
+
+  @action setOpenSubmission(s?: ISolrSubmissionWithDate, selection: [number, number, number] = [0, 0, 0]) {
+    this.openSubmission = s
+    this.openSelection = selection
   }
 
   @action getReviews = async () => {

@@ -1,27 +1,52 @@
 import React, { memo, useState, useEffect } from 'react'
+import { inject, observer } from 'mobx-react'
 import styled from '../../theme/styled'
 
+import { FloatingReviewMenu } from '../FloatingReviewMenu'
 import { Button } from '../../elements/Button'
 
+import { ReviewStore } from '../../stores/ReviewStore'
 import { ISearchParams, ISolrSubmissionWithDate } from 'shared'
 
 interface IProps {
   className?: string
   result: ISolrSubmissionWithDate
   latestQuery: ISearchParams
+  reviewStore?: ReviewStore
 }
 
-const ResultItemEl = memo((props: IProps) => {
-  const { className, result, latestQuery } = props
+const ResultItemEl = inject('reviewStore')(observer((props: IProps) => {
+  const { className, result, latestQuery, reviewStore } = props
   const [codeLines, setCodeLines] = useState([] as string[])
   const [matches, setMatches] = useState(0)
+  const [lineReviewMenuOpenTo, setLineReviewMenuOpenTo] = useState(-1)
   useEffect(() => {
     const hl = result.highlighted[0]
     setCodeLines(hl.split("\n"))
     setMatches((hl.match(/<mark>/g) || []).length)
   }, [result])
-  function handleResultClick(id: number) {
-
+  function isReviewOpenOnLine(idx: number) {
+    const openSubmission = reviewStore!.openSubmission
+    const openSelection = reviewStore!.openSelection
+    if (openSubmission && openSelection[0] !== 0) {
+      return openSubmission.id === result.id && openSelection[0] === idx
+    }
+    return false
+  }
+  function handleLineClick(idx: number) {
+    if (lineReviewMenuOpenTo !== idx) {
+      const selection = codeLines.reduce((acc, cur, i) => {
+        if (i < idx) {
+          acc[1] += cur.length + 2
+        } else if (i === idx) {
+          acc[2] = acc[0] + 2 +   cur.length
+        }
+        return acc
+      }, [idx, 0, 0] as [number, number, number])
+      reviewStore!.setOpenSubmission(result, selection)
+    } else {
+      reviewStore!.setOpenSubmission()
+    }
   }
   return (
     <Container className={className}>
@@ -34,7 +59,17 @@ const ResultItemEl = memo((props: IProps) => {
       </CodeHeader>
       <pre className="code">
         {codeLines.map((line, i) =>
-        <CodeLine key={`c-${i}`} dangerouslySetInnerHTML={{ __html: line }}></CodeLine>  
+        <>
+        <ReviewMenuWrapper key={`w-${i}`}>
+          { isReviewOpenOnLine(i) && <FloatingReviewMenu />}
+        </ReviewMenuWrapper>
+        <CodeLine
+          key={`c-${i}`}
+          active={isReviewOpenOnLine(i)}
+          dangerouslySetInnerHTML={{ __html: line }}
+          onClick={() => handleLineClick(i)}
+        />
+        </>
         )}
       </pre>
       <Controls>
@@ -47,7 +82,7 @@ const ResultItemEl = memo((props: IProps) => {
       </Controls>
     </Container>
   )
-})
+}))
 
 const Container = styled.div`
   display: flex;
@@ -75,7 +110,21 @@ const CodeHeader = styled.div`
   justify-content: space-between;
   margin-bottom: 1rem;
 `
-const CodeLine = styled.div`
+const ReviewMenuWrapper = styled.div`
+  position: relative;
+  & > ${FloatingReviewMenu} {
+    left: -303px;
+    position: absolute;
+    top: 0;
+    width: 288px;
+  }
+`
+const CodeLine = styled.div<{ active?: boolean }>`
+  background: ${({ active, theme }) => active ? '#666' : '#222'};
+  cursor: pointer;
+  &:hover {
+    background: #666;
+  }
   & > mark {
     background: yellow;
   }
