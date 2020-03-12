@@ -49,7 +49,7 @@ function ButtonEl(props: IProps) {
 export const Button = styled(ButtonEl)<IProps>`
   align-items: center;
   background-color: ${({ theme, intent }) => getIntentColor(theme, intent)};
-  border: 1px solid ${({ theme }) => theme.color.textDark};
+  border: 1px solid ${({ theme, intent }) => intent !== 'transparent' ? theme.color.textDark : 'transparent'};
   border-radius: 4px;
   color: ${({ theme, intent }) => getIntentTextColor(theme, intent)};
   cursor: pointer;
@@ -62,7 +62,8 @@ export const Button = styled(ButtonEl)<IProps>`
   text-decoration: none;
   width: ${({ fullWidth }) => fullWidth ? '100%' : ''};
   &:hover {
-    box-shadow: 0 0 2px 2px #039be569;
+    background: ${({ theme, intent }) => intent === 'transparent' && theme.color.gray.lightest};
+    box-shadow: ${({ intent }) => intent !== 'transparent' && '0 0 2px 2px #039be569'};
   }
   transition: 0.2s all;
 `

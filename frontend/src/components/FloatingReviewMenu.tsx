@@ -8,13 +8,16 @@ import { Input } from '../elements/Input'
 import { Icon } from '../elements/Icon'
 import { CheckBox } from '../elements/CheckBox'
 
+import { Stores } from '../stores'
 import { ReviewStore } from '../stores/ReviewStore'
+import { ModalStore } from '../stores/ModalStore'
 import { ITheme } from '../types/theme'
 import { ISubmissionWithDate, IReview } from 'shared'
 
 interface IProps {
   className?: string
   reviewStore?: ReviewStore
+  modalStore?: ModalStore
 }
 interface IReviewFormParams {
   message: string
@@ -26,13 +29,26 @@ const EMPTY_REVIEW_FORM_PARAMS: IReviewFormParams = {
   metadata: ''
 }
 
-const FloatingReviewMenuEl = inject('reviewStore')(observer((props: IProps) => {
-  const { className, reviewStore } = props
+const FloatingReviewMenuEl = inject((stores: Stores) => ({
+  reviewStore: stores.reviewStore,
+  modalStore: stores.modalStore,
+}))
+(observer((props: IProps) => {
+  const { className, reviewStore, modalStore } = props
   const [review, setReview] = useState(EMPTY_REVIEW_FORM_PARAMS)
-  const [useMultiselect, setUseMultiselect] = useState(false)
 
   function handleClickMaximize() {
 
+  }
+  function handleMultiSelectionToggle() {
+    if (reviewStore!.hasManySelections && reviewStore!.isMultiSelection) {
+      modalStore!.openModal('deleteReviewSelection', {
+        submit: () => reviewStore!.toggleMultiSelection(),
+        count: reviewStore!.selectedSubmissions.length - 1
+      })
+    } else {
+      reviewStore!.toggleMultiSelection()
+    }
   }
   function handleUpdateReview(data: IReviewFormParams) {
     setReview(data)
@@ -64,8 +80,8 @@ const FloatingReviewMenuEl = inject('reviewStore')(observer((props: IProps) => {
             <CheckBox
               name="use_multiselect"
               type="toggle"
-              checked={useMultiselect}
-              onChange={() => setUseMultiselect(!useMultiselect)}
+              checked={reviewStore!.isMultiSelection}
+              onChange={handleMultiSelectionToggle}
             />
             <CheckBoxText title="Select multiple selections">Use multiselect</CheckBoxText>
           </CheckBoxField>

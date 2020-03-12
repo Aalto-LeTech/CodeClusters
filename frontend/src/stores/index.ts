@@ -3,6 +3,7 @@ import { ReviewStore } from './ReviewStore'
 import { SubmissionStore } from './SubmissionStore'
 import { ClusteringStore } from './ClusteringStore'
 import { SearchStore } from './SearchStore'
+import { ModalStore } from './ModalStore'
 import { ToastStore } from './ToastStore'
 
 export class Stores {
@@ -11,9 +12,11 @@ export class Stores {
   submissionStore: SubmissionStore
   clusteringStore: ClusteringStore
   searchStore: SearchStore
+  modalStore: ModalStore
   toastStore: ToastStore
 
   constructor() {
+    this.modalStore = new ModalStore()
     this.toastStore = new ToastStore()
     this.authStore = new AuthStore(this.reset)
     this.reviewStore = new ReviewStore(this.toastStore)

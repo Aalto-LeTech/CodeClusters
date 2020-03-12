@@ -1,4 +1,4 @@
-import { action, runInAction, observable } from 'mobx'
+import { action, computed, runInAction, observable } from 'mobx'
 import * as reviewApi from '../api/review.api'
 
 import { IReviewWithDate, IReviewCreateParams, ISolrSubmissionWithDate } from 'shared'
@@ -9,10 +9,15 @@ export class ReviewStore {
   @observable selectedSubmissions: ISolrSubmissionWithDate[] = []
   @observable openSubmission?: ISolrSubmissionWithDate
   @observable openSelection: [number, number, number] = [0, 0, 0]
+  @observable isMultiSelection: boolean = true
   toastStore: ToastStore
 
   constructor(props: ToastStore) {
     this.toastStore = props
+  }
+
+  @computed get hasManySelections() {
+    return this.selectedSubmissions.length > 1
   }
 
   @action reset() {
@@ -22,12 +27,23 @@ export class ReviewStore {
     this.openSelection = [0, 0, 0]
   }
 
+  @action toggleMultiSelection = () => {
+    if (this.isMultiSelection) {
+      this.selectedSubmissions = this.selectedSubmissions.filter(s => s.id === this.openSubmission!.id)
+    }
+    this.isMultiSelection = !this.isMultiSelection
+  }
+
   @action setOpenSubmission(s?: ISolrSubmissionWithDate, selection: [number, number, number] = [0, 0, 0]) {
-    if (s) {
+    if (s && this.isMultiSelection) {
       const found = this.selectedSubmissions.find(ss => ss.id === s.id)
       if (!found) {
         this.selectedSubmissions.push(s)
       }
+    } else if (s) {
+      this.selectedSubmissions = [s]
+    } else if (this.isMultiSelection) {
+      this.selectedSubmissions = []
     } else {
       this.selectedSubmissions = this.selectedSubmissions.filter(s => s.id !== this.openSubmission!.id)
     }

@@ -3,6 +3,7 @@ import { inject } from 'mobx-react'
 import styled from '../theme/styled'
 
 import { SearchView } from '../components/Search'
+import { DeleteReviewSelectionModal } from '../modals/DeleteReviewSelectionModal'
 
 import { Stores } from '../stores'
 import { AuthStore } from '../stores/AuthStore'
@@ -19,6 +20,7 @@ export class FrontPage extends React.PureComponent<IProps> {
     return (
       <Container>
         <SearchView />
+        <DeleteReviewSelectionModal />
         <header>
           <h1><a href="https://github.com/Aalto-LeTech/CodeClusters">Code Clusters</a></h1>
           <p><i>The tool to solve all your problems...</i></p>

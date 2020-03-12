@@ -20,6 +20,8 @@ function getIntentColor(theme: ITheme, intent?: Intent) {
       return theme.color.red
     case 'warning':
       return theme.color.yellow
+    case 'transparent':
+      return 'transparent'
     case 'primary':
     default:
       return theme.color.primary
@@ -31,6 +33,7 @@ function getIntentTextColor(theme: ITheme, intent?: Intent) {
     case 'success':
     case 'danger':
     case 'warning':
+    case 'transparent':
       return theme.color.textDark
     case 'primary':
     default:

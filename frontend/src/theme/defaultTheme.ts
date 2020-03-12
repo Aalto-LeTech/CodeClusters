@@ -11,8 +11,12 @@ export const breakpoints = {
 export const defaultTheme : ITheme = {
   color: {
     bg: '#fff',
-    gray: '#aaa',
-    grayLight: '#eee',
+    gray: {
+      lightest: 'rgba(0, 0, 0, 0.08)',
+      lighter: '#eee',
+      light: '#ccc',
+      default: '#aaa',
+    },
     primary: '#1d9eff',
     primaryDark: '#0070cb', // Using https://material.io/resources/color/#!/?view.left=0&view.right=1&primary.color=1d9eff
     green: '#00e676',

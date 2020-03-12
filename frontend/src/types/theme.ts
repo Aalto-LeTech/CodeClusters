@@ -1,6 +1,10 @@
 export interface IThemeColor {
-  gray: string
-  grayLight: string
+  gray: {
+    lightest: string
+    lighter: string
+    light: string
+    default: string
+  }
   green: string
   orange: string
   blue: string
@@ -23,7 +27,7 @@ export interface IBreakpoints {
   MOBILE_WIDTH: string
 }
 
-export type Intent = 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info'
+export type Intent = 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'transparent'
 
 export interface ITheme {
   color: IThemeColor
