@@ -28,7 +28,7 @@ export const FloatingMenu = inject('reviewStore')(observer((props: IProps) => {
     <Wrapper className={className}>
       <Container>
         <Header>
-          <Title>Currently selected: {reviewStore!.selectedSubmissions.length}</Title>
+          <Title>Currently selected: {reviewStore!.currentSelectionCount}</Title>
           <Icon button onClick={handleClickToggle}>
             { minimized ? <FiChevronDown size={18}/> : <FiChevronUp size={18}/>}
           </Icon>

@@ -58,7 +58,7 @@ export const ReviewCreatePage = inject('reviewStore')(observer((props: IProps) =
     setSubmissionId(submission.id)
   }
   function handleSubmit(data: IReviewFormParams) {
-    const payload = { ...data, submission_id: submissionId }
+    const payload = { ...data, submission_id: submissionId.toString() }
     return reviewStore.addReview(payload)
   }
   return (

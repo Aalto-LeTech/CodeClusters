@@ -3,6 +3,7 @@ import { inject, observer } from 'mobx-react'
 import styled from '../../theme/styled'
 
 import { FloatingReviewMenu } from '../FloatingReviewMenu'
+import { CodeLine } from './CodeLine'
 import { Button } from '../../elements/Button'
 
 import { ReviewStore } from '../../stores/ReviewStore'
@@ -19,23 +20,26 @@ const ResultItemEl = inject('reviewStore')(observer((props: IProps) => {
   const { className, result, latestQuery, reviewStore } = props
   const [codeLines, setCodeLines] = useState([] as string[])
   const [matches, setMatches] = useState(0)
-  const [isActive, setIsActive] = useState(false)
-  const [lineReviewMenuOpenTo, setLineReviewMenuOpenTo] = useState(-1)
+
   useEffect(() => {
     const hl = result.highlighted[0]
     setCodeLines(hl.split("\n"))
     setMatches((hl.match(/<mark>/g) || []).length)
   }, [result])
-  function isReviewOpenOnLine(idx: number) {
-    const openSubmission = reviewStore!.openSubmission
-    const openSelection = reviewStore!.openSelection
-    if (openSubmission && openSelection[0] !== 0) {
-      return openSubmission.id === result.id && openSelection[0] === idx
+
+  function isLineActive(idx: number) {
+    if (reviewStore!.selected === result.id) {
+      const selection = reviewStore!.getSelection(result.id)
+      return selection !== undefined && selection.selection[0] === idx
     }
     return false
   }
+  function isLineSelected(idx: number) {
+    const selection = reviewStore!.getSelection(result.id)
+    return reviewStore!.selected !== result.id && selection !== undefined && selection.selection[0] === idx
+  }
   function handleLineClick(idx: number) {
-    if (!isReviewOpenOnLine(idx)) {
+    if (!isLineActive(idx)) {
       const selection = codeLines.reduce((acc, cur, i) => {
         if (i < idx) {
           acc[1] += cur.length + 2
@@ -63,17 +67,7 @@ const ResultItemEl = inject('reviewStore')(observer((props: IProps) => {
       </CodeHeader>
       <pre className="code">
         {codeLines.map((line, i) =>
-        <CodeLineWrapper key={`c-${i}`}>
-        { isReviewOpenOnLine(i) &&
-        <ReviewMenuWrapper>
-           <FloatingReviewMenu />
-        </ReviewMenuWrapper>}
-        <CodeLine
-          active={isReviewOpenOnLine(i)}
-          dangerouslySetInnerHTML={{ __html: line }}
-          onClick={() => handleLineClick(i)}
-        />
-        </CodeLineWrapper>
+        <CodeLine key={`c-${i}`} code={line} active={isLineActive(i)} selected={isLineSelected(i)} index={i} onClick={handleLineClick}/>
         )}
       </pre>
       <Controls>
@@ -116,26 +110,6 @@ const CodeHeader = styled.div`
 `
 const HeaderLeft = styled.div``
 const HeaderRight = styled.div``
-const ReviewMenuWrapper = styled.div`
-  position: relative;
-  & > ${FloatingReviewMenu} {
-    left: -300px;
-    position: absolute;
-    top: 0;
-    width: 288px;
-  }
-`
-const CodeLineWrapper = styled.div``
-const CodeLine = styled.div<{ active?: boolean }>`
-  background: ${({ active, theme }) => active ? '#666' : '#222'};
-  cursor: pointer;
-  &:hover {
-    background: #666;
-  }
-  & > mark {
-    background: yellow;
-  }
-`
 const Controls = styled.div`
   margin-top: 1rem;
   & > h3 {

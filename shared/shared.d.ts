@@ -15,7 +15,7 @@ declare module 'shared' {
     metadata: string
   }
   export interface IReviewCreateParams {
-    submission_id: number
+    submission_id: string
     message: string
     metadata: string
   }
@@ -130,7 +130,7 @@ declare module 'shared' {
   }
   export interface ISolrSubmission {
     _version_: number
-    id: number
+    id: string
     student_id: number
     course_id: number
     exercise_id: number
@@ -138,7 +138,7 @@ declare module 'shared' {
   }
   export interface ISolrSubmissionWithDate {
     _version_: number
-    id: number
+    id: string
     student_id: number
     course_id: number
     exercise_id: number
@@ -157,5 +157,9 @@ declare module 'shared' {
     exercise_id: number
     code: string
     date: Date
+  }
+  export interface IReviewSelection {
+    submission_id: string
+    selection: [number, number, number]
   }
 }

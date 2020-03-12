@@ -44,7 +44,7 @@ const FloatingReviewMenuEl = inject((stores: Stores) => ({
     if (reviewStore!.hasManySelections && reviewStore!.isMultiSelection) {
       modalStore!.openModal('deleteReviewSelection', {
         submit: () => reviewStore!.toggleMultiSelection(),
-        count: reviewStore!.selectedSubmissions.length - 1
+        count: reviewStore!.currentSelectionCount - 1
       })
     } else {
       reviewStore!.toggleMultiSelection()
@@ -57,8 +57,8 @@ const FloatingReviewMenuEl = inject((stores: Stores) => ({
     reviewStore!.setOpenSubmission()
   }
   async function handleSubmit(data: IReviewFormParams, onSuccess: () => void, onError: () => void) {
-    const submission_id = reviewStore!.openSubmission!.id
-    // const selection = reviewStore!.openSelection
+    const submission_id = reviewStore!.currentSelection!.submission_id
+    // const selection = reviewStore!.currentSelection
     const payload = { ...data, submission_id }
     const result = await reviewStore!.addReview(payload)
     if (result) {

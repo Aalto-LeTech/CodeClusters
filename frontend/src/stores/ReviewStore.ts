@@ -1,14 +1,13 @@
 import { action, computed, runInAction, observable } from 'mobx'
 import * as reviewApi from '../api/review.api'
 
-import { IReviewWithDate, IReviewCreateParams, ISolrSubmissionWithDate } from 'shared'
+import { IReviewWithDate, IReviewCreateParams, IReviewSelection, ISolrSubmissionWithDate } from 'shared'
 import { ToastStore } from './ToastStore'
 
 export class ReviewStore {
   @observable reviews: IReviewWithDate[] = []
-  @observable selectedSubmissions: ISolrSubmissionWithDate[] = []
-  @observable openSubmission?: ISolrSubmissionWithDate
-  @observable openSelection: [number, number, number] = [0, 0, 0]
+  @observable openSelections: { [id: string]: IReviewSelection } = {}
+  @observable selected = ''
   @observable isMultiSelection: boolean = true
   toastStore: ToastStore
 
@@ -16,39 +15,64 @@ export class ReviewStore {
     this.toastStore = props
   }
 
+  @computed get currentSelection() {
+    if (this.selected !== '') {
+      return this.openSelections[this.selected]
+    }
+    return undefined
+  }
+
+  @computed get hasCurrentSelection() {
+    return this.selected !== ''
+  }
+
+  @computed get currentSelectionCount() {
+    return Object.keys(this.openSelections).length
+  }
+
   @computed get hasManySelections() {
-    return this.selectedSubmissions.length > 1
+    return Object.keys(this.openSelections).length > 1
+  }
+
+  getSelection(id: string) : IReviewSelection | undefined {
+    return this.openSelections[id]
   }
 
   @action reset() {
     this.reviews = []
-    this.selectedSubmissions = []
-    this.openSubmission = undefined
-    this.openSelection = [0, 0, 0]
+    this.openSelections = {}
+    this.selected = ''
   }
 
   @action toggleMultiSelection = () => {
-    if (this.isMultiSelection) {
-      this.selectedSubmissions = this.selectedSubmissions.filter(s => s.id === this.openSubmission!.id)
+    if (this.isMultiSelection && this.currentSelection) {
+      this.openSelections = { [this.selected]: this.currentSelection }
     }
     this.isMultiSelection = !this.isMultiSelection
   }
 
   @action setOpenSubmission(s?: ISolrSubmissionWithDate, selection: [number, number, number] = [0, 0, 0]) {
     if (s && this.isMultiSelection) {
-      const found = this.selectedSubmissions.find(ss => ss.id === s.id)
-      if (!found) {
-        this.selectedSubmissions.push(s)
+      this.openSelections[s.id] = {
+        submission_id: s.id,
+        selection,
       }
+      this.selected = s.id
     } else if (s) {
-      this.selectedSubmissions = [s]
+      this.openSelections = {
+        [s.id]: {
+          submission_id: s.id,
+          selection,
+        }
+      }
+      this.selected = s.id
     } else if (this.isMultiSelection) {
-      this.selectedSubmissions = []
+      this.openSelections = {}
+      this.selected = ''
     } else {
-      this.selectedSubmissions = this.selectedSubmissions.filter(s => s.id !== this.openSubmission!.id)
+      delete this.openSelections[this.selected]
+      this.selected = ''
     }
-    this.openSubmission = s
-    this.openSelection = selection
   }
 
   @action getReviews = async () => {

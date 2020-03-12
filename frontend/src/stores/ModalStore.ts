@@ -12,7 +12,7 @@ interface IModals {
 export class ModalStore {
   @observable modals = {
     deleteReviewSelection: {
-      isOpen: true,
+      isOpen: false,
       params: {
         submit: () => undefined,
         count: 0
