@@ -6,6 +6,7 @@ import { FiTrash, FiMaximize2 } from 'react-icons/fi'
 import { Button } from '../elements/Button'
 import { Input } from '../elements/Input'
 import { Icon } from '../elements/Icon'
+import { CheckBox } from '../elements/CheckBox'
 
 import { ReviewStore } from '../stores/ReviewStore'
 import { ITheme } from '../types/theme'
@@ -28,6 +29,7 @@ const EMPTY_REVIEW_FORM_PARAMS: IReviewFormParams = {
 const FloatingReviewMenuEl = inject('reviewStore')(observer((props: IProps) => {
   const { className, reviewStore } = props
   const [review, setReview] = useState(EMPTY_REVIEW_FORM_PARAMS)
+  const [useMultiselect, setUseMultiselect] = useState(false)
 
   function handleClickMaximize() {
 
@@ -58,6 +60,15 @@ const FloatingReviewMenuEl = inject('reviewStore')(observer((props: IProps) => {
           <Icon button onClick={handleClickMaximize}><FiMaximize2 size={18}/></Icon>
         </Header>
         <Body>
+          <CheckBoxField>
+            <CheckBox
+              name="use_multiselect"
+              type="toggle"
+              checked={useMultiselect}
+              onChange={() => setUseMultiselect(!useMultiselect)}
+            />
+            <CheckBoxText title="Select multiple selections">Use multiselect</CheckBoxText>
+          </CheckBoxField>
           <ReviewForm
             data={review}
             onUpdateReview={handleUpdateReview}
@@ -69,7 +80,7 @@ const FloatingReviewMenuEl = inject('reviewStore')(observer((props: IProps) => {
   )
 }))
 
-const Title = styled.h4`
+const Title = styled.h3`
   margin: 0;
 `
 const Wrapper = styled.div`
@@ -90,13 +101,23 @@ const Header = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
-  margin: 0 0 1rem 0;
+  margin-bottom: 0.5rem;
   width: 100%;
 `
 const Body = styled.div`
   display: flex;
-  justify-content: space-around;
+  flex-direction: column;
   width: 100%;
+`
+const CheckBoxField = styled.div`
+  display: flex;
+  margin: 0 0 1rem 0;
+`
+const CheckBoxText = styled.label`
+  align-items: center;
+  display: flex;
+  margin-left: 1rem;
+  padding: 3px 0;
 `
 
 interface IFormProps {
@@ -178,7 +199,7 @@ const ReviewForm = styled((props: IFormProps) => {
         <Button
           intent="danger"
           onClick={onDelete}
-        >Remove</Button>
+        >Cancel</Button>
       </Buttons>
     </Form>
   )

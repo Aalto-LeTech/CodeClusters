@@ -29,7 +29,7 @@ const SearchBarEl = memo(forwardRef((props: IProps, ref) => {
         </IconWrapper>
         <StyledInput
           fullWidth
-          type="text"
+          type="search"
           placeholder={"Search"}
           autocomplete="off"
           name={name}

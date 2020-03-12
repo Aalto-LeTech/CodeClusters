@@ -6,7 +6,7 @@ interface IProps {
   value?: string | number
   name?: string
   autocomplete?: 'on' | 'off'
-  type?: 'email' | 'password' | 'text' | 'number' | 'textarea'
+  type?: 'email' | 'password' | 'text' | 'number' | 'search' | 'textarea'
   icon?: React.ReactNode
   iconPadding?: string
   fullWidth?: boolean

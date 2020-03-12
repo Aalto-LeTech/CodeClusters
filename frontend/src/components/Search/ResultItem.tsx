@@ -40,7 +40,7 @@ const ResultItemEl = inject('reviewStore')(observer((props: IProps) => {
         if (i < idx) {
           acc[1] += cur.length + 2
         } else if (i === idx) {
-          acc[2] = acc[0] + 2 +   cur.length
+          acc[2] = acc[0] + 2 + cur.length
         }
         return acc
       }, [idx, 0, 0] as [number, number, number])

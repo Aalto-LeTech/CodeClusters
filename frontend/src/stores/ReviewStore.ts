@@ -29,7 +29,7 @@ export class ReviewStore {
         this.selectedSubmissions.push(s)
       }
     } else {
-      this.selectedSubmissions = this.selectedSubmissions.filter(s => s.id === this.openSubmission!.id)
+      this.selectedSubmissions = this.selectedSubmissions.filter(s => s.id !== this.openSubmission!.id)
     }
     this.openSubmission = s
     this.openSelection = selection
