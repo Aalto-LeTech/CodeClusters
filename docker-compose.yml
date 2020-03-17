@@ -51,6 +51,5 @@ services:
       - 8983:8983
     volumes:
       - ./solr/data:/var/solr
-    command:
-      - solr-precreate
-      - gettingstarted
+    command: ["solr-precreate", "gettingstarted"]
+    # command: ["solr-precreate", "submission-search", "/opt/solr-8.4.1/config"]

@@ -16,7 +16,7 @@ case "$1" in
     docker cp $2 $CONTAINER_ID:/opt/solr-8.4.1/contrib/dataimporthandler
     ;;
   data-import)
-    curl http://localhost:8983/solr/gettingstarted/dataimport?command=full-import
+    CURL=$(curl http://localhost:8983/solr/gettingstarted/dataimport?command=full-import&entity=submission)
     ;;
   start)
     docker-compose up -d solr
