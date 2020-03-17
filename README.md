@@ -52,12 +52,11 @@ It should reside in http://localhost:8500. If you want to change it, remember to
 The instructions for this are still a little bit hazy. TODO schema.xml / managed-schema mismatch. In theory what you should do:
 
 1. Start the solr server: `docker-compose up -d solr`
-2. Add the lines from `solrconfig.add.xml` to the `solrconfig.xml` in `/solr/data/data/gettingstarted/conf`
-3. Copy the files `data-config.xml` and `schema.xml` to that folder
-4. Copy the Postgres driver to the container with: `./solr.sh copy-jar ./solr/postgresql-42.2.10.jar`
-5. Restart the solr: `docker-compose restart solr`
-6. Go to the GUI at http://localhost:8983 and see that there are no errors clicking the `Logging` link
+2. Add the lines from `solrconfig-add.xml` to the `solrconfig.xml` in `/solr/data/data/gettingstarted/conf`
+3. Copy the files `data-config.xml` and `schema.xml` to the same folder
+4. Restart the solr: `docker-compose restart solr`
+5. Run `./solr.sh data-import`
+6. Visit the the GUI at http://localhost:8983 and see that there are no errors clicking the `Logging` link
 7. Select the "gettingstarted" core from the `Core Selector` dropdown
-8. Click the `Dataimport` page open and execute the import query selecting `submission`-entity. Refresh status to see if it has successfully imported the database rows
-9. Click the `Query` tab and click `Execute Query` you should 10 results with the fields as specified in the schema
-10. If all successful, you are good to go. If not, Google is your best friend
+8. Go to the `Query` page and click `Execute Query` without adding any parameters
+9. This should return 112 records. If not, Google is your best friend
