@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../theme/styled'
 
-import { ReviewsList } from '../components/ReviewsList'
+import { ReviewedSubmissionsList } from '../components/ReviewsView'
 
 import { RouteComponentProps } from 'react-router'
 import { ReviewStore } from '../stores/ReviewStore'
@@ -38,7 +38,7 @@ export const ReviewViewPage = inject('reviewStore')(observer((props: IProps) => 
       </header>
       <Body>
         { loading ? 'Loading' :
-        <ReviewsList isStudent reviews={reviewStore!.reviews}/>
+        <ReviewedSubmissionsList isStudent reviewedSubmissions={reviewStore!.reviewedSubmissions}/>
         }
       </Body>
     </Container>

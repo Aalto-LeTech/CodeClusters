@@ -7,18 +7,26 @@ declare module 'shared' {
   export interface IReviewWithDate extends IReview {
     date: Date
   }
-  export interface IReview {
-    review_id: number
-    submission_id: number
-    timestamp: string
-    selection: [number, number, number]
+  export interface IReviewBody {
     message: string
     metadata: string
+    timestamp: string
+    selection: [number, number, number]
+  }
+  export interface IReviewedSubmission {
+    reviews: IReviewBody[]
+    code: string
+  }
+  export interface IReview {
+    review_id: number
+    message: string
+    metadata: string
+    timestamp: string
   }
   export interface IReviewCreateParams {
     selections: IReviewSelection[]
     message: string
-    metadata: string
+    metadata?: string
   }
 
   type SubmissionWithoutId = OmitProp<ISubmission, 'submission_id'>

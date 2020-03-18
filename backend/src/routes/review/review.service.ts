@@ -3,30 +3,38 @@ import { dbService } from '../../db/db.service'
 import { IReview, IUserReview, IReviewCreateParams } from 'shared'
 
 export const reviewService = {
-  getReviews: async (studentId?: number) : Promise<IReview[]> => {
-    if (studentId) {
-      return await dbService.queryMany<IReview>(`
-        SELECT review_id, submission_id, message, metadata, review.timestamp FROM review
-        JOIN submission ON submission_id = submission.id
-        WHERE submission.student_id = $1
-      `, [studentId])
-    }
+  getReviews: async () : Promise<IReview[]> => {
     return await dbService.queryMany<IReview>(`
-      SELECT review_id, submission_id, message, metadata, timestamp FROM review
+    SELECT json_agg(json_build_object(
+      'message', review.message,
+      'metadata', review.metadata,
+      'timestamp', review.timestamp,
+      'selection', review_submissions.selection
+    )) AS reviews, submission.code FROM submission
+    JOIN review_submissions ON submission.submission_id = review_submissions.submission_id
+    JOIN review ON review.review_id = review_submissions.review_id
+    GROUP BY(submission.submission_id, submission.code)
     `)
   },
   getUserReviews: async (studentId: number) : Promise<IUserReview[]> => {
     return await dbService.queryMany<IUserReview>(`
-      SELECT review_id, message, review.timestamp FROM review
-      JOIN review_submissions ON review_id = review_submissions.review_id
+      SELECT json_agg(json_build_object(
+        'message', review.message,
+        'metadata', review.metadata,
+        'timestamp', review.timestamp,
+        'selection', review_submissions.selection
+      )) AS reviews, submission.code FROM submission
+      JOIN review_submissions ON submission.submission_id = review_submissions.submission_id
+      JOIN review ON review.review_id = review_submissions.review_id
       WHERE submission.student_id = $1
+      GROUP BY(submission.submission_id, submission.code)
     `, [studentId])
   },
   createReview: async (params: IReviewCreateParams) : Promise<any> => {
     const savedReview = await dbService.queryOne<IReview | undefined>(`
       INSERT INTO review (message, metadata)
       VALUES($1, $2) RETURNING review_id, message, metadata, timestamp
-    `, [params.message, params.metadata])
+    `, [params.message, params.metadata || ''])
 
     function createValues(params: IReviewCreateParams, reviewId: number) {
       return params.selections.reduce((acc, cur, i) => {

@@ -55,7 +55,7 @@ export const ReviewCreatePage = inject('reviewStore')(observer((props: IProps) =
     setReviews(deleted)
   }
   function handleSelectSubmission(submission: ISubmissionWithDate) {
-    setSubmissionId(submission.id)
+    setSubmissionId(submission.submission_id)
   }
   function handleSubmit(data: IReviewFormParams) {
     return Promise.resolve(undefined)

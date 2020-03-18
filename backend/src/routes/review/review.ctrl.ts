@@ -15,7 +15,7 @@ export const REVIEW_SELECTION_SCHEMA = Joi.object({
 
 export const REVIEW_CREATE_SCHEMA = Joi.object({
   message: Joi.string().min(1).max(102400).required(),
-  metadata: Joi.string().min(1).max(102400).required(),
+  metadata: Joi.string().allow('').max(102400),
   selections: Joi.array().items(REVIEW_SELECTION_SCHEMA).required()
 })
 
@@ -31,13 +31,13 @@ export const REVIEW_LIST_QUERY_PARAMS = Joi.object({
 
 export const getReviews = async (req: IAuthRequest<{}, IReviewListQueryParams>, res: Response, next: NextFunction) => {
   try {
-    let reviews = [] as IReview[] | IUserReview[]
+    let reviewedSubmissions = [] as IReview[] | IUserReview[]
     if (req.queryParams.user_id) {
-      reviews = await reviewService.getUserReviews(req.queryParams.user_id)
+      reviewedSubmissions = await reviewService.getUserReviews(req.queryParams.user_id)
     } else {
-      reviews = await reviewService.getReviews()
+      reviewedSubmissions = await reviewService.getReviews()
     }
-    res.json({ reviews })
+    res.json({ reviewedSubmissions })
   } catch (err) {
     next(err)
   }

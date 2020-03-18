@@ -1,11 +1,11 @@
 import { action, computed, runInAction, observable } from 'mobx'
 import * as reviewApi from '../api/review.api'
 
-import { IReviewWithDate, IReviewCreateParams, IReviewSelection, ISolrSubmissionWithDate } from 'shared'
+import { IReviewedSubmission, IReviewCreateParams, IReviewSelection, ISolrSubmissionWithDate } from 'shared'
 import { ToastStore } from './ToastStore'
 
 export class ReviewStore {
-  @observable reviews: IReviewWithDate[] = []
+  @observable reviewedSubmissions: IReviewedSubmission[] = []
   @observable openSelections: { [id: string]: IReviewSelection } = {}
   @observable selected = ''
   @observable isMultiSelection: boolean = true
@@ -39,7 +39,7 @@ export class ReviewStore {
   }
 
   @action reset() {
-    this.reviews = []
+    this.reviewedSubmissions = []
     this.openSelections = {}
     this.selected = ''
   }
@@ -79,7 +79,7 @@ export class ReviewStore {
     const result = await reviewApi.getReviews()
     runInAction(() => {
       if (result) {
-        this.reviews = result.reviews.map(r => ({ ...r, date: new Date(r.timestamp) }))
+        this.reviewedSubmissions = result.reviewedSubmissions
       }
     })
     return result
@@ -89,7 +89,7 @@ export class ReviewStore {
     const result = await reviewApi.getUserReviews(userId)
     runInAction(() => {
       if (result) {
-        this.reviews = result.reviews.map(r => ({ ...r, date: new Date(r.timestamp) }))
+        this.reviewedSubmissions = result.reviewedSubmissions
       }
     })
     return result

@@ -23,7 +23,7 @@ const SelectSubmissionListEl = inject('submissionStore')(observer((props: IProps
     })
   }, [submissionStore])
   function handleSelect(submission: ISubmissionWithDate) {
-    setSubmissionId(submission.id)
+    setSubmissionId(submission.submission_id)
     onSelect(submission)
   }
   return (
@@ -31,7 +31,7 @@ const SelectSubmissionListEl = inject('submissionStore')(observer((props: IProps
       { loading ? 'Loading' :
       <SubmissionsList>
         { submissionStore!.submissions.map((s: ISubmissionWithDate, i: number) =>
-        <SubmissionsListItem key={i} onClick={() => handleSelect(s)} selected={s.id === submissionId}>
+        <SubmissionsListItem key={i} onClick={() => handleSelect(s)} selected={s.submission_id === submissionId}>
           <p>Student id: {s.student_id}</p>
           <p>{s.date.toISOString()}</p>
           <pre className="code">{s.code}</pre>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../theme/styled'
 
-import { ReviewsList } from '../components/ReviewsList'
+import { ReviewedSubmissionsList } from '../components/ReviewsView'
 
 import { ReviewStore } from '../stores/ReviewStore'
 
@@ -25,7 +25,7 @@ export const ReviewsPage = inject('reviewStore')(observer((props: IProps) => {
         <h1>Reviews</h1>
       </header>
       { loading ? 'Loading' :
-      <ReviewsList reviews={reviewStore!.reviews}/>
+      <ReviewedSubmissionsList reviewedSubmissions={reviewStore!.reviewedSubmissions}/>
       }
     </Container>
   )

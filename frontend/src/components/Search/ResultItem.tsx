@@ -19,11 +19,13 @@ interface IProps {
 const ResultItemEl = inject('reviewStore')(observer((props: IProps) => {
   const { className, result, latestQuery, reviewStore } = props
   const [codeLines, setCodeLines] = useState([] as string[])
+  const [rawCodeLines, setRawCodeLines] = useState([] as string[])
   const [matches, setMatches] = useState(0)
 
   useEffect(() => {
     const hl = result.highlighted[0]
     setCodeLines(hl.split("\n"))
+    setRawCodeLines(hl.replace('<mark>', '').replace('</mark>', '').split("\n"))
     setMatches((hl.match(/<mark>/g) || []).length)
   }, [result])
 
@@ -40,11 +42,11 @@ const ResultItemEl = inject('reviewStore')(observer((props: IProps) => {
   }
   function handleLineClick(idx: number) {
     if (!isLineActive(idx)) {
-      const selection = codeLines.reduce((acc, cur, i) => {
+      const selection = rawCodeLines.reduce((acc, cur, i) => {
         if (i < idx) {
-          acc[1] += cur.length + 2
+          acc[1] += cur.length + 1
         } else if (i === idx) {
-          acc[2] = acc[0] + 2 + cur.length
+          acc[2] = acc[1] + 1 + cur.length
         }
         return acc
       }, [idx, 0, 0] as [number, number, number])
