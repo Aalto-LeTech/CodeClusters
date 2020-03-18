@@ -11,16 +11,17 @@ declare module 'shared' {
     review_id: number
     submission_id: number
     timestamp: string
+    selection: [number, number, number]
     message: string
     metadata: string
   }
   export interface IReviewCreateParams {
-    submission_id: string
+    selections: IReviewSelection[]
     message: string
     metadata: string
   }
 
-  type SubmissionWithoutId = OmitProp<ISubmission, 'id'>
+  type SubmissionWithoutId = OmitProp<ISubmission, 'submission_id'>
   export interface ISubmissionCreateParams {
     student_id: number
     course_id: number
@@ -31,7 +32,7 @@ declare module 'shared' {
     date: Date
   }
   export interface ISubmission {
-    id: number
+    submission_id: number
     student_id: number
     course_id: number
     exercise_id: number
@@ -40,7 +41,7 @@ declare module 'shared' {
   }
 
   export interface IUser {
-    id: number
+    user_id: number
     name: string
     email: string
     student_id: number | null

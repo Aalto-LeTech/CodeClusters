@@ -1,13 +1,13 @@
 CREATE TYPE role AS ENUM ('ADMIN', 'TEACHER', 'STUDENT');
 
 CREATE TABLE student (
-	id SERIAL PRIMARY KEY,
+	student_id SERIAL PRIMARY KEY,
 	name TEXT NOT NULL,
 	username TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE app_user (
-	id SERIAL PRIMARY KEY,
+	user_id SERIAL PRIMARY KEY,
 	name VARCHAR(255) NOT NULL,
 	email VARCHAR(255) NOT NULL UNIQUE,
 	password TEXT NOT NULL,
@@ -16,13 +16,13 @@ CREATE TABLE app_user (
 );
 
 CREATE TABLE course (
-	id SERIAL PRIMARY KEY,
+	course_id SERIAL PRIMARY KEY,
 	name TEXT NOT NULL,
 	organization TEXT NOT NULL DEFAULT 'Aalto University'
 );
 
 CREATE TABLE exercise (
-	id SERIAL PRIMARY KEY,
+	exercise_id SERIAL PRIMARY KEY,
 	course_id INTEGER NOT NULL REFERENCES course ON DELETE CASCADE,
 	name TEXT NOT NULL
 );

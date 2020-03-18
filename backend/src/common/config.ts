@@ -3,7 +3,7 @@ if (process.env.NODE_ENV === undefined || process.env.NODE_ENV === 'local') {
 }
 
 export const config = {
-  ENV: process.env.NODE_ENV || 'local',
+  ENV: (process.env.NODE_ENV || 'local') as 'production' | 'local',
   PORT: process.env.PORT || 8600,
   CORS_SAME_ORIGIN: process.env.CORS_SAME_ORIGIN || true,
   LOG: {

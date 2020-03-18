@@ -8,7 +8,7 @@
     password="my-pg-password"
   />
   <document name="code_source">
-    <entity name="submission" query="SELECT id, course_id, exercise_id, student_id, code, timestamp FROM submission">
+    <entity name="submission" query="SELECT submission_id AS id, course_id, exercise_id, student_id, code, timestamp FROM submission">
       <field column="id" name="id"/>
       <field column="course_id" name="course_id"/>
       <field column="exercise_id" name="exercise_id"/>

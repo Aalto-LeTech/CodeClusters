@@ -1,4 +1,5 @@
 import axios, { AxiosError } from 'axios'
+import { log } from './logger'
 
 import { config } from './config'
 
@@ -22,8 +23,9 @@ const createRequest = <T>(url: string, options: any) : Promise<T> => {
     .catch((err: AxiosError) => {
       if (err.response) {
         const data = err.response.data
-        if (config.ENV === 'development') {
-          console.error(data)
+        if (config.ENV === 'local') {
+          log.error('Handled axios error: ')
+          log.error(JSON.stringify(data, null, 2))
         }
         const msg = data!.error!.msg // Solr errors are in this path
         throw new Error(msg || data)

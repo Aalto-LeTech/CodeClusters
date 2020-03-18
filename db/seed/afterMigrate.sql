@@ -33,6 +33,9 @@ int main() {
   return 0;
 }');
 
-INSERT INTO review (submission_id, message, metadata) VALUES (1, 'Tarkista funktion tyyppi. Tarkista tulostus!',
-  'Hah');
-INSERT INTO review (submission_id, message, metadata) VALUES (2, 'Tarkista tulostus!', 'Höh');
+INSERT INTO review (message, metadata) VALUES ('Tarkista funktion tyyppi. Tarkista tulostus!', 'Hah');
+INSERT INTO review (message, metadata) VALUES ('Tarkista tulostus!', 'Höh');
+
+INSERT INTO review_submissions (review_id, submission_id, selection) VALUES (1, 1, array[1, 10, 14]);
+INSERT INTO review_submissions (review_id, submission_id, selection) VALUES (2, 1, array[2, 20, 40]);
+INSERT INTO review_submissions (review_id, submission_id, selection) VALUES (2, 2, array[2, 20, 40]);

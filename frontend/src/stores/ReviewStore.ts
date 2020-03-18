@@ -95,8 +95,13 @@ export class ReviewStore {
     return result
   }
 
-  @action addReview = async (payload: IReviewCreateParams) => {
+  @action addReview = async (message: string, metadata: string) => {
     let result
+    const payload = {
+      message,
+      metadata,
+      selections: Object.values(this.openSelections),
+    }
     try {
       result = await reviewApi.addReview(payload)
       if (result) {

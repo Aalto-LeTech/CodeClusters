@@ -18,6 +18,7 @@ function login() {
   })
   .catch((err) => {
     console.log('Login failed:', err)
+    throw err
   })
 }
 

@@ -8,10 +8,15 @@ import { IAuthRequest } from '../../types/auth'
 import { IReview, IUserReview, IReviewCreateParams } from 'shared'
 import { IReviewListQueryParams } from './review.types'
 
-export const REVIEW_CREATE_SCHEMA = Joi.object({
+export const REVIEW_SELECTION_SCHEMA = Joi.object({
   submission_id: Joi.number().integer().required(),
+  selection: Joi.array().items(Joi.number().integer()).length(3).required(),
+})
+
+export const REVIEW_CREATE_SCHEMA = Joi.object({
   message: Joi.string().min(1).max(102400).required(),
   metadata: Joi.string().min(1).max(102400).required(),
+  selections: Joi.array().items(REVIEW_SELECTION_SCHEMA).required()
 })
 
 export const REVIEW_SCHEMA = Joi.object({
