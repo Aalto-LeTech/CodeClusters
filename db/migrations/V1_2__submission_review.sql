@@ -1,5 +1,5 @@
 CREATE TABLE submission (
-	submission_id SERIAL PRIMARY KEY,
+	submission_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
 	course_id INTEGER NOT NULL REFERENCES course,
 	exercise_id INTEGER NOT NULL REFERENCES exercise,
 	student_id INTEGER NOT NULL REFERENCES student,
@@ -16,7 +16,7 @@ CREATE TABLE review (
 
 CREATE TABLE review_submissions (
 	review_id INTEGER NOT NULL REFERENCES review ON DELETE CASCADE,
-	submission_id INTEGER NOT NULL REFERENCES submission ON DELETE CASCADE,
+	submission_id uuid NOT NULL REFERENCES submission ON DELETE CASCADE,
 	selection INTEGER[3] DEFAULT NULL,
 	PRIMARY KEY(review_id, submission_id)
 );

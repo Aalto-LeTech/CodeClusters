@@ -18,7 +18,6 @@ case "$1" in
     ;;
   reset)
     psql postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME} <<EOF
-DROP SCHEMA audit CASCADE;
 DROP SCHEMA public CASCADE;
 CREATE SCHEMA public;
 EOF
@@ -33,6 +32,6 @@ EOF
     cd ./db/generator && npm start
     ;;
   *)
-    echo $"Usage: $0 connect|migrate|reset|start|stop"
+    echo $"Usage: $0 connect|logs|migrate|reset|start|stop|testdata"
     exit 1
 esac

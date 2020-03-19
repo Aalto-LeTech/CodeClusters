@@ -119,7 +119,7 @@ declare module 'shared' {
       params: {
         _: number
         q: string
-        id?: number
+        id?: string
         student_id?: number
         course_id?: number
         exercise_id?: number
@@ -160,7 +160,7 @@ declare module 'shared' {
     results: ISearchResult[]
   }
   export interface ISearchResult {
-    id: number
+    id: string
     student_id: number
     course_id: number
     exercise_id: number

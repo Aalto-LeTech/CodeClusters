@@ -19,7 +19,7 @@ case "$1" in
     CURL=$(curl http://localhost:8983/solr/gettingstarted/dataimport?command=full-import&entity=submission)
     ;;
   start)
-    docker-compose up -d solr
+    docker-compose build solr && docker-compose up -d solr
     ;;
   stop)
     docker-compose stop solr
