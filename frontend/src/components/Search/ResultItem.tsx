@@ -1,9 +1,8 @@
-import React, { memo, useState, useEffect } from 'react'
+import React, { memo, useMemo, useState, useEffect } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../../theme/styled'
 
-import { FloatingReviewMenu } from '../FloatingReviewMenu'
-import { CodeLine } from './CodeLine'
+import { CodeBlock } from './CodeBlock'
 import { Button } from '../../elements/Button'
 
 import { ReviewStore } from '../../stores/ReviewStore'
@@ -21,6 +20,7 @@ const ResultItemEl = inject('reviewStore')(observer((props: IProps) => {
   const [codeLines, setCodeLines] = useState([] as string[])
   const [rawCodeLines, setRawCodeLines] = useState([] as string[])
   const [matches, setMatches] = useState(0)
+  const showMenuForThisReview = useMemo(() => reviewStore!.selectedId === result.id, [reviewStore!.selectedId])
 
   useEffect(() => {
     const hl = result.highlighted[0]
@@ -29,34 +29,25 @@ const ResultItemEl = inject('reviewStore')(observer((props: IProps) => {
     setMatches((hl.match(/<mark>/g) || []).length)
   }, [result])
 
-  function isLineActive(idx: number) {
-    if (reviewStore!.selected === result.id) {
-      const selection = reviewStore!.getSelection(result.id)
-      return selection !== undefined && selection.selection[0] === idx
-    }
-    return false
+  function isResultSelected() {
+    return reviewStore!.getSelection(result.id) !== undefined
   }
-  function isLineSelected(idx: number) {
-    const selection = reviewStore!.getSelection(result.id)
-    return reviewStore!.selected !== result.id && selection !== undefined && selection.selection[0] === idx
+  function handleToggleSelection() {
+    reviewStore!.toggleSelection(result)
   }
   function handleLineClick(idx: number) {
-    if (!isLineActive(idx)) {
-      const selection = rawCodeLines.reduce((acc, cur, i) => {
-        if (i < idx) {
-          acc[1] += cur.length + 1
-        } else if (i === idx) {
-          acc[2] = acc[1] + 1 + cur.length
-        }
-        return acc
-      }, [idx, 0, 0] as [number, number, number])
-      reviewStore!.setOpenSubmission(result, selection)
-    } else {
-      reviewStore!.setOpenSubmission()
-    }
+    const selection = rawCodeLines.reduce((acc, cur, i) => {
+      if (i < idx) {
+        acc[1] += cur.length + 1
+      } else if (i === idx) {
+        acc[2] = acc[1] + 1 + cur.length
+      }
+      return acc
+    }, [idx, 0, 0] as [number, number, number])
+    reviewStore!.toggleSelection(result, selection)
   }
   return (
-    <Container className={className}>
+    <Container className={className} active={isResultSelected()}>
       <CodeHeader>
         <HeaderLeft>
           <div>Student id: {result.student_id}</div>
@@ -67,16 +58,14 @@ const ResultItemEl = inject('reviewStore')(observer((props: IProps) => {
           <div>{matches} matches</div>
         </HeaderRight>
       </CodeHeader>
-      <pre className="code">
-        {codeLines.map((line, i) =>
-        <CodeLine key={`c-${i}`} code={line} active={isLineActive(i)} selected={isLineSelected(i)} index={i} onClick={handleLineClick}/>
-        )}
-      </pre>
+      <CodeBlock
+        codeLines={codeLines}
+        activeSelection={reviewStore?.getSelection(result.id)}
+        showMenu={showMenuForThisReview}
+        onSelectCodeLine={handleLineClick}
+      />
       <Controls>
-        <h3>Review</h3>
         <Buttons>
-          <Button intent="success">Select</Button>
-          <Button intent="danger">Discard</Button>
           <Button intent="info">Examine</Button>
         </Buttons>
       </Controls>
@@ -84,24 +73,17 @@ const ResultItemEl = inject('reviewStore')(observer((props: IProps) => {
   )
 }))
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  background: #ededed;
+const Container = styled.div<{ active: boolean }>`
+  background: ${({ active, theme }) => active ? theme.color.red : '#ededed'};
   border-radius: 0.25rem;
+  cursor: pointer;
   display: flex;
   flex-direction: column;
-  .code {
-    background: #222;
-    border-radius: 0.25rem;
-    color: #fff;
-    margin: 0;
-    padding: 10px;
-  }
-  .message {
-    background: rgba(255, 0, 0, 0.4);
-    padding: 1rem;
-    border-radius: 0.25rem;
+  margin: 0 0 10px 0;
+  padding: 1rem;
+  transition: ease-in background 0.2s;
+  &:hover {
+    background: ${({ active, theme }) => active ? theme.color.red : '#b7b7b7'};
   }
 `
 const CodeHeader = styled.div`

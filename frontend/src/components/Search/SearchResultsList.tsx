@@ -18,18 +18,15 @@ const SearchResultsListEl = inject('searchStore')(observer((props: IProps) => {
   const { className, searchStore } = props
   const resultsCount = searchStore!.searchResult.docs.length
   const totalCount = searchStore!.searchResult.numFound || 0
-  function handleResultClick(id: number) {
-
-  }
   return (
     <Container className={className}>
       { resultsCount !== 0 && <p>Showing {resultsCount} of {totalCount} results</p> }
       <Pagination pages={10}/>
       <ResultList className={className}>
         { searchStore!.searchResult.docs.map((result) =>
-          <SearchResultsListItem key={result.id}>
-            <ResultItem result={result} latestQuery={searchStore!.latestQuery}/>
-          </SearchResultsListItem>  
+        <SearchResultsListItem key={result.id}>
+          <ResultItem result={result} latestQuery={searchStore!.latestQuery}/>
+        </SearchResultsListItem>  
         )}
       </ResultList>
       <Pagination pages={10}/>
@@ -45,12 +42,6 @@ const Container = styled.div`
 const ResultList = styled.ul`
 `
 const SearchResultsListItem = styled.li`
-  background: #ededed;
-  border-radius: 0.25rem;
-  display: flex;
-  flex-direction: column;
-  margin: 0 0 10px 0;
-  padding: 1rem;
 `
 
 export const SearchResultsList = styled(SearchResultsListEl)``

@@ -34,7 +34,7 @@ export const ReviewViewPage = inject('reviewStore')(observer((props: IProps) => 
   return (
     <Container>
       <header>
-        <h1>Review</h1>
+        <h1>Reviews</h1>
       </header>
       <Body>
         { loading ? 'Loading' :

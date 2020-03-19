@@ -1,5 +1,4 @@
-import React from 'react'
-import { observer } from 'mobx-react'
+import React, { memo } from 'react'
 import styled from '../../theme/styled'
 
 import { FloatingReviewMenu } from '../FloatingReviewMenu'
@@ -7,25 +6,26 @@ import { FloatingReviewMenu } from '../FloatingReviewMenu'
 interface IProps {
   className?: string
   code: string
-  active: boolean
   selected: boolean
-  index: number
+  showMenu: boolean
+  lineNumber: number
   onClick: (idx: number) => void
 }
 
-export const CodeLine = observer((props: IProps) => {
-  const { className, code, active, selected, index, onClick } = props
+export const CodeLine = memo((props: IProps) => {
+  const { className, code, selected, showMenu, lineNumber, onClick } = props
+
   function handleClick() {
-    onClick(index)
+    onClick(lineNumber)
   }
   return (
     <Wrapper className={className}>
-      { active &&
+      { showMenu &&
       <ReviewMenuWrapper>
         <FloatingReviewMenu />
       </ReviewMenuWrapper>}
       <Code
-        active={active}
+        active={showMenu}
         selected={selected}
         dangerouslySetInnerHTML={{ __html: code }}
         onClick={handleClick}

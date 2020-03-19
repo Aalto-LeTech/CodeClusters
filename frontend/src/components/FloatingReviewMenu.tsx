@@ -54,13 +54,13 @@ const FloatingReviewMenuEl = inject((stores: Stores) => ({
     setReview(data)
   }
   function handleDeleteReview() {
-    reviewStore!.setOpenSubmission()
+    reviewStore!.resetSelections()
   }
   async function handleSubmit(data: IReviewFormParams, onSuccess: () => void, onError: () => void) {
     const result = await reviewStore!.addReview(data.message, data.metadata)
     if (result) {
       onSuccess()
-      reviewStore!.setOpenSubmission()
+      reviewStore!.resetSelections()
     } else {
       onError()
     }

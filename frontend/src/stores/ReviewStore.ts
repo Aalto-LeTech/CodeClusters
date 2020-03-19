@@ -6,8 +6,8 @@ import { ToastStore } from './ToastStore'
 
 export class ReviewStore {
   @observable reviewedSubmissions: IReviewedSubmission[] = []
-  @observable openSelections: { [id: string]: IReviewSelection } = {}
-  @observable selected = ''
+  @observable selectedSubmissions: { [id: string]: IReviewSelection } = {}
+  @observable selectedId = ''
   @observable isMultiSelection: boolean = true
   toastStore: ToastStore
 
@@ -16,62 +16,77 @@ export class ReviewStore {
   }
 
   @computed get currentSelection() {
-    if (this.selected !== '') {
-      return this.openSelections[this.selected]
+    if (this.selectedId !== '') {
+      return this.selectedSubmissions[this.selectedId]
     }
     return undefined
   }
 
   @computed get hasCurrentSelection() {
-    return this.selected !== ''
+    return this.selectedId !== ''
   }
 
   @computed get currentSelectionCount() {
-    return Object.keys(this.openSelections).length
+    return Object.keys(this.selectedSubmissions).length
   }
 
   @computed get hasManySelections() {
-    return Object.keys(this.openSelections).length > 1
+    return Object.keys(this.selectedSubmissions).length > 1
   }
 
-  getSelection(id: string) : IReviewSelection | undefined {
-    return this.openSelections[id]
+  getSelection(id: string) : [number, number, number] | undefined {
+    const sub = this.selectedSubmissions[id]
+    if (sub) {
+      return sub.selection
+    }
+    return undefined
+  }
+
+  equalSelection(s1: [number, number, number], s2: [number, number, number]) {
+    return s1[0] === s2[0] && s1[1] === s2[1] && s1[2] === s2[2]
   }
 
   @action reset() {
     this.reviewedSubmissions = []
-    this.openSelections = {}
-    this.selected = ''
+    this.selectedSubmissions = {}
+    this.selectedId = ''
+  }
+
+  @action resetSelections() {
+    this.selectedSubmissions = {}
+    this.selectedId = ''
   }
 
   @action toggleMultiSelection = () => {
     if (this.isMultiSelection && this.currentSelection) {
-      this.openSelections = { [this.selected]: this.currentSelection }
+      this.selectedSubmissions = { [this.selectedId]: this.currentSelection }
     }
     this.isMultiSelection = !this.isMultiSelection
   }
 
-  @action setOpenSubmission(s?: ISolrSubmissionWithDate, selection: [number, number, number] = [0, 0, 0]) {
-    if (s && this.isMultiSelection) {
-      this.openSelections[s.id] = {
+  @action toggleSelection(s: ISolrSubmissionWithDate, selection: [number, number, number] = [-1, 0, 0]) {
+    const oldSelection = this.getSelection(s.id)
+    const notExistsOrSelectionChanged = oldSelection === undefined || !this.equalSelection(oldSelection, selection)
+    if (notExistsOrSelectionChanged && this.isMultiSelection) {
+      this.selectedSubmissions[s.id] = {
         submission_id: s.id,
         selection,
       }
-      this.selected = s.id
-    } else if (s) {
-      this.openSelections = {
+      this.selectedId = s.id
+    } else if (notExistsOrSelectionChanged) {
+      this.selectedSubmissions = {
         [s.id]: {
           submission_id: s.id,
           selection,
         }
       }
-      this.selected = s.id
-    } else if (this.isMultiSelection) {
-      this.openSelections = {}
-      this.selected = ''
+      this.selectedId = s.id
+    } else if (!this.isMultiSelection) {
+      this.selectedSubmissions = {}
+      this.selectedId = ''
     } else {
-      delete this.openSelections[this.selected]
-      this.selected = ''
+      delete this.selectedSubmissions[s.id]
+      this.selectedId = ''
     }
   }
 
@@ -100,7 +115,7 @@ export class ReviewStore {
     const payload = {
       message,
       metadata,
-      selections: Object.values(this.openSelections),
+      selections: Object.values(this.selectedSubmissions),
     }
     try {
       result = await reviewApi.addReview(payload)

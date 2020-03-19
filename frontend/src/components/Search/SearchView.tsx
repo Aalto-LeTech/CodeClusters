@@ -12,12 +12,15 @@ interface IProps {
 
 const SearchViewEl = memo((props: IProps) => {
   const { className } = props
+  // 1-10	not much risk
+  // 11-20	moderate risk
+  // 21-50	high risk
+  // 51+	untestable, very high risk
   const complexityOptions = [
-    { name: '>100', value: 22 },
-    { name: '80-40', value: 18 },
-    { name: '40-20', value: 4 },
-    { name: '20-10', value: 10 },
-    { name: '<10', value: 50 },
+    { name: '>50', value: 22 },
+    { name: '50-21', value: 18 },
+    { name: '20-11', value: 4 },
+    { name: '10-1', value: 10 },
   ]
   const sizeOptions = [
     { name: '>100', value: 22 },

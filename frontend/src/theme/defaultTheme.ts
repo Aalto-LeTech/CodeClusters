@@ -19,11 +19,12 @@ export const defaultTheme : ITheme = {
     },
     primary: '#1d9eff',
     primaryDark: '#0070cb', // Using https://material.io/resources/color/#!/?view.left=0&view.right=1&primary.color=1d9eff
+    primaryLight: '#6fcfff',
     green: '#00e676',
     blue: '#425EC2',
     red: '#ff5d5d',
     orange: '#EF7F00',
-    secondary: '#6fcfff',
+    secondary: '#3f51b5',
     textLight: '#666',
     textDark: '#222',
     white: '#fff',

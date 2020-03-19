@@ -14,6 +14,7 @@ export interface IThemeColor {
   white: string
   primary: string
   primaryDark: string
+  primaryLight: string
   secondary: string
   red: string
   yellow: string
