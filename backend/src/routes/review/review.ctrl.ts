@@ -9,7 +9,7 @@ import { IReview, IUserReview, IReviewCreateParams } from 'shared'
 import { IReviewListQueryParams } from './review.types'
 
 export const REVIEW_SELECTION_SCHEMA = Joi.object({
-  submission_id: Joi.number().integer().required(),
+  submission_id: Joi.string().length(36).required(),
   selection: Joi.array().items(Joi.number().integer()).length(3).required(),
 })
 

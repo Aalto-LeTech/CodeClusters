@@ -40,7 +40,7 @@ export const reviewService = {
       return params.selections.reduce((acc, cur, i) => {
         const start = i === 0 ? '' : `${acc[0]},`
         const str = `${start} ($${acc[1]}, $${acc[1] + 1}, $${acc[1] + 2})`
-        const val = [...acc[2], reviewId, parseInt(cur.submission_id, 10), cur.selection]
+        const val = [...acc[2], reviewId, cur.submission_id, cur.selection]
         return [str, acc[1] + 3, val]
       }, ['', 1, [] as any])
     }
@@ -48,7 +48,7 @@ export const reviewService = {
 
     type Returned = {
       review_id: number
-      submission_id: number
+      submission_id: string
       selection: [number, number, number]
     }
     return dbService.queryMany<Returned>(`
