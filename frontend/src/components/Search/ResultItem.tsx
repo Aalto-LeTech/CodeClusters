@@ -47,7 +47,7 @@ const ResultItemEl = inject('reviewStore')(observer((props: IProps) => {
     reviewStore!.toggleSelection(result, selection)
   }
   return (
-    <Container className={className} active={isResultSelected()}>
+    <Container className={className} active={isResultSelected()} onClick={handleToggleSelection}>
       <CodeHeader>
         <HeaderLeft>
           <div>Student id: {result.student_id}</div>

@@ -15,7 +15,8 @@ interface IProps {
 export const CodeLine = memo((props: IProps) => {
   const { className, code, selected, showMenu, lineNumber, onClick } = props
 
-  function handleClick() {
+  function handleClick(e: React.MouseEvent<HTMLElement>) {
+    e.stopPropagation()
     onClick(lineNumber)
   }
   return (

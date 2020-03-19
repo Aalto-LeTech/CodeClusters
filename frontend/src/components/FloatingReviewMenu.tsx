@@ -37,6 +37,14 @@ const FloatingReviewMenuEl = inject((stores: Stores) => ({
   const { className, reviewStore, modalStore } = props
   const [review, setReview] = useState(EMPTY_REVIEW_FORM_PARAMS)
 
+  /**
+   * Stop the menu from being closed by ResultItem as the click event otherwise will propagate to it
+   * and its click event handler which will call toggleSelection.
+   * @param e 
+   */
+  function handleStopPropagation(e: React.MouseEvent<HTMLElement>) {
+    e.stopPropagation()
+  }
   function handleClickMaximize() {
 
   }
@@ -66,7 +74,7 @@ const FloatingReviewMenuEl = inject((stores: Stores) => ({
     }
   }
   return (
-    <Wrapper className={className}>
+    <Wrapper className={className} onClick={handleStopPropagation}>
       <Container>
         <Header>
           <Title>Submit review</Title>

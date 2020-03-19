@@ -64,7 +64,7 @@ export class ReviewStore {
     this.isMultiSelection = !this.isMultiSelection
   }
 
-  @action toggleSelection(s: ISolrSubmissionWithDate, selection: [number, number, number] = [-1, 0, 0]) {
+  @action toggleSelection(s: ISolrSubmissionWithDate, selection: [number, number, number] = [0, 0, 0]) {
     const oldSelection = this.getSelection(s.id)
     const notExistsOrSelectionChanged = oldSelection === undefined || !this.equalSelection(oldSelection, selection)
     if (notExistsOrSelectionChanged && this.isMultiSelection) {
