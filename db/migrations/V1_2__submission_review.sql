@@ -7,10 +7,14 @@ CREATE TABLE submission (
 	timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+CREATE TYPE review_status AS ENUM ('PENDING', 'SENT');
+
 CREATE TABLE review (
 	review_id SERIAL PRIMARY KEY,
 	message TEXT NOT NULL,
 	metadata TEXT NOT NULL,
+	status review_status NOT NULL DEFAULT 'PENDING',
+	tags TEXT[] NOT NULL DEFAULT array[]::TEXT[],
 	timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 

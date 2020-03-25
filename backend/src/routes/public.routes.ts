@@ -4,6 +4,7 @@ import { validateBody, authenticate, parseQueryParams } from '../middlewares'
 
 import * as modelCtrl from './model/model.ctrl'
 import * as reviewCtrl from './review/review.ctrl'
+import * as reviewFlowCtrl from './review_flow/review_flow.ctrl'
 import * as searchCtrl from './search/search.ctrl'
 import * as submissionCtrl from './submission/submission.ctrl'
 import * as userCtrl from './user/user.ctrl'
@@ -30,6 +31,15 @@ router.post('/review',
   authenticate,
   validateBody(reviewCtrl.REVIEW_CREATE_SCHEMA),
   reviewCtrl.createReview)
+
+router.get('/reviewflows',
+  authenticate,
+  parseQueryParams(reviewFlowCtrl.REVIEW_FLOW_LIST_QUERY_PARAMS),
+  reviewFlowCtrl.getReviewFlows)
+router.post('/reviewflow',
+  authenticate,
+  validateBody(reviewFlowCtrl.REVIEW_FLOW_CREATE_SCHEMA),
+  reviewFlowCtrl.createReviewFlow)
 
 router.get('/search',
   authenticate,

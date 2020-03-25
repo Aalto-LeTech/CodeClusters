@@ -2,6 +2,7 @@
 declare module 'shared' {
   export type OmitProp<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
+  // Review
   export type IUserReviewWithDate = OmitProp<IReviewWithDate, 'metadata'>
   export type IUserReview = OmitProp<IReview, 'metadata'>
   export interface IReviewWithDate extends IReview {
@@ -22,13 +23,15 @@ declare module 'shared' {
     message: string
     metadata: string
     timestamp: string
+    status: 'PENDING' | 'SENT'
+    tags: string[]
   }
   export interface IReviewCreateParams {
     selections: IReviewSelection[]
     message: string
     metadata?: string
   }
-
+  // Submission
   type SubmissionWithoutId = OmitProp<ISubmission, 'submission_id'>
   export interface ISubmissionCreateParams {
     student_id: number
@@ -154,6 +157,7 @@ declare module 'shared' {
     highlighted: string[]
     date: Date
   }
+  // Search
   export interface ISearchResponse {
     numFound: number
     start: number
@@ -170,5 +174,30 @@ declare module 'shared' {
   export interface IReviewSelection {
     submission_id: string
     selection: [number, number, number]
+  }
+  // Review flow
+  export interface IReviewFlowStep {
+    index: number
+    action: string
+    parameters: string
+  }
+  export interface IReviewFlow {
+    review_flow_id: number
+    course_id: number | null
+    exercise_id: number | null
+    public: boolean
+    title: string
+    description: string
+    steps: IReviewFlowStep[]
+  }
+  export interface IReviewFlowCreateParams {
+    course_id: number | null
+    exercise_id: number | null
+    user_id: number
+    title: string
+    description: string
+    public?: boolean
+    tags?: string[]
+    steps: IReviewFlowStep[]
   }
 }

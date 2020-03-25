@@ -5,15 +5,17 @@ import { IReview, IUserReview, IReviewCreateParams } from 'shared'
 export const reviewService = {
   getReviews: async () : Promise<IReview[]> => {
     return await dbService.queryMany<IReview>(`
-    SELECT json_agg(json_build_object(
-      'message', review.message,
-      'metadata', review.metadata,
-      'timestamp', review.timestamp,
-      'selection', review_submissions.selection
-    )) AS reviews, submission.code FROM submission
-    JOIN review_submissions ON submission.submission_id = review_submissions.submission_id
-    JOIN review ON review.review_id = review_submissions.review_id
-    GROUP BY(submission.submission_id, submission.code)
+      SELECT json_agg(json_build_object(
+        'message', review.message,
+        'metadata', review.metadata,
+        'timestamp', review.timestamp,
+        'status', review.status,
+        'tags', review.tags,
+        'selection', review_submissions.selection
+      )) AS reviews, submission.code FROM submission
+      JOIN review_submissions ON submission.submission_id = review_submissions.submission_id
+      JOIN review ON review.review_id = review_submissions.review_id
+      GROUP BY(submission.submission_id, submission.code)
     `)
   },
   getUserReviews: async (studentId: number) : Promise<IUserReview[]> => {
@@ -22,6 +24,8 @@ export const reviewService = {
         'message', review.message,
         'metadata', review.metadata,
         'timestamp', review.timestamp,
+        'status', review.status,
+        'tags', review.tags,
         'selection', review_submissions.selection
       )) AS reviews, submission.code FROM submission
       JOIN review_submissions ON submission.submission_id = review_submissions.submission_id
@@ -33,7 +37,7 @@ export const reviewService = {
   createReview: async (params: IReviewCreateParams) : Promise<any> => {
     const savedReview = await dbService.queryOne<IReview | undefined>(`
       INSERT INTO review (message, metadata)
-      VALUES($1, $2) RETURNING review_id, message, metadata, timestamp
+      VALUES($1, $2) RETURNING review_id, message, metadata, status, tags, timestamp
     `, [params.message, params.metadata || ''])
 
     function createValues(params: IReviewCreateParams, reviewId: number) {
@@ -45,7 +49,7 @@ export const reviewService = {
       }, ['', 1, [] as any])
     }
     const values = createValues(params, savedReview!.review_id)
-
+    console.log(values)
     type Returned = {
       review_id: number
       submission_id: string

@@ -3,7 +3,7 @@ export interface IThemeColor {
     lightest: string
     lighter: string
     light: string
-    default: string
+    base: string
   }
   green: string
   orange: string
