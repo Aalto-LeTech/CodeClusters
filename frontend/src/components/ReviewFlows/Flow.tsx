@@ -29,7 +29,7 @@ const FlowEl = memo((props: IProps) => {
       </Header>
       <FlowStepsList>
         {reviewFlow.steps.map((s =>
-        <FlowStepItem>
+        <FlowStepItem key={s.index}>
           <Action>{s.action}</Action>
           <Parameters>{s.parameters}</Parameters>
         </FlowStepItem>

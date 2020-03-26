@@ -17,6 +17,10 @@ export class ReviewFlowsStore {
     this.reviewFlows = []
   }
 
+  @action setSelectedFlow(title: string) {
+    this.selectedFlow = this.reviewFlows.find(r => r.title === title)
+  }
+
   @action getReviewFlows = async () => {
     const result = await reviewFlowApi.getReviewFlows()
     runInAction(() => {
@@ -25,6 +29,6 @@ export class ReviewFlowsStore {
         this.selectedFlow = result.reviewFlows[0]
       }
     })
-    return result
+    return result!.reviewFlows
   }
 }

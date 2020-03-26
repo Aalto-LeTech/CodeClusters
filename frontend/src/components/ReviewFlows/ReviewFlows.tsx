@@ -5,6 +5,7 @@ import { FiChevronDown, FiChevronUp, FiTrash } from 'react-icons/fi'
 
 import { Flow } from './Flow'
 import { TabsMenu } from '../../elements/TabsMenu'
+import { DropdownSearch } from '../../elements/DropdownSearch'
 import { Icon } from '../../elements/Icon'
 
 import { ReviewFlowsStore } from '../../stores/ReviewFlowsStore'
@@ -27,15 +28,21 @@ const ReviewFlowsEl = inject('reviewFlowsStore')(observer((props: IProps) => {
   const [loading, setLoading] = useState(false)
   const [selectedOption, setSelectedOption] = useState(TAB_OPTIONS[0])
   const [minimized, setMinimized] = useState(false)
+  const [options, setOptions] = useState(reviewFlowsStore!.reviewFlows.map(r => r.title))
+
   useEffect(() => {
     setLoading(true)
-    reviewFlowsStore!.getReviewFlows().then(() => {
+    reviewFlowsStore!.getReviewFlows().then((flows) => {
       setLoading(false)
+      setOptions(flows.map(r => r.title))
     })
   }, [])
 
   function handleSelectTabOption(o: string) {
     setSelectedOption(o)
+  }
+  function handleSelectReviewFlow(title: string | number) {
+    reviewFlowsStore!.setSelectedFlow(title as string)
   }
   function handleClickToggle() {
     setMinimized(!minimized)
@@ -56,6 +63,7 @@ const ReviewFlowsEl = inject('reviewFlowsStore')(observer((props: IProps) => {
           selected={selectedOption}
           onSelect={handleSelectTabOption}
         />
+        <DropdownSearch fullWidth options={options} onSelect={handleSelectReviewFlow}/>
         <Flow reviewFlow={reviewFlowsStore!.selectedFlow}/>
       </Body>
     </Container>
@@ -86,6 +94,10 @@ const Body = styled.div<{ minimized: boolean}>`
   margin-top: 1rem;
   visibility: ${({ minimized }) => minimized ? 'hidden' : 'initial'};
   width: 100%;
+  & > ${DropdownSearch} {
+    margin: 1rem 0 0 1rem;
+    width: 400px;
+  }
 `
 
 export const ReviewFlows = styled(ReviewFlowsEl)``

@@ -16,6 +16,7 @@ interface IProps {
   onChange?: (value: any) => void // Basically one of: string | number | file
   onFocus?: () => void
   onBlur?: () => void
+  onKeyPress?: (e: React.KeyboardEvent) => void
 }
 
 const InputEl = forwardRef((props: IProps, ref?: any) => {
@@ -23,7 +24,8 @@ const InputEl = forwardRef((props: IProps, ref?: any) => {
     !disabled && props.onChange && props.onChange(event.target.value)
   }
   const {
-    className, value, type, name, autocomplete, icon, iconPadding, placeholder, disabled, required, fullWidth, onFocus, onBlur
+    className, value, type, name, autocomplete, icon, iconPadding, placeholder, disabled, required, fullWidth,
+    onFocus, onBlur, onKeyPress
   } = props
   return (
     <Container className={className} fullWidth={fullWidth}>
@@ -39,6 +41,7 @@ const InputEl = forwardRef((props: IProps, ref?: any) => {
           onChange={handleChange}
           onFocus={onFocus}
           onBlur={onBlur}
+          onKeyPress={onKeyPress}
         />
         :
         <StyledInput
@@ -54,6 +57,7 @@ const InputEl = forwardRef((props: IProps, ref?: any) => {
           onChange={handleChange}
           onFocus={onFocus}
           onBlur={onBlur}
+          onKeyPress={onKeyPress}
         />
       }
     </Container>
