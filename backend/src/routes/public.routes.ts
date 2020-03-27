@@ -2,6 +2,7 @@ import { Router } from 'express'
 
 import { validateBody, authenticate, parseQueryParams } from '../middlewares'
 
+import * as courseCtrl from './course/course.ctrl'
 import * as modelCtrl from './model/model.ctrl'
 import * as reviewCtrl from './review/review.ctrl'
 import * as reviewFlowCtrl from './review_flow/review_flow.ctrl'
@@ -14,6 +15,10 @@ const router: Router = Router()
 router.post('/login',
   validateBody(userCtrl.USER_CREDENTIALS_SCHEMA),
   userCtrl.loginUser)
+
+router.get('/courses',
+  authenticate,
+  courseCtrl.getCourses)
 
 router.get('/model/clusters',
   authenticate,
