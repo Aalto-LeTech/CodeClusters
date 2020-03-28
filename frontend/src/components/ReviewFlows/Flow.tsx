@@ -1,19 +1,24 @@
-import React, { memo, useMemo, useState, useEffect } from 'react'
+import React, { memo } from 'react'
+import { inject, observer } from 'mobx-react'
 import styled from '../../theme/styled'
 
+import { Stores } from '../../stores'
 import { IReviewFlow } from 'shared'
 
 interface IProps {
   className?: string
-  reviewFlow?: IReviewFlow
+  selectedFlow?: IReviewFlow
 }
 
-const FlowEl = memo((props: IProps) => {
-  const { className, reviewFlow } = props
-  console.log(reviewFlow)
+const FlowEl = inject((stores: Stores) => ({
+  selectedFlow: stores.reviewFlowStore.selectedFlow,
+}))
+(observer((props: IProps) => {
+  const { className, selectedFlow } = props
+
   function handleClick(e: React.MouseEvent<HTMLElement>) {
   }
-  if (reviewFlow === undefined) {
+  if (selectedFlow === undefined) {
     return (
       <Container className={className}>
         No review flows
@@ -23,12 +28,12 @@ const FlowEl = memo((props: IProps) => {
   return (
     <Container className={className}>
       <Header>
-        <FlowTitle>{reviewFlow.title}</FlowTitle>
-        <Description>{reviewFlow.description}</Description>
+        <FlowTitle>{selectedFlow.title}</FlowTitle>
+        <Description>{selectedFlow.description}</Description>
         <Note>This review has been ran before with these parameters!</Note>
       </Header>
       <FlowStepsList>
-        {reviewFlow.steps.map((s =>
+        {selectedFlow.steps.map((s =>
         <FlowStepItem key={s.index}>
           <Action>{s.action}</Action>
           <Parameters>{s.parameters}</Parameters>
@@ -37,7 +42,7 @@ const FlowEl = memo((props: IProps) => {
       </FlowStepsList>
     </Container>
   )
-})
+}))
 
 const Container = styled.div`
   background: #ededed;

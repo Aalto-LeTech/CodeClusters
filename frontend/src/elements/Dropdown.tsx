@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import styled from '../theme/styled'
 import { FiChevronDown } from 'react-icons/fi'
 
@@ -16,23 +16,24 @@ interface IProps<T extends OptionValue> {
   disabled?: boolean
   required?: boolean
   placeholder?: string
+  fullWidth?: boolean
   onSelect: (option: Option<T>) => void
 }
 
 DropdownEl.defaultProps = {
-  disabled: false,
-  required: false,
   placeholder: 'Choose',
 }
 
 function DropdownEl<T extends OptionValue>(props: IProps<T>) {
-  const { className, selected, options, placeholder } = props
+  const {
+    className, options, selected, disabled, required, placeholder, fullWidth, onSelect
+  } = props
 
   function closeMenu() {
     setMenuOpen(false)
   }
   function toggleMenu() {
-    !props.disabled && setMenuOpen(oldMenuOpen => !oldMenuOpen)
+    !disabled && setMenuOpen(oldMenuOpen => !oldMenuOpen)
   }
   function isSelected(option: Option<T>) {
     return option.value === selected
@@ -46,15 +47,15 @@ function DropdownEl<T extends OptionValue>(props: IProps<T>) {
   const selectOption = (option: Option<T>) => (e: React.MouseEvent) => {
     e.stopPropagation()
     if (option.value !== selected) {
-      props.onSelect(option)
+      onSelect(option)
       closeMenu()
     }
   }
-  const ref = React.useRef(null)
-  const [menuOpen, setMenuOpen] = React.useState(false)
+  const ref = useRef(null)
+  const [menuOpen, setMenuOpen] = useState(false)
   useClickOutside(ref, (e) => closeMenu(), menuOpen)
   return (
-    <div className={className} ref={ref}>
+    <Container className={className} ref={ref} fullWidth={fullWidth}>
       <Button onClick={toggleMenu} aria-haspopup aria-label="Dropdown menu">
         {getButtonText()} 
         <SvgWrapper><FiChevronDown size={18}/></SvgWrapper>
@@ -69,10 +70,18 @@ function DropdownEl<T extends OptionValue>(props: IProps<T>) {
         </Option>
         )}
       </DropdownList>
-    </div>
+    </Container>
   )
 }
 
+const Container = styled.div<{ fullWidth?: boolean }>`
+  background: transparent;
+  border: 0;
+  display: inline-block;
+  padding: 0;
+  position: relative;
+  width: ${({ fullWidth }) => fullWidth ? '100%' : '180px'};
+`
 const SvgWrapper = styled.span`
   display: flex;
 `
@@ -136,12 +145,7 @@ const OptionButton = styled.button<OptionButtonProps>`
     background-color: rgba(0, 0, 0, 0.08);
   }
 `
-// export const Dropdown = DropdownEl
-// TODO fix this, using this component in SC does not work eg ${Dropdown}
-export const Dropdown: new <T>() => React.Component<T> = styled(DropdownEl)`
-  background: transparent;
-  border: 0;
-  display: inline-block;
-  padding: 0;
-  position: relative;
-` as any // as React.ComponentType as new <T>() => GenericComponent<T>
+
+export const GenericDropdown = <T extends OptionValue>() => styled((props: IProps<T>) => <DropdownEl<T> {...props} />)``
+
+export const Dropdown = GenericDropdown<string>()

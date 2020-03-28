@@ -13,10 +13,10 @@ const EMPTY_JWT = {
 export class AuthStore {
   @observable user?: IUser = undefined
   @observable jwt: IJwt = EMPTY_JWT
-  resetFn: () => void
+  resetAllStores: () => void
 
   constructor(resetFn: () => void) {
-    this.resetFn = resetFn
+    this.resetAllStores = resetFn
     persist(() => this.user, (val: any) => this.user = val, 'auth.user')
     persist(() => this.jwt, (val: any) => this.jwt = val, 'auth.jwt')
   }
@@ -38,7 +38,7 @@ export class AuthStore {
   }
 
   @action logout = () => {
-    this.resetFn()
+    this.resetAllStores()
   }
 
   @computed

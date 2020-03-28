@@ -31,6 +31,19 @@ declare module 'shared' {
     message: string
     metadata?: string
   }
+  // Course
+  export interface ICourse {
+    course_id: number
+    name: string
+    organization: string
+    student_ids: number[]
+    exercises: IExercise[]
+  }
+  export interface IExercise {
+    exercise_id: number
+    course_id: number
+    name: string
+  }
   // Submission
   type SubmissionWithoutId = OmitProp<ISubmission, 'submission_id'>
   export interface ISubmissionCreateParams {
@@ -185,6 +198,7 @@ declare module 'shared' {
     review_flow_id: number
     course_id: number | null
     exercise_id: number | null
+    user_id: number
     public: boolean
     title: string
     description: string

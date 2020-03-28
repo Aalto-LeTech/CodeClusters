@@ -19,12 +19,11 @@ export class FrontPage extends React.PureComponent<IProps> {
   render() {
     return (
       <Container>
+        <Header>
+          <h1><a href="https://github.com/Aalto-LeTech/CodeClusters">Code Clusters</a></h1>
+        </Header>
         <SearchView />
         <DeleteReviewSelectionModal />
-        <header>
-          <h1><a href="https://github.com/Aalto-LeTech/CodeClusters">Code Clusters</a></h1>
-          <p><i>The tool to solve all your problems...</i></p>
-        </header>
         <ImgContainer>
           <img width={1200} src={'/img/architecture.jpg'} alt="Architecture"/>
         </ImgContainer>
@@ -34,6 +33,13 @@ export class FrontPage extends React.PureComponent<IProps> {
 }
 
 const Container = styled.div`
+`
+const Header = styled.header`
+  display: flex;
+  justify-content: center;
+  & > h1 {
+
+  }
 `
 const ImgContainer = styled.figure`
   & > img {

@@ -1,11 +1,12 @@
 import React, { memo } from 'react'
 import styled from '../theme/styled'
 
+type Option = { key: string, value: string, disabled?: boolean }
 interface IProps {
   className?: string
-  options: string[]
-  selected: string
-  onSelect: (option: string) => void
+  options: Option[]
+  selected: Option
+  onSelect: (option: Option) => void
 }
 
 const TabsMenuEl = memo((props: IProps) => {
@@ -14,8 +15,8 @@ const TabsMenuEl = memo((props: IProps) => {
     <Container className={className}>
       <TabList>
         { options.map(o =>
-        <TabListItem key={o} selected={selected === o}>
-          <TabButton onClick={() => onSelect(o)}>{o}</TabButton>
+        <TabListItem key={o.key} selected={selected.key === o.key}>
+          <TabButton disabled={o.disabled} onClick={() => onSelect(o)}>{o.value}</TabButton>
         </TabListItem>
         )}
       </TabList>

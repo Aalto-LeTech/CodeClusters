@@ -7,29 +7,31 @@ import { Icon } from './Icon'
 
 import useClickOutside from '../hooks/useClickOutside'
 
-type OptionType = string | number
+interface IDropdownOption {
+  key: string
+  value: string
+}
 interface IProps {
   className?: string
-  options: OptionType[]
-  selected?: OptionType
+  options: IDropdownOption[]
+  selected?: string
+  value: string
   disabled?: boolean
   required?: boolean
   placeholder?: string
   fullWidth?: boolean
-  onSelect: (option: OptionType) => void
+  onChange: (val: string) => void
+  onSelect: (option: IDropdownOption) => void
 }
 
 DropdownSearchEl.defaultProps = {
-  disabled: false,
-  required: false,
   placeholder: 'Search',
 }
 
 function DropdownSearchEl(props: IProps) {
   const {
-    className, options, selected, disabled, required, placeholder, fullWidth, onSelect
+    className, value, options, selected, disabled, required, placeholder, fullWidth, onChange, onSelect
   } = props
-  const [searchValue, setSearchValue] = useState('')
   const [shownItems, setShownItems] = useState(options.map(o => true))
   const ref = useRef(null)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -38,8 +40,8 @@ function DropdownSearchEl(props: IProps) {
   function closeMenu() {
     setMenuOpen(false)
   }
-  function isSelected(option: OptionType) {
-    return option === selected
+  function isSelected(option: IDropdownOption) {
+    return option.value === selected
   }
   function toggleMenu() {
     if (!disabled) {
@@ -48,9 +50,9 @@ function DropdownSearchEl(props: IProps) {
     }
   }
   function handleSearchChange(val: string) {
-    setSearchValue(val)
+    onChange(val)
     const l = val.toLowerCase()
-    setShownItems(options.map(o => o.toString().toLowerCase().includes(l)))
+    setShownItems(options.map(o => o.value.toString().toLowerCase().includes(l)))
   }
   function handleSearchFocus() {
     setMenuOpen(true)
@@ -62,14 +64,14 @@ function DropdownSearchEl(props: IProps) {
       if (firstItemIndex !== -1) {
         const item = options[firstItemIndex]
         onSelect(item)
-        setSearchValue(item.toString())
+        onChange(item.toString())
       }
       setMenuOpen(false)
     }
   }
-  const selectOption = (option: OptionType) => (e: React.MouseEvent) => {
+  const selectOption = (option: IDropdownOption) => (e: React.MouseEvent) => {
     e.stopPropagation()
-    setSearchValue(option.toString())
+    onChange(option.value)
     setMenuOpen(false)
     onSelect(option)
   }
@@ -79,7 +81,7 @@ function DropdownSearchEl(props: IProps) {
         <Input
           fullWidth
           placeholder={placeholder}
-          value={searchValue}
+          value={value}
           onChange={handleSearchChange}
           onFocus={handleSearchFocus}
           onKeyPress={handleSearchKeyPress}
@@ -92,12 +94,12 @@ function DropdownSearchEl(props: IProps) {
       </InputWrapper>
       <DropdownList open={menuOpen}>
         { options.map((o, i) =>
-        <Option key={`opt-${o}`} visible={shownItems[i]}>
+        <OptionItem key={o.key} visible={shownItems[i]}>
           <OptionButton
             onClick={selectOption(o)}
             selected={isSelected(o)}
-          >{o}</OptionButton>
-        </Option>
+          >{o.value}</OptionButton>
+        </OptionItem>
         )}
       </DropdownList>
     </Container>
@@ -172,7 +174,7 @@ const DropdownList = styled.ul<DropdownProps>`
   top: 36px;
   transform-origin: 251px 0px;
 `
-const Option = styled.li<{ visible: boolean }>`
+const OptionItem = styled.li<{ visible: boolean }>`
   display: ${({ visible }) => visible ? 'initial' : 'none'};
   visibility: ${({ visible }) => visible ? 'visible' : 'hidden'};
 `

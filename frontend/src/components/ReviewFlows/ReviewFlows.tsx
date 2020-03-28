@@ -8,41 +8,44 @@ import { TabsMenu } from '../../elements/TabsMenu'
 import { DropdownSearch } from '../../elements/DropdownSearch'
 import { Icon } from '../../elements/Icon'
 
-import { ReviewFlowsStore } from '../../stores/ReviewFlowsStore'
+import { ReviewFlowStore, ReviewFlowFilterType } from '../../stores/ReviewFlowStore'
 import { IReviewFlow } from 'shared'
 
 interface IProps {
   className?: string
-  reviewFlowsStore?: ReviewFlowsStore
+  reviewFlowStore?: ReviewFlowStore
 }
 
-const TAB_OPTIONS = [
-  'This exercise',
-  'This course',
-  'All flows',
-  'Your flows'
-]
-
-const ReviewFlowsEl = inject('reviewFlowsStore')(observer((props: IProps) => {
-  const { className, reviewFlowsStore } = props
+const ReviewFlowsEl = inject('reviewFlowStore')(observer((props: IProps) => {
+  const { className, reviewFlowStore } = props
   const [loading, setLoading] = useState(false)
-  const [selectedOption, setSelectedOption] = useState(TAB_OPTIONS[0])
   const [minimized, setMinimized] = useState(false)
-  const [options, setOptions] = useState(reviewFlowsStore!.reviewFlows.map(r => r.title))
+  const [searchValue, setSearchValue] = useState('')
+  const [searchOptions, setSearchOptions] = useState(getSearchOptions())
 
   useEffect(() => {
     setLoading(true)
-    reviewFlowsStore!.getReviewFlows().then((flows) => {
+    reviewFlowStore!.getReviewFlows().then((flows) => {
       setLoading(false)
-      setOptions(flows.map(r => r.title))
+      setSearchOptions(getSearchOptions())
+      if (flows.length > 0) {
+        setSearchValue(flows[0].title)
+      }
     })
   }, [])
 
-  function handleSelectTabOption(o: string) {
-    setSelectedOption(o)
+  function getSearchOptions() {
+    return reviewFlowStore!.currentReviewFlows.map(r => ({ key: r.title, value: r.title }))
   }
-  function handleSelectReviewFlow(title: string | number) {
-    reviewFlowsStore!.setSelectedFlow(title as string)
+  function handleSelectTabOption(o: { key: string, value: string }) {
+    reviewFlowStore!.filterReviewFlows(o.key as ReviewFlowFilterType)
+    setSearchOptions(getSearchOptions())
+  }
+  function handleSearchChange(title: string) {
+    setSearchValue(title)
+  }
+  function handleSelectReviewFlow(option: { key: string, value: string }) {
+    reviewFlowStore!.setSelectedFlow(option.key)
   }
   function handleClickToggle() {
     setMinimized(!minimized)
@@ -59,12 +62,18 @@ const ReviewFlowsEl = inject('reviewFlowsStore')(observer((props: IProps) => {
       </Header>
       <Body minimized={minimized}>
         <TabsMenu
-          options={TAB_OPTIONS}
-          selected={selectedOption}
+          options={reviewFlowStore!.filterOptions}
+          selected={reviewFlowStore!.getCurrentFilterOption}
           onSelect={handleSelectTabOption}
         />
-        <DropdownSearch fullWidth options={options} onSelect={handleSelectReviewFlow}/>
-        <Flow reviewFlow={reviewFlowsStore!.selectedFlow}/>
+        <DropdownSearch
+          fullWidth
+          options={searchOptions}
+          value={searchValue}
+          onChange={handleSearchChange}
+          onSelect={handleSelectReviewFlow}
+        />
+        <Flow/>
       </Body>
     </Container>
   )
