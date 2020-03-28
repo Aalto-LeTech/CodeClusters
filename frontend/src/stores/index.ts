@@ -28,7 +28,8 @@ export class Stores {
     this.reviewStore = new ReviewStore(this.toastStore)
     this.reviewFlowStore = new ReviewFlowStore({
       toastStore: this.toastStore,
-      searchStore: this.searchStore,
+      courseStore: this.courseStore,
+      authStore: this.authStore,
     })
     this.submissionStore = new SubmissionStore(this.toastStore)
     this.clusteringStore = new ClusteringStore(this.toastStore)

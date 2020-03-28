@@ -3,7 +3,8 @@ import * as reviewFlowApi from '../api/review_flow.api'
 
 import { IReviewFlow } from 'shared'
 import { ToastStore } from './ToastStore'
-import { SearchStore } from './SearchStore'
+import { CourseStore } from './CourseStore'
+import { AuthStore } from './AuthStore'
 
 export type ReviewFlowFilterType = 'course' | 'exercise' | 'all' | 'user'
 
@@ -33,11 +34,13 @@ export class ReviewFlowStore {
   @observable filteredBy: [ReviewFlowFilterType, number] = ['all', 0]
   @observable filterOptions = FILTER_OPTIONS.map(f => ({ ...f, disabled: false }))
   toastStore: ToastStore
-  searchStore: SearchStore
+  courseStore: CourseStore
+  authStore: AuthStore
 
-  constructor(props: { toastStore: ToastStore, searchStore: SearchStore }) {
+  constructor(props: { toastStore: ToastStore, courseStore: CourseStore, authStore: AuthStore }) {
     this.toastStore = props.toastStore
-    this.searchStore = props.searchStore
+    this.courseStore = props.courseStore
+    this.authStore = props.authStore
   }
 
   @computed get getCurrentFilterOption() {
@@ -53,11 +56,9 @@ export class ReviewFlowStore {
   }
 
   @action filterReviewFlows(by: ReviewFlowFilterType, id?: number) {
-    const {
-      course_id,
-      exercise_id,
-    } = this.searchStore.latestQuery
-    console.log(this.searchStore.latestQuery)
+    const course_id = this.courseStore.selectedCourse?.course_id
+    const exercise_id = this.courseStore.selectedExercise?.exercise_id
+    const user_id = this.authStore.user?.user_id
     this.currentReviewFlows = this.reviewFlows.filter(r => {
       switch (by) {
         case 'course':
@@ -65,7 +66,7 @@ export class ReviewFlowStore {
         case 'exercise':
           return r.exercise_id === exercise_id
         case 'user':
-          return r.user_id === id
+          return r.user_id === user_id
         case 'all':
         default:
           return r

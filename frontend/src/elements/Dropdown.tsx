@@ -17,6 +17,7 @@ interface IProps<K extends OptionValue, V extends OptionValue> {
   required?: boolean
   placeholder?: string
   fullWidth?: boolean
+  renderMenu?: (text: string) => React.ReactNode
   onSelect: (option: Option<K, V>) => void
 }
 
@@ -26,7 +27,7 @@ DropdownEl.defaultProps = {
 
 function DropdownEl<K extends OptionValue, V extends OptionValue>(props: IProps<K, V>) {
   const {
-    className, options, selected, disabled, required, placeholder, fullWidth, onSelect
+    className, options, selected, disabled, required, placeholder, fullWidth, renderMenu, onSelect
   } = props
 
   function closeMenu() {
@@ -38,11 +39,20 @@ function DropdownEl<K extends OptionValue, V extends OptionValue>(props: IProps<
   function isSelected(option: Option<K, V>) {
     return option.value === selected
   }
-  function getButtonText() {
-    if (selected) {
-      return selected
+  function isDisabled() {
+    return disabled || options.length === 0
+  }
+  function renderButtonContent() {
+    const text = selected ? selected.toString() : (placeholder || 'Choose')
+    if (renderMenu) {
+      return renderMenu(text)
     }
-    return placeholder
+    return (
+      <>
+        {text} 
+        <SvgWrapper><FiChevronDown size={18}/></SvgWrapper>
+      </>
+    )
   }
   const selectOption = (option: Option<K, V>) => (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -56,9 +66,8 @@ function DropdownEl<K extends OptionValue, V extends OptionValue>(props: IProps<
   useClickOutside(ref, (e) => closeMenu(), menuOpen)
   return (
     <Container className={className} ref={ref} fullWidth={fullWidth}>
-      <Button onClick={toggleMenu} aria-haspopup aria-label="Dropdown menu">
-        {getButtonText()} 
-        <SvgWrapper><FiChevronDown size={18}/></SvgWrapper>
+      <Button onClick={toggleMenu} disabled={isDisabled()} aria-haspopup aria-label="Dropdown menu">
+        {renderButtonContent()}
       </Button>
       <DropdownList open={menuOpen}>
         { options.map(o =>
@@ -85,12 +94,12 @@ const Container = styled.div<{ fullWidth?: boolean }>`
 const SvgWrapper = styled.span`
   display: flex;
 `
-const Button = styled.button`
+const Button = styled.button<{ disabled: boolean }>`
   align-items: center;
   background: transparent;
   border: 1px solid ${({ theme }) => theme.color.textDark};
   border-radius: 26px;
-  cursor: pointer;
+  cursor: ${({ disabled }) => disabled ? 'not-allowed' : 'pointer'};
   display: flex;
   font-size: ${({ theme }) => theme.fontSize.medium};
   justify-content: center;
@@ -98,7 +107,7 @@ const Button = styled.button`
   position: relative;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   &:hover {
-    background-color: rgba(0, 0, 0, 0.08);
+    background-color: ${({ disabled }) => disabled ? '' : 'rgba(0, 0, 0, 0.08)'};
   }
   & > ${SvgWrapper} {
     margin-left: 6px;

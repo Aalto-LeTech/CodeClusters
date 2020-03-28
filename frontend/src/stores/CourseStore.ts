@@ -19,8 +19,15 @@ export class CourseStore {
     this.courses = []
   }
 
-  @action setSelectedCourse(name: string) {
-    this.selectedCourse = this.courses.find(c => c.name === name)
+  @action setSelectedCourse(name?: string) {
+    if (name === undefined || this.selectedCourse?.name !== name) {
+      this.selectedCourse = this.courses.find(c => c.name === name)
+      this.selectedExercise = undefined
+    }
+  }
+
+  @action setSelectedExercise(name?: string) {
+    this.selectedExercise = this.selectedCourse?.exercises.find(e => e.name === name)
   }
 
   @action getCourses = async () => {

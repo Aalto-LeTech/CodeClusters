@@ -1,6 +1,7 @@
 import React, { memo, useState } from 'react'
 import styled from 'styled-components'
 
+import { SelectCourseExercise } from './SelectCourseExercise'
 import { SearchConsole } from './SearchConsole'
 import { ReviewFlows } from '../ReviewFlows'
 import { SearchResultsList } from './SearchResultsList'
@@ -18,6 +19,7 @@ const SearchViewEl = memo((props: IProps) => {
   }
   return (
     <Container className={className}>
+      <SelectCourseExercise />
       <ReviewFlows />
       <SearchConsole />
       <ExtraControls>

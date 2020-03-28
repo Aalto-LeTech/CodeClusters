@@ -18,7 +18,9 @@ function IconEl(props: IProps) {
   const { className, inline, button, children, onClick } = props
   if (button) {
     return (
-      <Button className={className} onClick={onClick}>{children}</Button>
+      <Wrapper className={className} inline={inline}>
+        <Button onClick={onClick}>{children}</Button>
+      </Wrapper>
     )
   }
   return (
