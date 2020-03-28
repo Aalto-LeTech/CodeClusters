@@ -60,7 +60,7 @@ const SelectCourseExerciseEl = inject('courseStore')(observer((props: IProps) =>
       </InfoText>
       <DropdownField>
         <CustomDropdown
-          selected={courseStore!.selectedCourse?.name}
+          selected={courseStore!.selectedCourse?.course_id}
           options={courseOptions}
           placeholder="Select course"
           fullWidth
@@ -71,7 +71,7 @@ const SelectCourseExerciseEl = inject('courseStore')(observer((props: IProps) =>
       </DropdownField>
       <DropdownField>
         <CustomDropdown
-          selected={courseStore!.selectedExercise?.name}
+          selected={courseStore!.selectedExercise?.exercise_id}
           options={exerciseOptions}
           placeholder="Select exercise"
           fullWidth

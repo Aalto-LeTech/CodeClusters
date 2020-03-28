@@ -64,7 +64,7 @@ function DropdownSearchEl(props: IProps) {
       if (firstItemIndex !== -1) {
         const item = options[firstItemIndex]
         onSelect(item)
-        onChange(item.toString())
+        onChange(item.value.toString())
       }
       setMenuOpen(false)
     }

@@ -12,7 +12,7 @@ type Option<K extends KeyValue, V extends React.ReactNode> = {
 interface IProps<K extends KeyValue, V extends React.ReactNode> {
   className?: string
   options: Option<K, V>[]
-  selected?: V
+  selected?: K
   disabled?: boolean
   required?: boolean
   placeholder?: string
@@ -37,7 +37,7 @@ function DropdownEl<K extends KeyValue, V extends React.ReactNode>(props: IProps
     !disabled && setMenuOpen(oldMenuOpen => !oldMenuOpen)
   }
   function isSelected(option: Option<K, V>) {
-    return option.value === selected
+    return option.key === selected
   }
   function isDisabled() {
     return disabled || options.length === 0
