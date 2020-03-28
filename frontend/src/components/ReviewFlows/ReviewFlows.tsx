@@ -49,7 +49,7 @@ const ReviewFlowsEl = inject('reviewFlowStore')(observer((props: IProps) => {
     <Container className={className}>
       <Header>
         <Button onClick={handleClickToggle}>
-          <Title>Use review flows</Title>
+          <Title>{`${minimized ? 'Use' : 'Hide'} review flows`}</Title>
         </Button>
         <Icon button onClick={handleClickToggle}>
           { minimized ? <FiChevronDown size={18}/> : <FiChevronUp size={18}/>}
@@ -74,7 +74,8 @@ const ReviewFlowsEl = inject('reviewFlowStore')(observer((props: IProps) => {
   )
 }))
 
-const Container = styled.div`
+const Container = styled.section`
+  align-items: center;
   display: flex;
   flex-direction: column;
   margin: 1rem;
@@ -97,6 +98,7 @@ const Body = styled.div<{ minimized: boolean}>`
   flex-direction: column;
   justify-content: space-around;
   margin-top: 0.75rem;
+  max-width: 700px;
   visibility: ${({ minimized }) => minimized ? 'hidden' : 'initial'};
   width: 100%;
   & > ${DropdownSearch} {

@@ -84,23 +84,8 @@ const SelectCourseExerciseEl = inject('courseStore')(observer((props: IProps) =>
   )
 }))
 
-const DropdownText = styled.span`
-  font-weight: bold;
-  font-size: 1.5rem;
-  margin: 0 1rem;
-`
-const CustomDropdown = styled(GenericDropdown<number, string>())`
-  & > button {
-    background: ${({ theme }) => theme.color.green};
-    border: 1px solid #222;
-    border-radius: 4px;
-    &:hover {
-      background-color: #00c364; // rgba(0, 0, 0, 0.08);
-    }
-  }
-`
-const Container = styled.div`
-  align-items: flex-start;
+const Container = styled.section`
+  align-items: center;
   display: flex;
   flex-direction: column;
   margin: 1rem 1rem 0 1rem;
@@ -115,6 +100,21 @@ const DropdownField = styled.div`
   width: 100%;
   & > ${Icon} {
     margin-left: 1rem;
+  }
+`
+const DropdownText = styled.span`
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin: 0 1rem;
+`
+const CustomDropdown = styled(GenericDropdown<number, string>())`
+  & > button {
+    background: ${({ theme }) => theme.color.green};
+    border: 1px solid #222;
+    border-radius: 4px;
+    &:hover {
+      background-color: #00c364; // rgba(0, 0, 0, 0.08);
+    }
   }
 `
 

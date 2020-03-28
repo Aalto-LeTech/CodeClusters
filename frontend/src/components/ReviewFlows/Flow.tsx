@@ -2,6 +2,8 @@ import React, { memo } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../../theme/styled'
 
+import { Button } from '../../elements/Button'
+
 import { Stores } from '../../stores'
 import { IReviewFlow } from 'shared'
 
@@ -40,6 +42,9 @@ const FlowEl = inject((stores: Stores) => ({
         </FlowStepItem>
         ))}
       </FlowStepsList>
+      <Controls>
+        <Button intent="success">Run and review</Button>
+      </Controls>
     </Container>
   )
 }))
@@ -78,5 +83,9 @@ const Action = styled.div`
   width: 100px;
 `
 const Parameters = styled.div``
+const Controls = styled.div`
+  display: flex;
+  margin-top: 1rem;
+`
 
 export const Flow = styled(FlowEl)``
