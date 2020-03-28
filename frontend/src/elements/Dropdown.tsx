@@ -5,26 +5,26 @@ import { FiChevronDown } from 'react-icons/fi'
 import useClickOutside from '../hooks/useClickOutside'
 
 type OptionValue = string | number
-type Option<T extends OptionValue> = {
-  key: string | number
-  value: T
+type Option<K extends OptionValue, V extends OptionValue> = {
+  key: K
+  value: V
 }
-interface IProps<T extends OptionValue> {
+interface IProps<K extends OptionValue, V extends OptionValue> {
   className?: string
-  options: Option<T>[]
-  selected?: T
+  options: Option<K, V>[]
+  selected?: V
   disabled?: boolean
   required?: boolean
   placeholder?: string
   fullWidth?: boolean
-  onSelect: (option: Option<T>) => void
+  onSelect: (option: Option<K, V>) => void
 }
 
 DropdownEl.defaultProps = {
   placeholder: 'Choose',
 }
 
-function DropdownEl<T extends OptionValue>(props: IProps<T>) {
+function DropdownEl<K extends OptionValue, V extends OptionValue>(props: IProps<K, V>) {
   const {
     className, options, selected, disabled, required, placeholder, fullWidth, onSelect
   } = props
@@ -35,7 +35,7 @@ function DropdownEl<T extends OptionValue>(props: IProps<T>) {
   function toggleMenu() {
     !disabled && setMenuOpen(oldMenuOpen => !oldMenuOpen)
   }
-  function isSelected(option: Option<T>) {
+  function isSelected(option: Option<K, V>) {
     return option.value === selected
   }
   function getButtonText() {
@@ -44,7 +44,7 @@ function DropdownEl<T extends OptionValue>(props: IProps<T>) {
     }
     return placeholder
   }
-  const selectOption = (option: Option<T>) => (e: React.MouseEvent) => {
+  const selectOption = (option: Option<K, V>) => (e: React.MouseEvent) => {
     e.stopPropagation()
     if (option.value !== selected) {
       onSelect(option)
@@ -62,12 +62,12 @@ function DropdownEl<T extends OptionValue>(props: IProps<T>) {
       </Button>
       <DropdownList open={menuOpen}>
         { options.map(o =>
-        <Option key={o.key}>
+        <OptionListItem key={o.key}>
           <OptionButton
             onClick={selectOption(o)}
             selected={isSelected(o)}
           >{o.value}</OptionButton>
-        </Option>
+        </OptionListItem>
         )}
       </DropdownList>
     </Container>
@@ -104,8 +104,7 @@ const Button = styled.button`
     margin-left: 6px;
   }
 `
-type DropdownProps = { open: boolean }
-const DropdownList = styled.ul<DropdownProps>`
+const DropdownList = styled.ul<{ open: boolean }>`
   background-color: #fff;
   border-color: #b5b5b5;
   border-radius: 4px;
@@ -126,10 +125,8 @@ const DropdownList = styled.ul<DropdownProps>`
   top: 0;
   transform-origin: 251px 0px;
 `
-const Option = styled.li`
-`
-type OptionButtonProps = { selected: boolean }
-const OptionButton = styled.button<OptionButtonProps>`
+const OptionListItem = styled.li``
+const OptionButton = styled.button<{ selected: boolean }>`
   align-items: center;
   display: flex;
   background-color: ${({ selected }) => selected ? 'rgba(0, 0, 0, 0.08)' : '#fff'};
@@ -146,6 +143,7 @@ const OptionButton = styled.button<OptionButtonProps>`
   }
 `
 
-export const GenericDropdown = <T extends OptionValue>() => styled((props: IProps<T>) => <DropdownEl<T> {...props} />)``
+export const GenericDropdown = <K extends OptionValue, V extends OptionValue>() =>
+  styled((props: IProps<K, V>) => <DropdownEl<K, V> {...props} />)``
 
-export const Dropdown = GenericDropdown<string>()
+export const Dropdown = GenericDropdown<string, string>()
