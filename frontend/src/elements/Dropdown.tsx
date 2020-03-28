@@ -17,7 +17,7 @@ interface IProps<K extends KeyValue, V extends React.ReactNode> {
   required?: boolean
   placeholder?: string
   fullWidth?: boolean
-  renderMenu?: (text: string) => React.ReactNode
+  renderMenu?: (content: React.ReactNode) => React.ReactNode
   onSelect: (option: Option<K, V>) => void
 }
 
@@ -43,13 +43,14 @@ function DropdownEl<K extends KeyValue, V extends React.ReactNode>(props: IProps
     return disabled || options.length === 0
   }
   function renderButtonContent() {
-    const text = selected ? selected.toString() : (placeholder || 'Choose')
+    const placeholderText = placeholder || 'Choose'
+    const content = selected ? options.find(o => o.key === selected)!.value : placeholderText
     if (renderMenu) {
-      return renderMenu(text)
+      return renderMenu(content)
     }
     return (
       <>
-        {text} 
+        {content} 
         <SvgWrapper><FiChevronDown size={18}/></SvgWrapper>
       </>
     )

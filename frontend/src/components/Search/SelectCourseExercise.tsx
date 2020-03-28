@@ -42,11 +42,11 @@ const SelectCourseExerciseEl = inject('courseStore')(observer((props: IProps) =>
   function handleExerciseTrashClick() {
     courseStore!.setSelectedExercise()
   }
-  function renderDropdownMenu(text: string) {
+  function renderDropdownMenu(content: React.ReactNode) {
     return (
       <>
         <Icon><MdKeyboardArrowRight size={24}/></Icon>
-        <DropdownText>{text}</DropdownText>
+        <DropdownText>{content}</DropdownText>
       </>
     )
   }
