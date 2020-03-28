@@ -7,6 +7,12 @@ import { CourseStore } from './CourseStore'
 import { AuthStore } from './AuthStore'
 
 export type ReviewFlowFilterType = 'course' | 'exercise' | 'all' | 'user'
+interface ITabOption {
+  key: string
+  value: string
+  disabled: boolean
+  itemCount: number
+}
 
 const FILTER_OPTIONS = [
   {
@@ -38,7 +44,7 @@ export class ReviewFlowStore {
   @observable selectedFlow?: IReviewFlow = undefined
   @observable filteredBy: ReviewFlowFilterType = 'all'
   @observable filteredFlows: { [key: string]: IReviewFlow[] } = { ...EMPTY_FILTERED_FLOWS }
-  @observable filterOptions = FILTER_OPTIONS.map(o => ({ ...o, disabled: false }))
+  @observable tabFilterOptions: ITabOption[] = FILTER_OPTIONS.map(o => ({ ...o, disabled: false, itemCount: 0 }))
   toastStore: ToastStore
   courseStore: CourseStore
   authStore: AuthStore
@@ -51,7 +57,7 @@ export class ReviewFlowStore {
   }
 
   @computed get getCurrentFilterOption() {
-    return this.filterOptions.find(o => o.key === this.filteredBy)!
+    return this.tabFilterOptions.find(o => o.key === this.filteredBy)!
   }
 
   @computed get getCurrentFlows() {
@@ -71,9 +77,10 @@ export class ReviewFlowStore {
   }
 
   @action setFilterOptions() {
-    this.filterOptions = FILTER_OPTIONS.map(o => ({
+    this.tabFilterOptions = FILTER_OPTIONS.map(o => ({
       ...o,
-      disabled: this.filteredFlows[o.key].length === 0
+      disabled: this.filteredFlows[o.key].length === 0,
+      itemCount: this.filteredFlows[o.key].length
     }))
   }
 

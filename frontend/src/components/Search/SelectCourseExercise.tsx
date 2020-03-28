@@ -91,22 +91,26 @@ const DropdownText = styled.span`
 `
 const CustomDropdown = styled(GenericDropdown<number, string>())`
   & > button {
-    border: 4px;
-    border-radius: 0;
+    background: ${({ theme }) => theme.color.green};
+    border: 1px solid #222;
+    border-radius: 4px;
+    &:hover {
+      background-color: #00c364; // rgba(0, 0, 0, 0.08);
+    }
   }
 `
 const Container = styled.div`
   align-items: flex-start;
   display: flex;
   flex-direction: column;
-  margin: 1rem;
+  margin: 1rem 1rem 0 1rem;
 `
 const InfoText = styled.p`
   margin: 0 0 1rem 1rem;
 `
 const DropdownField = styled.div`
   display: flex;
-  margin: 0.5rem 0 0 0;
+  margin: 0.75rem 0 0 0;
   max-width: 700px;
   width: 100%;
   & > ${Icon} {
