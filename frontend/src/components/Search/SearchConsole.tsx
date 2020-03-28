@@ -11,7 +11,9 @@ import { MultiInput } from '../../elements/MultiInput'
 
 import { useDebouncedCallback } from '../../hooks/useDebounce'
 
+import { Stores } from '../../stores'
 import { SearchStore } from '../../stores/SearchStore'
+import { CourseStore } from '../../stores/CourseStore'
 import { ISearchParams, ISearchResponse } from 'shared'
 
 function createQueryParams(obj: {[key: string]: string | number}) {
@@ -20,19 +22,19 @@ function createQueryParams(obj: {[key: string]: string | number}) {
 
 interface IProps extends RouteComponentProps {
   className?: string
-  searchStore?: SearchStore,
+  searchStore?: SearchStore
+  courseStore?: CourseStore
 }
 
-const SearchConsoleEl = inject('searchStore')(observer(withRouter((props: IProps) => {
+const SearchConsoleEl = inject((stores: Stores) => ({
+  searchStore: stores.searchStore,
+  courseStore: stores.courseStore,
+}))
+(observer(withRouter((props: IProps) => {
   const {
-    className, history, searchStore
+    className, history, searchStore, courseStore
   } = props
-  const { register, handleSubmit } = useForm({
-    defaultValues: {
-      course_id: 2,
-      exercise_id: 1,
-    }
-  })
+  const { register, handleSubmit } = useForm({})
   const [filterText, setFilterText] = useState('')
   const [wordFilters, setWordFilters] = useState([] as string[])
   const [submitInProgress, setSubmitInProgress] = useState(false)
@@ -61,6 +63,14 @@ const SearchConsoleEl = inject('searchStore')(observer(withRouter((props: IProps
     if (payload.q === undefined || payload.q === '') {
       payload.q = '*'
     }
+    const courseId = courseStore!.courseId
+    const exerciseId = courseStore!.exerciseId
+    if (courseId) {
+      payload.course_id = courseId
+    }
+    if (exerciseId) {
+      payload.exercise_id = exerciseId
+    }
     // Remove false, undefined and empty values since they are their default values
     // to keep the URL from being cluttered with redundant parameters
     Object.keys(payload).forEach(key => {
@@ -80,28 +90,6 @@ const SearchConsoleEl = inject('searchStore')(observer(withRouter((props: IProps
   return (
     <Container className={className}>
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <TopRow>
-          <FormField>
-            <label htmlFor="course_id">Course</label>
-            <Input
-              fullWidth
-              type="number"
-              name="course_id"
-              ref={register}
-              onChange={handleChange}
-            ></Input>
-          </FormField>
-          <FormField>
-            <label htmlFor="exercise_id">Exercise</label>
-            <Input
-              fullWidth
-              type="number"
-              name="exercise_id"
-              ref={register}
-              onChange={handleChange}
-            ></Input>
-          </FormField>
-        </TopRow>
         <TopRow>
           <FormField>
             <label htmlFor="num_results">Results per page</label>
@@ -128,12 +116,12 @@ const SearchConsoleEl = inject('searchStore')(observer(withRouter((props: IProps
         </TopRow>
         <MiddleRow>
           <FormField>
-            <label>Filters</label>
+            <label>Custom filters</label>
             <MultiInput
               fullWidth
               type="text"
-              name="filters"
-              placeholder="Eg. while"
+              name="custom_filters"
+              placeholder="Eg. student_id=1"
               value={filterText}
               items={wordFilters}
               onChange={handleFilterTextChange}
@@ -182,7 +170,6 @@ const Container = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
-  margin-bottom: 2rem;
 `
 const Form = styled.form`
   align-items: center;

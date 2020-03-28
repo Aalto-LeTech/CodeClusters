@@ -8,8 +8,8 @@ import { TabsMenu } from '../../elements/TabsMenu'
 import { DropdownSearch } from '../../elements/DropdownSearch'
 import { Icon } from '../../elements/Icon'
 
-import { ReviewFlowStore, ReviewFlowFilterType } from '../../stores/ReviewFlowStore'
 import { IReviewFlow } from 'shared'
+import { ReviewFlowStore, ReviewFlowFilterType } from '../../stores/ReviewFlowStore'
 
 interface IProps {
   className?: string
@@ -21,25 +21,19 @@ const ReviewFlowsEl = inject('reviewFlowStore')(observer((props: IProps) => {
   const [loading, setLoading] = useState(false)
   const [minimized, setMinimized] = useState(false)
   const [searchValue, setSearchValue] = useState('')
-  const [searchOptions, setSearchOptions] = useState(getSearchOptions())
 
   useEffect(() => {
     setLoading(true)
     reviewFlowStore!.getReviewFlows().then((flows) => {
       setLoading(false)
-      setSearchOptions(getSearchOptions())
       if (flows.length > 0) {
         setSearchValue(flows[0].title)
       }
     })
   }, [])
 
-  function getSearchOptions() {
-    return reviewFlowStore!.currentReviewFlows.map(r => ({ key: r.title, value: r.title }))
-  }
   function handleSelectTabOption(o: { key: string, value: string }) {
-    reviewFlowStore!.filterReviewFlows(o.key as ReviewFlowFilterType)
-    setSearchOptions(getSearchOptions())
+    reviewFlowStore!.setFilteredBy(o.key as ReviewFlowFilterType)
   }
   function handleSearchChange(title: string) {
     setSearchValue(title)
@@ -49,8 +43,6 @@ const ReviewFlowsEl = inject('reviewFlowStore')(observer((props: IProps) => {
   }
   function handleClickToggle() {
     setMinimized(!minimized)
-  }
-  function handleClick(e: React.MouseEvent<HTMLElement>) {
   }
   return (
     <Container className={className}>
@@ -68,7 +60,7 @@ const ReviewFlowsEl = inject('reviewFlowStore')(observer((props: IProps) => {
         />
         <DropdownSearch
           fullWidth
-          options={searchOptions}
+          options={reviewFlowStore!.getCurrentFlows.map(r => ({ key: r.title, value: r.title }))}
           value={searchValue}
           onChange={handleSearchChange}
           onSelect={handleSelectReviewFlow}

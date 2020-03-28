@@ -4,12 +4,12 @@ import { FiChevronDown } from 'react-icons/fi'
 
 import useClickOutside from '../hooks/useClickOutside'
 
-type OptionValue = string | number
-type Option<K extends OptionValue, V extends OptionValue> = {
+type KeyValue = string | number
+type Option<K extends KeyValue, V extends React.ReactNode> = {
   key: K
   value: V
 }
-interface IProps<K extends OptionValue, V extends OptionValue> {
+interface IProps<K extends KeyValue, V extends React.ReactNode> {
   className?: string
   options: Option<K, V>[]
   selected?: V
@@ -25,7 +25,7 @@ DropdownEl.defaultProps = {
   placeholder: 'Choose',
 }
 
-function DropdownEl<K extends OptionValue, V extends OptionValue>(props: IProps<K, V>) {
+function DropdownEl<K extends KeyValue, V extends React.ReactNode>(props: IProps<K, V>) {
   const {
     className, options, selected, disabled, required, placeholder, fullWidth, renderMenu, onSelect
   } = props
@@ -152,7 +152,7 @@ const OptionButton = styled.button<{ selected: boolean }>`
   }
 `
 
-export const GenericDropdown = <K extends OptionValue, V extends OptionValue>() =>
+export const GenericDropdown = <K extends KeyValue, V extends React.ReactNode>() =>
   styled((props: IProps<K, V>) => <DropdownEl<K, V> {...props} />)``
 
 export const Dropdown = GenericDropdown<string, string>()

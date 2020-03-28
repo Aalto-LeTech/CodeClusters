@@ -1,4 +1,4 @@
-import { action, computed, runInAction, observable } from 'mobx'
+import { action, autorun, computed, runInAction, observable } from 'mobx'
 import * as reviewFlowApi from '../api/review_flow.api'
 
 import { IReviewFlow } from 'shared'
@@ -26,13 +26,19 @@ const FILTER_OPTIONS = [
     value: 'Your flows'
   }
 ]
+const EMPTY_FILTERED_FLOWS = {
+  exercise: [],
+  course: [],
+  all: [],
+  user: []
+} as { [key: string]: IReviewFlow[] }
 
 export class ReviewFlowStore {
   @observable reviewFlows: IReviewFlow[] = []
-  @observable currentReviewFlows: IReviewFlow[] = []
   @observable selectedFlow?: IReviewFlow = undefined
-  @observable filteredBy: [ReviewFlowFilterType, number] = ['all', 0]
-  @observable filterOptions = FILTER_OPTIONS.map(f => ({ ...f, disabled: false }))
+  @observable filteredBy: ReviewFlowFilterType = 'all'
+  @observable filteredFlows: { [key: string]: IReviewFlow[] } = { ...EMPTY_FILTERED_FLOWS }
+  @observable filterOptions = FILTER_OPTIONS.map(o => ({ ...o, disabled: false }))
   toastStore: ToastStore
   courseStore: CourseStore
   authStore: AuthStore
@@ -41,10 +47,15 @@ export class ReviewFlowStore {
     this.toastStore = props.toastStore
     this.courseStore = props.courseStore
     this.authStore = props.authStore
+    this.watchFilteringChanges()
   }
 
   @computed get getCurrentFilterOption() {
-    return FILTER_OPTIONS.find(o => o.key === this.filteredBy[0])!
+    return this.filterOptions.find(o => o.key === this.filteredBy)!
+  }
+
+  @computed get getCurrentFlows() {
+    return this.filteredFlows[this.filteredBy]
   }
 
   @action reset() {
@@ -55,24 +66,47 @@ export class ReviewFlowStore {
     this.selectedFlow = this.reviewFlows.find(r => r.title === title)
   }
 
-  @action filterReviewFlows(by: ReviewFlowFilterType, id?: number) {
-    const course_id = this.courseStore.selectedCourse?.course_id
-    const exercise_id = this.courseStore.selectedExercise?.exercise_id
-    const user_id = this.authStore.user?.user_id
-    this.currentReviewFlows = this.reviewFlows.filter(r => {
-      switch (by) {
-        case 'course':
-          return r.course_id === course_id
-        case 'exercise':
-          return r.exercise_id === exercise_id
-        case 'user':
-          return r.user_id === user_id
-        case 'all':
-        default:
-          return r
+  @action setFilteredBy(key: ReviewFlowFilterType) {
+    this.filteredBy = key
+  }
+
+  @action setFilterOptions() {
+    this.filterOptions = FILTER_OPTIONS.map(o => ({
+      ...o,
+      disabled: this.filteredFlows[o.key].length === 0
+    }))
+  }
+
+  @action setFilteredFlows(flows: IReviewFlow[], courseId?: number, exerciseId?: number, userId?: number) {
+    this.filteredFlows = flows.reduce((acc, flow) => {
+      if (courseId !== undefined && flow.course_id === courseId) {
+        acc['course'].push(flow)
       }
+      if (exerciseId !== undefined && flow.exercise_id === exerciseId) {
+        acc['exercise'].push(flow)
+      }
+      if (userId !== undefined && flow.user_id === userId) {
+        acc['user'].push(flow)
+      }
+      acc['all'].push(flow)
+      return acc
+    }, {
+        exercise: [],
+        course: [],
+        all: [],
+        user: []
+      } as { [key: string]: IReviewFlow[] }
+    )
+  }
+
+  watchFilteringChanges = () => {
+    autorun(() => {
+      const courseId = this.courseStore.selectedCourse?.course_id
+      const exerciseId = this.courseStore.selectedExercise?.exercise_id
+      const userId = this.authStore.user?.user_id
+      this.setFilteredFlows(this.reviewFlows, courseId, exerciseId, userId)
+      this.setFilterOptions()
     })
-    this.filteredBy = [by, id || 0]
   }
 
   @action getReviewFlows = async () => {
@@ -80,8 +114,9 @@ export class ReviewFlowStore {
     runInAction(() => {
       if (result) {
         this.reviewFlows = result.reviewFlows
-        this.filterReviewFlows('all')
-        this.selectedFlow = result.reviewFlows[0]
+        if (result.reviewFlows.length > 0) {
+          this.selectedFlow = result.reviewFlows[0]
+        }
       }
     })
     return result && result.reviewFlows || []

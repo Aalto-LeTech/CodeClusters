@@ -107,7 +107,8 @@ const InfoText = styled.p`
 const DropdownField = styled.div`
   display: flex;
   margin: 0.5rem 0 0 0;
-  width: 700px;
+  max-width: 700px;
+  width: 100%;
   & > ${Icon} {
     margin-left: 1rem;
   }

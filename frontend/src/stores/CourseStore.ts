@@ -15,6 +15,14 @@ export class CourseStore {
     this.toastStore = props
   }
 
+  @computed get courseId() {
+    return this.selectedCourse?.course_id
+  }
+
+  @computed get exerciseId() {
+    return this.selectedExercise?.exercise_id
+  }
+
   @action reset() {
     this.courses = []
   }
