@@ -48,7 +48,7 @@ INSERT INTO review_submissions (review_id, submission_id, selection)
 VALUES (2, (SELECT submission_id FROM submission WHERE student_id = 2), array[2, 71, 135]);
 
 INSERT INTO review_flow (course_id, exercise_id, user_id, title, description, public, tags)
-VALUES (2, 1, 1, 'Too lengthy code',
+VALUES (2, 4, 1, 'Too lengthy code',
 'Generic evaluation of code based on its length. In this exercise the optimal solution shouldn''t be much longer than the model answer (150).',
 TRUE, array['length', 'static']);
 INSERT INTO review_flow (course_id, exercise_id, user_id, title, description, public, tags)
@@ -69,9 +69,9 @@ INSERT INTO review_flow_step (index, action, parameters)
 VALUES (2, 'Review', 'Your submission has the cyclomatic complexity of over 20. Please see the material to see how it can be reduced to reasonable level 1-19.');
 
 INSERT INTO review_flow_step (index, action, parameters)
-VALUES (1, 'Search', 'q=*&user_id=1');
+VALUES (1, 'Search', 'q=*&student_ids=[1]');
 INSERT INTO review_flow_step (index, action, parameters)
-VALUES (2, 'Model', 'model=ngram&grams=(5,5)');
+VALUES (2, 'Model', 'model=ngram&ngrams=[5,5]');
 INSERT INTO review_flow_step (index, action, parameters)
 VALUES (3, 'Review', 'You are a moron Morty. You have the brains of a catfish with a down syndrome.');
 

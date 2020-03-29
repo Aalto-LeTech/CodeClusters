@@ -11,6 +11,7 @@ export const SEARCH_QUERY_PARAMS = Joi.object({
   q: Joi.string().min(1).max(256).required(),
   course_id: Joi.number().integer(),
   exercise_id: Joi.number().integer(),
+  student_ids: Joi.array().items(Joi.number().integer()),
   num_results: Joi.number().integer(),
   num_lines: Joi.number().integer(),
   results_start: Joi.number().integer(),

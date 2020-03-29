@@ -1,7 +1,7 @@
 import { action, autorun, computed, runInAction, observable } from 'mobx'
 import * as reviewFlowApi from '../api/review_flow.api'
 
-import { IReviewFlow } from 'shared'
+import { IReviewFlow, IReviewFlowRunParams } from 'shared'
 import { ToastStore } from './ToastStore'
 import { CourseStore } from './CourseStore'
 import { AuthStore } from './AuthStore'
@@ -126,6 +126,16 @@ export class ReviewFlowStore {
         }
       }
     })
-    return result && result.reviewFlows || []
+    return result?.reviewFlows || []
+  }
+
+  @action runReviewFlow = async (params: IReviewFlowRunParams) => {
+    const result = await reviewFlowApi.runReviewFlow(params)
+    runInAction(() => {
+      if (result) {
+        console.log(result)
+      }
+    })
+    return result
   }
 }

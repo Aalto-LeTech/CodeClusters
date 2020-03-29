@@ -23,10 +23,10 @@ router.get('/courses',
 router.get('/model/clusters',
   authenticate,
   modelCtrl.getClusters)
-router.post('/model/cluster',
+router.post('/model/ngram',
   authenticate,
-  validateBody(modelCtrl.RUN_CLUSTERING_SCHEMA),
-  modelCtrl.runClustering)
+  validateBody(modelCtrl.RUN_NGRAM_PARAMS),
+  modelCtrl.runNgram)
 
 router.get('/reviews',
   authenticate,
@@ -45,6 +45,10 @@ router.post('/reviewflow',
   authenticate,
   validateBody(reviewFlowCtrl.REVIEW_FLOW_CREATE_SCHEMA),
   reviewFlowCtrl.createReviewFlow)
+router.post('/reviewflow/run',
+  authenticate,
+  validateBody(reviewFlowCtrl.REVIEW_FLOW_RUN_SCHEMA),
+  reviewFlowCtrl.runReviewFlow)
 
 router.get('/search',
   authenticate,

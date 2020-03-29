@@ -5,20 +5,25 @@ import styled from '../../theme/styled'
 import { Button } from '../../elements/Button'
 
 import { Stores } from '../../stores'
-import { IReviewFlow } from 'shared'
+import { IReviewFlow, IReviewFlowRunParams } from 'shared'
 
 interface IProps {
   className?: string
   selectedFlow?: IReviewFlow
+  runReviewFlow?: (params: IReviewFlowRunParams) => Promise<any>
 }
 
 const FlowEl = inject((stores: Stores) => ({
   selectedFlow: stores.reviewFlowStore.selectedFlow,
+  runReviewFlow: stores.reviewFlowStore.runReviewFlow,
 }))
 (observer((props: IProps) => {
-  const { className, selectedFlow } = props
+  const { className, selectedFlow, runReviewFlow } = props
 
-  function handleClick(e: React.MouseEvent<HTMLElement>) {
+  function handleClickRunReviewFlow() {
+    runReviewFlow!({
+      steps: selectedFlow?.steps || []
+    })
   }
   if (selectedFlow === undefined) {
     return (
@@ -43,7 +48,7 @@ const FlowEl = inject((stores: Stores) => ({
         ))}
       </FlowStepsList>
       <Controls>
-        <Button intent="success">Run and review</Button>
+        <Button intent="success" onClick={handleClickRunReviewFlow}>Run and review</Button>
       </Controls>
     </Container>
   )

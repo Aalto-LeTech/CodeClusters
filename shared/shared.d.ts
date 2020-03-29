@@ -103,6 +103,32 @@ declare module 'shared' {
     regex?: boolean
     whole_words?: boolean
   }
+  export interface IRunNgramParams {
+    model: string
+    ngrams?: [number, number]
+    n_components?: number
+    submission_ids: string[]
+  }
+  export interface IRunNgramResponse {
+    ngram: {
+      clusters: {[key: number]: number[]}
+      labels: number[]
+      params: {
+        ngrams: number[]
+        n_components: number
+      }
+    }
+    filter: {
+      filters: string[]
+      ids: number[]
+      matches: number[][]
+      counts: number[]
+      score: number[]
+    } | {}
+    // job_id: number
+    // documents_used: number
+    // status_url: string
+  }
   export interface IRunClusteringParams {
     course_id: number
     exercise_id: number
@@ -212,6 +238,10 @@ declare module 'shared' {
     description: string
     public?: boolean
     tags?: string[]
+    steps: IReviewFlowStep[]
+  }
+  export interface IReviewFlowRunParams {
+    review_flow_id?: number
     steps: IReviewFlowStep[]
   }
 }
