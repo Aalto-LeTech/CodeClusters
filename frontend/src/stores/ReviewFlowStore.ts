@@ -1,10 +1,12 @@
 import { action, autorun, computed, runInAction, observable } from 'mobx'
 import * as reviewFlowApi from '../api/review_flow.api'
 
-import { IReviewFlow, IReviewFlowRunParams } from 'shared'
+import { IReviewFlow, IReviewFlowRunParams, IRunNgramResponse } from 'shared'
 import { ToastStore } from './ToastStore'
 import { CourseStore } from './CourseStore'
 import { AuthStore } from './AuthStore'
+import { SearchStore } from './SearchStore'
+import { ModelStore } from './ModelStore'
 
 export type ReviewFlowFilterType = 'course' | 'exercise' | 'all' | 'user'
 interface ITabOption {
@@ -39,6 +41,14 @@ const EMPTY_FILTERED_FLOWS = {
   user: []
 } as { [key: string]: IReviewFlow[] }
 
+interface IProps {
+  toastStore: ToastStore
+  courseStore: CourseStore
+  authStore: AuthStore
+  searchStore: SearchStore
+  modelStore: ModelStore
+}
+
 export class ReviewFlowStore {
   @observable reviewFlows: IReviewFlow[] = []
   @observable selectedFlow?: IReviewFlow = undefined
@@ -48,11 +58,15 @@ export class ReviewFlowStore {
   toastStore: ToastStore
   courseStore: CourseStore
   authStore: AuthStore
+  searchStore: SearchStore
+  modelStore: ModelStore
 
-  constructor(props: { toastStore: ToastStore, courseStore: CourseStore, authStore: AuthStore }) {
+  constructor(props: IProps) {
     this.toastStore = props.toastStore
     this.courseStore = props.courseStore
     this.authStore = props.authStore
+    this.searchStore = props.searchStore
+    this.modelStore = props.modelStore
     this.watchFilteringChanges()
   }
 
@@ -134,6 +148,13 @@ export class ReviewFlowStore {
     runInAction(() => {
       if (result) {
         console.log(result)
+        if (result.searchResult) {
+          this.searchStore.addSearchResult(result.searchResult)
+        }
+        if (result.modelingResult && result.modelingResult.model === 'ngram') {
+          this.modelStore.setLatestRunNgram(result.modelingResult as IRunNgramResponse)
+        }
+        this.toastStore.createToast('Review flow run', 'success')
       }
     })
     return result

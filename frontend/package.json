@@ -4,6 +4,8 @@
   "author": "https://github.com/teemukoivisto",
   "dependencies": {
     "axios": "^0.19.0",
+    "d3-scale": "^3.2.1",
+    "d3-scale-chromatic": "^1.5.0",
     "lodash.debounce": "^4.0.8",
     "mobx": "^5.15.1",
     "mobx-react": "^6.1.4",
@@ -13,6 +15,7 @@
     "react-icons": "^3.8.0",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
+    "recharts": "^1.8.5",
     "styled-components": "^4.4.1"
   },
   "scripts": {
@@ -27,6 +30,7 @@
     "preversion": "npm run lint"
   },
   "devDependencies": {
+    "@types/d3": "^5.7.2",
     "@types/jest": "24.0.24",
     "@types/lodash.debounce": "^4.0.6",
     "@types/node": "12.12.21",
@@ -34,6 +38,7 @@
     "@types/react-dom": "16.9.4",
     "@types/react-router": "^5.1.3",
     "@types/react-router-dom": "^5.1.3",
+    "@types/recharts": "^1.8.9",
     "@types/styled-components": "4.4.1",
     "@typescript-eslint/eslint-plugin": "^2.12.0",
     "eslint": "^6.8.0",

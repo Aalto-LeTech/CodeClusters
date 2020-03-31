@@ -54,7 +54,6 @@ function NavLinks(props: { user?: IUser }) {
       <Link to="/">Frontpage</Link>
       <Link to="/reviews">Reviews</Link>
       <Link to="/review/create">Review</Link>
-      <Link to="/clusterings">Clusterings</Link>
       <Link to="/submissions">Submissions</Link>
       <Link to="/submit">Submit</Link>
     </>

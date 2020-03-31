@@ -1,4 +1,4 @@
-import { IReviewFlow, IReviewFlowCreateParams, IReviewFlowRunParams } from 'shared'
+import { IReviewFlow, IReviewFlowCreateParams, IReviewFlowRunParams, IReviewFlowRunResponse } from 'shared'
 
 import {
   authenticatedHeaders,
@@ -13,4 +13,4 @@ export const getReviewFlows = () =>
   get<{reviewFlows: IReviewFlow[]}>('reviewflows', authenticatedHeaders())
 
 export const runReviewFlow = (payload: IReviewFlowRunParams) =>
-  post<IReviewFlow>('reviewflow/run', payload, authenticatedHeaders())
+  post<IReviewFlowRunResponse>('reviewflow/run', payload, authenticatedHeaders())

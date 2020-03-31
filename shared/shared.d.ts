@@ -31,6 +31,10 @@ declare module 'shared' {
     message: string
     metadata?: string
   }
+  export interface IReviewSelection {
+    submission_id: string
+    selection: [number, number, number]
+  }
   // Course
   export interface ICourse {
     course_id: number
@@ -63,7 +67,7 @@ declare module 'shared' {
     code: string
     timestamp: string
   }
-
+  // User / auth
   export interface IUser {
     user_id: number
     name: string
@@ -91,17 +95,10 @@ declare module 'shared' {
     student_id: number | null
     role: Role
   }
-  export interface ISearchParams {
-    q: string
-    course_id?: number
-    exercise_id?: number
-    num_results?: number
-    num_lines?: number
-    result_start?: number
-    filters?: string[]
-    case_sensitive?: boolean
-    regex?: boolean
-    whole_words?: boolean
+  // Model
+  export interface IRunModelResult {
+    model: string // basically 'ngram'
+    // date: Date
   }
   export interface IRunNgramParams {
     model: string
@@ -109,10 +106,11 @@ declare module 'shared' {
     n_components?: number
     submission_ids: string[]
   }
-  export interface IRunNgramResponse {
+  export interface IRunNgramResponse extends IRunModelResult {
     ngram: {
-      clusters: {[key: number]: number[]}
+      clusters: {[key: number]: string[]}
       labels: number[]
+      TSNE: { id: string, x: number, y: number, cluster: number }[]
       params: {
         ngrams: number[]
         n_components: number
@@ -153,6 +151,19 @@ declare module 'shared' {
     // job_id: number
     // documents_used: number
     // status_url: string
+  }
+  // Search with Solr
+  export interface ISearchParams {
+    q: string
+    course_id?: number
+    exercise_id?: number
+    num_results?: number
+    num_lines?: number
+    result_start?: number
+    filters?: string[]
+    case_sensitive?: boolean
+    regex?: boolean
+    whole_words?: boolean
   }
   export interface ISolrSearchResponse {
     responseHeader: {
@@ -196,7 +207,6 @@ declare module 'shared' {
     highlighted: string[]
     date: Date
   }
-  // Search
   export interface ISearchResponse {
     numFound: number
     start: number
@@ -209,10 +219,6 @@ declare module 'shared' {
     exercise_id: number
     code: string
     date: Date
-  }
-  export interface IReviewSelection {
-    submission_id: string
-    selection: [number, number, number]
   }
   // Review flow
   export interface IReviewFlowStep {
@@ -243,5 +249,9 @@ declare module 'shared' {
   export interface IReviewFlowRunParams {
     review_flow_id?: number
     steps: IReviewFlowStep[]
+  }
+  export interface IReviewFlowRunResponse {
+    searchResult?: ISolrSearchResponse
+    modelingResult?: IRunModelResult
   }
 }

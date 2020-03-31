@@ -49,7 +49,7 @@ export const reviewService = {
       }, ['', 1, [] as any])
     }
     const values = createValues(params, savedReview!.review_id)
-    console.log(values)
+
     type Returned = {
       review_id: number
       submission_id: string

@@ -3,7 +3,7 @@ import { CourseStore } from './CourseStore'
 import { ReviewStore } from './ReviewStore'
 import { ReviewFlowStore } from './ReviewFlowStore'
 import { SubmissionStore } from './SubmissionStore'
-import { ClusteringStore } from './ClusteringStore'
+import { ModelStore } from './ModelStore'
 import { SearchStore } from './SearchStore'
 import { ModalStore } from './ModalStore'
 import { ToastStore } from './ToastStore'
@@ -14,7 +14,7 @@ export class Stores {
   reviewStore: ReviewStore
   reviewFlowStore: ReviewFlowStore
   submissionStore: SubmissionStore
-  clusteringStore: ClusteringStore
+  modelStore: ModelStore
   searchStore: SearchStore
   modalStore: ModalStore
   toastStore: ToastStore
@@ -26,13 +26,15 @@ export class Stores {
     this.searchStore = new SearchStore(this.toastStore)
     this.courseStore = new CourseStore(this.toastStore)
     this.reviewStore = new ReviewStore(this.toastStore)
+    this.submissionStore = new SubmissionStore(this.toastStore)
+    this.modelStore = new ModelStore(this.toastStore)
     this.reviewFlowStore = new ReviewFlowStore({
       toastStore: this.toastStore,
       courseStore: this.courseStore,
       authStore: this.authStore,
+      searchStore: this.searchStore,
+      modelStore: this.modelStore
     })
-    this.submissionStore = new SubmissionStore(this.toastStore)
-    this.clusteringStore = new ClusteringStore(this.toastStore)
   }
 
   reset = () => {
@@ -42,7 +44,7 @@ export class Stores {
     this.reviewStore.reset()
     this.reviewFlowStore.reset()
     this.submissionStore.reset()
-    this.clusteringStore.reset()
+    this.modelStore.reset()
     this.searchStore.reset()
   }
 }

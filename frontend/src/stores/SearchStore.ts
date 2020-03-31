@@ -39,6 +39,18 @@ export class SearchStore {
     this.searchResults = []
   }
 
+  @action addSearchResult(result: ISolrSearchResponse) {
+    const docs = result.response.docs.map(r => ({
+      ...r,
+      date: new Date(r.timestamp),
+      highlighted: result.highlighting[r.id].code
+    }))
+    this.searchResult = {
+      ...result.response,
+      docs
+    }
+  }
+
   @action search = async (payload: ISearchParams) => {
     const result = await searchApi.search(payload)
     runInAction(() => {
