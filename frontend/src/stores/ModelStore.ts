@@ -1,6 +1,8 @@
 import { action, computed, runInAction, observable } from 'mobx'
 import * as modelApi from '../api/model.api'
 
+import { persist } from './persist'
+
 import {
   IModel, IRunModelResponse, IRunNgramParams, IRunNgramResponse, NgramModelId
 } from 'shared'
@@ -31,6 +33,7 @@ export class ModelStore {
   constructor(props: IProps) {
    this.toastStore = props.toastStore
    this.searchStore = props.searchStore
+   persist(() => this.latestRunNgram, (val: any) => this.latestRunNgram = val, 'model.latestRunNgram')
  }
 
   @computed get getNgramHistogramData() {
@@ -83,18 +86,6 @@ export class ModelStore {
         this.toastStore.createToast('Model ran successfully', 'success')
         this.runModels.push(result)
         if (model_id === NgramModelId) this.latestRunNgram = result
-      }
-    })
-    return result
-  }
-
-  @action runNgram = async (payload: IRunNgramParams) => {
-    const result = await modelApi.runNgram(payload)
-    runInAction(() => {
-      if (result) {
-        this.toastStore.createToast('Ngram model ran', 'success')
-        this.runModels.push(result)
-        this.latestRunNgram = result
       }
     })
     return result

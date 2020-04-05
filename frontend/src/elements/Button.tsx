@@ -51,7 +51,7 @@ export const Button = styled(ButtonEl)<IProps>`
   background-color: ${({ theme, intent }) => getIntentColor(theme, intent)};
   border: 1px solid ${({ theme, intent }) => intent !== 'transparent' ? theme.color.textDark : 'transparent'};
   border-radius: 4px;
-  color: ${({ theme, intent }) => getIntentTextColor(theme, intent)};
+  color: ${({ intent, theme }) => getIntentTextColor(theme, intent)};
   cursor: pointer;
   display: flex;
   font-size: ${({ theme }) => theme.fontSize.medium};
@@ -60,12 +60,17 @@ export const Button = styled(ButtonEl)<IProps>`
   min-width: 100px;
   padding: 0.5rem 1.5rem;
   text-decoration: none;
+  transition: 0.2s all;
   width: ${({ fullWidth }) => fullWidth ? '100%' : ''};
   &:hover {
     background: ${({ theme, intent }) => intent === 'transparent' && theme.color.gray.lightest};
     box-shadow: ${({ intent }) => intent !== 'transparent' && '0 0 2px 2px #039be569'};
   }
-  transition: 0.2s all;
+  &:disabled {
+    box-shadow: none;
+    color: rgba(34, 34, 34, 0.4);
+    cursor: default;
+  }
 `
 
 Button.defaultProps = {

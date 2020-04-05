@@ -21,7 +21,7 @@ const SelectCourseExerciseEl = inject('courseStore')(observer((props: IProps) =>
   } = props
   const [loading, setLoading] = useState(false)
   const courseOptions = courseStore!.courses.map(c => ({ key: c.course_id, value: c.name }))
-  const exerciseOptions = courseStore!.selectedCourse?.exercises.map(e => ({ key: e.exercise_id, value: e.name })) || []
+  const exerciseOptions = courseStore!.selectedCourse?.exercises?.map(e => ({ key: e.exercise_id, value: e.name })) || []
 
   useEffect(() => {
     setLoading(true)

@@ -1,7 +1,7 @@
-import React, { memo, useMemo, useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../../theme/styled'
-import { FiChevronDown, FiChevronUp, FiTrash } from 'react-icons/fi'
+import { FiChevronDown, FiChevronUp } from 'react-icons/fi'
 
 import { ClusteringResults } from './ClusteringResults'
 import { Button } from '../../elements/Button'
@@ -19,7 +19,7 @@ const ClustersEl = inject('modelStore')(observer((props: IProps) => {
     className, modelStore
   } = props
   const [minimized, setMinimized] = useState(true)
-  const [loading, setLoading] = useState(false)
+  const disabled = modelStore!.latestRunNgram === undefined
 
   function handleClickToggle() {
     setMinimized(!minimized)
@@ -27,10 +27,10 @@ const ClustersEl = inject('modelStore')(observer((props: IProps) => {
   return (
     <Container className={className}>
       <Header>
-        <Button onClick={handleClickToggle}>
+        <Button onClick={handleClickToggle} disabled={disabled}>
           <Title>{`${minimized ? 'Show' : 'Hide'} clusters`}</Title>
         </Button>
-        <Icon button onClick={handleClickToggle}>
+        <Icon button onClick={handleClickToggle} disabled={disabled}>
           { minimized ? <FiChevronDown size={18}/> : <FiChevronUp size={18}/>}
         </Icon>
       </Header>
@@ -59,8 +59,9 @@ const Title = styled.h2`
   margin: 0;
 `
 const Body = styled.div<{ minimized: boolean}>`
-  background: #ededed;
+  background: #fff;
   border-radius: 4px;
+  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.18);
   display: ${({ minimized }) => minimized ? 'none' : 'flex'};
   flex-direction: column;
   justify-content: space-around;

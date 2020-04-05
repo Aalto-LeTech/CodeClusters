@@ -5,7 +5,7 @@ import { inject, observer } from 'mobx-react'
 import { Button } from '../../elements/Button'
 import { Input } from '../../elements/Input'
 
-import { IRunNgramParams, IRunNgramResponse } from 'shared'
+import { IRunNgramParams, IRunNgramResponse, NgramModelId } from 'shared'
 import { Stores } from '../../stores'
 
 interface IProps {
@@ -20,9 +20,9 @@ const DEFAULT_NGRAMS = [5, 5] as [number, number]
 const DEFAULT_NCOMPONENTS = 50
 
 const NgramParametersFormEl = inject((stores: Stores) => ({
-  data: stores.modelStore.modelParameters['ngram'],
-  onUpdate: (data: Partial<IRunNgramParams>) => stores.modelStore.updateModelParameters('ngram', data),
-  onSubmit: () => stores.modelStore.runModel('ngram')
+  data: stores.modelStore.modelParameters[NgramModelId],
+  onUpdate: (data: Partial<IRunNgramParams>) => stores.modelStore.updateModelParameters(NgramModelId, data),
+  onSubmit: () => stores.modelStore.runModel(NgramModelId)
 }))
 (observer((props: IProps) => {
   const { className, data, onUpdate, onSubmit, visible } = props
@@ -53,11 +53,6 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (hasNoError()) {
-      // const payload = {
-      //   model: 'ngrams',
-      //   ngrams,
-      //   n_components,
-      // }
       setSubmitInProgress(true)
       const result = await onSubmit!()
       if (result) {

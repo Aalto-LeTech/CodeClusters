@@ -32,6 +32,7 @@ export const WrappedRoute = ({ component, ...rest } : IWrappedRoute) =>
   <Route {...rest} render={renderWrapper(component)}/>
 
 const MainWrapper = styled.div`
+  background: ${({ theme }) => theme.color.bg};
 `
 const MainContainer = styled.main`
   margin: 40px auto 20px auto;
