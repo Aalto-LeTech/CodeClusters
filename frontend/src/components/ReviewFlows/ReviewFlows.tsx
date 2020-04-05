@@ -20,7 +20,7 @@ interface IProps {
 const ReviewFlowsEl = inject('reviewFlowStore')(observer((props: IProps) => {
   const { className, reviewFlowStore } = props
   const [loading, setLoading] = useState(false)
-  const [minimized, setMinimized] = useState(false)
+  const [minimized, setMinimized] = useState(true)
   const [searchValue, setSearchValue] = useState('')
 
   useEffect(() => {
@@ -49,7 +49,7 @@ const ReviewFlowsEl = inject('reviewFlowStore')(observer((props: IProps) => {
     <Container className={className}>
       <Header>
         <Button onClick={handleClickToggle}>
-          <Title>{`${minimized ? 'Use' : 'Hide'} review flows`}</Title>
+          <Title>{`${minimized ? 'Show' : 'Hide'} review flows`}</Title>
         </Button>
         <Icon button onClick={handleClickToggle}>
           { minimized ? <FiChevronDown size={18}/> : <FiChevronUp size={18}/>}

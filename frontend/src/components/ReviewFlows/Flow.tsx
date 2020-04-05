@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { useState } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../../theme/styled'
 
@@ -19,10 +19,15 @@ const FlowEl = inject((stores: Stores) => ({
 }))
 (observer((props: IProps) => {
   const { className, selectedFlow, runReviewFlow } = props
+  const [loading, setLoading] = useState(false)
 
   function handleClickRunReviewFlow() {
+    setLoading(true)
     runReviewFlow!({
       steps: selectedFlow?.steps || []
+    })
+    .then((result) => {
+      setLoading(false)
     })
   }
   if (selectedFlow === undefined) {
@@ -48,7 +53,7 @@ const FlowEl = inject((stores: Stores) => ({
         ))}
       </FlowStepsList>
       <Controls>
-        <Button intent="success" onClick={handleClickRunReviewFlow}>Run and review</Button>
+        <Button intent="success" loading={loading} onClick={handleClickRunReviewFlow}>Run and review</Button>
       </Controls>
     </Container>
   )

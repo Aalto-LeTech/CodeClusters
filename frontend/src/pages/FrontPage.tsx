@@ -1,36 +1,36 @@
 import React from 'react'
-import { inject } from 'mobx-react'
+import { inject, observer } from 'mobx-react'
 import styled from '../theme/styled'
 
 import { SearchView } from '../components/Search'
 import { DeleteReviewSelectionModal } from '../modals/DeleteReviewSelectionModal'
+import { FloatingMenu } from '../components/FloatingMenu'
 
 import { Stores } from '../stores'
 import { AuthStore } from '../stores/AuthStore'
 
 interface IProps {
-  authStore?: AuthStore,
+  authStore?: AuthStore
 }
 
-@inject((stores: Stores) => ({
+export const FrontPage = inject((stores: Stores) => ({
   authStore: stores.authStore,
 }))
-export class FrontPage extends React.PureComponent<IProps> {
-  render() {
-    return (
-      <Container>
-        <Header>
-          <h1><a href="https://github.com/Aalto-LeTech/CodeClusters">Code Clusters</a></h1>
-        </Header>
-        <SearchView />
-        <DeleteReviewSelectionModal />
-        <ImgContainer>
-          <img width={1200} src={'/img/architecture.jpg'} alt="Architecture"/>
-        </ImgContainer>
-      </Container>
-    )
-  }
-}
+(observer((props: IProps) => {
+  return (
+    <Container>
+      <Header>
+        <h1><a href="https://github.com/Aalto-LeTech/CodeClusters">Code Clusters</a></h1>
+      </Header>
+      <SearchView/>
+      <DeleteReviewSelectionModal />
+      <FloatingMenu />
+      <ImgContainer>
+        <img width={1200} src={'/img/architecture.jpg'} alt="Architecture"/>
+      </ImgContainer>
+    </Container>
+  )
+}))
 
 const Container = styled.div`
 `

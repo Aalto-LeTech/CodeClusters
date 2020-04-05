@@ -1,6 +1,8 @@
 import { action, computed, runInAction, observable } from 'mobx'
 import * as courseApi from '../api/course.api'
 
+import { persist } from './persist'
+
 import { ICourse, IExercise } from 'shared'
 import { ToastStore } from './ToastStore'
 import { SearchStore } from './SearchStore'
@@ -13,6 +15,9 @@ export class CourseStore {
 
   constructor(props: ToastStore) {
     this.toastStore = props
+    persist(() => this.courses, (val: any) => this.courses = val, 'course.courses')
+    persist(() => this.selectedCourse, (val: any) => this.selectedCourse = val, 'course.selectedCourse')
+    persist(() => this.selectedExercise, (val: any) => this.selectedExercise = val, 'course.selectedExercise')
   }
 
   @computed get courseId() {

@@ -14,7 +14,7 @@ export const RUN_CLUSTERING_SCHEMA = Joi.object({
 })
 
 export const RUN_NGRAM_PARAMS = Joi.object({
-  model: Joi.string().min(1).max(256).required(),
+  model_id: Joi.string().min(1).max(256).required(),
   ngrams: Joi.array().items(Joi.number().integer()).length(2),
   n_components: Joi.number().integer(),
   submission_ids: Joi.array().items(Joi.string()),
@@ -29,10 +29,10 @@ export const runNgram = async (req: IAuthRequest<IRunNgramParams>, res: Response
   }
 }
 
-export const getClusters = async (req: IAuthRequest<{}>, res: Response, next: NextFunction) => {
+export const getModels = async (req: IAuthRequest<{}>, res: Response, next: NextFunction) => {
   try {
-    const clusters = await modelService.getClusters()
-    res.json({ clusters })
+    const models = await modelService.getModels()
+    res.json({ models })
   } catch (err) {
     next(err)
   }

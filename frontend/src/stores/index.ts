@@ -6,6 +6,7 @@ import { SubmissionStore } from './SubmissionStore'
 import { ModelStore } from './ModelStore'
 import { SearchStore } from './SearchStore'
 import { ModalStore } from './ModalStore'
+import { StateStore } from './StateStore'
 import { ToastStore } from './ToastStore'
 
 export class Stores {
@@ -17,6 +18,7 @@ export class Stores {
   modelStore: ModelStore
   searchStore: SearchStore
   modalStore: ModalStore
+  stateStore: StateStore
   toastStore: ToastStore
 
   constructor() {
@@ -27,7 +29,10 @@ export class Stores {
     this.courseStore = new CourseStore(this.toastStore)
     this.reviewStore = new ReviewStore(this.toastStore)
     this.submissionStore = new SubmissionStore(this.toastStore)
-    this.modelStore = new ModelStore(this.toastStore)
+    this.modelStore = new ModelStore({
+      toastStore: this.toastStore,
+      searchStore: this.searchStore,
+    })
     this.reviewFlowStore = new ReviewFlowStore({
       toastStore: this.toastStore,
       courseStore: this.courseStore,
@@ -35,6 +40,7 @@ export class Stores {
       searchStore: this.searchStore,
       modelStore: this.modelStore
     })
+    this.stateStore = new StateStore()
   }
 
   reset = () => {
@@ -46,5 +52,6 @@ export class Stores {
     this.submissionStore.reset()
     this.modelStore.reset()
     this.searchStore.reset()
+    this.stateStore.reset()
   }
 }

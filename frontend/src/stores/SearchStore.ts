@@ -1,13 +1,15 @@
 import { action, runInAction, observable } from 'mobx'
 import * as searchApi from '../api/search.api'
 
-// import { persist } from './persist'
+import { persist } from './persist'
 
-import { ISearchParams, ISolrSearchResponse, ISolrSubmissionWithDate } from 'shared'
+import {
+  ISearchCodeParams, ISearchCodeResult, ISolrSearchCodeResponse, ISolrSubmissionWithDate
+} from 'shared'
 import { ToastStore } from './ToastStore'
 
-const EMPTY_QUERY: ISearchParams = {
-  q: '',
+const EMPTY_QUERY: ISearchCodeParams = {
+  q: '*',
   course_id: undefined,
   exercise_id: undefined,
   filters: [],
@@ -26,49 +28,66 @@ const EMPTY_RESULT = {
 }
 
 export class SearchStore {
-  @observable searchResults: ISolrSubmissionWithDate[] = []
-  @observable searchResult = EMPTY_RESULT
-  @observable latestQuery: ISearchParams = EMPTY_QUERY
+  @observable searchResults: ISearchCodeResult[] = []
+  @observable searchedIds: string[] = []
+  @observable selectedSearchResult = EMPTY_RESULT
+  @observable searchParams: ISearchCodeParams = EMPTY_QUERY
   toastStore: ToastStore
 
   constructor(props: ToastStore) {
     this.toastStore = props
+    persist(() => this.searchResults, (val: any) => this.searchResults = val, 'search.searchResults')
   }
 
   @action reset() {
     this.searchResults = []
   }
 
-  @action addSearchResult(result: ISolrSearchResponse) {
+  @action addSearchResult(result: ISolrSearchCodeResponse) {
     const docs = result.response.docs.map(r => ({
       ...r,
       date: new Date(r.timestamp),
       highlighted: result.highlighting[r.id].code
     }))
-    this.searchResult = {
+    const searchResult = {
       ...result.response,
       docs
     }
+    this.selectedSearchResult = searchResult
   }
 
-  @action search = async (payload: ISearchParams) => {
+  @action search = async (payload: ISearchCodeParams) => {
     const result = await searchApi.search(payload)
     runInAction(() => {
-      this.latestQuery = payload
+      this.searchParams = payload
     })
     if (result) {
       runInAction(() => {
         const docs = result.response.docs.map(r => ({
           ...r,
           date: new Date(r.timestamp),
-          highlighted: result.highlighting[r.id].code
+          highlighted: result.highlighting[r.id].code,
         }))
-        this.searchResult = {
+        const searchResult = {
           ...result.response,
           docs
         }
+        this.selectedSearchResult = searchResult
+        this.searchResults.push({ ...searchResult, params: payload })
       })
     }
     return result
+  }
+
+  @action searchIds = async () => {
+    const result = await searchApi.searchIds(this.searchParams)
+    let ids = [] as string[]
+    if (result) {
+      runInAction(() => {
+        ids = result.response.docs.map(r => r.id)
+        this.searchedIds = ids
+      })
+    }
+    return ids
   }
 }

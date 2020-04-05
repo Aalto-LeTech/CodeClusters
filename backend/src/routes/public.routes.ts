@@ -20,9 +20,9 @@ router.get('/courses',
   authenticate,
   courseCtrl.getCourses)
 
-router.get('/model/clusters',
+router.get('/models',
   authenticate,
-  modelCtrl.getClusters)
+  modelCtrl.getModels)
 router.post('/model/ngram',
   authenticate,
   validateBody(modelCtrl.RUN_NGRAM_PARAMS),
@@ -54,6 +54,11 @@ router.get('/search',
   authenticate,
   parseQueryParams(searchCtrl.SEARCH_QUERY_PARAMS),
   searchCtrl.searchSubmissions)
+
+router.get('/search_ids',
+  authenticate,
+  parseQueryParams(searchCtrl.SEARCH_QUERY_PARAMS),
+  searchCtrl.searchSubmissionIds)
 
 router.get('/submissions',
   authenticate,

@@ -6,12 +6,12 @@ import { CodeBlock } from './CodeBlock'
 import { Button } from '../../elements/Button'
 
 import { ReviewStore } from '../../stores/ReviewStore'
-import { ISearchParams, ISolrSubmissionWithDate } from 'shared'
+import { ISearchCodeParams, ISolrSubmissionWithDate } from 'shared'
 
 interface IProps {
   className?: string
   result: ISolrSubmissionWithDate
-  latestQuery: ISearchParams
+  latestQuery: ISearchCodeParams
   reviewStore?: ReviewStore
 }
 

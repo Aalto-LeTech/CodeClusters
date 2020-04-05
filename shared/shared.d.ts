@@ -1,4 +1,3 @@
-
 declare module 'shared' {
   export type OmitProp<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
@@ -96,17 +95,22 @@ declare module 'shared' {
     role: Role
   }
   // Model
-  export interface IRunModelResult {
-    model: string // basically 'ngram'
-    // date: Date
+  export interface IModel {
+    model_id: string // basically 'ngram'
+    title: string
+    description: string
   }
+  export const NgramModelId: 'ngram'
+  export type IModelParams = IRunNgramParams
+  export type IRunModelResponse = IRunNgramResponse
   export interface IRunNgramParams {
-    model: string
+    model_id: string
     ngrams?: [number, number]
     n_components?: number
     submission_ids: string[]
   }
-  export interface IRunNgramResponse extends IRunModelResult {
+  export interface IRunNgramResponse {
+    model_id: string
     ngram: {
       clusters: {[key: number]: string[]}
       labels: number[]
@@ -153,7 +157,7 @@ declare module 'shared' {
     // status_url: string
   }
   // Search with Solr
-  export interface ISearchParams {
+  export interface ISearchCodeParams {
     q: string
     course_id?: number
     exercise_id?: number
@@ -165,7 +169,7 @@ declare module 'shared' {
     regex?: boolean
     whole_words?: boolean
   }
-  export interface ISolrSearchResponse {
+  export interface ISolrSearchCodeResponse {
     responseHeader: {
       status: number
       QTime: number
@@ -207,18 +211,36 @@ declare module 'shared' {
     highlighted: string[]
     date: Date
   }
-  export interface ISearchResponse {
+  export interface ISolrSearchIdsResponse {
+    responseHeader: {
+      status: number
+      QTime: number
+      params: {
+        _: number
+        q: string
+        id?: string
+        student_id?: number
+        course_id?: number
+        exercise_id?: number
+        timestamp?: string
+      }
+    }
+    response: {
+      numFound: number
+      start: number
+      docs: { id: string }[]
+    }
+  }
+  export interface ISearchCodeResponse {
     numFound: number
     start: number
-    results: ISearchResult[]
+    docs: ISolrSubmissionWithDate[]
   }
-  export interface ISearchResult {
-    id: string
-    student_id: number
-    course_id: number
-    exercise_id: number
-    code: string
-    date: Date
+  export interface ISearchCodeResult {
+    numFound: number
+    start: number
+    docs: ISolrSubmissionWithDate[]
+    params: ISearchCodeParams
   }
   // Review flow
   export interface IReviewFlowStep {
@@ -251,7 +273,7 @@ declare module 'shared' {
     steps: IReviewFlowStep[]
   }
   export interface IReviewFlowRunResponse {
-    searchResult?: ISolrSearchResponse
-    modelingResult?: IRunModelResult
+    searchResult?: ISolrSearchCodeResponse
+    modelingResult?: IRunModelResponse
   }
 }

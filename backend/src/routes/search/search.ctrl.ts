@@ -4,7 +4,7 @@ import { searchService } from './search.service'
 
 // import { CustomError } from '../../common'
 
-import { ISearchParams } from 'shared'
+import { ISearchCodeParams } from 'shared'
 import { IAuthRequest } from '../../types/auth'
 
 export const SEARCH_QUERY_PARAMS = Joi.object({
@@ -21,9 +21,22 @@ export const SEARCH_QUERY_PARAMS = Joi.object({
   whole_words: Joi.boolean(),
 })
 
-export const searchSubmissions = async (req: IAuthRequest<{}, ISearchParams>, res: Response, next: NextFunction) => {
+export const searchSubmissions = async (req: IAuthRequest<{}, ISearchCodeParams>, res: Response, next: NextFunction) => {
   try {
     const result = await searchService.searchSubmissions(req.queryParams)
+    if (result) {
+      res.json(result)
+    } else {
+      res.status(400).json({ message: 'Bad query' })
+    }
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const searchSubmissionIds = async (req: IAuthRequest<{}, ISearchCodeParams>, res: Response, next: NextFunction) => {
+  try {
+    const result = await searchService.searchSubmissionIds(req.queryParams)
     if (result) {
       res.json(result)
     } else {

@@ -2,6 +2,7 @@
   "name": "shared",
   "version": "0.0.0",
   "description": "Shared code between frontend and backend eg type definitions",
+  "main": "shared.js",
   "types": "shared.d.ts",
   "scripts": {
     "test": "exit 0"

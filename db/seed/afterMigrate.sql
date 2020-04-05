@@ -1,5 +1,3 @@
-BEGIN;
-
 INSERT INTO student (name, username) VALUES ('Morty', 'morty');
 INSERT INTO student (name, username) VALUES ('Linus Torvals', 'linus');
 
@@ -71,7 +69,7 @@ VALUES (2, 'Review', 'Your submission has the cyclomatic complexity of over 20. 
 INSERT INTO review_flow_step (index, action, parameters)
 VALUES (1, 'Search', 'q=*&student_ids=[1]');
 INSERT INTO review_flow_step (index, action, parameters)
-VALUES (2, 'Model', 'model=ngram&ngrams=[5,5]');
+VALUES (2, 'Model', 'model_id=ngram&ngrams=[6,6]');
 INSERT INTO review_flow_step (index, action, parameters)
 VALUES (3, 'Review', 'You are a moron Morty. You have the brains of a catfish with a down syndrome.');
 
@@ -83,4 +81,14 @@ INSERT INTO review_flow_steps (review_flow_id, review_flow_step_id) VALUES (3, 5
 INSERT INTO review_flow_steps (review_flow_id, review_flow_step_id) VALUES (3, 6);
 INSERT INTO review_flow_steps (review_flow_id, review_flow_step_id) VALUES (3, 7);
 
-END;
+INSERT INTO model (model_id, title, description)
+VALUES ('ngram', 'N-gram',
+'Parses the code into ASTs, which are then tokenized into more generic tokens.
+These tokens are then used to train ngram models with grams preferably between 3-7, after which they are
+yield the similarity scores between the different submissions. The similarity scores are projected onto
+2d-space using things and then clustered using DBSCAN clustering algorithm.
+
+Parameters:
+ngrams [int, int]: used ngrams, default [5,5]
+n_components int: the amount of components for the SVD, defines the lower bound how many submissions can be used. Default 50
+');

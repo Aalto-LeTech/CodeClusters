@@ -11,7 +11,7 @@ import { SEARCH_QUERY_PARAMS } from '../search/search.ctrl'
 import { RUN_NGRAM_PARAMS } from '../model/model.ctrl'
 
 import { IAuthRequest } from '../../types/auth'
-import { IReviewFlow, IReviewFlowCreateParams, ISearchParams, IRunNgramParams, IReviewFlowStep } from 'shared'
+import { IReviewFlow, IReviewFlowCreateParams, ISearchCodeParams, IRunNgramParams, IReviewFlowStep } from 'shared'
 import { IReviewListQueryParams } from './review_flow.types'
 
 export const REVIEW_FLOW_STEP_SCHEMA = Joi.object({
@@ -85,7 +85,7 @@ export const runReviewFlow = async (req: IAuthRequest<IReviewFlow>, res: Respons
       log.debug(modelValidated.error)
       return next(new CustomError('Validation failed for the review flow Model-parameters', 400))
     }
-    const searchPayload = searchValidated.value as ISearchParams
+    const searchPayload = searchValidated.value as ISearchCodeParams
     let modelingResult
     if (modelingParams) {
       const searchResponse = await searchService.searchSubmissionIds(searchPayload)
@@ -95,6 +95,7 @@ export const runReviewFlow = async (req: IAuthRequest<IReviewFlow>, res: Respons
         submission_ids: submissionIds
       } as IRunNgramParams
       modelingResult = await modelService.runNgram(modelingPayload)
+      if (modelingResult) modelingResult.model_id = modelingPayload.model_id
     }
     const searchResult = await searchService.searchSubmissions(searchPayload)
     res.json({ searchResult, modelingResult })

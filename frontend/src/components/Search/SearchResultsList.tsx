@@ -16,16 +16,16 @@ interface IProps {
 
 const SearchResultsListEl = inject('searchStore')(observer((props: IProps) => {
   const { className, searchStore } = props
-  const resultsCount = searchStore!.searchResult.docs.length
-  const totalCount = searchStore!.searchResult.numFound || 0
+  const resultsCount = searchStore!.selectedSearchResult.docs.length
+  const totalCount = searchStore!.selectedSearchResult.numFound || 0
   return (
     <Container className={className}>
       { resultsCount !== 0 && <p>Showing {resultsCount} of {totalCount} results</p> }
       <Pagination pages={10}/>
       <ResultList className={className}>
-        { searchStore!.searchResult.docs.map((result) =>
+        { searchStore!.selectedSearchResult.docs.map((result) =>
         <SearchResultsListItem key={result.id}>
-          <ResultItem result={result} latestQuery={searchStore!.latestQuery}/>
+          <ResultItem result={result} latestQuery={searchStore!.searchParams}/>
         </SearchResultsListItem>  
         )}
       </ResultList>

@@ -44,7 +44,7 @@ function DropdownEl<K extends KeyValue, V extends React.ReactNode>(props: IProps
   }
   function renderButtonContent() {
     const placeholderText = placeholder || 'Choose'
-    const content = selected ? options.find(o => o.key === selected)!.value : placeholderText
+    const content = (selected && options.length !== 0) ? options.find(o => o.key === selected)!.value : placeholderText
     if (renderMenu) {
       return renderMenu(content)
     }

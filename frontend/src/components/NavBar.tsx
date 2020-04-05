@@ -44,14 +44,15 @@ function NavLinks(props: { user?: IUser }) {
     const reviewUrl = `/review/${user.student_id}`
     return (
       <>
-        <Link to="/">Frontpage</Link>
+        <Link to="/">Search</Link>
         <Link to={reviewUrl}>My reviews</Link>
       </>
     )
   }
   return (
     <>
-      <Link to="/">Frontpage</Link>
+      <Link to="/">Search</Link>
+      <Link to="/model">Model</Link>
       <Link to="/reviews">Reviews</Link>
       <Link to="/review/create">Review</Link>
       <Link to="/submissions">Submissions</Link>

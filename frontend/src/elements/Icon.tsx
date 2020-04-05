@@ -5,6 +5,7 @@ interface IProps {
   className?: string
   inline?: boolean
   button?: boolean
+  disabled?: boolean
   children: React.ReactNode
   onClick?: () => void
 }
@@ -15,11 +16,11 @@ IconEl.defaultProps = {
 }
 
 function IconEl(props: IProps) {
-  const { className, inline, button, children, onClick } = props
+  const { className, inline, button, disabled, children, onClick } = props
   if (button) {
     return (
       <Wrapper className={className} inline={inline}>
-        <Button onClick={onClick}>{children}</Button>
+        <Button onClick={onClick} disabled={disabled}>{children}</Button>
       </Wrapper>
     )
   }
@@ -42,12 +43,12 @@ const Button = styled.button`
   background: transparent;
   border: 0;
   border-radius: 50%;
-  cursor: pointer;
+  cursor: ${({ disabled }) => disabled ? 'cursor' : 'pointer'};
   display: flex;
   padding: 8px;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   &:hover {
-    background-color: rgba(0, 0, 0, 0.08);
+    background-color: ${({ disabled }) => !disabled && 'rgba(0, 0, 0, 0.08)'};
   }
 `
 

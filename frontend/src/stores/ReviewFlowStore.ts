@@ -151,7 +151,7 @@ export class ReviewFlowStore {
         if (result.searchResult) {
           this.searchStore.addSearchResult(result.searchResult)
         }
-        if (result.modelingResult && result.modelingResult.model === 'ngram') {
+        if (result.modelingResult && result.modelingResult.model_id === 'ngram') {
           this.modelStore.setLatestRunNgram(result.modelingResult as IRunNgramResponse)
         }
         this.toastStore.createToast('Review flow run', 'success')

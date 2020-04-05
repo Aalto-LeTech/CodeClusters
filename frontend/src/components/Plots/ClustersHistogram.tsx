@@ -32,7 +32,7 @@ function ClustersHistogramEl(props: IProps) {
       }}
     >
       <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="cluster" />
+      <XAxis dataKey="name" />
       <YAxis />
       <Tooltip />
       <Legend />

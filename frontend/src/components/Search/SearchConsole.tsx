@@ -14,7 +14,7 @@ import { useDebouncedCallback } from '../../hooks/useDebounce'
 import { Stores } from '../../stores'
 import { SearchStore } from '../../stores/SearchStore'
 import { CourseStore } from '../../stores/CourseStore'
-import { ISearchParams, ISearchResponse } from 'shared'
+import { ISearchCodeParams, ISearchCodeResponse } from 'shared'
 
 function createQueryParams(obj: {[key: string]: string | number}) {
   return Object.keys(obj).reduce((acc, cur, i) => cur !== 'q' ? `${acc}&${cur}=${obj[cur]}` : acc, `?q=${obj.q}`)

@@ -22,9 +22,11 @@ const ClusteringResultsEl = inject('modelStore')(observer((props: IProps) => {
   }
   return (
     <Container className={className}>
-      <PlotTitle>Ngram clusters</PlotTitle>
-      <ClustersHistogram data={modelStore!.getNgramHistogramData} onClickBar={handleClickBar}/>
-      <ClustersScatterPlot data={modelStore!.getNgramScatterData} clusters={modelStore!.getNgramHistogramData.length}/>
+      <Title>Ngram clusters</Title>
+      <Plots>
+        <ClustersHistogram data={modelStore!.getNgramHistogramData} onClickBar={handleClickBar}/>
+        <ClustersScatterPlot data={modelStore!.getNgramScatterData} clusters={modelStore!.getNgramHistogramData.length}/>
+      </Plots>
     </Container>
   )
 }))
@@ -35,6 +37,10 @@ const Container = styled.div`
   flex-direction: column;
   width: 100%;
 `
-const PlotTitle = styled.h3``
+const Title = styled.h3``
+const Plots = styled.div`
+  align-items: center;
+  display: flex;
+`
 
 export const ClusteringResults = styled(ClusteringResultsEl)``

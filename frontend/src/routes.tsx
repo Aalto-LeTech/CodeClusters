@@ -6,6 +6,7 @@ import { AuthHOC } from './components/AuthHOC'
 
 import { FrontPage } from './pages/FrontPage'
 import { LoginPage } from './pages/LoginPage'
+import { ModelPage } from './pages/ModelPage'
 import { ReviewsPage } from './pages/ReviewsPage'
 import { ReviewCreatePage } from './pages/ReviewCreatePage'
 import { ReviewViewPage } from './pages/ReviewViewPage'
@@ -17,6 +18,7 @@ export const Routes = () : React.ReactElement<any> => (
     <Switch>
       <NoMainContainerRoute exact path="/" component={FrontPage}/>
       <WrappedRoute exact path="/login" component={LoginPage}/>
+      <NoMainContainerRoute exact path="/model" component={AuthHOC(ModelPage)}/>
       <WrappedRoute exact path="/reviews" component={AuthHOC(ReviewsPage)}/>
       <NoMainContainerRoute exact path="/review/create" component={AuthHOC(ReviewCreatePage)}/>
       <WrappedRoute exact path="/review/:userId" component={AuthHOC(ReviewViewPage)}/>
