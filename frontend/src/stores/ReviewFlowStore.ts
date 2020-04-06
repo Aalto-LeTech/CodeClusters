@@ -3,8 +3,9 @@ import * as reviewFlowApi from '../api/review_flow.api'
 
 import { IReviewFlow, IReviewFlowRunParams, IRunNgramResponse } from 'shared'
 import { ToastStore } from './ToastStore'
-import { CourseStore } from './CourseStore'
 import { AuthStore } from './AuthStore'
+import { CourseStore } from './CourseStore'
+import { ClustersStore } from './ClustersStore'
 import { SearchStore } from './SearchStore'
 import { ModelStore } from './ModelStore'
 
@@ -43,8 +44,9 @@ const EMPTY_FILTERED_FLOWS = {
 
 interface IProps {
   toastStore: ToastStore
-  courseStore: CourseStore
   authStore: AuthStore
+  courseStore: CourseStore
+  clustersStore: ClustersStore
   searchStore: SearchStore
   modelStore: ModelStore
 }
@@ -56,8 +58,9 @@ export class ReviewFlowStore {
   @observable filteredFlows: { [key: string]: IReviewFlow[] } = { ...EMPTY_FILTERED_FLOWS }
   @observable tabFilterOptions: ITabOption[] = FILTER_OPTIONS.map(o => ({ ...o, disabled: false, itemCount: 0 }))
   toastStore: ToastStore
-  courseStore: CourseStore
   authStore: AuthStore
+  courseStore: CourseStore
+  clustersStore: ClustersStore
   searchStore: SearchStore
   modelStore: ModelStore
 
@@ -65,6 +68,7 @@ export class ReviewFlowStore {
     this.toastStore = props.toastStore
     this.courseStore = props.courseStore
     this.authStore = props.authStore
+    this.clustersStore = props.clustersStore
     this.searchStore = props.searchStore
     this.modelStore = props.modelStore
     this.watchFilteringChanges()
@@ -147,12 +151,11 @@ export class ReviewFlowStore {
     const result = await reviewFlowApi.runReviewFlow(params)
     runInAction(() => {
       if (result) {
-        console.log(result)
         if (result.searchResult) {
           this.searchStore.addSearchResult(result.searchResult)
         }
         if (result.modelingResult && result.modelingResult.model_id === 'ngram') {
-          this.modelStore.setLatestRunNgram(result.modelingResult as IRunNgramResponse)
+          this.clustersStore.setLatestNgramModel(result.modelingResult as IRunNgramResponse)
         }
         this.toastStore.createToast('Review flow run', 'success')
       }

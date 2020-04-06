@@ -7,25 +7,38 @@ import { Pagination } from './Pagination'
 
 import { SelectItem } from '../../elements/SelectItem'
 
-import { SearchStore } from '../../stores/SearchStore'
+import { Stores } from '../../stores'
+import { ISolrFullSubmissionWithDate } from 'shared'
 
 interface IProps {
   className?: string
-  searchStore?: SearchStore
+  localSearchActive?: boolean
+  totalResultsCount?: number
+  shownSubmissions?: ISolrFullSubmissionWithDate[]
 }
 
-const SearchResultsListEl = inject('searchStore')(observer((props: IProps) => {
-  const { className, searchStore } = props
-  const resultsCount = searchStore!.selectedSearchResult.docs.length
-  const totalCount = searchStore!.selectedSearchResult.numFound || 0
+const SearchResultsListEl = inject((stores: Stores) => {
+  const localSearchActive = stores.localSearchStore.active
+  const ls = stores.localSearchStore
+  const s = stores.searchStore
+  return {
+    localSearchActive: stores.localSearchStore.active,
+    totalResultsCount: localSearchActive ? ls.foundSubmissionsIndexes.length : s.selectedSearchResult.numFound || 0,
+    shownSubmissions: localSearchActive ? ls.shownSubmissions : s.selectedSearchResult.docs
+  }
+})
+(observer((props: IProps) => {
+  const { className, localSearchActive, totalResultsCount, shownSubmissions } = props
+  const resultsCount = shownSubmissions!.length
   return (
     <Container className={className}>
-      { resultsCount !== 0 && <p>Showing {resultsCount} of {totalCount} results</p> }
+      { localSearchActive && <p>Local search active</p >}
+      { resultsCount !== 0 && <p>Showing {resultsCount} of {totalResultsCount} results</p> }
       <Pagination pages={10}/>
       <ResultList className={className}>
-        { searchStore!.selectedSearchResult.docs.map((result) =>
+        { shownSubmissions!.map((result) =>
         <SearchResultsListItem key={result.id}>
-          <ResultItem result={result} latestQuery={searchStore!.searchParams}/>
+          <ResultItem result={result} />
         </SearchResultsListItem>  
         )}
       </ResultList>

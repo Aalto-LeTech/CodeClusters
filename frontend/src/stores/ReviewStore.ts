@@ -34,7 +34,7 @@ export class ReviewStore {
     return Object.keys(this.selectedSubmissions).length > 1
   }
 
-  getSelection(id: string) : [number, number, number] | undefined {
+  getSelection = (id: string) => {
     const sub = this.selectedSubmissions[id]
     if (sub) {
       return sub.selection
@@ -64,28 +64,28 @@ export class ReviewStore {
     this.isMultiSelection = !this.isMultiSelection
   }
 
-  @action toggleSelection(s: ISolrSubmissionWithDate, selection: [number, number, number] = [0, 0, 0]) {
-    const oldSelection = this.getSelection(s.id)
+  @action toggleSelection(submission_id: string, selection: [number, number, number] = [0, 0, 0]) {
+    const oldSelection = this.getSelection(submission_id)
     const notExistsOrSelectionChanged = oldSelection === undefined || !this.equalSelection(oldSelection, selection)
     if (notExistsOrSelectionChanged && this.isMultiSelection) {
-      this.selectedSubmissions[s.id] = {
-        submission_id: s.id,
+      this.selectedSubmissions[submission_id] = {
+        submission_id,
         selection,
       }
-      this.selectedId = s.id
+      this.selectedId = submission_id
     } else if (notExistsOrSelectionChanged) {
       this.selectedSubmissions = {
-        [s.id]: {
-          submission_id: s.id,
+        [submission_id]: {
+          submission_id,
           selection,
         }
       }
-      this.selectedId = s.id
+      this.selectedId = submission_id
     } else if (!this.isMultiSelection) {
       this.selectedSubmissions = {}
       this.selectedId = ''
     } else {
-      delete this.selectedSubmissions[s.id]
+      delete this.selectedSubmissions[submission_id]
       this.selectedId = ''
     }
   }

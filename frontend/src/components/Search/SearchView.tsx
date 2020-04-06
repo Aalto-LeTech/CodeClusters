@@ -4,9 +4,8 @@ import styled from 'styled-components'
 import { SelectCourseExercise } from './SelectCourseExercise'
 import { SearchConsole } from './SearchConsole'
 import { ReviewFlows } from '../ReviewFlows'
-import { Models } from '../Model'
+import { Modeling } from '../Model'
 import { SearchResultsList } from './SearchResultsList'
-import { Clusters } from '../Model'
 import { LeftPanel } from './LeftPanel'
 import { Button } from '../../elements/Button'
 
@@ -23,7 +22,6 @@ const SearchViewEl = memo((props: IProps) => {
     <Container className={className}>
       <SelectCourseExercise />
       <ReviewFlows />
-      <Models />
       <PreviousQueries>
         <div>arrow left</div>
         <div>previous query 1</div>
@@ -39,7 +37,7 @@ const SearchViewEl = memo((props: IProps) => {
           <Button>Visualize</Button>
         </Buttons>
       </ExtraControls>
-      <Clusters />
+      <Modeling />
       <Body>
         <LeftPanel />
         <SearchResultsList />

@@ -2,91 +2,53 @@ import React, { memo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { inject, observer } from 'mobx-react'
 import { useForm } from 'react-hook-form'
-import { withRouter, RouteComponentProps } from 'react-router'
 
-import { SearchBar } from './SearchBar'
+import { SearchBar } from '../Search/SearchBar'
 import { CheckBox } from '../../elements/CheckBox'
 import { Input } from '../../elements/Input'
-import { MultiInput } from '../../elements/MultiInput'
 
 import { useDebouncedCallback } from '../../hooks/useDebounce'
 
 import { Stores } from '../../stores'
-import { ISearchCodeParams, ISolrSearchCodeResponse } from 'shared'
+import { ISearchCodeParams } from 'shared'
 
-function createQueryParams(obj: {[key: string]: string | number}) {
-  return Object.keys(obj).reduce((acc, cur, i) => cur !== 'q' ? `${acc}&${cur}=${obj[cur]}` : acc, `?q=${obj.q}`)
-}
-
-interface IProps extends RouteComponentProps {
+interface IProps {
   className?: string
-  courseId?: number
-  exerciseId?: number
-  search?: (payload: ISearchCodeParams) => Promise<ISolrSearchCodeResponse | undefined>
-  deactivateLocalSearch?: () => void
+  search?: (payload: ISearchCodeParams) => void
+  activateLocalSearch?: () => void
 }
 
-const SearchConsoleEl = inject((stores: Stores) => ({
-  courseId: stores.courseStore.courseId,
-  exerciseId: stores.courseStore.exerciseId,
-  search: stores.searchStore.search,
-  deactivateLocalSearch: () => stores.localSearchStore.setActive(false),
+const LocalSearchFormEl = inject((stores: Stores) => ({
+  search: stores.localSearchStore.search,
+  activateLocalSearch: () => stores.localSearchStore.setActive(true),
 }))
-(observer(withRouter((props: IProps) => {
+(observer((props: IProps) => {
   const {
-    className, history, search, deactivateLocalSearch, courseId, exerciseId
+    className, search, activateLocalSearch
   } = props
   const { register, handleSubmit } = useForm({})
-  const [filterText, setFilterText] = useState('')
-  const [wordFilters, setWordFilters] = useState([] as string[])
-  const [submitInProgress, setSubmitInProgress] = useState(false)
   const submitButtonRef = useRef<HTMLButtonElement>(null)
   const debouncedSearch = useDebouncedCallback(handleSearch, 500)
 
   function handleChange() {
     debouncedSearch()
-    deactivateLocalSearch!()
-  }
-  function handleFilterTextChange(val: string) {
-    setFilterText(val)
-  }
-  function handleWordAdd(item: string) {
-    setWordFilters([...wordFilters, item])
-  }
-  function handleWordRemove(item: string) {
-    setWordFilters(wordFilters.filter(w => w !== item))
+    activateLocalSearch!()
   }
   function handleSearch() {
+    activateLocalSearch!()
     if (submitButtonRef && submitButtonRef.current) {
       submitButtonRef.current.click()
     }
   }
   const onSubmit = async (data: any, e?: React.BaseSyntheticEvent) => {
     const payload = data
-    if (payload.q === undefined || payload.q === '') {
-      payload.q = '*'
-    }
-    if (courseId) {
-      payload.course_id = courseId
-    }
-    if (exerciseId) {
-      payload.exercise_id = exerciseId
-    }
     // Remove false, undefined and empty values since they are their default values
-    // to keep the URL from being cluttered with redundant parameters
     Object.keys(payload).forEach(key => {
-      if (!payload[key] || payload[key] === '') {
+      if (key !== 'q' && (!payload[key] || payload[key] === '')) {
         delete payload[key]
       }
     })
-    setSubmitInProgress(true)
     const result = await search!(payload)
-    history.push(createQueryParams(payload))
-    if (result) {
-      setSubmitInProgress(false)
-    } else {
-      setSubmitInProgress(false)
-    }
   }
   return (
     <Container className={className}>
@@ -98,7 +60,7 @@ const SearchConsoleEl = inject((stores: Stores) => ({
               fullWidth
               type="number"
               name="num_results"
-              placeholder="20"
+              placeholder="200"
               ref={register}
               onChange={handleChange}
             ></Input>
@@ -115,24 +77,8 @@ const SearchConsoleEl = inject((stores: Stores) => ({
             ></Input>
           </FormField>
         </TopRow>
-        <MiddleRow>
-          <FormField>
-            <label>Custom filters</label>
-            <MultiInput
-              fullWidth
-              type="text"
-              name="custom_filters"
-              placeholder="Eg. student_id=1"
-              value={filterText}
-              items={wordFilters}
-              onChange={handleFilterTextChange}
-              onAddItem={handleWordAdd}
-              onRemoveItem={handleWordRemove}
-            ></MultiInput>
-          </FormField>
-        </MiddleRow>
         <SearchRow>
-          <label htmlFor="q">Search</label>
+          <label htmlFor="q">Local search</label>
           <SearchBar name="q" ref={register} onSearch={handleSearch}/>
         </SearchRow>
         <BottomRow>
@@ -144,28 +90,12 @@ const SearchConsoleEl = inject((stores: Stores) => ({
             />
             <CheckBoxText>Case sensitive</CheckBoxText>
           </CheckBoxField>
-          <CheckBoxField>
-            <CheckBox
-              name="regex"
-              ref={register}
-              onChange={handleChange}
-            />
-            <CheckBoxText>Use regex</CheckBoxText>
-          </CheckBoxField>
-          <CheckBoxField>
-            <CheckBox
-              name="whole_words"
-              ref={register}
-              onChange={handleChange}
-            />
-            <CheckBoxText>Whole words</CheckBoxText>
-          </CheckBoxField>
         </BottomRow>
         <HiddenSubmitButton type="submit" ref={submitButtonRef}></HiddenSubmitButton>
       </Form>
     </Container>
   )
-})))
+}))
 
 const Container = styled.div`
   align-items: center;
@@ -224,5 +154,5 @@ const HiddenSubmitButton = styled.button`
   visibility: none;
 `
 
-export const SearchConsole = styled(SearchConsoleEl)`
+export const LocalSearchForm = styled(LocalSearchFormEl)`
 `

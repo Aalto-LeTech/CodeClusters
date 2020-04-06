@@ -2,38 +2,61 @@ import React, { memo, useMemo, useState, useEffect } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../../theme/styled'
 
-import { CodeBlock } from './CodeBlock'
+import { CodeBlock } from '../CodeBlock'
 import { Button } from '../../elements/Button'
 
+import { Stores } from '../../stores'
 import { ReviewStore } from '../../stores/ReviewStore'
-import { ISearchCodeParams, ISolrSubmissionWithDate } from 'shared'
+import { ISolrSubmissionWithDate, ISolrFullSubmissionWithDate } from 'shared'
+
+type SolrSubmission = ISolrSubmissionWithDate | ISolrFullSubmissionWithDate
 
 interface IProps {
   className?: string
-  result: ISolrSubmissionWithDate
-  latestQuery: ISearchCodeParams
-  reviewStore?: ReviewStore
+  result: SolrSubmission
+  selectedReviewId?: string
+  getSelection?(id: string) : [number, number, number] | undefined
+  toggleSelection?(id: string, selection?: [number, number, number]) : void
 }
 
-const ResultItemEl = inject('reviewStore')(observer((props: IProps) => {
-  const { className, result, latestQuery, reviewStore } = props
+function isFullSubmission(result: SolrSubmission): result is ISolrFullSubmissionWithDate {
+  if ((result as ISolrFullSubmissionWithDate).code !== undefined) {
+    return true
+  }
+  return false
+}
+
+const ResultItemEl = inject((stores: Stores) => ({
+  selectedReviewId: stores.reviewStore.selectedId,
+  getSelection: stores.reviewStore.getSelection,
+  toggleSelection: stores.reviewStore.toggleSelection,
+}))
+(observer((props: IProps) => {
+  const { className, result, selectedReviewId, getSelection, toggleSelection } = props
   const [codeLines, setCodeLines] = useState([] as string[])
   const [rawCodeLines, setRawCodeLines] = useState([] as string[])
   const [matches, setMatches] = useState(0)
-  const showMenuForThisReview = useMemo(() => reviewStore!.selectedId === result.id, [reviewStore!.selectedId])
+  const showMenuForThisReview = useMemo(() => selectedReviewId === result.id, [selectedReviewId])
 
   useEffect(() => {
-    const hl = result.highlighted[0]
-    setCodeLines(hl.split("\n"))
-    setRawCodeLines(hl.replace('<mark>', '').replace('</mark>', '').split("\n"))
-    setMatches((hl.match(/<mark>/g) || []).length)
+    if (isFullSubmission(result)) {
+      const code = result.code[0]
+      setCodeLines(code.split("\n"))
+      setRawCodeLines(code.split("\n"))
+      setMatches(0)
+    } else {
+      const hl = result.highlighted[0]
+      setCodeLines(hl.split("\n"))
+      setRawCodeLines(hl.replace('<mark>', '').replace('</mark>', '').split("\n"))
+      setMatches((hl.match(/<mark>/g) || []).length)
+    }
   }, [result])
 
   function isResultSelected() {
-    return reviewStore!.getSelection(result.id) !== undefined
+    return getSelection!(result.id) !== undefined
   }
   function handleToggleSelection() {
-    reviewStore!.toggleSelection(result)
+    toggleSelection!(result.id)
   }
   function handleLineClick(idx: number) {
     const selection = rawCodeLines.reduce((acc, cur, i) => {
@@ -44,7 +67,7 @@ const ResultItemEl = inject('reviewStore')(observer((props: IProps) => {
       }
       return acc
     }, [idx, 0, 0] as [number, number, number])
-    reviewStore!.toggleSelection(result, selection)
+    toggleSelection!(result.id, selection)
   }
   return (
     <Container className={className} active={isResultSelected()} onClick={handleToggleSelection}>
@@ -60,13 +83,12 @@ const ResultItemEl = inject('reviewStore')(observer((props: IProps) => {
       </CodeHeader>
       <CodeBlock
         codeLines={codeLines}
-        activeSelection={reviewStore?.getSelection(result.id)}
+        activeSelection={getSelection!(result.id)}
         showMenu={showMenuForThisReview}
         onSelectCodeLine={handleLineClick}
       />
       <Controls>
         <Buttons>
-          <Button intent="info">Examine</Button>
         </Buttons>
       </Controls>
     </Container>

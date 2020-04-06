@@ -29,7 +29,7 @@ const EMPTY_RESULT = {
 
 export class SearchStore {
   @observable searchResults: ISearchCodeResult[] = []
-  @observable searchedIds: string[] = []
+  @observable currentlySelectedIds: string[] = []
   @observable selectedSearchResult = EMPTY_RESULT
   @observable searchParams: ISearchCodeParams = EMPTY_QUERY
   toastStore: ToastStore
@@ -43,7 +43,11 @@ export class SearchStore {
     this.searchResults = []
   }
 
-  @action addSearchResult(result: ISolrSearchCodeResponse) {
+  @action resetSelectedIds() {
+    this.currentlySelectedIds = []
+  }
+
+  parseSearchResponse(result: ISolrSearchCodeResponse) {
     const docs = result.response.docs.map(r => ({
       ...r,
       date: new Date(r.timestamp),
@@ -53,7 +57,11 @@ export class SearchStore {
       ...result.response,
       docs
     }
-    this.selectedSearchResult = searchResult
+    return searchResult
+  }
+
+  @action addSearchResult(result: ISolrSearchCodeResponse) {
+    this.selectedSearchResult = this.parseSearchResponse(result)
   }
 
   @action search = async (payload: ISearchCodeParams) => {
@@ -63,15 +71,7 @@ export class SearchStore {
     })
     if (result) {
       runInAction(() => {
-        const docs = result.response.docs.map(r => ({
-          ...r,
-          date: new Date(r.timestamp),
-          highlighted: result.highlighting[r.id].code,
-        }))
-        const searchResult = {
-          ...result.response,
-          docs
-        }
+        const searchResult = this.parseSearchResponse(result)
         this.selectedSearchResult = searchResult
         this.searchResults.push({ ...searchResult, params: payload })
       })
@@ -85,9 +85,23 @@ export class SearchStore {
     if (result) {
       runInAction(() => {
         ids = result.response.docs.map(r => r.id)
-        this.searchedIds = ids
+        this.currentlySelectedIds = ids
       })
     }
     return ids
+  }
+
+  @action searchAll = async () => {
+    const result = await searchApi.searchAll(this.searchParams)
+    if (result === undefined) return undefined
+    const docs = result.response.docs.map(r => ({
+      ...r,
+      date: new Date(r.timestamp),
+    }))
+    // const searchResult = {
+    //   ...result.response,
+    //   docs
+    // }
+    return docs
   }
 }

@@ -1,9 +1,10 @@
 declare module 'shared' {
-  export type OmitProp<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+  // Utils
+  export function createQueryParams(obj: {[key: string]: string | number}) : string
 
   // Review
-  export type IUserReviewWithDate = OmitProp<IReviewWithDate, 'metadata'>
-  export type IUserReview = OmitProp<IReview, 'metadata'>
+  export type IUserReviewWithDate = Omit<IReviewWithDate, 'metadata'>
+  export type IUserReview = Omit<IReview, 'metadata'>
   export interface IReviewWithDate extends IReview {
     date: Date
   }
@@ -48,7 +49,7 @@ declare module 'shared' {
     name: string
   }
   // Submission
-  type SubmissionWithoutId = OmitProp<ISubmission, 'submission_id'>
+  type SubmissionWithoutId = Omit<ISubmission, 'submission_id'>
   export interface ISubmissionCreateParams {
     student_id: number
     course_id: number
@@ -107,7 +108,7 @@ declare module 'shared' {
     model_id: string
     ngrams?: [number, number]
     n_components?: number
-    submission_ids: string[]
+    submissions: { id: string, code: string }[]
   }
   export interface IRunNgramResponse {
     model_id: string
@@ -169,30 +170,39 @@ declare module 'shared' {
     regex?: boolean
     whole_words?: boolean
   }
+  export interface ISearchCodeByIdsParams extends ISearchCodeParams {
+    submission_ids: string[]
+  }
+  export interface ISolrResponseHeader {
+    status: number
+    QTime: number
+    params: {
+      _: number
+      q: string
+      id?: string
+      student_id?: number
+      course_id?: number
+      exercise_id?: number
+      timestamp?: string
+    }
+  }
+  export interface ISolrResponse<T> {
+    numFound: number
+    start: number
+    docs: T[]
+  }
   export interface ISolrSearchCodeResponse {
-    responseHeader: {
-      status: number
-      QTime: number
-      params: {
-        _: number
-        q: string
-        id?: string
-        student_id?: number
-        course_id?: number
-        exercise_id?: number
-        timestamp?: string
-      }
-    }
-    response: {
-      numFound: number
-      start: number
-      docs: ISolrSubmission[]
-    }
+    responseHeader: ISolrResponseHeader
+    response: ISolrResponse<ISolrSubmission>
     highlighting: {
       [id: string]: {
         code: string[]
       }
     }
+  }
+  export interface ISolrSearchAllCodeResponse {
+    responseHeader: ISolrResponseHeader
+    response: ISolrResponse<ISolrFullSubmission>
   }
   export interface ISolrSubmission {
     _version_: number
@@ -202,44 +212,25 @@ declare module 'shared' {
     exercise_id: number
     timestamp: string
   }
-  export interface ISolrSubmissionWithDate {
-    _version_: number
-    id: string
-    student_id: number
-    course_id: number
-    exercise_id: number
+  export interface ISolrSubmissionWithDate extends Omit<ISolrSubmission, 'timestamp'> {
     highlighted: string[]
     date: Date
   }
+  export interface ISolrFullSubmission extends ISolrSubmission {
+    code: string[]
+  }
+  export interface ISolrFullSubmissionWithDate extends Omit<ISolrFullSubmission, 'timestamp'> {
+    date: Date
+  }
   export interface ISolrSearchIdsResponse {
-    responseHeader: {
-      status: number
-      QTime: number
-      params: {
-        _: number
-        q: string
-        id?: string
-        student_id?: number
-        course_id?: number
-        exercise_id?: number
-        timestamp?: string
-      }
-    }
-    response: {
-      numFound: number
-      start: number
-      docs: { id: string }[]
-    }
+    responseHeader: ISolrResponseHeader
+    response: ISolrResponse<{ id: string }>
   }
-  export interface ISearchCodeResponse {
-    numFound: number
-    start: number
-    docs: ISolrSubmissionWithDate[]
+  export type ISearchCodeResponse = ISolrResponse<ISolrSubmissionWithDate>
+  export interface ISearchCodeResult extends ISearchCodeResponse {
+    params: ISearchCodeParams
   }
-  export interface ISearchCodeResult {
-    numFound: number
-    start: number
-    docs: ISolrSubmissionWithDate[]
+  export interface ISearchAllCodeResult extends ISolrResponse<ISolrFullSubmissionWithDate> {
     params: ISearchCodeParams
   }
   // Review flow

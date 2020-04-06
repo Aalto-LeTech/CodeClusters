@@ -12,13 +12,13 @@ interface IItem {
 interface IProps {
   className?: string
   data: IItem[]
+  activeCluster: number
   onClickBar: (item: any) => void
 }
 
 function ClustersHistogramEl(props: IProps) {
-  const { className, data, onClickBar } = props
+  const { className, data, activeCluster, onClickBar } = props
   function handleClickBar(e: any) {
-    console.log(e)
     onClickBar(e)
   }
   return (
@@ -36,7 +36,11 @@ function ClustersHistogramEl(props: IProps) {
       <YAxis />
       <Tooltip />
       <Legend />
-      <Bar dataKey="count" fill="#8884d8" onClick={handleClickBar}/>
+      <Bar dataKey="count" fill="#8884d8" onClick={handleClickBar}>
+      { data.map((entry, index) => (
+        <Cell cursor="pointer" fill={entry.cluster === activeCluster ? '#82ca9d' : '#8884d8'} key={`cell-${index}`} />
+      ))}
+      </Bar>
     </BarChart>
   )
 }

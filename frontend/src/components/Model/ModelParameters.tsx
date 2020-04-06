@@ -67,8 +67,6 @@ const Title = styled.h2`
   margin: 0 1rem;
 `
 const Body = styled.div<{ minimized: boolean}>`
-  background: #ededed;
-  border-radius: 4px;
   display: ${({ minimized }) => minimized ? 'none' : 'flex'};
   flex-direction: column;
   justify-content: space-around;

@@ -17,7 +17,10 @@ export const RUN_NGRAM_PARAMS = Joi.object({
   model_id: Joi.string().min(1).max(256).required(),
   ngrams: Joi.array().items(Joi.number().integer()).length(2),
   n_components: Joi.number().integer(),
-  submission_ids: Joi.array().items(Joi.string()),
+  submissions: Joi.array().items(Joi.object({
+    id: Joi.string().length(36).required(),
+    code: Joi.string().required(),
+  })),
 })
 
 export const runNgram = async (req: IAuthRequest<IRunNgramParams>, res: Response, next: NextFunction) => {

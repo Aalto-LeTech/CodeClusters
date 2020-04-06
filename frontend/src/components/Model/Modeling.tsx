@@ -5,6 +5,8 @@ import { FiChevronDown, FiChevronUp, FiTrash } from 'react-icons/fi'
 import { MdKeyboardArrowRight } from 'react-icons/md'
 
 import { ModelParameters } from './ModelParameters'
+import { ClusteringResults } from './ClusteringResults'
+import { LocalSearchForm } from '../LocalSearch/LocalSearchForm'
 import { Button } from '../../elements/Button'
 import { Icon } from '../../elements/Icon'
 import { Dropdown } from '../../elements/Dropdown'
@@ -16,7 +18,7 @@ interface IProps {
   modelStore?: ModelStore
 }
 
-const ModelsEl = inject('modelStore')(observer((props: IProps) => {
+const ModelingEl = inject('modelStore')(observer((props: IProps) => {
   const {
     className, modelStore
   } = props
@@ -52,28 +54,32 @@ const ModelsEl = inject('modelStore')(observer((props: IProps) => {
     <Container className={className}>
       <Header>
         <Button onClick={handleClickToggle}>
-          <Title>{`${minimized ? 'Show' : 'Hide'} models`}</Title>
+          <Title>{`${minimized ? 'Show' : 'Hide'} modeling`}</Title>
         </Button>
         <Icon button onClick={handleClickToggle}>
           { minimized ? <FiChevronDown size={18}/> : <FiChevronUp size={18}/>}
         </Icon>
       </Header>
       <Body minimized={minimized}>
-        <InfoText>
-          Currently only N-gram model is supported.
-        </InfoText>
-        <DropdownField>
-          <SelectModelDropdown
-            selected={modelStore!.selectedModel?.model_id}
-            options={modelOptions}
-            placeholder="Select model"
-            fullWidth
-            renderMenu={renderDropdownMenu}
-            onSelect={handleSelectModel}
-          />
-          <Icon button onClick={handleModelTrashClick}><FiTrash size={18}/></Icon>
-        </DropdownField>
-        <ModelParameters />
+        <ModelControlsWrapper>
+          <InfoText>
+            Currently only N-gram model is supported.
+          </InfoText>
+          <DropdownField>
+            <SelectModelDropdown
+              selected={modelStore!.selectedModel?.model_id}
+              options={modelOptions}
+              placeholder="Select model"
+              fullWidth
+              renderMenu={renderDropdownMenu}
+              onSelect={handleSelectModel}
+            />
+            <Icon button onClick={handleModelTrashClick}><FiTrash size={18}/></Icon>
+          </DropdownField>
+          <ModelParameters />
+        </ModelControlsWrapper>
+        <LocalSearchForm />
+        <ClusteringResults />
       </Body>
     </Container>
   )
@@ -97,6 +103,7 @@ const Title = styled.h2`
   margin: 0;
 `
 const Body = styled.div<{ minimized: boolean}>`
+  align-items: center;
   background: #fff;
   border-radius: 4px;
   box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.18);
@@ -104,9 +111,14 @@ const Body = styled.div<{ minimized: boolean}>`
   flex-direction: column;
   justify-content: space-around;
   margin-top: 0.75rem;
-  max-width: 700px;
   padding: 1rem;
   visibility: ${({ minimized }) => minimized ? 'hidden' : 'initial'};
+  width: 100%;
+`
+const ModelControlsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  max-width: 700px;
   width: 100%;
 `
 const InfoText = styled.p`
@@ -137,4 +149,4 @@ const SelectModelDropdown = styled(Dropdown)`
   }
 `
 
-export const Models = styled(ModelsEl)``
+export const Modeling = styled(ModelingEl)``

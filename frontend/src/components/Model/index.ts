@@ -1,2 +1,1 @@
-export { Clusters } from './Clusters'
-export { Models } from './Models'
+export { Modeling } from './Modeling'

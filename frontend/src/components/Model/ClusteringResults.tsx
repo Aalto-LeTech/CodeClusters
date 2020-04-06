@@ -5,27 +5,35 @@ import styled from '../../theme/styled'
 import { ClustersHistogram } from '../Plots/ClustersHistogram'
 import { ClustersScatterPlot } from '../Plots/ClustersScatterPlot'
 
-import { ModelStore } from '../../stores/ModelStore'
+import { ClustersStore } from '../../stores/ClustersStore'
 
 interface IProps {
   className?: string
-  modelStore?: ModelStore
+  clustersStore?: ClustersStore
 }
 
-const ClusteringResultsEl = inject('modelStore')(observer((props: IProps) => {
-  const { className, modelStore } = props
+const ClusteringResultsEl = inject('clustersStore')(observer((props: IProps) => {
+  const { className, clustersStore } = props
   function handleClickBar(item: any) {
     console.log(item)
+    clustersStore!.setActiveCluster(item.cluster)
   }
-  if (modelStore!.latestRunNgram === undefined) {
+  if (clustersStore!.latestRunNgram === undefined) {
     return <Container className={className}></Container>
   }
   return (
     <Container className={className}>
       <Title>Ngram clusters</Title>
       <Plots>
-        <ClustersHistogram data={modelStore!.getNgramHistogramData} onClickBar={handleClickBar}/>
-        <ClustersScatterPlot data={modelStore!.getNgramScatterData} clusters={modelStore!.getNgramHistogramData.length}/>
+        <ClustersHistogram
+          data={clustersStore!.getNgramHistogramData}
+          activeCluster={clustersStore!.activeCluster}
+          onClickBar={handleClickBar}
+        />
+        <ClustersScatterPlot
+          data={clustersStore!.getNgramScatterData}
+          clusters={clustersStore!.getNgramHistogramData.length}
+        />
       </Plots>
     </Container>
   )
