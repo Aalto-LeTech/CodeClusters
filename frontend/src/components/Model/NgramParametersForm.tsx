@@ -38,14 +38,16 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
   function hasNoError() {
     return true
   }
-  function handleNgramsChange(val: number) {
-    const tuple = [val, val] as [number, number]
+  function handleNgramsChange(val: string) {
+    const n = parseInt(val)
+    const tuple = [n, n] as [number, number]
     setNgrams(tuple)
     onUpdate!({ ngrams: tuple })
   }
-  function handleNcomponentsChange(val: number) {
-    setNcomponents(val)
-    onUpdate!({ n_components: val })
+  function handleNcomponentsChange(val: string) {
+    const n = parseInt(val)
+    setNcomponents(n)
+    onUpdate!({ n_components: n })
   }
   function handleDelete() {
     
@@ -54,21 +56,10 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
     e.preventDefault()
     if (hasNoError()) {
       setSubmitInProgress(true)
-      const result = await onSubmit!()
-      if (result) {
-        onSuccess()
-      } else {
-        onError()
-      }
+      onSubmit!().then((result) => {
+        setSubmitInProgress(false)
+      })
     }
-  }
-  function onSuccess() {
-    setSubmitInProgress(false)
-    setNgrams(DEFAULT_NGRAMS)
-    setNcomponents(DEFAULT_NCOMPONENTS)
-  }
-  function onError() {
-    setSubmitInProgress(false)
   }
   return (
     <Form onSubmit={handleSubmit} className={className} visible={visible}>

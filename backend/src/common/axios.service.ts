@@ -27,7 +27,11 @@ const createRequest = <T>(url: string, options: any) : Promise<T> => {
           log.error('Handled axios error: ')
           log.error(JSON.stringify(data, null, 2))
         }
-        const msg = data!.error!.msg // Solr errors are in this path
+        if (err.response.headers['content-type'].includes('text/html')) {
+          // Flask dev error message
+          throw new Error(err.response.statusText)
+        }
+        const msg = data?.error?.msg // Solr errors are in this path
         throw new Error(msg || data)
       }
       throw err

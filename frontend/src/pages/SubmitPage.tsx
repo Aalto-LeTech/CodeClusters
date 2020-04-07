@@ -80,7 +80,7 @@ const SubmitForm = styled((props: IFormProps) => {
         <Input
           type="number"
           value={exercise}
-          onChange={(val: number) => setExercise(val)}
+          onChange={(val: string) => setExercise(parseInt(val))}
         ></Input>
       </FormField>
       <FormField>

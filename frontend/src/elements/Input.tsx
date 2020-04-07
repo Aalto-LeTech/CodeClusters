@@ -13,20 +13,20 @@ interface IProps {
   disabled?: boolean
   placeholder?: string
   required?: boolean
-  onChange?: (value: any) => void // Basically one of: string | number | file
+  onChange?: (value: string) => void // Basically one of: string | file
   onFocus?: () => void
   onBlur?: () => void
   onKeyPress?: (e: React.KeyboardEvent) => void
 }
 
 const InputEl = forwardRef((props: IProps, ref?: any) => {
-  function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    !disabled && props.onChange && props.onChange(event.target.value)
-  }
   const {
     className, value, type, name, autocomplete, icon, iconPadding, placeholder, disabled, required, fullWidth,
-    onFocus, onBlur, onKeyPress
+    onChange, onFocus, onBlur, onKeyPress
   } = props
+  function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    !disabled && onChange && onChange(event.target.value)
+  }
   return (
     <Container className={className} fullWidth={fullWidth}>
       { icon }
@@ -98,7 +98,7 @@ const StyledTextarea = styled.textarea`
   padding: 0.5rem;
   width: 100%;
 `
-const StyledInput = styled.input<IProps>`
+const StyledInput = styled.input<{ autocomplete?: string, iconPadding?: string }>`
   background-color: ${({ theme }) => theme.color.white};
   border: 0;
   border-radius: 4px;
