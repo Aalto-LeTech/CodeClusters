@@ -47,6 +47,7 @@ export class LocalSearchStore {
 
   @action search = (payload: ISearchCodeParams) => {
     runInAction(() => {
+      this.active = true
       this.searchParams = payload
       const q = !payload.case_sensitive ? payload.q.toLowerCase() : payload.q
       this.foundSubmissionsIndexes = this.submissions.map((s, i) => {
@@ -58,7 +59,7 @@ export class LocalSearchStore {
 
   @action searchByIds = (submissionIds: string[]) => {
     runInAction(() => {
-      if (!this.active) this.active = true
+      this.active = true
       this.foundSubmissionsIndexes = this.submissions.map((s, i) => {
         if (submissionIds.includes(s.id)) return i
         return -1

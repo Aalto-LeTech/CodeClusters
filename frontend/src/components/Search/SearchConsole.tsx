@@ -1,4 +1,4 @@
-import React, { memo, useRef, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { inject, observer } from 'mobx-react'
 import { useForm } from 'react-hook-form'
@@ -14,7 +14,15 @@ import { useDebouncedCallback } from '../../hooks/useDebounce'
 import { Stores } from '../../stores'
 import { ISearchCodeParams, ISolrSearchCodeResponse } from 'shared'
 
-function createQueryParams(obj: {[key: string]: string | number}) {
+function removeEmptyValues(obj: {[key: string]: any}) {
+  return Object.keys(obj).reduce((acc, key) => {
+    if (!obj[key] || obj[key] === '' || obj[key].length === 0) {
+      return acc
+    }
+    return { ...acc, [key]: obj[key] }
+  }, {})
+}
+function createSearchQueryParams(obj: {[key: string]: any}) {
   return Object.keys(obj).reduce((acc, cur, i) => cur !== 'q' ? `${acc}&${cur}=${obj[cur]}` : acc, `?q=${obj.q}`)
 }
 
@@ -22,6 +30,7 @@ interface IProps extends RouteComponentProps {
   className?: string
   courseId?: number
   exerciseId?: number
+  searchParams?: ISearchCodeParams
   search?: (payload: ISearchCodeParams) => Promise<ISolrSearchCodeResponse | undefined>
   deactivateLocalSearch?: () => void
 }
@@ -29,19 +38,32 @@ interface IProps extends RouteComponentProps {
 const SearchConsoleEl = inject((stores: Stores) => ({
   courseId: stores.courseStore.courseId,
   exerciseId: stores.courseStore.exerciseId,
+  searchParams: stores.searchStore.searchParams,
   search: stores.searchStore.search,
   deactivateLocalSearch: () => stores.localSearchStore.setActive(false),
 }))
 (observer(withRouter((props: IProps) => {
   const {
-    className, history, search, deactivateLocalSearch, courseId, exerciseId
+    className, history, search, deactivateLocalSearch, searchParams, courseId, exerciseId
   } = props
-  const { register, handleSubmit } = useForm({})
+  const { register, setValue, handleSubmit } = useForm({})
   const [filterText, setFilterText] = useState('')
   const [wordFilters, setWordFilters] = useState([] as string[])
   const [submitInProgress, setSubmitInProgress] = useState(false)
   const submitButtonRef = useRef<HTMLButtonElement>(null)
   const debouncedSearch = useDebouncedCallback(handleSearch, 500)
+
+  useEffect(() => {
+    const values = Object.keys(searchParams || {}).map(k => {
+      const val = searchParams![k]
+      if (k === 'q' && val === '*') {
+        return { [k]: '' }
+      }
+      return { [k]: val }
+    })
+    setValue(values)
+    history.push(createSearchQueryParams(removeEmptyValues(searchParams!)))
+  }, [searchParams])
 
   function handleChange() {
     debouncedSearch()
@@ -61,7 +83,7 @@ const SearchConsoleEl = inject((stores: Stores) => ({
       submitButtonRef.current.click()
     }
   }
-  const onSubmit = async (data: any, e?: React.BaseSyntheticEvent) => {
+  const onSubmit = async (data: Partial<ISearchCodeParams>, e?: React.BaseSyntheticEvent) => {
     const payload = data
     if (payload.q === undefined || payload.q === '') {
       payload.q = '*'
@@ -72,16 +94,12 @@ const SearchConsoleEl = inject((stores: Stores) => ({
     if (exerciseId) {
       payload.exercise_id = exerciseId
     }
+    setSubmitInProgress(true)
     // Remove false, undefined and empty values since they are their default values
     // to keep the URL from being cluttered with redundant parameters
-    Object.keys(payload).forEach(key => {
-      if (!payload[key] || payload[key] === '') {
-        delete payload[key]
-      }
-    })
-    setSubmitInProgress(true)
-    const result = await search!(payload)
-    history.push(createQueryParams(payload))
+    const pruned = removeEmptyValues(payload) as ISearchCodeParams
+    const result = await search!(pruned)
+    history.push(createSearchQueryParams(pruned))
     if (result) {
       setSubmitInProgress(false)
     } else {

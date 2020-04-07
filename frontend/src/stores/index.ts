@@ -27,11 +27,14 @@ export class Stores {
     this.modalStore = new ModalStore()
     this.toastStore = new ToastStore()
     this.authStore = new AuthStore(this.reset)
-    this.searchStore = new SearchStore(this.toastStore)
     this.localSearchStore = new LocalSearchStore(this.toastStore)
     this.courseStore = new CourseStore(this.toastStore)
     this.reviewStore = new ReviewStore(this.toastStore)
     this.submissionStore = new SubmissionStore(this.toastStore)
+    this.searchStore = new SearchStore({
+      toastStore: this.toastStore,
+      localSearchStore: this.localSearchStore,
+    })
     this.clustersStore = new ClustersStore({
       toastStore: this.toastStore,
       localSearchStore: this.localSearchStore,

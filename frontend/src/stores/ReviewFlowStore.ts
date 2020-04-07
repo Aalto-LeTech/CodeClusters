@@ -1,7 +1,7 @@
 import { action, autorun, computed, runInAction, observable } from 'mobx'
 import * as reviewFlowApi from '../api/review_flow.api'
 
-import { IReviewFlow, IReviewFlowRunParams, IRunNgramResponse } from 'shared'
+import { IReviewFlow, IReviewFlowRunParams, IReviewFlowStep, ISearchCodeParams } from 'shared'
 import { ToastStore } from './ToastStore'
 import { AuthStore } from './AuthStore'
 import { CourseStore } from './CourseStore'
@@ -148,18 +148,26 @@ export class ReviewFlowStore {
   }
 
   @action runReviewFlow = async (params: IReviewFlowRunParams) => {
-    const result = await reviewFlowApi.runReviewFlow(params)
-    runInAction(() => {
-      if (result) {
-        if (result.searchResult) {
-          this.searchStore.addSearchResult(result.searchResult)
-        }
-        if (result.modelingResult && result.modelingResult.model_id === 'ngram') {
-          this.clustersStore.setLatestNgramModel(result.modelingResult as IRunNgramResponse)
-        }
-        this.toastStore.createToast('Review flow run', 'success')
-      }
-    })
-    return result
+    let searchResult
+    let modelingResult
+    if (params.steps[0] && params.steps[0].action === 'Search') {
+      const searchParams = this.getStepParams(params.steps[0]) as unknown as ISearchCodeParams
+      searchResult = await this.searchStore.search(searchParams)
+    }
+    if (searchResult && params.steps[1] && params.steps[1].action === 'Model') {
+      const modelingParams = this.getStepParams(params.steps[1])
+      modelingResult = await this.modelStore.runModel(modelingParams.model_id)
+    }
+    if (searchResult && modelingResult) {
+      this.toastStore.createToast('Review flow run', 'success')
+      return true
+    }
+    return undefined
+  }
+
+  getStepParams(step: IReviewFlowStep) {
+    const params = new URLSearchParams(step.parameters) as any
+    const arr = Array.from(params) as [string, string][]
+    return arr.reduce((acc, cur) => ({ ...acc, [cur[0]]: cur[1] }), {} as {[key: string]: string})
   }
 }

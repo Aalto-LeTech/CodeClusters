@@ -1,10 +1,10 @@
 import { action, computed, runInAction, observable } from 'mobx'
 import * as modelApi from '../api/model.api'
 
-import { persist } from './persist'
+// import { persist } from './persist'
 
 import {
-  IModel, IRunModelResponse, IRunNgramParams, IRunNgramResponse, NgramModelId
+  IModel, IRunModelResponse, IRunNgramParams, NgramModelId
 } from 'shared'
 import { ToastStore } from './ToastStore'
 import { SearchStore } from './SearchStore'
@@ -77,6 +77,10 @@ export class ModelStore {
         this.runModels.push(result)
         if (model_id === NgramModelId) {
           this.clustersStore.setLatestNgramModel(result)
+          const firstCluster = Object.keys(result.ngram.clusters)[0]
+          if (firstCluster) {
+            this.clustersStore.setActiveCluster(firstCluster)
+          }
         }
       }
     })

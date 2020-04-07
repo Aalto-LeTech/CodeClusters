@@ -7,6 +7,12 @@ import {
   ISearchCodeParams, ISearchCodeResult, ISolrSearchCodeResponse, ISolrSubmissionWithDate
 } from 'shared'
 import { ToastStore } from './ToastStore'
+import { LocalSearchStore } from './LocalSearchStore'
+
+interface IProps {
+  toastStore: ToastStore
+  localSearchStore: LocalSearchStore
+}
 
 const EMPTY_QUERY: ISearchCodeParams = {
   q: '*',
@@ -33,9 +39,11 @@ export class SearchStore {
   @observable selectedSearchResult = EMPTY_RESULT
   @observable searchParams: ISearchCodeParams = EMPTY_QUERY
   toastStore: ToastStore
+  localSearchStore: LocalSearchStore
 
-  constructor(props: ToastStore) {
-    this.toastStore = props
+  constructor(props: IProps) {
+    this.toastStore = props.toastStore
+    this.localSearchStore = props.localSearchStore
     persist(() => this.searchResults, (val: any) => this.searchResults = val, 'search.searchResults')
   }
 
@@ -65,6 +73,7 @@ export class SearchStore {
   }
 
   @action search = async (payload: ISearchCodeParams) => {
+    this.localSearchStore.setActive(false)
     const result = await searchApi.search(payload)
     runInAction(() => {
       this.searchParams = payload
@@ -79,17 +88,6 @@ export class SearchStore {
     return result
   }
 
-  @action searchIds = async () => {
-    const result = await searchApi.searchIds(this.searchParams)
-    let ids = [] as string[]
-    if (result) {
-      runInAction(() => {
-        ids = result.response.docs.map(r => r.id)
-        this.currentlySelectedIds = ids
-      })
-    }
-    return ids
-  }
 
   @action searchAll = async () => {
     const result = await searchApi.searchAll(this.searchParams)

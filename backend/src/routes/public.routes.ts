@@ -45,10 +45,6 @@ router.post('/reviewflow',
   authenticate,
   validateBody(reviewFlowCtrl.REVIEW_FLOW_CREATE_SCHEMA),
   reviewFlowCtrl.createReviewFlow)
-router.post('/reviewflow/run',
-  authenticate,
-  validateBody(reviewFlowCtrl.REVIEW_FLOW_RUN_SCHEMA),
-  reviewFlowCtrl.runReviewFlow)
 
 router.get('/search',
   authenticate,
@@ -58,10 +54,6 @@ router.get('/search_all',
   authenticate,
   parseQueryParams(searchCtrl.SEARCH_QUERY_PARAMS),
   searchCtrl.searchAllSubmissions)
-router.get('/search_ids',
-  authenticate,
-  parseQueryParams(searchCtrl.SEARCH_QUERY_PARAMS),
-  searchCtrl.searchSubmissionIds)
 
 router.get('/submissions',
   authenticate,

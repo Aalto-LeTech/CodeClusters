@@ -113,34 +113,9 @@ declare module 'shared' {
   export interface IRunNgramResponse {
     model_id: string
     ngram: {
-      clusters: {[key: number]: string[]}
+      clusters: {[key: string]: string[]}
       labels: number[]
       TSNE: { id: string, x: number, y: number, cluster: number }[]
-      params: {
-        ngrams: number[]
-        n_components: number
-      }
-    }
-    filter: {
-      filters: string[]
-      ids: number[]
-      matches: number[][]
-      counts: number[]
-      score: number[]
-    } | {}
-    // job_id: number
-    // documents_used: number
-    // status_url: string
-  }
-  export interface IRunClusteringParams {
-    course_id: number
-    exercise_id: number
-    word_filters: string[]
-  }
-  export interface IRunClusteringResponse {
-    ngram: {
-      clusters: {[key: number]: number[]}
-      labels: number[]
       params: {
         ngrams: number[]
         n_components: number
@@ -169,9 +144,6 @@ declare module 'shared' {
     case_sensitive?: boolean
     regex?: boolean
     whole_words?: boolean
-  }
-  export interface ISearchCodeByIdsParams extends ISearchCodeParams {
-    submission_ids: string[]
   }
   export interface ISolrResponseHeader {
     status: number
@@ -222,10 +194,6 @@ declare module 'shared' {
   export interface ISolrFullSubmissionWithDate extends Omit<ISolrFullSubmission, 'timestamp'> {
     date: Date
   }
-  export interface ISolrSearchIdsResponse {
-    responseHeader: ISolrResponseHeader
-    response: ISolrResponse<{ id: string }>
-  }
   export type ISearchCodeResponse = ISolrResponse<ISolrSubmissionWithDate>
   export interface ISearchCodeResult extends ISearchCodeResponse {
     params: ISearchCodeParams
@@ -262,9 +230,5 @@ declare module 'shared' {
   export interface IReviewFlowRunParams {
     review_flow_id?: number
     steps: IReviewFlowStep[]
-  }
-  export interface IReviewFlowRunResponse {
-    searchResult?: ISolrSearchCodeResponse
-    modelingResult?: IRunModelResponse
   }
 }

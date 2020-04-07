@@ -15,8 +15,7 @@ interface IProps {
 
 export class ClustersStore {
   @observable latestRunNgram?: IRunNgramResponse = undefined
-  @observable shownSubmissions: number[] = []
-  @observable activeCluster: number = 0
+  @observable activeCluster: string = ''
   toastStore: ToastStore
   localSearchStore: LocalSearchStore
 
@@ -24,14 +23,15 @@ export class ClustersStore {
     this.toastStore = props.toastStore
     this.localSearchStore = props.localSearchStore
     persist(() => this.latestRunNgram, (val: any) => this.latestRunNgram = val, 'clusters.latestRunNgram')
+    persist(() => this.activeCluster, (val: any) => this.activeCluster = val, 'clusters.activeCluster')
   }
 
   @computed get getNgramHistogramData() {
     if (this.latestRunNgram) {
-      const clusterKeys = Object.keys(this.latestRunNgram.ngram.clusters) as unknown as number[]
+      const clusterKeys = Object.keys(this.latestRunNgram.ngram.clusters)
       const histData = clusterKeys.map((key, i) => ({
         cluster: key,
-        name: key.toString(),
+        name: key,
         count: this.latestRunNgram!.ngram.clusters[key].length,
       }))
       return histData
@@ -53,7 +53,7 @@ export class ClustersStore {
     this.latestRunNgram = model
   }
 
-  @action setActiveCluster(cluster: number) {
+  @action setActiveCluster(cluster: string) {
     this.activeCluster = cluster
     if (this.latestRunNgram) {
       this.localSearchStore.searchByIds(this.latestRunNgram!.ngram.clusters[cluster])

@@ -1,4 +1,4 @@
-import { ISearchCodeParams, ISolrSearchCodeResponse, ISolrSearchAllCodeResponse, ISolrSearchIdsResponse } from 'shared'
+import { ISearchCodeParams, ISolrSearchCodeResponse, ISolrSearchAllCodeResponse } from 'shared'
 
 import {
   authenticatedHeaders,
@@ -10,6 +10,3 @@ export const search = (payload: ISearchCodeParams) =>
 
 export const searchAll = (payload: ISearchCodeParams) =>
   getWithQuery<ISolrSearchAllCodeResponse>('search_all', payload, authenticatedHeaders())
-
-export const searchIds = (payload: ISearchCodeParams) =>
-  getWithQuery<ISolrSearchIdsResponse>('search_ids', payload, authenticatedHeaders())

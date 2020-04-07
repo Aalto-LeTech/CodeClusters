@@ -5,14 +5,14 @@ import {
 import styled from '../../theme/styled'
 
 interface IItem {
-  cluster: number
+  cluster: string
   name: string
   count: number
 }
 interface IProps {
   className?: string
   data: IItem[]
-  activeCluster: number
+  activeCluster: string
   onClickBar: (item: any) => void
 }
 
