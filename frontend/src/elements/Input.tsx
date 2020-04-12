@@ -13,13 +13,13 @@ interface IProps {
   disabled?: boolean
   placeholder?: string
   required?: boolean
-  onChange?: (value: string) => void // Basically one of: string | file
+  onChange?: (value: string) => void // Basically one of: string | file (numbers are strings)
   onFocus?: () => void
   onBlur?: () => void
   onKeyPress?: (e: React.KeyboardEvent) => void
 }
 
-const InputEl = forwardRef((props: IProps, ref?: any) => {
+const InputEl = forwardRef((props: IProps, ref?: React.Ref<any>) => {
   const {
     className, value, type, name, autocomplete, icon, iconPadding, placeholder, disabled, required, fullWidth,
     onChange, onFocus, onBlur, onKeyPress

@@ -50,8 +50,9 @@ const IconWrapper = styled.div`
   height: 18px;
 `
 const Container = styled.div``
-const Body = styled.fieldset``
-
+const Body = styled.fieldset`
+  background: #fff;
+`
 const Title = styled.legend``
 
 const SearchInput = styled.input``
