@@ -176,6 +176,10 @@ declare module 'shared' {
     responseHeader: ISolrResponseHeader
     response: ISolrResponse<ISolrFullSubmission>
   }
+  export interface ISolrSearchAllIdsResponse {	
+    responseHeader: ISolrResponseHeader	
+    response: ISolrResponse<ISolrSubmission>	
+  }
   export interface ISolrSubmission {
     _version_: number
     id: string

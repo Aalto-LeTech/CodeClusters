@@ -5,33 +5,68 @@ import { FiCheck, FiPlusSquare, FiFolderPlus, FiTrash } from 'react-icons/fi'
 
 import { Icon } from '../elements/Icon'
 
-import { ReviewStore } from '../stores/ReviewStore'
+import { ISolrSubmissionWithDate, ISolrFullSubmissionWithDate } from 'shared'
+import { Stores } from '../stores'
+import { EModal } from '../stores/ModalStore'
 
+type SolrSubmission = ISolrSubmissionWithDate | ISolrFullSubmissionWithDate
 interface IProps {
   className?: string
-  reviewStore?: ReviewStore
+  currentSelectionCount?: number
+  searchResultsCount?: number
+  allSubmissions?: SolrSubmission[]
+  shownSubmissions?: ISolrFullSubmissionWithDate[]
+  openReviewSubmissionsModal?: () => void
+  toggleSelectShownSubmissions?: () => void
+  selectAllSubmissions?: () => Promise<void>
+  resetSelections?: () => void
 }
-export const FloatingMenu = inject('reviewStore')(observer((props: IProps) => {
-  const { className, reviewStore } = props
+
+export const FloatingMenu = inject((stores: Stores) => ({
+  currentSelectionCount: stores.reviewStore.currentSelectionCount,
+  searchResultsCount: stores.searchStore.searchResultsCount,
+  shownSubmissionsCount: stores.searchStore.getShownSubmissions.length,
+  openReviewSubmissionsModal: () => stores.modalStore.openModal(EModal.REVIEW_SUBMISSIONS),
+  toggleSelectShownSubmissions: stores.reviewStore.toggleSelectShownSubmissions,
+  selectAllSubmissions: stores.reviewStore.selectAllSubmissions,
+  resetSelections: stores.reviewStore.resetSelections,
+}))
+(observer((props: IProps) => {
+  const {
+    className, currentSelectionCount, searchResultsCount, openReviewSubmissionsModal,
+    toggleSelectShownSubmissions, selectAllSubmissions, resetSelections
+  } = props
   function handleReviewClick() {
+    openReviewSubmissionsModal!()
   }
   function handleToggleShownClick() {
+    toggleSelectShownSubmissions!()
   }
   function handleAddAllClick() {
+    selectAllSubmissions!()
   }
   function handleTrashClick() {
+    resetSelections!()
   }
   return (
     <Wrapper className={className}>
       <Container>
         <Header>
-          <Title>Selected: 0/0</Title>
+          <Title>Selected: {currentSelectionCount}/{searchResultsCount}</Title>
         </Header>
         <Body>
-          <Icon button onClick={handleReviewClick} tooltip="Review selected"><FiCheck size={18}/></Icon>
-          <Icon button onClick={handleToggleShownClick} tooltip="Add all shown"><FiPlusSquare size={18}/></Icon>
-          <Icon button onClick={handleAddAllClick} tooltip="Add all found"><FiFolderPlus size={18}/></Icon>
-          <Icon button onClick={handleTrashClick} tooltip="Unselect all"><FiTrash size={18}/></Icon>
+          <Icon button onClick={handleReviewClick} title="Review selected" disabled={currentSelectionCount === 0}>
+            <FiCheck size={18}/>
+          </Icon>
+          <Icon button onClick={handleToggleShownClick} title="Toggle all shown" disabled={searchResultsCount === 0}>
+            <FiPlusSquare size={18}/>
+          </Icon>
+          <Icon button onClick={handleAddAllClick} title="Add all found" disabled={searchResultsCount === 0}>
+            <FiFolderPlus size={18}/>
+          </Icon>
+          <Icon button onClick={handleTrashClick} title="Unselect all" disabled={currentSelectionCount === 0}>
+            <FiTrash size={18}/>
+          </Icon>
         </Body>
       </Container>
     </Wrapper>

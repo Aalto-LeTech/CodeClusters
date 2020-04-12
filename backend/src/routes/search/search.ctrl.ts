@@ -46,3 +46,16 @@ export const searchAllSubmissions = async (req: IAuthRequest<{}, ISearchCodePara
     next(err)
   }
 }
+
+export const searchAllSubmissionIds = async (req: IAuthRequest<{}, ISearchCodeParams>, res: Response, next: NextFunction) => {
+  try {
+    const result = await searchService.searchAllSubmissionIds(req.queryParams)
+    if (result) {
+      res.json(result)
+    } else {
+      res.status(400).json({ message: 'Bad query' })
+    }
+  } catch (err) {
+    next(err)
+  }
+}

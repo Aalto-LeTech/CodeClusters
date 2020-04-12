@@ -3,6 +3,14 @@ import * as reviewApi from '../api/review.api'
 
 import { IReviewedSubmission, IReviewCreateParams, IReviewSelection, ISolrSubmissionWithDate } from 'shared'
 import { ToastStore } from './ToastStore'
+import { SearchStore } from './SearchStore'
+import { LocalSearchStore } from './LocalSearchStore'
+
+interface IProps {
+  toastStore: ToastStore
+  searchStore: SearchStore
+  localSearchStore: LocalSearchStore
+}
 
 export class ReviewStore {
   @observable reviewedSubmissions: IReviewedSubmission[] = []
@@ -10,9 +18,13 @@ export class ReviewStore {
   @observable selectedId = ''
   @observable isMultiSelection: boolean = true
   toastStore: ToastStore
+  searchStore: SearchStore
+  localSearchStore: LocalSearchStore
 
-  constructor(props: ToastStore) {
-    this.toastStore = props
+  constructor(props: IProps) {
+    this.toastStore = props.toastStore
+    this.searchStore = props.searchStore
+    this.localSearchStore = props.localSearchStore
   }
 
   @computed get currentSelection() {
@@ -52,7 +64,7 @@ export class ReviewStore {
     this.selectedId = ''
   }
 
-  @action resetSelections() {
+  @action resetSelections = () => {
     this.selectedSubmissions = {}
     this.selectedId = ''
   }
@@ -90,6 +102,58 @@ export class ReviewStore {
     }
   }
 
+  @action toggleSelectShownSubmissions = () => {
+    let ids: string[] = []
+    if (this.localSearchStore.active) {
+      ids = this.localSearchStore.shownSubmissions.map(s => s.id)
+    } else {
+      ids = this.searchStore.selectedSearchResult.docs.map(s => s.id)
+    }
+    const atLeastOneUnselected = ids.some(id => !(id in this.selectedSubmissions))
+    let newSelections: { [id: string]: IReviewSelection } = {}
+    if (atLeastOneUnselected) {
+      newSelections = ids.reduce((acc, id) => ({
+        ...acc,
+        [id]: {
+          submission_id: id,
+          selection: [0, 0, 0]
+        }
+      }), { ...this.selectedSubmissions })
+    } else {
+      newSelections = Object.keys(this.selectedSubmissions).reduce((acc, id) => {
+        if (ids.includes(id)) {
+          return acc
+        }
+        return {
+          ...acc,
+          [id]: this.selectedSubmissions[id]
+        }
+      }, {})
+    }
+    this.selectedSubmissions = newSelections
+    this.isMultiSelection = true
+  }
+
+  @action selectAllSubmissions = async () => {
+    let ids: string[] = []
+    if (this.localSearchStore.active) {
+      ids = this.localSearchStore.submissions.map(s => s.id)
+    } else {
+      ids = await this.searchStore.searchIds()
+    }
+    const newSelections: { [id: string]: IReviewSelection } = ids.reduce((acc, id) => ({
+      ...acc,
+      [id]: {
+        submission_id: id,
+        selection: [0, 0, 0]
+      }
+    }), { ...this.selectedSubmissions })
+    runInAction(() => {
+      this.selectedSubmissions = newSelections
+      this.isMultiSelection = true
+    })
+  }
+
   @action getReviews = async () => {
     const result = await reviewApi.getReviews()
     runInAction(() => {
@@ -111,21 +175,15 @@ export class ReviewStore {
   }
 
   @action addReview = async (message: string, metadata: string) => {
-    let result
     const payload = {
       message,
       metadata,
       selections: Object.values(this.selectedSubmissions),
     }
-    try {
-      result = await reviewApi.addReview(payload)
-      if (result) {
-        this.toastStore.createToast('Review sent', 'success')
-      }
-      return result
-    } catch (err) {
-      console.log(err)
+    const result = await reviewApi.addReview(payload)
+    if (result) {
+      this.toastStore.createToast('Review sent', 'success')
     }
-    return Promise.resolve(undefined)
+    return result
   }
 }

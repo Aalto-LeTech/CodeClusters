@@ -54,6 +54,10 @@ router.get('/search_all',
   authenticate,
   parseQueryParams(searchCtrl.SEARCH_QUERY_PARAMS),
   searchCtrl.searchAllSubmissions)
+router.get('/search_ids',
+  authenticate,
+  parseQueryParams(searchCtrl.SEARCH_QUERY_PARAMS),
+  searchCtrl.searchAllSubmissionIds)
 
 router.get('/submissions',
   authenticate,

@@ -1,14 +1,12 @@
 import React, { useRef, useState } from 'react'
 import styled from '../theme/styled'
 
-import useHover from '../hooks/useHover'
-
 interface IProps {
   className?: string
   inline?: boolean
   button?: boolean
   disabled?: boolean
-  tooltip?: string
+  title?: string
   children: React.ReactNode
   onClick?: () => void
 }
@@ -19,48 +17,18 @@ IconEl.defaultProps = {
 }
 
 function IconEl(props: IProps) {
-  const { className, inline, button, disabled, tooltip, children, onClick } = props
-  const ref = useRef(null)
-  const [hoverActive, setHoverActive] = useState(tooltip !== undefined)
-  const [tooltipDir, setTooltipDir] = useState('top')
-  function handleHover(e: MouseEvent) {
-    const { innerHeight, innerWidth } = window
-    const { clientX, clientY } = e
-    const threshold = 100
-    const closeToLeft = clientX < threshold
-    const closeToTop = clientY < threshold
-    const closeToRight = (clientX + threshold) > innerWidth
-    const closeToBottom = (clientY + threshold) > innerHeight
-    if (closeToLeft && closeToTop) {
-      setTooltipDir('right bottom')
-    } else if (closeToTop && closeToRight) {
-      setTooltipDir('left bottom')
-    } else if (closeToRight && closeToBottom) {
-      setTooltipDir('left top')
-    } else if (closeToBottom && closeToLeft) {
-      setTooltipDir('right top')
-    } else if (closeToLeft) {
-      setTooltipDir('right')
-    } else if (closeToTop) {
-      setTooltipDir('bottom')
-    } else if (closeToRight) {
-      setTooltipDir('left')
-    } else if (closeToBottom) {
-      setTooltipDir('top')
-    }
-  }
-  useHover(ref, (e) => handleHover(e), hoverActive)
+  const { className, inline, button, disabled, title, children, onClick } = props
   if (button) {
     return (
-      <Wrapper ref={ref} className={className} inline={inline}>
-        <Button onClick={onClick} disabled={disabled} title={tooltip} data-tooltip={tooltip} className={tooltipDir}>
+      <Wrapper className={className} inline={inline}>
+        <Button onClick={onClick} disabled={disabled} title={title}>
           {children}
         </Button>
       </Wrapper>
     )
   }
   return (
-    <Wrapper ref={ref} className={`${className} ${tooltipDir}`} inline={inline} title={tooltip} data-tooltip={tooltip}>
+    <Wrapper className={className} inline={inline} title={title}>
       { children }
     </Wrapper>
   )

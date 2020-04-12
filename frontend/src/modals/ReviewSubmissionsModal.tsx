@@ -6,25 +6,33 @@ import { FiX } from 'react-icons/fi'
 import useClickOutside from '../hooks/useClickOutside'
 import useScrollLock from '../hooks/useScrollLock'
 
+import { AddReviewForm, IAddReviewFormParams } from '../components/AddReviewForm'
 import { Modal } from '../elements/Modal'
 import { Button } from '../elements/Button'
 import { Icon } from '../elements/Icon'
 
+import { IReviewCreateParams } from 'shared'
 import { Stores } from '../stores'
 import { IModal, EModal } from '../stores/ModalStore'
 
 interface IProps {
   className?: string
+  currentSelectionCount?: number
   modal?: IModal
   closeModal?: () => void
+  addReview?: (message: string, metadata: string) => Promise<any>
+  resetSelections?: () => void
 }
 
-export const DeleteReviewSelectionModal = inject((stores: Stores) => ({
-  modal: stores.modalStore.modals[EModal.DELETE_REVIEW_SELECTION],
-  closeModal: () => stores.modalStore.closeModal(EModal.DELETE_REVIEW_SELECTION),
+export const ReviewSubmissionsModal = inject((stores: Stores) => ({
+  currentSelectionCount: stores.reviewStore.currentSelectionCount,
+  modal: stores.modalStore.modals[EModal.REVIEW_SUBMISSIONS],
+  closeModal: () => stores.modalStore.closeModal(EModal.REVIEW_SUBMISSIONS),
+  addReview: stores.reviewStore.addReview,
+  resetSelections: stores.reviewStore.resetSelections,
 }))
 (observer((props: IProps) => {
-  const { className, modal, closeModal } = props
+  const { className, currentSelectionCount, modal, closeModal, addReview, resetSelections } = props
   function handleClose() {
     closeModal!()
   }
@@ -35,6 +43,16 @@ export const DeleteReviewSelectionModal = inject((stores: Stores) => ({
   function onCancel() {
     closeModal!()
   }
+  async function handleReviewSubmit(payload: IAddReviewFormParams, onSuccess: () => void, onError: () => void) {
+    const result = await addReview!(payload.message, payload.metadata)
+    if (result) {
+      onSuccess()
+      resetSelections!()
+      closeModal!()
+    } else {
+      onError()
+    }
+  }
   const ref = useRef(null)
   useClickOutside(ref, (e) => handleClose(), modal!.isOpen)
   useScrollLock(modal!.isOpen)
@@ -44,13 +62,16 @@ export const DeleteReviewSelectionModal = inject((stores: Stores) => ({
       body={
         <Body ref={ref}>
           <Header>
-            <TitleWrapper><h2>This will delete {modal!.params.count} selections</h2></TitleWrapper>
+            <TitleWrapper><h2>Add {currentSelectionCount} new pending reviews</h2></TitleWrapper>
             <Icon button onClick={handleClose}><FiX size={24}/></Icon>
           </Header>
-          <Buttons>
-            <Button intent="success" onClick={onAccept}>OK</Button>
-            <Button intent="transparent" onClick={onCancel}>Cancel</Button>
-          </Buttons>
+          <SubmissionsVisualization>
+            this should visualize the selected submissions as eg diff of submissions
+          </SubmissionsVisualization>
+          <AddReviewForm
+            onSubmit={handleReviewSubmit}
+            onCancel={handleClose}
+          />
         </Body>
       }
     ></Modal>
@@ -79,7 +100,6 @@ const Header = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 2rem;
   width: 100%;
 `
 const TitleWrapper = styled.div`
@@ -93,6 +113,12 @@ const TitleWrapper = styled.div`
     margin: 0;
     padding: 0;
   }
+`
+const SubmissionsVisualization = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
 `
 const Buttons = styled.div`
   align-items: center;

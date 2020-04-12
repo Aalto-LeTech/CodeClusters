@@ -10,14 +10,12 @@ import { CheckBox } from '../elements/CheckBox'
 
 import { Stores } from '../stores'
 import { ReviewStore } from '../stores/ReviewStore'
-import { ModalStore } from '../stores/ModalStore'
-import { ITheme } from '../types/theme'
-import { ISubmissionWithDate, IReview } from 'shared'
+import { EModal } from '../stores/ModalStore'
 
 interface IProps {
   className?: string
   reviewStore?: ReviewStore
-  modalStore?: ModalStore
+  openDeleteReviewSelectionModal?: (params: any) => void
 }
 interface IReviewFormParams {
   message: string
@@ -31,10 +29,10 @@ const EMPTY_REVIEW_FORM_PARAMS: IReviewFormParams = {
 
 const FloatingReviewMenuEl = inject((stores: Stores) => ({
   reviewStore: stores.reviewStore,
-  modalStore: stores.modalStore,
+  openDeleteReviewSelectionModal: (params: any) => stores.modalStore.openModal(EModal.DELETE_REVIEW_SELECTION, params),
 }))
 (observer((props: IProps) => {
-  const { className, reviewStore, modalStore } = props
+  const { className, reviewStore, openDeleteReviewSelectionModal } = props
   const [review, setReview] = useState(EMPTY_REVIEW_FORM_PARAMS)
 
   /**
@@ -50,7 +48,7 @@ const FloatingReviewMenuEl = inject((stores: Stores) => ({
   }
   function handleMultiSelectionToggle() {
     if (reviewStore!.hasManySelections && reviewStore!.isMultiSelection) {
-      modalStore!.openModal('deleteReviewSelection', {
+      openDeleteReviewSelectionModal!({
         submit: () => reviewStore!.toggleMultiSelection(),
         count: reviewStore!.currentSelectionCount - 1
       })

@@ -1,4 +1,4 @@
-import { action, runInAction, observable } from 'mobx'
+import { action, computed, runInAction, observable } from 'mobx'
 import * as searchApi from '../api/search.api'
 
 import { persist } from './persist'
@@ -35,7 +35,6 @@ const EMPTY_RESULT = {
 
 export class SearchStore {
   @observable searchResults: ISearchCodeResult[] = []
-  @observable currentlySelectedIds: string[] = []
   @observable selectedSearchResult = EMPTY_RESULT
   @observable searchParams: ISearchCodeParams = EMPTY_QUERY
   toastStore: ToastStore
@@ -47,12 +46,22 @@ export class SearchStore {
     persist(() => this.searchResults, (val: any) => this.searchResults = val, 'search.searchResults')
   }
 
-  @action reset() {
-    this.searchResults = []
+  @computed get searchResultsCount() {
+    if (this.localSearchStore.active) {
+      return this.localSearchStore.foundSubmissionsIndexes.length
+    }
+    return this.selectedSearchResult.numFound || 0
   }
 
-  @action resetSelectedIds() {
-    this.currentlySelectedIds = []
+  @computed get getShownSubmissions() {
+    if (this.localSearchStore.active) {
+      return this.localSearchStore.shownSubmissions
+    }
+    return this.selectedSearchResult.docs
+  }
+
+  @action reset() {
+    this.searchResults = []
   }
 
   parseSearchResponse(result: ISolrSearchCodeResponse) {
@@ -88,7 +97,6 @@ export class SearchStore {
     return result
   }
 
-
   @action searchAll = async () => {
     const result = await searchApi.searchAll(this.searchParams)
     if (result === undefined) return undefined
@@ -101,5 +109,13 @@ export class SearchStore {
     //   docs
     // }
     return docs
+  }
+
+  @action searchIds = async () => {
+    const result = await searchApi.searchIds(this.searchParams)
+    if (result) {
+      return result.response.docs.map(r => r.id)
+    }
+    return []
   }
 }

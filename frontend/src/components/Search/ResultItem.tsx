@@ -96,7 +96,8 @@ const ResultItemEl = inject((stores: Stores) => ({
 }))
 
 const Container = styled.div<{ active: boolean }>`
-  background: ${({ active, theme }) => active ? theme.color.red : '#ededed'};
+  background: ${({ active, theme }) => active ? theme.color.red : '#fff'};
+  border: 1px solid ${({ theme }) => theme.color.textDark};
   border-radius: 0.25rem;
   cursor: pointer;
   display: flex;

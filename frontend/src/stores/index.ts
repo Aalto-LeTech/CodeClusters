@@ -29,7 +29,6 @@ export class Stores {
     this.authStore = new AuthStore(this.reset)
     this.localSearchStore = new LocalSearchStore(this.toastStore)
     this.courseStore = new CourseStore(this.toastStore)
-    this.reviewStore = new ReviewStore(this.toastStore)
     this.submissionStore = new SubmissionStore(this.toastStore)
     this.searchStore = new SearchStore({
       toastStore: this.toastStore,
@@ -37,6 +36,11 @@ export class Stores {
     })
     this.clustersStore = new ClustersStore({
       toastStore: this.toastStore,
+      localSearchStore: this.localSearchStore,
+    })
+    this.reviewStore = new ReviewStore({
+      toastStore: this.toastStore,
+      searchStore: this.searchStore,
       localSearchStore: this.localSearchStore,
     })
     this.modelStore = new ModelStore({

@@ -4,6 +4,7 @@ import styled from '../theme/styled'
 
 import { SearchView } from '../components/Search'
 import { DeleteReviewSelectionModal } from '../modals/DeleteReviewSelectionModal'
+import { ReviewSubmissionsModal } from '../modals/ReviewSubmissionsModal'
 import { FloatingMenu } from '../components/FloatingMenu'
 
 import { Stores } from '../stores'
@@ -24,6 +25,7 @@ export const FrontPage = inject((stores: Stores) => ({
       </Header>
       <SearchView/>
       <DeleteReviewSelectionModal />
+      <ReviewSubmissionsModal />
       <FloatingMenu />
       <ImgContainer>
         <img width={1200} src={'/img/architecture.jpg'} alt="Architecture"/>
