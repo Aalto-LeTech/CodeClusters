@@ -55,10 +55,11 @@ const LocalSearchFormEl = inject((stores: Stores) => ({
       <Form onSubmit={handleSubmit(onSubmit)}>
         <TopRow>
           <FormField>
-            <label htmlFor="num_results">Results per page</label>
+            <label htmlFor="local_num_results">Results per page</label>
             <Input
               fullWidth
               type="number"
+              id="local_num_results"
               name="num_results"
               placeholder="200"
               ref={register}
@@ -66,10 +67,11 @@ const LocalSearchFormEl = inject((stores: Stores) => ({
             ></Input>
           </FormField>
           <FormField>
-            <label htmlFor="num_lines">Lines per result</label>
+            <label htmlFor="local_num_lines">Lines per result</label>
             <Input
               fullWidth
               type="number"
+              id="local_num_lines"
               name="num_lines"
               placeholder="0 - return all the lines"
               ref={register}
@@ -78,17 +80,18 @@ const LocalSearchFormEl = inject((stores: Stores) => ({
           </FormField>
         </TopRow>
         <SearchRow>
-          <label htmlFor="q">Local search</label>
-          <SearchBar name="q" ref={register} onSearch={handleSearch}/>
+          <label htmlFor="local-search">Local search</label>
+          <SearchBar name="q" id="local-search" ref={register} onSearch={handleSearch}/>
         </SearchRow>
         <BottomRow>
           <CheckBoxField>
             <CheckBox
+              id="local_case_sensitive"
               name="case_sensitive"
               ref={register}
               onChange={handleChange}
             />
-            <CheckBoxText>Case sensitive</CheckBoxText>
+            <CheckBoxText htmlFor="local_case_sensitive">Case sensitive</CheckBoxText>
           </CheckBoxField>
         </BottomRow>
         <HiddenSubmitButton type="submit" ref={submitButtonRef}></HiddenSubmitButton>
@@ -117,7 +120,7 @@ const FormField = styled.div`
 const CheckBoxField = styled.div`
   display: flex;
 `
-const CheckBoxText = styled.div`
+const CheckBoxText = styled.label`
   align-items: center;
   display: flex;
   padding: 3px 0;

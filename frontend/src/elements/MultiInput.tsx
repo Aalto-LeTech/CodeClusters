@@ -6,6 +6,7 @@ interface IProps {
   className?: string
   value?: string
   items: string[]
+  id?: string
   name?: string
   autocomplete?: 'on' | 'off'
   type?: 'email' | 'text'
@@ -31,7 +32,8 @@ MultiInputEl.defaultProps = {
 
 function MultiInputEl(props: IProps) {
   const {
-    className, value, items, type, name, autocomplete, icon, iconPadding, placeholder, disabled, required, fullWidth, onFocus, onBlur
+    className, value, items, type, id, name, autocomplete, icon, iconPadding, placeholder, disabled, required,
+    fullWidth, onFocus, onBlur
   } = props
   function handleClickX(item: string) {
     !disabled && props.onRemoveItem(item)
@@ -60,6 +62,7 @@ function MultiInputEl(props: IProps) {
       <StyledInput
         value={value}
         type={type}
+        id={id}
         name={name}
         autocomplete={autocomplete}
         iconPadding={iconPadding}

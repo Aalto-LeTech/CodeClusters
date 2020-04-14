@@ -4,6 +4,7 @@ import styled from '../theme/styled'
 interface IProps {
   className?: string
   value?: string | number
+  id?: string
   name?: string
   autocomplete?: 'on' | 'off'
   type?: 'email' | 'password' | 'text' | 'number' | 'search' | 'textarea'
@@ -21,7 +22,7 @@ interface IProps {
 
 const InputEl = forwardRef((props: IProps, ref?: React.Ref<any>) => {
   const {
-    className, value, type, name, autocomplete, icon, iconPadding, placeholder, disabled, required, fullWidth,
+    className, value, type, id, name, autocomplete, icon, iconPadding, placeholder, disabled, required, fullWidth,
     onChange, onFocus, onBlur, onKeyPress
   } = props
   function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -34,6 +35,7 @@ const InputEl = forwardRef((props: IProps, ref?: React.Ref<any>) => {
         <StyledTextarea
           ref={ref}
           value={value}
+          id={id}
           name={name}
           placeholder={placeholder}
           disabled={disabled}
@@ -48,6 +50,7 @@ const InputEl = forwardRef((props: IProps, ref?: React.Ref<any>) => {
           ref={ref}
           value={value}
           type={type}
+          id={id}
           name={name}
           autocomplete={autocomplete}
           iconPadding={iconPadding}

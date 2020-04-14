@@ -116,6 +116,7 @@ const SearchConsoleEl = inject((stores: Stores) => ({
               fullWidth
               type="number"
               name="num_results"
+              id="num_results"
               placeholder="20"
               ref={register}
               onChange={handleChange}
@@ -127,6 +128,7 @@ const SearchConsoleEl = inject((stores: Stores) => ({
               fullWidth
               type="number"
               name="num_lines"
+              id="num_lines"
               placeholder="0 - return all the lines"
               ref={register}
               onChange={handleChange}
@@ -135,11 +137,12 @@ const SearchConsoleEl = inject((stores: Stores) => ({
         </TopRow>
         <MiddleRow>
           <FormField>
-            <label>Custom filters</label>
+            <label htmlFor="custom_filters">Custom filters</label>
             <MultiInput
               fullWidth
               type="text"
               name="custom_filters"
+              id="custom_filters"
               placeholder="Eg. student_id=1"
               value={filterText}
               items={wordFilters}
@@ -150,33 +153,36 @@ const SearchConsoleEl = inject((stores: Stores) => ({
           </FormField>
         </MiddleRow>
         <SearchRow>
-          <label htmlFor="q">Search</label>
-          <SearchBar name="q" ref={register} onSearch={handleSearch}/>
+          <label htmlFor="search">Search</label>
+          <SearchBar name="q" id="search" ref={register} onSearch={handleSearch}/>
         </SearchRow>
         <BottomRow>
           <CheckBoxField>
             <CheckBox
+              id="case_sensitive"
               name="case_sensitive"
               ref={register}
               onChange={handleChange}
             />
-            <CheckBoxText>Case sensitive</CheckBoxText>
+            <CheckBoxText htmlFor="case_sensitive">Case sensitive</CheckBoxText>
           </CheckBoxField>
           <CheckBoxField>
             <CheckBox
+              id="use_regex"
               name="regex"
               ref={register}
               onChange={handleChange}
             />
-            <CheckBoxText>Use regex</CheckBoxText>
+            <CheckBoxText htmlFor="use_regex">Use regex</CheckBoxText>
           </CheckBoxField>
           <CheckBoxField>
             <CheckBox
+              id="use_whole_words"
               name="whole_words"
               ref={register}
               onChange={handleChange}
             />
-            <CheckBoxText>Whole words</CheckBoxText>
+            <CheckBoxText htmlFor="use_whole_words">Whole words</CheckBoxText>
           </CheckBoxField>
         </BottomRow>
         <HiddenSubmitButton type="submit" ref={submitButtonRef}></HiddenSubmitButton>
@@ -205,7 +211,7 @@ const FormField = styled.div`
 const CheckBoxField = styled.div`
   display: flex;
 `
-const CheckBoxText = styled.div`
+const CheckBoxText = styled.label`
   align-items: center;
   display: flex;
   padding: 3px 0;

@@ -9,12 +9,13 @@ import { useDebouncedCallback } from '../../hooks/useDebounce'
 interface IProps {
   className?: string
   name: string
+  id: string
   onSearch: (val: string) => void
 }
 
 const SearchBarEl = memo(forwardRef((props: IProps, ref) => {
   const {
-    className, name, onSearch
+    className, name, id, onSearch
   } = props
   const debouncedSearch = useDebouncedCallback(onSearch, 500)
 
@@ -33,6 +34,7 @@ const SearchBarEl = memo(forwardRef((props: IProps, ref) => {
           placeholder={"Search"}
           autocomplete="off"
           name={name}
+          id={id}
           ref={ref}
           onChange={handleChange}
         />
