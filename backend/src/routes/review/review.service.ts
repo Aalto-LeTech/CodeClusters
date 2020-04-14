@@ -3,6 +3,35 @@ import { dbService } from '../../db/db.service'
 import { IReview, IUserReview, IReviewCreateParams } from 'shared'
 
 export const reviewService = {
+  getPendingReviews: (courseId?: number, exerciseId?: number) => {
+    const courseCondition = courseId ? ` AND course_id=${courseId}` : ''
+    const exerciseCondition = exerciseId ? ` AND exercise_id=${exerciseId}` : ''
+    const params = [courseId, exerciseId].filter(e => e !== undefined)
+    return dbService.queryMany<any>(`
+      SELECT r.review_id, message, metadata, status, tags, r.timestamp FROM review AS r
+      JOIN review_submissions ON r.review_id = review_submissions.review_id
+      JOIN submission ON review_submissions.submission_id = submission.submission_id
+      WHERE status='PENDING' ${courseCondition} ${exerciseCondition}
+      GROUP BY(r.review_id, message, metadata, status, tags, r.timestamp)
+    `, params)
+  },
+  getReviewSubmissions: (courseId?: number, exerciseId?: number) => {
+    const courseCondition = courseId ? ` AND course_id=${courseId}` : ''
+    const exerciseCondition = exerciseId ? ` AND exercise_id=${exerciseId}` : ''
+    const params = [courseId, exerciseId].filter(e => e !== undefined)
+    return dbService.queryMany<any>(`
+      SELECT rs.review_id, rs.submission_id, selection FROM review_submissions AS rs
+      JOIN submission ON rs.submission_id = submission.submission_id
+      JOIN review ON review.review_id = rs.review_id
+      WHERE status='PENDING' ${courseCondition} ${exerciseCondition}
+    `, params)
+  },
+  updateReview: (review: Partial<IReview>) => {
+    return undefined
+  },
+  deleteReview: (reviewId: number) => {
+    return undefined
+  },
   getReviews: async () : Promise<IReview[]> => {
     return await dbService.queryMany<IReview>(`
       SELECT json_agg(json_build_object(

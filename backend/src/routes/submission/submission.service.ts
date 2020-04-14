@@ -4,8 +4,14 @@ import { ISubmission } from 'shared'
 import { ISubmissionCreateParams } from './submission.types'
 
 export const submissionService = {
-  getSubmissions: async () : Promise<ISubmission[] | undefined> => {
-    return await dbService.queryMany<ISubmission>('SELECT submission_id, student_id, course_id, exercise_id, code, timestamp FROM submission')
+  getSubmissions: (courseId?: number, exerciseId?: number) => {
+    const courseCondition = courseId ? `WHERE course_id=${courseId}` : ''
+    const exerciseCondition = exerciseId ? ` AND exercise_id=${exerciseId}` : ''
+    const params = [courseId, exerciseId].filter(e => e !== undefined)
+    return dbService.queryMany<ISubmission>(`
+      SELECT submission_id, student_id, course_id, exercise_id, code, timestamp FROM submission
+      ${courseCondition} ${exerciseCondition}
+    `, params)
   },
   createSubmission: async (params: ISubmissionCreateParams) : Promise<ISubmission | undefined> => {
     const submissions = await dbService.queryOne<ISubmission | undefined>(`

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../theme/styled'
 
-import { ReviewedSubmissionsList } from '../components/ReviewsView'
+import { ReviewedSubmissionsList } from '../components/ReviewsPage'
 
 import { RouteComponentProps } from 'react-router'
 import { ReviewStore } from '../stores/ReviewStore'

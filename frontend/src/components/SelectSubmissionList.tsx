@@ -14,7 +14,7 @@ interface IProps {
 const SelectSubmissionListEl = inject('submissionStore')(observer((props: IProps) => {
   const { className, submissionStore, onSelect } = props
   const [loading, setLoading] = useState(false)
-  const [submissionId, setSubmissionId] = useState(-1)
+  const [submissionId, setSubmissionId] = useState('')
 
   useEffect(() => {
     setLoading(true)

@@ -4,6 +4,7 @@ import { submissionService } from './submission.service'
 
 // import { CustomError } from '../../common'
 
+import { ISubmissionListQueryParams } from 'shared'
 import { IAuthRequest } from '../../types/auth'
 import { ISubmissionCreateParams } from './submission.types'
 
@@ -23,9 +24,14 @@ export const SUBMISSION_SCHEMA = Joi.object({
   date: Joi.date().required()
 })
 
-export const getSubmissions = async (req: IAuthRequest<{}>, res: Response, next: NextFunction) => {
+export const SUBMISSION_LIST_QUERY_PARAMS = Joi.object({
+  course_id: Joi.number().integer(),
+  exercise_id: Joi.number().integer(),
+})
+
+export const getSubmissions = async (req: IAuthRequest<{}, ISubmissionListQueryParams>, res: Response, next: NextFunction) => {
   try {
-    const submissions = await submissionService.getSubmissions()
+    const submissions = await submissionService.getSubmissions(req.queryParams.course_id, req.queryParams.exercise_id)
     res.json({ submissions })
   } catch (err) {
     next(err)

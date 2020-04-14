@@ -1,13 +1,28 @@
-import { IReview, IReviewedSubmission, IReviewCreateParams } from 'shared'
+import { IReview, IReviewSubmission, IReviewedSubmission, IReviewListQueryParams, IReviewCreateParams } from 'shared'
 
 import {
   authenticatedHeaders,
   get,
+  getWithQuery,
   post,
+  put,
+  del,
 } from './methods'
 
 export const addReview = (payload: IReviewCreateParams) =>
   post<IReview>('review', payload, authenticatedHeaders())
+
+export const updateReview = (reviewId: number, payload: Partial<IReview>) =>
+  put<boolean>(`review/${reviewId}`, payload, authenticatedHeaders())
+
+export const deleteReview = (reviewId: number) =>
+  del<boolean>(`review/${reviewId}`, authenticatedHeaders())
+
+export const getPendingReviews = (payload: IReviewListQueryParams) =>
+  getWithQuery<{
+    reviews: IReview[],
+    reviewSubmissions: IReviewSubmission[]
+  }>('reviews/pending', payload, authenticatedHeaders())
 
 export const getReviews = () =>
   get<{reviewedSubmissions: IReviewedSubmission[]}>('reviews', authenticatedHeaders())

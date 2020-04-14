@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../theme/styled'
 
-import { ReviewedSubmissionsList } from '../components/ReviewsView'
+import { SubmissionsReviewsGrid } from '../components/ReviewsPage/SubmissionsReviewsGrid'
 import { Button } from '../elements/Button'
+import { SubmissionReviewsModal } from '../modals/SubmissionReviewsModal'
 
 import { ReviewStore } from '../stores/ReviewStore'
 
@@ -12,18 +13,10 @@ interface IProps {
 }
 
 export const ReviewsPage = inject('reviewStore')(observer((props: IProps) => {
-  const { reviewStore } = props
-  const [loading, setLoading] = useState(false)
-  useEffect(() => {
-    setLoading(true)
-    reviewStore.getReviews().then(() => {
-      setLoading(false)
-    })
-  }, [reviewStore])
   return (
     <Container>
       <header>
-        <h1>Reviews</h1>
+        <h1>Pending Reviews</h1>
       </header>
       <Controls>
         <div>
@@ -40,9 +33,8 @@ export const ReviewsPage = inject('reviewStore')(observer((props: IProps) => {
         <Button intent="success">Accept all</Button>
         <Button intent="danger">Reject all</Button>
       </Buttons>
-      { loading ? 'Loading' :
-      <ReviewedSubmissionsList reviewedSubmissions={reviewStore!.reviewedSubmissions}/>
-      }
+      <SubmissionsReviewsGrid />
+      <SubmissionReviewsModal />
     </Container>
   )
 }))

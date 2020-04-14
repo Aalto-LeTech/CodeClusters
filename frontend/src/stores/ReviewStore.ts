@@ -1,7 +1,7 @@
 import { action, computed, runInAction, observable } from 'mobx'
 import * as reviewApi from '../api/review.api'
 
-import { IReviewedSubmission, IReviewCreateParams, IReviewSelection, ISolrSubmissionWithDate } from 'shared'
+import { IReview, IReviewedSubmission, IReviewCreateParams, IReviewSelection, IReviewSubmission} from 'shared'
 import { ToastStore } from './ToastStore'
 import { SearchStore } from './SearchStore'
 import { LocalSearchStore } from './LocalSearchStore'
@@ -13,6 +13,8 @@ interface IProps {
 }
 
 export class ReviewStore {
+  @observable reviews: IReview[] = []
+  @observable reviewSubmissions: IReviewSubmission[] = []
   @observable reviewedSubmissions: IReviewedSubmission[] = []
   @observable selectedSubmissions: { [id: string]: IReviewSelection } = {}
   @observable selectedId = ''
@@ -154,6 +156,21 @@ export class ReviewStore {
     })
   }
 
+  @action getPendingReviews = async (courseId?: number, exerciseId?: number) => {
+    const payload = {
+      course_id: courseId,
+      exercise_id: exerciseId,
+    }
+    const result = await reviewApi.getPendingReviews(payload)
+    runInAction(() => {
+      if (result) {
+        this.reviews = result.reviews
+        this.reviewSubmissions = result.reviewSubmissions
+      }
+    })
+    return result
+  }
+
   @action getReviews = async () => {
     const result = await reviewApi.getReviews()
     runInAction(() => {
@@ -183,6 +200,29 @@ export class ReviewStore {
     const result = await reviewApi.addReview(payload)
     if (result) {
       this.toastStore.createToast('Review sent', 'success')
+    }
+    return result
+  }
+
+  @action updateReview = async (reviewId: number, review: Partial<IReview>) => {
+    const result = await reviewApi.updateReview(reviewId, review)
+    if (result) {
+      this.reviews = this.reviews.map(r => {
+        if (r.review_id === reviewId) {
+          return { ...r, ...review }
+        }
+        return r
+      })
+      this.toastStore.createToast('Review updated', 'success')
+    }
+    return result
+  }
+
+  @action deleteReview = async (reviewId: number) => {
+    const result = await reviewApi.deleteReview(reviewId)
+    if (result) {
+      this.reviews = this.reviews.filter(r => r.review_id !== reviewId)
+      this.toastStore.createToast('Review deleted', 'success')
     }
     return result
   }

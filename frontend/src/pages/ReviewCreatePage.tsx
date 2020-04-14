@@ -28,7 +28,7 @@ const EMPTY_REVIEW_FORM_PARAMS = {
 
 export const ReviewCreatePage = inject('reviewStore')(observer((props: IProps) => {
   const { reviewStore } = props
-  const [submissionId, setSubmissionId] = useState(0)
+  const [submissionId, setSubmissionId] = useState('')
   const [currentReviewIdx, setCurrentReviewIdx] = useState(0)
   const [reviews, setReviews] = useState([EMPTY_REVIEW_FORM_PARAMS] as IReviewFormParams[])
 

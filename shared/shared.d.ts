@@ -26,14 +26,27 @@ declare module 'shared' {
     status: 'PENDING' | 'SENT'
     tags: string[]
   }
-  export interface IReviewCreateParams {
-    selections: IReviewSelection[]
-    message: string
-    metadata?: string
+  export interface IReviewWithSelection extends IReview {
+    selection: [number, number, number]
   }
   export interface IReviewSelection {
     submission_id: string
     selection: [number, number, number]
+  }
+  export interface IReviewSubmission {
+    review_id: number
+    submission_id: string
+    selection: [number, number, number]
+  }
+  // Review API
+  export interface IReviewListQueryParams {
+    course_id?: number
+    exercise_id?: number
+  }
+  export interface IReviewCreateParams {
+    selections: IReviewSelection[]
+    message: string
+    metadata?: string
   }
   // Course
   export interface ICourse {
@@ -50,6 +63,10 @@ declare module 'shared' {
   }
   // Submission
   type SubmissionWithoutId = Omit<ISubmission, 'submission_id'>
+  export interface ISubmissionListQueryParams {
+    course_id?: number
+    exercise_id?: number
+  }
   export interface ISubmissionCreateParams {
     student_id: number
     course_id: number
@@ -60,7 +77,7 @@ declare module 'shared' {
     date: Date
   }
   export interface ISubmission {
-    submission_id: number
+    submission_id: string
     student_id: number
     course_id: number
     exercise_id: number

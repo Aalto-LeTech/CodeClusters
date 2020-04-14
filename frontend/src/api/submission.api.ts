@@ -1,13 +1,13 @@
-import { ISubmission, ISubmissionCreateParams } from 'shared'
+import { ISubmission, ISubmissionListQueryParams, ISubmissionCreateParams } from 'shared'
 
 import {
   authenticatedHeaders,
-  get,
+  getWithQuery,
   post,
 } from './methods'
 
-export const getSubmissions = () =>
-  get<{ submissions: ISubmission[]}>('submissions', authenticatedHeaders())
+export const getSubmissions = (payload: ISubmissionListQueryParams) =>
+  getWithQuery<{ submissions: ISubmission[]}>('submissions', payload, authenticatedHeaders())
 
 export const addSubmission = (payload: ISubmissionCreateParams) =>
   post<ISubmission>('submission', payload, authenticatedHeaders())

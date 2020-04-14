@@ -28,6 +28,10 @@ router.post('/model/ngram',
   validateBody(modelCtrl.RUN_NGRAM_PARAMS),
   modelCtrl.runNgram)
 
+router.get('/reviews/pending',
+  authenticate,
+  parseQueryParams(reviewCtrl.REVIEW_PENDING_LIST_QUERY_PARAMS),
+  reviewCtrl.getPendingReviews)
 router.get('/reviews',
   authenticate,
   parseQueryParams(reviewCtrl.REVIEW_LIST_QUERY_PARAMS),
@@ -61,6 +65,7 @@ router.get('/search_ids',
 
 router.get('/submissions',
   authenticate,
+  parseQueryParams(submissionCtrl.SUBMISSION_LIST_QUERY_PARAMS),
   submissionCtrl.getSubmissions)
 router.post('/submission',
   authenticate,
