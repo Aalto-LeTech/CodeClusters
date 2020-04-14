@@ -1,6 +1,8 @@
 import { dbService } from '../../db/db.service'
 
-import { IReview, IReviewSubmission, IUserReview, IReviewCreateParams } from 'shared'
+import {
+  IReview, IReviewSubmission, IUserReview, IReviewCreateParams, IAcceptReviewsParams
+} from 'shared'
 
 export const reviewService = {
   getPendingReviews: (courseId?: number, exerciseId?: number) => {
@@ -88,5 +90,13 @@ export const reviewService = {
       INSERT INTO review_submissions (review_id, submission_id, selection)
       VALUES ${values[0]} RETURNING review_id, submission_id, selection
     `, values[2])
+  },
+  acceptPendingReviews: (params: IAcceptReviewsParams) => {
+    const updatedValues = params.reviewIds.map((_, i) => ` ($${i + 1})`).join(',')
+    return dbService.queryMany<any>(`
+      UPDATE review AS r SET status = 'SENT'
+      FROM (VALUES ${updatedValues}) AS u(review_id)
+      WHERE r.review_id = u.review_id::integer
+    `, params.reviewIds)
   }
 }

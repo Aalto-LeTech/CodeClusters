@@ -11,6 +11,7 @@ type IModals = {
 
 export enum EModal {
   DELETE_REVIEW_SELECTION = 'DELETE_REVIEW_SELECTION',
+  DELETE_REVIEWS = 'DELETE_REVIEWS',
   REVIEW_SUBMISSIONS = 'REVIEW_SUBMISSIONS',
   SUBMISSION_REVIEWS = 'SUBMISSION_REVIEWS'
 }
@@ -18,6 +19,13 @@ export enum EModal {
 export class ModalStore {
   @observable modals = {
     [EModal.DELETE_REVIEW_SELECTION]: {
+      isOpen: false,
+      params: {
+        submit: () => undefined,
+        count: 0
+      }
+    },
+    [EModal.DELETE_REVIEWS]: {
       isOpen: false,
       params: {
         submit: () => undefined,

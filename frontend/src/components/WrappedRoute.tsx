@@ -35,9 +35,11 @@ const MainWrapper = styled.div`
   background: ${({ theme }) => theme.color.bg};
 `
 const MainContainer = styled.main`
-  margin: 40px auto 20px auto;
+  margin: 40px auto 0 auto;
   max-width: 680px;
+  padding-bottom: 20px;
   @media only screen and (max-width: 720px) {
-    margin: 40px 20px 20px 20px;
+    margin: 40px 20px 0 20px;
+    padding-bottom: 20px;
   }
 `

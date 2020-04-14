@@ -32,6 +32,10 @@ router.get('/reviews/pending',
   authenticate,
   parseQueryParams(reviewCtrl.REVIEW_PENDING_LIST_QUERY_PARAMS),
   reviewCtrl.getPendingReviews)
+router.post('/reviews/pending',
+  authenticate,
+  validateBody(reviewCtrl.REVIEW_PENDING_ACCEPT_PARAMS),
+  reviewCtrl.acceptPendingReviews)
 router.get('/reviews',
   authenticate,
   parseQueryParams(reviewCtrl.REVIEW_LIST_QUERY_PARAMS),

@@ -5,10 +5,10 @@ import { inject, observer } from 'mobx-react'
 import { MdKeyboardArrowRight } from 'react-icons/md'
 import { FiTrash } from 'react-icons/fi'
 
-import { Icon } from '../../elements/Icon'
-import { GenericDropdown } from '../../elements/Dropdown'
+import { Icon } from '../elements/Icon'
+import { GenericDropdown } from '../elements/Dropdown'
 
-import { CourseStore } from '../../stores/CourseStore'
+import { CourseStore } from '../stores/CourseStore'
 
 interface IProps {
   className?: string
@@ -53,11 +53,6 @@ const SelectCourseExerciseEl = inject('courseStore')(observer((props: IProps) =>
 
   return (
     <Container className={className}>
-      <InfoText>
-        Note: both Course and Exercise fields are optional.
-        <br />
-        Although running models on the whole indexed data is not advised.
-      </InfoText>
       <DropdownField>
         <CustomDropdown
           selected={courseStore!.selectedCourse?.course_id}
@@ -88,14 +83,12 @@ const Container = styled.section`
   align-items: center;
   display: flex;
   flex-direction: column;
-  margin: 1rem 1rem 0 1rem;
-`
-const InfoText = styled.p`
-  margin: 0 0 1rem 1rem;
+  > * + * {
+    margin-top: 1rem;
+  }
 `
 const DropdownField = styled.div`
   display: flex;
-  margin: 0.75rem 0 0 0;
   max-width: 700px;
   width: 100%;
   & > ${Icon} {

@@ -53,6 +53,8 @@ const SubmissionsReviewsGridEl = inject((stores: Stores) => ({
         }
       }
       setSubmissionReviewsRows(mat)
+    } else {
+      setSubmissionReviewsRows([])
     }
   }, [reviews, reviewSubmissions, submissions])
   const ref = useRef(null)

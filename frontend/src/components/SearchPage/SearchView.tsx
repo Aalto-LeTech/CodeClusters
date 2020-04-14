@@ -1,7 +1,7 @@
 import React, { memo, useState } from 'react'
 import styled from 'styled-components'
 
-import { SelectCourseExercise } from './SelectCourseExercise'
+import { SelectCourseExercise } from '../SelectCourseExercise'
 import { SearchConsole } from './SearchConsole'
 import { ReviewFlows } from '../ReviewFlows'
 import { Modeling } from '../Model'
@@ -20,6 +20,13 @@ const SearchViewEl = memo((props: IProps) => {
   }
   return (
     <Container className={className}>
+      <Info>
+        <InfoText>
+          Note: both Course and Exercise fields are optional.
+          <br />
+          Although running models on the whole indexed data is not advised.
+        </InfoText>
+      </Info>
       <SelectCourseExercise />
       <ReviewFlows />
       <PreviousQueries>
@@ -50,6 +57,15 @@ const Container = styled.section`
   & > ${SearchConsole} {
     margin-bottom: 1.5rem;
   }
+`
+const Info = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin: 0 0 1rem 1rem;
+`
+const InfoText = styled.p`
+  margin: 0;
 `
 const PreviousQueries = styled.div`
   align-items: center;

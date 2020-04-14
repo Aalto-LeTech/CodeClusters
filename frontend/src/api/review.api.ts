@@ -1,4 +1,6 @@
-import { IReview, IReviewSubmission, IReviewedSubmission, IReviewListQueryParams, IReviewCreateParams } from 'shared'
+import {
+  IReview, IReviewSubmission, IReviewedSubmission, IReviewListQueryParams, IReviewCreateParams, IAcceptReviewsParams
+} from 'shared'
 
 import {
   authenticatedHeaders,
@@ -23,6 +25,9 @@ export const getPendingReviews = (payload: IReviewListQueryParams) =>
     reviews: IReview[],
     reviewSubmissions: IReviewSubmission[]
   }>('reviews/pending', payload, authenticatedHeaders())
+
+export const acceptPendingReviews = (payload: IAcceptReviewsParams) =>
+  post<boolean>('reviews/pending', payload, authenticatedHeaders())
 
 export const getReviews = () =>
   get<{reviewedSubmissions: IReviewedSubmission[]}>('reviews', authenticatedHeaders())

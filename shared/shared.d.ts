@@ -48,6 +48,9 @@ declare module 'shared' {
     message: string
     metadata?: string
   }
+  export interface IAcceptReviewsParams {
+    reviewIds: number[]
+  }
   // Review flow
   export interface IReviewFlowStep {
     index: number

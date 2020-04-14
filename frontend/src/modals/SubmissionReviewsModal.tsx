@@ -35,8 +35,6 @@ export const SubmissionReviewsModal = inject((stores: Stores) => ({
   const [codeHTML, setCodeHTML] = useState(modal!.params.submission?.code)
 
   useEffect(() => {
-    console.log(modal!.params)
-    // console.log(modal!.params.submission?.code)
     setCodeHTML(modal!.params.submission?.code)
   }, [modal!.params])
 
@@ -153,7 +151,7 @@ const Content = styled.div`
 const ReviewsListUl = styled.ul`
   max-width: 600px;
   overflow-y: scroll;
-  padding: 0 0.5rem;
+  padding: 0.5rem;
   width: 100%;
 `
 const ReviewItem = styled.li<{ active: boolean}>`

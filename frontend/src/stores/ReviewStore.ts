@@ -226,4 +226,19 @@ export class ReviewStore {
     }
     return result
   }
+
+  @action acceptPendingReviews = async (reviewIds: number[]) => {
+    const payload = {
+      reviewIds
+    }
+    const result = await reviewApi.acceptPendingReviews(payload)
+    if (result) {
+      runInAction(() => {
+        this.reviews = this.reviews.filter(r => !reviewIds.includes(r.review_id))
+        this.reviewSubmissions = this.reviewSubmissions.filter(rs => !reviewIds.includes(rs.review_id))
+        this.toastStore.createToast('Reviews accepted', 'success')
+      })
+    }
+    return result
+  }
 }
