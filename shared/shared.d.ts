@@ -48,6 +48,37 @@ declare module 'shared' {
     message: string
     metadata?: string
   }
+  // Review flow
+  export interface IReviewFlowStep {
+    index: number
+    action: string
+    parameters: string
+  }
+  export interface IReviewFlow {
+    review_flow_id: number
+    course_id: number | null
+    exercise_id: number | null
+    user_id: number
+    public: boolean
+    title: string
+    description: string
+    steps: IReviewFlowStep[]
+  }
+  // Review flow API
+  export interface IReviewFlowCreateParams {
+    course_id: number | null
+    exercise_id: number | null
+    user_id: number
+    title: string
+    description: string
+    public?: boolean
+    tags?: string[]
+    steps: IReviewFlowStep[]
+  }
+  export interface IReviewFlowRunParams {
+    review_flow_id?: number
+    steps: IReviewFlowStep[]
+  }
   // Course
   export interface ICourse {
     course_id: number
@@ -63,16 +94,6 @@ declare module 'shared' {
   }
   // Submission
   type SubmissionWithoutId = Omit<ISubmission, 'submission_id'>
-  export interface ISubmissionListQueryParams {
-    course_id?: number
-    exercise_id?: number
-  }
-  export interface ISubmissionCreateParams {
-    student_id: number
-    course_id: number
-    exercise_id: number
-    code: string
-  }
   export interface ISubmissionWithDate extends ISubmission {
     date: Date
   }
@@ -84,6 +105,17 @@ declare module 'shared' {
     code: string
     timestamp: string
   }
+  // Submission API
+  export interface ISubmissionListQueryParams {
+    course_id?: number
+    exercise_id?: number
+  }
+  export interface ISubmissionCreateParams {
+    student_id: number
+    course_id: number
+    exercise_id: number
+    code: string
+  }
   // User / auth
   export interface IUser {
     user_id: number
@@ -93,6 +125,18 @@ declare module 'shared' {
     role: Role
   }
   export type Role = 'ADMIN' | 'TEACHER' | 'STUDENT'
+  export interface IJwt {
+    expires: number
+    token: string
+  }
+  // User API
+  export interface IUserCreateParams {
+    name: string
+    email: string
+    password: string
+    student_id: number | null
+    role: Role
+  }
   export interface ILoginCredentials {
     email: string
     password: string
@@ -100,17 +144,6 @@ declare module 'shared' {
   export interface ILoginResponse {
     user: IUser
     jwt: IJwt
-  }
-  export interface IJwt {
-    expires: number
-    token: string
-  }
-  export interface IUserCreateParams {
-    name: string
-    email: string
-    password: string
-    student_id: number | null
-    role: Role
   }
   // Model
   export interface IModel {
@@ -221,35 +254,5 @@ declare module 'shared' {
   }
   export interface ISearchAllCodeResult extends ISolrResponse<ISolrFullSubmissionWithDate> {
     params: ISearchCodeParams
-  }
-  // Review flow
-  export interface IReviewFlowStep {
-    index: number
-    action: string
-    parameters: string
-  }
-  export interface IReviewFlow {
-    review_flow_id: number
-    course_id: number | null
-    exercise_id: number | null
-    user_id: number
-    public: boolean
-    title: string
-    description: string
-    steps: IReviewFlowStep[]
-  }
-  export interface IReviewFlowCreateParams {
-    course_id: number | null
-    exercise_id: number | null
-    user_id: number
-    title: string
-    description: string
-    public?: boolean
-    tags?: string[]
-    steps: IReviewFlowStep[]
-  }
-  export interface IReviewFlowRunParams {
-    review_flow_id?: number
-    steps: IReviewFlowStep[]
   }
 }

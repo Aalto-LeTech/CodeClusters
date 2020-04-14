@@ -6,7 +6,7 @@ import { MdKeyboardArrowRight } from 'react-icons/md'
 
 import { ModelParameters } from './ModelParameters'
 import { ClusteringResults } from './ClusteringResults'
-import { LocalSearchForm } from '../LocalSearch/LocalSearchForm'
+import { LocalSearchForm } from './LocalSearchForm'
 import { Button } from '../../elements/Button'
 import { Icon } from '../../elements/Icon'
 import { Dropdown } from '../../elements/Dropdown'
