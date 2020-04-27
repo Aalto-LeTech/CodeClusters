@@ -1,9 +1,10 @@
 import React, { memo, useState } from 'react'
 import styled from 'styled-components'
 
-import { Button } from '../../elements/Button'
+import { FetchReviewsButton } from './FetchReviewsButton'
 import { SelectCourseExercise } from '../SelectCourseExercise'
 import { SubmissionsReviewsGrid } from './SubmissionsReviewsGrid'
+import { PendingSentToggle } from './PendingSentToggle'
 import { ReviewStats } from './ReviewStats'
 import { ReviewSubmissionsControls } from './ReviewSubmissionsControls'
 
@@ -16,9 +17,13 @@ const ReviewsViewEl = memo((props: IProps) => {
   return (
     <Container className={className}>
       <header>
-        <h1>Pending Reviews</h1>
+        <h1>Reviews</h1>
       </header>
-      <SelectCourseExercise />
+      <MainInputs>
+        <SelectCourseExercise />
+        <PendingSentToggle />
+        <FetchReviewsButton />
+      </MainInputs>
       <ReviewStats />
       <ReviewSubmissionsControls />
       <SubmissionsReviewsGrid />
@@ -26,7 +31,7 @@ const ReviewsViewEl = memo((props: IProps) => {
   )
 })
 
-const Container = styled.section`
+const Container = styled.div`
   > * + * {
     margin: 2rem 0;
   }
@@ -34,11 +39,9 @@ const Container = styled.section`
     margin: 2rem 0;
   }
 `
-const Buttons = styled.div`
-  display: flex;
-  width: 600px;
+const MainInputs = styled.div`
   > * + * {
-    margin-left: 1rem;
+    margin: 1rem 0;
   }
 `
 

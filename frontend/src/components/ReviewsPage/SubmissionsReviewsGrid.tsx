@@ -17,8 +17,6 @@ interface IProps {
   reviews?: IReview[]
   reviewSubmissions?: IReviewSubmission[]
   submissions?: ISubmission[]
-  getPendingReviews?: (courseId?: number, exerciseId?: number) => Promise<any>
-  getSubmissions?: (courseId?: number, exerciseId?: number) => Promise<any>
   openSubmissionReviewsModal?: (params: any) => void
 }
 
@@ -26,21 +24,15 @@ const SubmissionsReviewsGridEl = inject((stores: Stores) => ({
   reviews: stores.reviewStore.reviews,
   reviewSubmissions: stores.reviewStore.reviewSubmissions,
   submissions: stores.submissionStore.submissions,
-  getPendingReviews: stores.reviewStore.getPendingReviews,
-  getSubmissions: stores.submissionStore.getSubmissions,
   openSubmissionReviewsModal: (params: any) => stores.modalStore.openModal(EModal.SUBMISSION_REVIEWS, params),
 }))
 (observer((props: IProps) => {
   const {
-    className, reviews, reviewSubmissions, submissions, getPendingReviews, getSubmissions, openSubmissionReviewsModal
+    className, reviews, reviewSubmissions, submissions, openSubmissionReviewsModal
   } = props
   const [submissionReviewsRows, setSubmissionReviewsRows] = useState([] as (IReviewSubmission | undefined)[][])
   const [editedReviewId, setEditedReviewId] = useState(-1)
 
-  useEffect(() => {
-    getPendingReviews!()
-    getSubmissions!()
-  }, [])
   useEffect(() => {
     if (reviews!.length > 0 && reviewSubmissions!.length > 0 && submissions!.length > 0) {
       const mat = Array(submissions!.length).fill(undefined).map(_ => Array(reviews!.length).fill(undefined))
@@ -134,11 +126,16 @@ function SubmissionColumn(props: ISubmissionColumnProps) {
   if (!reviewSubmission) {
     return <td></td>
   }
-  const hasSelection = !reviewSubmission!.selection.every((e: number) => e === 0)
+  const selection = reviewSubmission!.selection
+  const hasSelection = !selection.every((e: number) => e === 0)
+  let tooltip = undefined
+  if (hasSelection) {
+    tooltip = `line: ${selection[0]}, range: ${selection[1]}-${selection[2]}`
+  }
   return (
     <td
       className={'top selected'}
-      data-tooltip={hasSelection ? `Line: ${reviewSubmission!.selection[0]}` : undefined}
+      data-tooltip={tooltip}
     >
       { hasSelection ?
       <Icon><FiAlignLeft size={14} /></Icon> :

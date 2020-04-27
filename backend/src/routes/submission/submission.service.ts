@@ -5,8 +5,8 @@ import { ISubmissionCreateParams } from './submission.types'
 
 export const submissionService = {
   getSubmissions: (courseId?: number, exerciseId?: number) => {
-    const courseCondition = courseId ? `WHERE course_id=${courseId}` : ''
-    const exerciseCondition = exerciseId ? ` AND exercise_id=${exerciseId}` : ''
+    const courseCondition = courseId ? 'WHERE course_id=$1' : ''
+    const exerciseCondition = exerciseId ? ' AND exercise_id=$2' : ''
     const params = [courseId, exerciseId].filter(e => e !== undefined)
     return dbService.queryMany<ISubmission>(`
       SELECT submission_id, student_id, course_id, exercise_id, code, timestamp FROM submission

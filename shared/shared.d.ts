@@ -1,6 +1,6 @@
 declare module 'shared' {
   // Utils
-  export function createQueryParams(obj: {[key: string]: string | number}) : string
+  // export function createQueryParams(obj: {[key: string]: string | number}) : string
 
   // Review
   export type IUserReviewWithDate = Omit<IReviewWithDate, 'metadata'>
@@ -23,8 +23,12 @@ declare module 'shared' {
     message: string
     metadata: string
     timestamp: string
-    status: 'PENDING' | 'SENT'
+    status: EReviewStatus
     tags: string[]
+  }
+  export enum EReviewStatus {
+    PENDING = 'PENDING',
+    SENT = 'SENT'
   }
   export interface IReviewWithSelection extends IReview {
     selection: [number, number, number]
@@ -42,6 +46,7 @@ declare module 'shared' {
   export interface IReviewListQueryParams {
     course_id?: number
     exercise_id?: number
+    status?: EReviewStatus
   }
   export interface IReviewCreateParams {
     selections: IReviewSelection[]

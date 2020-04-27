@@ -16,8 +16,12 @@ export class SubmissionStore {
     this.submissions = []
   }
 
-  @action getSubmissions = async () => {
-    const result = await submitApi.getSubmissions({})
+  @action getSubmissions = async (courseId?: number, exerciseId?: number) => {
+    const payload = {
+      course_id: courseId,
+      exercise_id: exerciseId,
+    }
+    const result = await submitApi.getSubmissions(payload)
     runInAction(() => {
       if (result) {
         this.submissions = result.submissions.map(s => ({ ...s, date: new Date(s.timestamp) })) as ISubmissionWithDate[]

@@ -9,16 +9,17 @@ interface IProps {
   checked?: boolean
   disabled?: boolean
   required?: boolean
+  title?: string
   onChange?: (val: boolean) => void
 }
 
 const CheckBoxEl = forwardRef((props: IProps, ref?: any) => {
-  const { className, id, name, checked, disabled, required, type = 'checkbox', onChange } = props
+  const { className, id, name, checked, disabled, required, type = 'checkbox', title, onChange } = props
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     !disabled && onChange && onChange(event.target.checked)
   }
   return (
-    <Wrapper className={`${className} ${type}`}>
+    <Wrapper className={`${className} ${type}`} title={title}>
       <input
         ref={ref}
         id={id}

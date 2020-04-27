@@ -28,18 +28,18 @@ router.post('/model/ngram',
   validateBody(modelCtrl.RUN_NGRAM_PARAMS),
   modelCtrl.runNgram)
 
-router.get('/reviews/pending',
-  authenticate,
-  parseQueryParams(reviewCtrl.REVIEW_PENDING_LIST_QUERY_PARAMS),
-  reviewCtrl.getPendingReviews)
-router.post('/reviews/pending',
-  authenticate,
-  validateBody(reviewCtrl.REVIEW_PENDING_ACCEPT_PARAMS),
-  reviewCtrl.acceptPendingReviews)
 router.get('/reviews',
   authenticate,
   parseQueryParams(reviewCtrl.REVIEW_LIST_QUERY_PARAMS),
   reviewCtrl.getReviews)
+router.post('/reviews/pending',
+  authenticate,
+  validateBody(reviewCtrl.REVIEW_PENDING_ACCEPT_PARAMS),
+  reviewCtrl.acceptPendingReviews)
+router.get('/reviews/user/:user_id',
+  authenticate,
+  parseQueryParams(reviewCtrl.REVIEW_USER_LIST_QUERY_PARAMS),
+  reviewCtrl.getUserReviews)
 router.post('/review',
   authenticate,
   validateBody(reviewCtrl.REVIEW_CREATE_SCHEMA),

@@ -43,7 +43,7 @@ function createSubmissionsFromTsv(data, token) {
     const payload = {
       student_id: Math.floor(Math.random() * 2 + 1),
       course_id: 2,
-      exercise_id: 1,
+      exercise_id: 4,
       code
     }
     return sendRequest('submission', payload, token)

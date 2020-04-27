@@ -20,17 +20,14 @@ export const updateReview = (reviewId: number, payload: Partial<IReview>) =>
 export const deleteReview = (reviewId: number) =>
   del<boolean>(`review/${reviewId}`, authenticatedHeaders())
 
-export const getPendingReviews = (payload: IReviewListQueryParams) =>
+export const getReviews = (payload: IReviewListQueryParams) =>
   getWithQuery<{
     reviews: IReview[],
     reviewSubmissions: IReviewSubmission[]
-  }>('reviews/pending', payload, authenticatedHeaders())
+  }>('reviews', payload, authenticatedHeaders())
 
 export const acceptPendingReviews = (payload: IAcceptReviewsParams) =>
   post<boolean>('reviews/pending', payload, authenticatedHeaders())
 
-export const getReviews = () =>
-  get<{reviewedSubmissions: IReviewedSubmission[]}>('reviews', authenticatedHeaders())
-
 export const getUserReviews = (userId: number) =>
-  get<{reviewedSubmissions: IReviewedSubmission[]}>(`reviews?user_id=${userId}`, authenticatedHeaders())
+  get<{reviewedSubmissions: IReviewedSubmission[]}>(`reviews/user/${userId}`, authenticatedHeaders())

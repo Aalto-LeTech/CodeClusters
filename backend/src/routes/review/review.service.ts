@@ -1,31 +1,31 @@
 import { dbService } from '../../db/db.service'
 
 import {
-  IReview, IReviewSubmission, IUserReview, IReviewCreateParams, IAcceptReviewsParams
+  IReview, IReviewSubmission, IUserReview, IReviewCreateParams, IAcceptReviewsParams, EReviewStatus
 } from 'shared'
 
 export const reviewService = {
-  getPendingReviews: (courseId?: number, exerciseId?: number) => {
-    const courseCondition = courseId ? ` AND course_id=${courseId}` : ''
-    const exerciseCondition = exerciseId ? ` AND exercise_id=${exerciseId}` : ''
-    const params = [courseId, exerciseId].filter(e => e !== undefined)
+  getReviews: (courseId?: number, exerciseId?: number, status: EReviewStatus = EReviewStatus.PENDING) => {
+    const courseCondition = courseId ? ' AND course_id=$2' : ''
+    const exerciseCondition = exerciseId ? ' AND exercise_id=$3' : ''
+    const params = [status, courseId, exerciseId].filter(e => e !== undefined)
     return dbService.queryMany<IReview>(`
       SELECT r.review_id, message, metadata, status, tags, r.timestamp FROM review AS r
       JOIN review_submissions ON r.review_id = review_submissions.review_id
       JOIN submission ON review_submissions.submission_id = submission.submission_id
-      WHERE status='PENDING' ${courseCondition} ${exerciseCondition}
+      WHERE status=$1 ${courseCondition} ${exerciseCondition}
       GROUP BY(r.review_id, message, metadata, status, tags, r.timestamp)
     `, params)
   },
-  getReviewSubmissions: (courseId?: number, exerciseId?: number) => {
-    const courseCondition = courseId ? ` AND course_id=${courseId}` : ''
-    const exerciseCondition = exerciseId ? ` AND exercise_id=${exerciseId}` : ''
-    const params = [courseId, exerciseId].filter(e => e !== undefined)
+  getReviewSubmissions: (courseId?: number, exerciseId?: number, status: EReviewStatus = EReviewStatus.PENDING) => {
+    const courseCondition = courseId ? ' AND course_id=$2' : ''
+    const exerciseCondition = exerciseId ? ' AND exercise_id=$3' : ''
+    const params = [status, courseId, exerciseId].filter(e => e !== undefined)
     return dbService.queryMany<IReviewSubmission>(`
       SELECT rs.review_id, rs.submission_id, selection FROM review_submissions AS rs
       JOIN submission ON rs.submission_id = submission.submission_id
       JOIN review ON review.review_id = rs.review_id
-      WHERE status='PENDING' ${courseCondition} ${exerciseCondition}
+      WHERE status=$1 ${courseCondition} ${exerciseCondition}
     `, params)
   },
   updateReview: (review: Partial<IReview>) => {
@@ -33,21 +33,6 @@ export const reviewService = {
   },
   deleteReview: (reviewId: number) => {
     return undefined
-  },
-  getReviews: async () : Promise<IReview[]> => {
-    return await dbService.queryMany<IReview>(`
-      SELECT json_agg(json_build_object(
-        'message', review.message,
-        'metadata', review.metadata,
-        'timestamp', review.timestamp,
-        'status', review.status,
-        'tags', review.tags,
-        'selection', review_submissions.selection
-      )) AS reviews, submission.code FROM submission
-      JOIN review_submissions ON submission.submission_id = review_submissions.submission_id
-      JOIN review ON review.review_id = review_submissions.review_id
-      GROUP BY(submission.submission_id, submission.code)
-    `)
   },
   getUserReviews: async (studentId: number) : Promise<IUserReview[]> => {
     return await dbService.queryMany<IUserReview>(`

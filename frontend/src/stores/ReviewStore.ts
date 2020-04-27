@@ -1,7 +1,9 @@
 import { action, computed, runInAction, observable } from 'mobx'
 import * as reviewApi from '../api/review.api'
 
-import { IReview, IReviewedSubmission, IReviewCreateParams, IReviewSelection, IReviewSubmission} from 'shared'
+import {
+  IReview, IReviewedSubmission, IReviewCreateParams, IReviewSelection, IReviewSubmission, EReviewStatus
+} from 'shared'
 import { ToastStore } from './ToastStore'
 import { SearchStore } from './SearchStore'
 import { LocalSearchStore } from './LocalSearchStore'
@@ -18,6 +20,7 @@ export class ReviewStore {
   @observable reviewedSubmissions: IReviewedSubmission[] = []
   @observable selectedSubmissions: { [id: string]: IReviewSelection } = {}
   @observable selectedId = ''
+  @observable fetchedReviewsStatus = EReviewStatus.PENDING
   @observable isMultiSelection: boolean = true
   toastStore: ToastStore
   searchStore: SearchStore
@@ -69,6 +72,10 @@ export class ReviewStore {
   @action resetSelections = () => {
     this.selectedSubmissions = {}
     this.selectedId = ''
+  }
+
+  @action setFetchedReviewsStatus = (status: EReviewStatus) => {
+    this.fetchedReviewsStatus = status
   }
 
   @action toggleMultiSelection = () => {
@@ -160,22 +167,13 @@ export class ReviewStore {
     const payload = {
       course_id: courseId,
       exercise_id: exerciseId,
+      status: this.fetchedReviewsStatus,
     }
-    const result = await reviewApi.getPendingReviews(payload)
+    const result = await reviewApi.getReviews(payload)
     runInAction(() => {
       if (result) {
         this.reviews = result.reviews
         this.reviewSubmissions = result.reviewSubmissions
-      }
-    })
-    return result
-  }
-
-  @action getReviews = async () => {
-    const result = await reviewApi.getReviews()
-    runInAction(() => {
-      if (result) {
-        this.reviewedSubmissions = result.reviewedSubmissions
       }
     })
     return result

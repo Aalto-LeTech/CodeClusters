@@ -5,7 +5,8 @@ import { reviewService } from './review.service'
 // import { CustomError } from '../../common'
 
 import { IAuthRequest } from '../../types/auth'
-import { IReview, IUserReview, IReviewCreateParams, IAcceptReviewsParams, IReviewListQueryParams } from 'shared'
+import { IReviewCreateParams, IAcceptReviewsParams, IReviewListQueryParams } from 'shared'
+import { ValidationError } from '../../common'
 
 export const REVIEW_SELECTION_SCHEMA = Joi.object({
   submission_id: Joi.string().length(36).required(),
@@ -21,35 +22,38 @@ export const REVIEW_SCHEMA = Joi.object({
   message: Joi.string().min(1).max(10240).required(),
   timestamp: Joi.string().min(1).max(20).required(),
 })
-export const REVIEW_PENDING_LIST_QUERY_PARAMS = Joi.object({
+export const REVIEW_LIST_QUERY_PARAMS = Joi.object({
   course_id: Joi.number().integer(),
   exercise_id: Joi.number().integer(),
+  status: Joi.string(),
+})
+export const REVIEW_USER_LIST_QUERY_PARAMS = Joi.object({
+  user_id: Joi.number().integer().required(),
 })
 export const REVIEW_PENDING_ACCEPT_PARAMS = Joi.object({
   reviewIds: Joi.array().items(Joi.number().integer()).required()
 })
-export const REVIEW_LIST_QUERY_PARAMS = Joi.object({
-  user_id: Joi.number().integer(),
-})
 
-export const getPendingReviews = async (req: IAuthRequest<{}, IReviewListQueryParams>, res: Response, next: NextFunction) => {
+export const getReviews = async (req: IAuthRequest<{}, IReviewListQueryParams>, res: Response, next: NextFunction) => {
   try {
-    const reviews = await reviewService.getPendingReviews()
-    const reviewSubmissions = await reviewService.getReviewSubmissions()
+    const { course_id, exercise_id, status } = req.queryParams
+    const reviews = await reviewService.getReviews(course_id, exercise_id, status)
+    const reviewSubmissions = await reviewService.getReviewSubmissions(course_id, exercise_id, status)
     res.json({ reviews, reviewSubmissions })
   } catch (err) {
     next(err)
   }
 }
 
-export const getReviews = async (req: IAuthRequest<{}, { user_id?: number }>, res: Response, next: NextFunction) => {
+export const getUserReviews = async (req: IAuthRequest, res: Response, next: NextFunction) => {
   try {
-    let reviewedSubmissions = [] as IReview[] | IUserReview[]
-    if (req.queryParams.user_id) {
-      reviewedSubmissions = await reviewService.getUserReviews(req.queryParams.user_id)
-    } else {
-      reviewedSubmissions = await reviewService.getReviews()
+    let userId
+    try {
+      userId = parseInt(req.params.user_id, 10)
+    } catch (e) {
+      return next(new ValidationError('User id wasn\'t an integer'))
     }
+    const reviewedSubmissions = await reviewService.getUserReviews(userId)
     res.json({ reviewedSubmissions })
   } catch (err) {
     next(err)
@@ -67,6 +71,10 @@ export const createReview = async (req: IAuthRequest<IReviewCreateParams>, res: 
 
 export const acceptPendingReviews = async (req: IAuthRequest<IAcceptReviewsParams>, res: Response, next: NextFunction) => {
   try {
+    if (req.body.reviewIds.length === 0) {
+      res.status(200).send(true)
+      return
+    }
     const updatedRows = await reviewService.acceptPendingReviews(req.body)
     res.json(updatedRows)
   } catch (err) {
