@@ -4,7 +4,7 @@ import { reviewService } from './review.service'
 
 // import { CustomError } from '../../common'
 
-import { IAuthRequest } from '../../types/auth'
+import { IAuthRequest } from '../../types/request'
 import { IReviewCreateParams, IAcceptReviewsParams, IReviewListQueryParams } from 'shared'
 import { ValidationError } from '../../common'
 
@@ -45,7 +45,7 @@ export const getReviews = async (req: IAuthRequest<{}, IReviewListQueryParams>, 
   }
 }
 
-export const getUserReviews = async (req: IAuthRequest, res: Response, next: NextFunction) => {
+export const getUserReviews = async (req: IAuthRequest<{}, {}, { user_id: string }>, res: Response, next: NextFunction) => {
   try {
     let userId
     try {

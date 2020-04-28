@@ -27,6 +27,8 @@ const Th = styled.th<{ active: boolean }>`
   background: ${({ active, theme }) => active && theme.color.green};
   border-radius: 2px;
   cursor: pointer;
+  font-size: 0.8rem;
+  height: 30px;
   position: relative;
   width: 75px;
   word-break: break-all;

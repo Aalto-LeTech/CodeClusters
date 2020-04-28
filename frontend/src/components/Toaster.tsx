@@ -56,7 +56,7 @@ function getTypeIcon(type: string, size: number = 24) {
       return <FiAlertCircle size={size} />
     case 'warning':
       return <FiAlertTriangle size={size} />
-    case 'error':
+    case 'danger':
       return <FiXOctagon size={size} />
     case 'success':
     default:
@@ -70,7 +70,7 @@ function getTypeColor(type: string, theme: ITheme) {
       return theme.color.blue
     case 'warning':
       return theme.color.orange
-    case 'error':
+    case 'danger':
       return theme.color.red
     case 'success':
     default:

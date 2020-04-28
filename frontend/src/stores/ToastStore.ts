@@ -1,6 +1,6 @@
 import { action, observable } from 'mobx'
 
-import { IToast } from '../types/ui'
+import { IToast, IToastType } from '../types/ui'
 
 export class ToastStore {
   @observable toasts: IToast[] = []
@@ -10,7 +10,7 @@ export class ToastStore {
     this.toasts = []
   }
 
-  @action createToast = (message: string, type: string = 'success', duration: number = 5000) => {
+  @action createToast = (message: string, type: IToastType = 'success', duration: number = 5000) => {
     const newToast = {
       id: this.idCounter,
       message,

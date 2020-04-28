@@ -5,6 +5,7 @@ import { validateBody, authenticate, parseQueryParams } from '../middlewares'
 import * as courseCtrl from './course/course.ctrl'
 import * as modelCtrl from './model/model.ctrl'
 import * as reviewCtrl from './review/review.ctrl'
+import * as reviewSubmissionCtrl from './review_submission/review_submission.ctrl'
 import * as reviewFlowCtrl from './review_flow/review_flow.ctrl'
 import * as searchCtrl from './search/search.ctrl'
 import * as submissionCtrl from './submission/submission.ctrl'
@@ -36,7 +37,7 @@ router.post('/reviews/pending',
   authenticate,
   validateBody(reviewCtrl.REVIEW_PENDING_ACCEPT_PARAMS),
   reviewCtrl.acceptPendingReviews)
-router.get('/reviews/user/:user_id',
+router.get('/reviews/user/:user_id(\\d+)',
   authenticate,
   parseQueryParams(reviewCtrl.REVIEW_USER_LIST_QUERY_PARAMS),
   reviewCtrl.getUserReviews)
@@ -44,6 +45,13 @@ router.post('/review',
   authenticate,
   validateBody(reviewCtrl.REVIEW_CREATE_SCHEMA),
   reviewCtrl.createReview)
+
+router.put('/review_submission/:review_id(\\d+)/:submission_id',
+  authenticate,
+  reviewSubmissionCtrl.upsertReviewSubmission)
+router.delete('/review_submission/:review_id(\\d+)/:submission_id',
+  authenticate,
+  reviewSubmissionCtrl.deleteReviewSubmission)
 
 router.get('/reviewflows',
   authenticate,

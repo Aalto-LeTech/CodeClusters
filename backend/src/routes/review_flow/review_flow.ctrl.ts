@@ -2,7 +2,7 @@ import { Response, NextFunction } from 'express'
 import * as Joi from 'joi'
 import { reviewFlowService } from './review_flow.service'
 
-import { IAuthRequest } from '../../types/auth'
+import { IAuthRequest } from '../../types/request'
 import { IReviewFlowCreateParams } from 'shared'
 import { IReviewListQueryParams } from './review_flow.types'
 

@@ -1,7 +1,9 @@
+export type IToastType = 'success' | 'danger' | 'warning' | 'info'
+
 export interface IToast {
   id: number
   message: string
-  type: string
+  type: IToastType
   duration: number
 }
 

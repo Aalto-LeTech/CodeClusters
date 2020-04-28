@@ -5,7 +5,7 @@ import { searchService } from './search.service'
 // import { CustomError } from '../../common'
 
 import { ISearchCodeParams } from 'shared'
-import { IAuthRequest } from '../../types/auth'
+import { IAuthRequest } from '../../types/request'
 
 export const SEARCH_QUERY_PARAMS = Joi.object({
   q: Joi.string().min(1).max(256).required(),

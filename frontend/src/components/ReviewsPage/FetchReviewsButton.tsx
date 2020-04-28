@@ -20,7 +20,7 @@ const FetchReviewsButtonEl = inject((stores: Stores) => ({
   courseId: stores.courseStore.courseId,
   exerciseId: stores.courseStore.exerciseId,
   fetchedReviewsStatus: stores.reviewStore.fetchedReviewsStatus,
-  getPendingReviews: stores.reviewStore.getPendingReviews,
+  getPendingReviews: stores.reviewStore.getReviews,
   getSubmissions: stores.submissionStore.getSubmissions,
 }))
 (observer((props: IProps) => {
@@ -69,7 +69,6 @@ const Container = styled.div`
 const CheckBoxText = styled.label`
   align-items: center;
   background: #0094ff; // ${({ theme }) => theme.color.green};
-  /* border: 1px solid #222; */
   border-radius: 4px;
   color: #fff;
   display: flex;

@@ -163,7 +163,7 @@ export class ReviewStore {
     })
   }
 
-  @action getPendingReviews = async (courseId?: number, exerciseId?: number) => {
+  @action getReviews = async (courseId?: number, exerciseId?: number) => {
     const payload = {
       course_id: courseId,
       exercise_id: exerciseId,
@@ -205,13 +205,50 @@ export class ReviewStore {
   @action updateReview = async (reviewId: number, review: Partial<IReview>) => {
     const result = await reviewApi.updateReview(reviewId, review)
     if (result) {
-      this.reviews = this.reviews.map(r => {
-        if (r.review_id === reviewId) {
-          return { ...r, ...review }
-        }
-        return r
+      runInAction(() => {
+        this.reviews = this.reviews.map(r => {
+          if (r.review_id === reviewId) {
+            return { ...r, ...review }
+          }
+          return r
+        })
       })
       this.toastStore.createToast('Review updated', 'success')
+    }
+    return result
+  }
+
+  @action upsertReviewSubmission = async (reviewSubmission: IReviewSubmission) => {
+    const { review_id, submission_id } = reviewSubmission
+    const payload = { selection: reviewSubmission.selection }
+    const result = await reviewApi.upsertReviewSubmission(review_id, submission_id, payload)
+    if (result) {
+      runInAction(() => {
+        let found = false
+        this.reviewSubmissions = this.reviewSubmissions.map(r => {
+          if (r.review_id === review_id && r.submission_id === submission_id) {
+            found = true
+            return reviewSubmission
+          }
+          return r
+        })
+        if (!found) {
+          this.reviewSubmissions.push(reviewSubmission)
+        }
+      })
+      this.toastStore.createToast('Review submission updated', 'success')
+    }
+    return result
+  }
+
+  @action deleteReviewSubmission = async (reviewSubmission: IReviewSubmission) => {
+    const { review_id, submission_id } = reviewSubmission
+    const result = await reviewApi.deleteReviewSubmission(review_id, submission_id)
+    if (result) {
+      runInAction(() => {
+        this.reviewSubmissions = this.reviewSubmissions.filter(r => r.review_id !== review_id || r.submission_id !== submission_id)
+      })
+      this.toastStore.createToast('Review submission deleted', 'danger')
     }
     return result
   }

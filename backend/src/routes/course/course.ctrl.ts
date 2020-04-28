@@ -4,7 +4,7 @@ import { courseService } from './course.service'
 
 // import { CustomError } from '../../common'
 
-import { IAuthRequest } from '../../types/auth'
+import { IAuthRequest } from '../../types/request'
 
 export const getCourses = async (req: IAuthRequest<{}>, res: Response, next: NextFunction) => {
   try {

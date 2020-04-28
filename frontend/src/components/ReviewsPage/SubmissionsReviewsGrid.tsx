@@ -17,6 +17,7 @@ interface IProps {
   reviews?: IReview[]
   reviewSubmissions?: IReviewSubmission[]
   submissions?: ISubmission[]
+  openEditSubmissionReviewModal?: (params: any) => void
   openSubmissionReviewsModal?: (params: any) => void
 }
 
@@ -24,11 +25,12 @@ const SubmissionsReviewsGridEl = inject((stores: Stores) => ({
   reviews: stores.reviewStore.reviews,
   reviewSubmissions: stores.reviewStore.reviewSubmissions,
   submissions: stores.submissionStore.submissions,
+  openEditSubmissionReviewModal: (params: any) => stores.modalStore.openModal(EModal.EDIT_SUBMISSION_REVIEW, params),
   openSubmissionReviewsModal: (params: any) => stores.modalStore.openModal(EModal.SUBMISSION_REVIEWS, params),
 }))
 (observer((props: IProps) => {
   const {
-    className, reviews, reviewSubmissions, submissions, openSubmissionReviewsModal
+    className, reviews, reviewSubmissions, submissions, openEditSubmissionReviewModal, openSubmissionReviewsModal
   } = props
   const [submissionReviewsRows, setSubmissionReviewsRows] = useState([] as (IReviewSubmission | undefined)[][])
   const [editedReviewId, setEditedReviewId] = useState(-1)
@@ -67,11 +69,19 @@ const SubmissionsReviewsGridEl = inject((stores: Stores) => ({
       reviews: reviewsWithSelection
     })
   }
+  function handleSubmissionCellClick(submission: ISubmission, colIdx: number, reviewSubmission?: IReviewSubmission) {
+    openEditSubmissionReviewModal!({
+      submission,
+      review: reviews![colIdx],
+      reviewSubmission,
+    })
+  }
   return (
-    <ReviewsTable className={className}>
+    <ReviewsTable className={className} cellPadding="0" cellSpacing="0">
       <THead>
         <tr>
-          <Th padding>Submission</Th>
+          <Th>Submission</Th>
+          <Th>Length</Th>
           { reviews!.map(r =>
           <ReviewTh
             key={r.review_id}
@@ -89,6 +99,7 @@ const SubmissionsReviewsGridEl = inject((stores: Stores) => ({
           submission={s}
           submissionReviews={submissionReviewsRows[i]}
           onSubmissionThClick={handleSubmissionThClick}
+          onCellClick={handleSubmissionCellClick}
         />
         )}
       </TBody>
@@ -100,18 +111,21 @@ interface ISubmissionRowProps {
   submission: ISubmission
   submissionReviews: (IReviewSubmission | undefined)[]
   onSubmissionThClick: (submission: ISubmission) => void
+  onCellClick: (submission: ISubmission, colIdx: number, reviewSubmission?: IReviewSubmission) => void
 }
 function SubmissionRow(props: ISubmissionRowProps) {
-  const { submission, submissionReviews = [], onSubmissionThClick } = props
+  const { submission, submissionReviews = [], onSubmissionThClick, onCellClick } = props
   return (
     <tr>
       <SubmissionTh tabIndex={0} onClick={() => onSubmissionThClick(submission)}>
         {submission.submission_id.substring(0, 5)}
       </SubmissionTh>
+      <th>{submission.code.length}</th>
       { submissionReviews.map((sr, j) =>
         <SubmissionColumn
           key={`row-${submission.submission_id}-col-${j}`}
           reviewSubmission={sr}
+          onCellClick={() => onCellClick(submission, j, sr)}
         />
       )}
     </tr>
@@ -120,22 +134,18 @@ function SubmissionRow(props: ISubmissionRowProps) {
 
 interface ISubmissionColumnProps {
   reviewSubmission?: IReviewSubmission
+  onCellClick: () => void
 }
 function SubmissionColumn(props: ISubmissionColumnProps) {
-  const { reviewSubmission } = props
+  const { reviewSubmission, onCellClick } = props
   if (!reviewSubmission) {
-    return <td></td>
+    return <td onClick={onCellClick}></td>
   }
-  const selection = reviewSubmission!.selection
-  const hasSelection = !selection.every((e: number) => e === 0)
-  let tooltip = undefined
-  if (hasSelection) {
-    tooltip = `line: ${selection[0]}, range: ${selection[1]}-${selection[2]}`
-  }
+  const hasSelection = !reviewSubmission!.selection.every((e: number) => e === 0)
   return (
     <td
-      className={'top selected'}
-      data-tooltip={tooltip}
+      className={'selected'}
+      onClick={onCellClick}
     >
       { hasSelection ?
       <Icon><FiAlignLeft size={14} /></Icon> :
@@ -156,50 +166,15 @@ const ReviewsTable = styled.table`
       background: ${({ theme }) => theme.color.gray.light};
     }
   }
-  [data-tooltip] {
-    position: relative;
-    z-index: 1;
-    &.left:before {
-      left: -125%;
-    }  
-    &.top:before {
-      top: -110%;
-    }
-    &.right:before {
-      right: -125%;
-    }
-    &.bottom:before {
-      bottom: -110%;
-    }
-  }
-  [data-tooltip]:before {
-    border-radius: 4px;
-    box-shadow: 2px 2px 1px silver;
-    color: #fff;
-    content: attr(data-tooltip);
-    opacity: 0;
-    padding: 10px;
-    position: absolute;
-    transition: all 0.15s ease;
-    width: max-content;
-  }
-  [data-tooltip]:hover:before {
-    background: #222;
-    opacity: 1;
-  }
-  [data-tooltip]:not([data-tooltip-persistent]):before {
-    pointer-events: none;
-  }
 `
 const THead = styled.thead``
-const Th = styled.th<{ padding?: boolean }>`
-  padding-right: ${({ padding }) => padding && '1rem'};
-  width: 75px;
+const Th = styled.th`
+  font-size: 0.8rem;
+  padding: 0 0.25rem;
 `
 const SubmissionTh = styled.th`
   border-radius: 2px;
   cursor: pointer;
-  width: 75px;
   &:hover {
     background: ${({ theme }) => theme.color.gray.light};
   }

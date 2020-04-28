@@ -1,5 +1,6 @@
 import {
-  IReview, IReviewSubmission, IReviewedSubmission, IReviewListQueryParams, IReviewCreateParams, IAcceptReviewsParams
+  IReview, IReviewSubmission, IReviewedSubmission, IReviewListQueryParams, IReviewCreateParams, IAcceptReviewsParams,
+  IReviewSubmissionPutParams
 } from 'shared'
 
 import {
@@ -17,8 +18,14 @@ export const addReview = (payload: IReviewCreateParams) =>
 export const updateReview = (reviewId: number, payload: Partial<IReview>) =>
   put<boolean>(`review/${reviewId}`, payload, authenticatedHeaders())
 
+export const upsertReviewSubmission = (reviewId: number, submissionId: string, payload: IReviewSubmissionPutParams) =>
+  put<boolean>(`review_submission/${reviewId}/${submissionId}`, payload, authenticatedHeaders())
+
 export const deleteReview = (reviewId: number) =>
   del<boolean>(`review/${reviewId}`, authenticatedHeaders())
+
+export const deleteReviewSubmission = (reviewId: number, submissionId: string) =>
+  del<boolean>(`review_submission/${reviewId}/${submissionId}`, authenticatedHeaders())
 
 export const getReviews = (payload: IReviewListQueryParams) =>
   getWithQuery<{

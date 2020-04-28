@@ -34,23 +34,23 @@ const createRequest = <T>(path: string, options: any) : Promise<Maybe<T>> => {
         switch (err.response.status) {
           case 401:
             if (options.headers && options.headers.Authorization) {
-              stores.toastStore!.createToast('401 Your session has expired, please re-login.', 'error')
+              stores.toastStore!.createToast('401 Your session has expired, please re-login.', 'danger')
               return undefined
             }
             break
           case 403:
-            stores.toastStore!.createToast('403 You do not have privileges for that action', 'error')
+            stores.toastStore!.createToast('403 You do not have privileges for that action', 'danger')
             return undefined
           case 404:
-            stores.toastStore!.createToast('404 Route not found', 'error')
+            stores.toastStore!.createToast('404 Route not found', 'danger')
             return undefined
           case 502:
           case 503:
           case 504:
-            stores.toastStore!.createToast(`${err.response.status} The backend is unreachable`, 'error')
+            stores.toastStore!.createToast(`${err.response.status} The backend is unreachable`, 'danger')
             return undefined
           case 500:
-            stores.toastStore!.createToast('500 The backend had a bug, whops', 'error')
+            stores.toastStore!.createToast('500 The backend had a bug, whops', 'danger')
             return undefined
         }
         throw new Error(err.response.data.message || err.response.data)

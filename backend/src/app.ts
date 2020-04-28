@@ -15,7 +15,7 @@ const corsOptions: cors.CorsOptions = {
       callback(null, false)
     }
   },
-  methods: ['GET', 'POST', 'PUT', 'OPTIONS']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }
 
 app.use(cors(corsOptions))

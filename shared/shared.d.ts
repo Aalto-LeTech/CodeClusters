@@ -56,6 +56,10 @@ declare module 'shared' {
   export interface IAcceptReviewsParams {
     reviewIds: number[]
   }
+  // Review submission API
+  export interface IReviewSubmissionPutParams {
+    selection: [number, number, number]
+  }
   // Review flow
   export interface IReviewFlowStep {
     index: number

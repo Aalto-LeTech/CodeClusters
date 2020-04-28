@@ -19,7 +19,7 @@ export const Routes = () : React.ReactElement<any> => (
       <NoMainContainerRoute exact path="/" component={FrontPage}/>
       <WrappedRoute exact path="/login" component={LoginPage}/>
       <NoMainContainerRoute exact path="/model" component={AuthHOC(ModelPage)}/>
-      <WrappedRoute exact path="/reviews" component={AuthHOC(ReviewsPage)}/>
+      <NoMainContainerRoute exact path="/reviews" component={AuthHOC(ReviewsPage)}/>
       <NoMainContainerRoute exact path="/review/create" component={AuthHOC(ReviewCreatePage)}/>
       <WrappedRoute exact path="/review/:userId" component={AuthHOC(ReviewViewPage)}/>
       <WrappedRoute exact path="/submissions" component={AuthHOC(SubmissionsPage)}/>

@@ -4,7 +4,8 @@ import { jwtService } from '../common/jwt.service'
 
 import { CustomError } from '../common'
 
-import { IJwtPayload, IAuthRequest } from '../types/auth'
+import { IJwtPayload } from '../types/auth'
+import { IAuthRequest } from '../types/request'
 
 function parseJwtFromHeaders(req: Request) {
   if (req.headers.authorization && req.headers.authorization.toLowerCase().includes('bearer')) {

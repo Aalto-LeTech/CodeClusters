@@ -5,7 +5,7 @@ import { submissionService } from './submission.service'
 // import { CustomError } from '../../common'
 
 import { ISubmissionListQueryParams } from 'shared'
-import { IAuthRequest } from '../../types/auth'
+import { IAuthRequest } from '../../types/request'
 import { ISubmissionCreateParams } from './submission.types'
 
 export const SUBMISSION_CREATE_SCHEMA = Joi.object({

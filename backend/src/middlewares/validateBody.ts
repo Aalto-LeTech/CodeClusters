@@ -3,7 +3,7 @@ import * as Joi from 'joi'
 
 import { ValidationError } from '../common'
 
-import { AnyRequest } from '../types/general'
+import { AnyRequest } from '../types/request'
 
 export const validateBody = (schema: Joi.ObjectSchema) => async (req: AnyRequest, res: Response, next: NextFunction) => {
   const { body } = req

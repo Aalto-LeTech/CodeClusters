@@ -4,7 +4,7 @@ import { modelService } from './model.service'
 
 // import { CustomError } from '../../common'
 
-import { IAuthRequest } from '../../types/auth'
+import { IAuthRequest } from '../../types/request'
 import { IRunNgramParams } from 'shared'
 
 export const RUN_CLUSTERING_SCHEMA = Joi.object({

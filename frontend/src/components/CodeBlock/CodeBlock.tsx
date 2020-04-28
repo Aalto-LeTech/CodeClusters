@@ -11,7 +11,7 @@ interface IProps {
   onSelectCodeLine: (i: number) => void
 }
 
-export const CodeBlock = memo((props: IProps) => {
+export const CodeBlock = styled(memo((props: IProps) => {
   const { className, codeLines, showMenu, activeSelection, onSelectCodeLine } = props
   function isLineActive(idx: number) {
     return showMenu && activeSelection !== undefined && activeSelection[0] === idx
@@ -37,7 +37,7 @@ export const CodeBlock = memo((props: IProps) => {
   return prevProps.codeLines === nextProps.codeLines &&
     prevProps.showMenu === nextProps.showMenu &&
     prevProps.activeSelection === nextProps.activeSelection
-})
+}))``
 
 const Container = styled.pre`
   background: #222;

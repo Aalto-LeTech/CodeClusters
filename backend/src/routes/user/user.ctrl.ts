@@ -6,7 +6,7 @@ import { jwtService } from '../../common/jwt.service'
 import { CustomError } from '../../common'
 
 import { IUser, ILoginResponse, IUserCreateParams } from 'shared'
-import { IAuthRequest } from '../../types/auth'
+import { IAuthRequest } from '../../types/request'
 import { ILoginCredentials } from './user.types'
 
 export const USER_CREDENTIALS_SCHEMA = Joi.object({
