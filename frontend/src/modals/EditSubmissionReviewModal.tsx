@@ -8,7 +8,6 @@ import useScrollLock from '../hooks/useScrollLock'
 
 import { Modal } from '../elements/Modal'
 import { Button } from '../elements/Button'
-import { CheckBox } from '../elements/CheckBox'
 import { Icon } from '../elements/Icon'
 import { CodeBlock } from '../components/CodeBlock'
 
@@ -59,13 +58,10 @@ export const EditSubmissionReviewModal = inject((stores: Stores) => ({
     setHasCurrentReview(true)
     setSelection(selection)
   }
-  function handleToggleReview(val: boolean) {
-    setHasCurrentReview(val)
-  }
   function handleClose() {
     closeModal!()
   }
-  async function onAccept() {
+  async function onUpdate() {
     let result
     if (hasCurrentReview) {
       result = await updateReviewSubmission!({
@@ -73,9 +69,13 @@ export const EditSubmissionReviewModal = inject((stores: Stores) => ({
         submission_id: modal!.params.submission.submission_id,
         selection,
       })
-    } else if (modal!.params.reviewSubmission) {
-      result = await deleteReviewSubmission!(modal!.params.reviewSubmission)
     }
+    if (result) {
+      closeModal!()
+    }
+  }
+  async function onDelete() {
+    const result = await deleteReviewSubmission!(modal!.params.reviewSubmission)
     if (result) {
       closeModal!()
     }
@@ -117,18 +117,10 @@ export const EditSubmissionReviewModal = inject((stores: Stores) => ({
             />
           </Content>
           <Buttons>
-            <CheckBoxField>
-              <CheckBoxText>Toggle review</CheckBoxText>
-              <CheckBox
-                id="toggle_review"
-                name="toggle_review"
-                type="toggle"
-                title="Toggle review"
-                checked={hasCurrentReview}
-                onChange={handleToggleReview}
-              />
-            </CheckBoxField>
-            <Button intent="success" onClick={onAccept}>Save</Button>
+            <Button intent="danger" disabled={modal!.params.reviewSubmission === undefined} onClick={onDelete}>
+              Delete
+            </Button>
+            <Button intent="success" onClick={onUpdate}>Update</Button>
             <Button intent="transparent" onClick={onCancel}>Cancel</Button>
           </Buttons>
         </Body>
@@ -200,11 +192,4 @@ const Buttons = styled.div`
   & > * + * {
     margin-left: 1rem;
   }
-`
-const CheckBoxField = styled.div`
-  align-items: center;
-  display: flex;
-`
-const CheckBoxText = styled.label`
-  margin-right: 0.5rem;
 `
