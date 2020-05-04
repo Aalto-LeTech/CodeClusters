@@ -1,12 +1,21 @@
 #!/usr/bin/env bash
 
+CORE_NAME="gettingstarted"
+
 case "$1" in
   bash)
     CONTAINER_ID="$(docker ps | grep solr | awk '{print $1}')"
     docker exec -it $CONTAINER_ID bash
     ;;
   data-import)
-    CURL=$(curl http://localhost:8983/solr/gettingstarted/dataimport?command=full-import&entity=submission)
+    CURL=$(curl http://localhost:8983/solr/${CORE_NAME}/dataimport?command=full-import&entity=submission)
+    ;;
+  reset)
+    CURL=$(curl http://localhost:8983/solr/${CORE_NAME}/update?commit=true -H 'Content-Type: application/json' \
+      --data-binary '{"delete":{"query":"*:*" }}')
+    ;;
+  restart)
+    docker-compose restart solr
     ;;
   start)
     docker-compose build solr && docker-compose up -d solr
@@ -21,6 +30,6 @@ case "$1" in
     docker-compose logs -f solr
     ;;
   *)
-    echo $"Usage: $0 bash|data-import|start|stop|delete|logs"
+    echo $"Usage: $0 bash|data-import|reset|start|stop|delete|logs"
     exit 1
 esac

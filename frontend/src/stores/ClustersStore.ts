@@ -41,7 +41,7 @@ export class ClustersStore {
 
   @computed get getNgramScatterData() {
     if (this.latestRunNgram) {
-      return this.latestRunNgram.ngram.TSNE
+      return this.latestRunNgram.ngram['2d']
     }
     return []
   }

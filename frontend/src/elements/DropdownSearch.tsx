@@ -86,7 +86,7 @@ function DropdownSearchEl(props: IProps) {
           onFocus={handleSearchFocus}
           onKeyPress={handleSearchKeyPress}
         />
-        <MenuButton aria-haspopup aria-label="Dropdown menu" onClick={toggleMenu}>
+        <MenuButton type="button" aria-haspopup aria-label="Dropdown menu" onClick={toggleMenu}>
           <Icon>
             { menuOpen ? <FiChevronUp size={18}/> : <FiChevronDown size={18}/>}
           </Icon>
@@ -96,6 +96,7 @@ function DropdownSearchEl(props: IProps) {
         { options.map((o, i) =>
         <OptionItem key={o.key} visible={shownItems[i]}>
           <OptionButton
+            type="button"
             onClick={selectOption(o)}
             selected={isSelected(o)}
           >{o.value}</OptionButton>

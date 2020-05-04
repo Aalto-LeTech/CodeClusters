@@ -66,13 +66,14 @@ function DropdownEl<K extends KeyValue, V extends React.ReactNode>(props: IProps
   useClickOutside(ref, (e) => closeMenu(), menuOpen)
   return (
     <Container className={className} ref={ref} fullWidth={fullWidth}>
-      <Button onClick={toggleMenu} disabled={isDisabled()} aria-haspopup aria-label="Dropdown menu">
+      <Button onClick={toggleMenu} disabled={isDisabled()} type="button" aria-haspopup aria-label="Dropdown menu">
         {renderButtonContent()}
       </Button>
       <DropdownList open={menuOpen}>
         { options.map(o =>
         <OptionListItem key={o.key}>
           <OptionButton
+            type="button"
             onClick={selectOption(o)}
             selected={isSelected(o)}
           >{o.value}</OptionButton>

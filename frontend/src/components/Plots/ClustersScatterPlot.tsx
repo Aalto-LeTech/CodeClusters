@@ -22,7 +22,7 @@ function ClustersScatterPlotEl(props: IProps) {
   const { className, data, clusters } = props
   const [colors, setColors] = useState([] as string[])
   useEffect(() => {
-    const scale = scaleSequential(interpolateRdYlBu).domain([0, clusters])
+    const scale = scaleSequential(interpolateRdYlBu).domain([-1, clusters])
     setColors(data.map((d, i) => scale(d.cluster)))
   }, [data])
 

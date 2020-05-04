@@ -1,18 +1,20 @@
 import { dbService } from '../../db/db.service'
 import { config, axiosService } from '../../common'
 
-import { IRunNgramParams, IRunNgramResponse, IModel } from 'shared'
+import { IRunNgramParams, IRunNgramResponse, IModel, IRunMetricsParams, IRunMetricsResponse } from 'shared'
 
 function url(path: string) {
   return `${config.MODEL_SERVER_URL}/${path}`
 }
 
 export const modelService = {
-  runNgram: async (params: IRunNgramParams) : Promise<IRunNgramResponse | undefined> => {
-    const result = axiosService.post<IRunNgramResponse>(url('ngram'), params)
-    return result
+  runNgram: (params: IRunNgramParams) => {
+    return axiosService.post<IRunNgramResponse>(url('ngram'), params)
   },
-  getModels: async () => {
-    return await dbService.queryMany<IModel>('SELECT * FROM model')
+  runMetrics: (params: IRunMetricsParams) => {
+    return axiosService.post<IRunMetricsResponse>(url('metrics'), params)
+  },
+  getModels: () => {
+    return dbService.queryMany<IModel>('SELECT * FROM model')
   },
 }

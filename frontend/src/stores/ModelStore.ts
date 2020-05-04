@@ -26,8 +26,9 @@ export class ModelStore {
     [NgramModelId]: Partial<IRunNgramParams>
   } = {
     [NgramModelId]: {
+      token_set: 'modified',
       ngrams: [5, 5],
-      n_components: 50
+      svd_n_components: 40
     }
   }
   toastStore: ToastStore

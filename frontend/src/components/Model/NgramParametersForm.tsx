@@ -4,6 +4,7 @@ import { inject, observer } from 'mobx-react'
 
 import { Button } from '../../elements/Button'
 import { Input } from '../../elements/Input'
+import { GenericDropdown } from '../../elements/Dropdown'
 
 import { IRunNgramParams, IRunNgramResponse, NgramModelId } from 'shared'
 import { Stores } from '../../stores'
@@ -16,6 +17,12 @@ interface IProps {
   visible: boolean
 }
 
+type TokenSetType = 'modified' | 'keywords'
+const TOKEN_SET_OPTIONS = [
+  { key: 'modified', value: 'modified'},
+  { key: 'keywords', value: 'keywords' }
+] as { key: TokenSetType, value: string }[]
+const DEFAULT_TOKEN_SET = 'modified'
 const DEFAULT_NGRAMS = [5, 5] as [number, number]
 const DEFAULT_NCOMPONENTS = 50
 
@@ -26,17 +33,23 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
 }))
 (observer((props: IProps) => {
   const { className, data, onUpdate, onSubmit, visible } = props
+  const [tokenSet, setTokenSet] = useState<TokenSetType>(DEFAULT_TOKEN_SET)
   const [ngrams, setNgrams] = useState(DEFAULT_NGRAMS)
-  const [n_components, setNcomponents] = useState(DEFAULT_NCOMPONENTS)
+  const [svd_n_components, setSvdNComponents] = useState(DEFAULT_NCOMPONENTS)
   const [submitInProgress, setSubmitInProgress] = useState(false)
 
   useEffect(() => {
+    if (data && data.token_set) setTokenSet(data.token_set)
     if (data && data.ngrams) setNgrams(data.ngrams)
-    if (data && data.n_components) setNcomponents(data.n_components)
+    if (data && data.svd_n_components) setSvdNComponents(data.svd_n_components)
   }, [])
 
   function hasNoError() {
     return true
+  }
+  function handleTokenSetChange(opt: { key: TokenSetType, value: string }) {
+    setTokenSet(opt.key)
+    onUpdate!({ token_set: opt.key })
   }
   function handleNgramsChange(val: string) {
     const n = parseInt(val)
@@ -46,8 +59,8 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
   }
   function handleNcomponentsChange(val: string) {
     const n = parseInt(val)
-    setNcomponents(n)
-    onUpdate!({ n_components: n })
+    setSvdNComponents(n)
+    onUpdate!({ svd_n_components: n })
   }
   function handleDelete() {
     
@@ -65,6 +78,14 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
     <Form onSubmit={handleSubmit} className={className} visible={visible}>
       <TopRow>
         <FormField>
+          <label>Token set</label>
+          <TokenSetDropdown
+            selected={tokenSet}
+            options={TOKEN_SET_OPTIONS}
+            onSelect={handleTokenSetChange}
+          />
+        </FormField>
+        <FormField>
           <label>Ngrams</label>
           <Input
             type="number"
@@ -76,7 +97,7 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
           <label>N components</label>
           <Input
             type="number"
-            value={n_components}
+            value={svd_n_components}
             onChange={handleNcomponentsChange}
           ></Input>
         </FormField>
@@ -96,6 +117,8 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
     </Form>
   )
 }))
+
+const TokenSetDropdown = GenericDropdown<TokenSetType, string>()
 
 const Form = styled.form<{ visible: boolean }>`
   display: ${({ visible }) => visible ? 'initial' : 'none'};

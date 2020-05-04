@@ -163,25 +163,34 @@ declare module 'shared' {
     title: string
     description: string
   }
-  export const NgramModelId: 'ngram'
   export type IModelParams = IRunNgramParams
   export type IRunModelResponse = IRunNgramResponse
+  // Metrics model API
+  export interface IRunMetricsParams {
+    model_id: string
+    submissions: { id: string, code: string }[]
+  }
+  export interface IRunMetricsResponse {
+    token_counts: { [id: string]: { [keyword: string]: number } }
+    rare_token_counts: { [id: string]: { [keyword: string]: number } }
+  }
+  // Ngram model API
+  export const NgramModelId: 'ngram'
   export interface IRunNgramParams {
     model_id: string
+    token_set?: 'modified' | 'keywords'
     ngrams?: [number, number]
-    n_components?: number
+    svd_n_components?: number
+    cluster_algo?: 'DBSCAN' | 'HDBSCAN'
+    dim_visualization?: 'TSNE' | 'UMAP'
+    random_seed?: number
     submissions: { id: string, code: string }[]
   }
   export interface IRunNgramResponse {
     model_id: string
     ngram: {
-      clusters: {[key: string]: string[]}
-      labels: number[]
-      TSNE: { id: string, x: number, y: number, cluster: number }[]
-      params: {
-        ngrams: number[]
-        n_components: number
-      }
+      clusters: { [id: string]: string[] }
+      '2d': { id: string, x: number, y: number, cluster: number }[]
     }
     filter: {
       filters: string[]

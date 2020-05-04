@@ -83,12 +83,31 @@ INSERT INTO review_flow_steps (review_flow_id, review_flow_step_id) VALUES (3, 7
 
 INSERT INTO model (model_id, title, description)
 VALUES ('ngram', 'N-gram',
-'Parses the code into ASTs, which are then tokenized into more generic tokens.
-These tokens are then used to train ngram models with grams preferably between 3-7, after which they are
-yield the similarity scores between the different submissions. The similarity scores are projected onto
-2d-space using things and then clustered using DBSCAN clustering algorithm.
+'Generic N-gram model, which could be used in plagiarism detection. Here instead of returning just a few of the most
+similar submissions, returns all of the similarity scores for every submissions clustered by chosen algorithm.
+
+The submissions can be parsed into two different token sets, both derived from the AST. The "modified" set is a customized
+collection of different tokens, with control flow structure embedded in them eg separate "IF {" and "} IF" tokens.
+The "keyword" set is the default language keywords with all of the non-descriptive tokens eg whitespace or brackets omitted. Full description
+can be found from the modeling Github repository''s source code.
+
+From these tokens n-grams are generated. With a lower n, more of the lower-level features are captured, 
+with a higher n the higher level structures. A range of 3-6 is preferable, 1 will
+be suspectible to noise, and higher than 6 won''t really find much meaningful clusters.
+
+The n-grams are turned into TF-IDF matrix, after which cosine similarity is used to calculate the similarity scores.
+SVD is used to reduce the dimensionality for the clustering with user-inputted n_components.
+Then they are clusterd using one of the unsupervised clustering algorithms.
+For the 2d representation a dimensionality reduction is done, by either TSNE or UMAP. Due to the low size of the data,
+there can be very high variance between the dimension reductions.
 
 Parameters:
-ngrams [int, int]: used ngrams, default [5,5]
-n_components int: the amount of components for the SVD, defines the lower bound how many submissions can be used. Default 50
+- token_set [string]: Used token set, either "modified" or "keywords". Default "modified".
+- ngrams [int, int]: The n of n-grams. Default [5,5].
+- svd_n_components int: The amount of dimensions the SVD reduces the features. A lower bound for how many submissions can be used. Default 50
+');
+INSERT INTO model (model_id, title, description)
+VALUES ('keyword_metrics', 'Keyword metrics',
+'Returns the AST keywords for every submission, omits the non-descriptive tokens eg whitespace, brackets.
+For histograms, distribution plots.
 ');

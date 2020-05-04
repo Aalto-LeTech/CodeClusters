@@ -28,6 +28,10 @@ router.post('/model/ngram',
   authenticate,
   validateBody(modelCtrl.RUN_NGRAM_PARAMS),
   modelCtrl.runNgram)
+router.post('/model/metrics',
+  authenticate,
+  validateBody(modelCtrl.RUN_METRICS_PARAMS),
+  modelCtrl.runMetrics)
 
 router.get('/reviews',
   authenticate,
