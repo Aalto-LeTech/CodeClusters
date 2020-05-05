@@ -7,6 +7,7 @@ interface IProps {
   id?: string
   name?: string
   autocomplete?: 'on' | 'off'
+  step?: number
   type?: 'email' | 'password' | 'text' | 'number' | 'search' | 'textarea'
   icon?: React.ReactNode
   iconPadding?: string
@@ -22,7 +23,7 @@ interface IProps {
 
 const InputEl = forwardRef((props: IProps, ref?: React.Ref<any>) => {
   const {
-    className, value, type, id, name, autocomplete, icon, iconPadding, placeholder, disabled, required, fullWidth,
+    className, value, type, id, name, autocomplete, step, icon, iconPadding, placeholder, disabled, required, fullWidth,
     onChange, onFocus, onBlur, onKeyPress
   } = props
   function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -52,6 +53,7 @@ const InputEl = forwardRef((props: IProps, ref?: React.Ref<any>) => {
           type={type}
           id={id}
           name={name}
+          step={step}
           autocomplete={autocomplete}
           iconPadding={iconPadding}
           placeholder={placeholder}

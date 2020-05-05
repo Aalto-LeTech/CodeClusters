@@ -1,14 +1,14 @@
 import { Response, NextFunction } from 'express'
-import * as Joi from 'joi'
+import { ObjectSchema } from '@hapi/joi'
 
 import { ValidationError } from '../common'
 
 import { AnyRequest } from '../types/request'
 
-export const validateBody = (schema: Joi.ObjectSchema) => async (req: AnyRequest, res: Response, next: NextFunction) => {
+export const validateBody = (schema: ObjectSchema) => async (req: AnyRequest, res: Response, next: NextFunction) => {
   const { body } = req
 
-  const result = Joi.validate(body, schema)
+  const result = schema.strict().validate(body)
 
   if (result.error) {
     next(new ValidationError(result.error.message))

@@ -1,5 +1,5 @@
 import { Response, NextFunction } from 'express'
-import * as Joi from 'joi'
+import * as Joi from '@hapi/joi'
 import { modelService } from './model.service'
 
 // import { CustomError } from '../../common'
@@ -7,17 +7,25 @@ import { modelService } from './model.service'
 import { IAuthRequest } from '../../types/request'
 import { IRunNgramParams, IRunMetricsParams } from 'shared'
 
-export const RUN_CLUSTERING_SCHEMA = Joi.object({
-  course_id: Joi.number().integer().required(),
-  exercise_id: Joi.number().integer().required(),
-  word_filters: Joi.array().items(Joi.string()).required()
+export const DBSCAN_SCHEMA = Joi.object({
+  name: Joi.string().valid('DBSCAN').required(),
+  eps: Joi.number().min(0).max(1),
 })
-
+export const HDBSCAN_SCHEMA = Joi.object({
+  name: Joi.string().valid('HDBSCAN').required(),
+  min_cluster_size: Joi.number().min(2),
+  return_dendrogram: Joi.boolean(),
+})
+export const KMEANS_SCHEMA = Joi.object({
+  name: Joi.string().valid('Kmeans').required(),
+  clusters: Joi.number().min(2),
+})
 export const RUN_NGRAM_PARAMS = Joi.object({
-  model_id: Joi.string().min(1).max(256).required(),
-  token_set: Joi.string(),
+  model_id: Joi.string().valid('ngram').required(),
+  token_set: Joi.string().valid('modified', 'keywords'),
   ngrams: Joi.array().items(Joi.number().integer()).length(2),
   svd_n_components: Joi.number().integer(),
+  clustering_params: Joi.alternatives().try(DBSCAN_SCHEMA, HDBSCAN_SCHEMA, KMEANS_SCHEMA),
   submissions: Joi.array().items(Joi.object({
     id: Joi.string().length(36).required(),
     code: Joi.string().required(),
@@ -25,7 +33,7 @@ export const RUN_NGRAM_PARAMS = Joi.object({
 })
 
 export const RUN_METRICS_PARAMS = Joi.object({
-  model_id: Joi.string().min(1).max(256).required(),
+  model_id: Joi.string().valid('metrics').required(),
   submissions: Joi.array().items(Joi.object({
     id: Joi.string().length(36).required(),
     code: Joi.string().required(),

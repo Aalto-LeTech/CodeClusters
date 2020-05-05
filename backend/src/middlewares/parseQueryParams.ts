@@ -1,14 +1,14 @@
 import { Response, NextFunction } from 'express'
-import * as Joi from 'joi'
+import { ObjectSchema } from '@hapi/joi'
 
 import { ValidationError } from '../common'
 
 import { AnyRequest } from '../types/request'
 
-export const parseQueryParams = (schema: Joi.ObjectSchema) => (req: AnyRequest, res: Response, next: NextFunction) => {
+export const parseQueryParams = (schema: ObjectSchema) => (req: AnyRequest, res: Response, next: NextFunction) => {
   const { query } = req
 
-  const result = Joi.validate(query, schema)
+  const result = schema.validate(query)
 
   if (result.error) {
     next(new ValidationError(result.error.message))

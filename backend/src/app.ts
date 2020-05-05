@@ -1,7 +1,8 @@
 import * as express from 'express'
 import * as morgan from 'morgan'
-import publicRoutes from './routes/public.routes'
 import * as cors from 'cors'
+
+import teacherRoutes from './routes/teacher.routes'
 
 import { errorHandler, logStream, config } from './common'
 
@@ -28,7 +29,7 @@ app.get('/health', (req: any, res: any) => { res.sendStatus(200) })
 
 app.use(morgan('short', { stream: logStream }))
 
-app.use('/api', publicRoutes)
+app.use('/api', teacherRoutes)
 app.use(errorHandler)
 
 export { app }

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import * as Joi from 'joi'
+import * as Joi from '@hapi/joi'
 import { userService } from './user.service'
 import { jwtService } from '../../common/jwt.service'
 

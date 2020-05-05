@@ -29,7 +29,11 @@ export class ModelStore {
       model_id: NgramModelId,
       token_set: 'modified',
       ngrams: [5, 5],
-      svd_n_components: 40
+      svd_n_components: 40,
+      clustering_params: {
+        name: 'DBSCAN',
+        eps: 0.25,
+      }
     }
   }
   toastStore: ToastStore

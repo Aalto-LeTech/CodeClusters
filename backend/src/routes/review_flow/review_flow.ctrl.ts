@@ -1,5 +1,5 @@
 import { Response, NextFunction } from 'express'
-import * as Joi from 'joi'
+import * as Joi from '@hapi/joi'
 import { reviewFlowService } from './review_flow.service'
 
 import { IAuthRequest } from '../../types/request'

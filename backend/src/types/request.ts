@@ -1,4 +1,4 @@
-// import * as Joi from 'joi'
+// import * as Joi from '@hapi/joi'
 import { Request } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { IUser } from 'shared'

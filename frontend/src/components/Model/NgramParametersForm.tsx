@@ -1,13 +1,14 @@
 import React, { memo, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { inject, observer } from 'mobx-react'
-import { useForm } from 'react-hook-form'
+import { FormContext, useForm, useFormContext } from 'react-hook-form'
 
+import { SelectClusteringAlgo } from './SelectClusteringAlgo'
 import { Button } from '../../elements/Button'
 import { Input } from '../../elements/Input'
 import { GenericDropdown } from '../../elements/Dropdown'
 
-import { INgramParams, TokenSetType, NgramModelId } from 'shared'
+import { INgramParams, TokenSetType, NgramModelId, ClusteringAlgo } from 'shared'
 import { Stores } from '../../stores'
 
 type TokenSetOption = { key: TokenSetType, value: string }
@@ -22,12 +23,12 @@ const DEFAULT_MAX_NGRAMS = 5
 const DEFAULT_SVD_N_COMPONENTS = 40
 const DEFAULT_RANDOM_SEED = -1
 
-interface INgramFormParams {
+export interface INgramFormParams {
   token_set: 'modified' | 'keywords'
   min_ngrams: string
   max_ngrams: string
   svd_n_components: string
-  // clustering_params?: ClusteringAlgo
+  clustering_params: ClusteringAlgo
   // dim_visualization_params?: DimVisualization
   random_seed?: string
 }
@@ -46,14 +47,19 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
 }))
 (observer((props: IProps) => {
   const { className, initialData, onSubmit, onCancel, visible } = props
-  const { register, errors, reset, handleSubmit } = useForm<INgramFormParams>({
+  const methods = useForm<INgramFormParams>({
     defaultValues: {
-      svd_n_components: (initialData && initialData.svd_n_components || DEFAULT_SVD_N_COMPONENTS).toString(),
-      random_seed: (initialData && initialData.random_seed || DEFAULT_RANDOM_SEED).toString(),
-      min_ngrams: (initialData && initialData.ngrams && initialData.ngrams[0] || DEFAULT_MIN_NGRAMS).toString(),
-      max_ngrams: (initialData && initialData.ngrams && initialData.ngrams[1] || DEFAULT_MAX_NGRAMS).toString(),
+      svd_n_components: (initialData?.svd_n_components || DEFAULT_SVD_N_COMPONENTS).toString(),
+      random_seed: (initialData?.random_seed || DEFAULT_RANDOM_SEED).toString(),
+      min_ngrams: (initialData?.ngrams && initialData.ngrams[0] || DEFAULT_MIN_NGRAMS).toString(),
+      max_ngrams: (initialData?.ngrams && initialData.ngrams[1] || DEFAULT_MAX_NGRAMS).toString(),
+      clustering_params: {
+        name: initialData?.clustering_params?.name || 'DBSCAN',
+        ...initialData?.clustering_params
+      }
     }
   })
+  const { register, errors, reset, handleSubmit } = methods
   const [tokenSet, setTokenSet] = useState<TokenSetType>(DEFAULT_TOKEN_SET)
   const [submitInProgress, setSubmitInProgress] = useState(false)
 
@@ -62,14 +68,17 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
   }
   const onFormSubmit = async (data: INgramFormParams, e?: React.BaseSyntheticEvent) => {
     setSubmitInProgress(true)
+    console.log(data)
     const {
-      min_ngrams, max_ngrams, svd_n_components, random_seed
+      min_ngrams, max_ngrams, svd_n_components, random_seed, clustering_params
     } = data
+    const getCp = (cp: any) => ({ name: cp.name, eps: parseFloat(cp.eps) })
     const payload = {
       model_id: NgramModelId,
       token_set: tokenSet,
       ngrams: [parseInt(min_ngrams), parseInt(max_ngrams)] as [number, number],
       svd_n_components: parseInt(svd_n_components),
+      clustering_params: getCp(clustering_params),
       // clustering_params?: ClusteringAlgo
       // dim_visualization_params?: DimVisualization
       // random_seed: parseInt(random_seed),
@@ -79,6 +88,7 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
     })
   }
   return (
+    <FormContext {...methods} >
     <Form onSubmit={handleSubmit(onFormSubmit)} className={className} visible={visible}>
       <TopRow>
         <FormField>
@@ -138,6 +148,11 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
             </Error>
         </FormField>
       </TopRow>
+      <MiddleRow>
+        <FormField>
+          <SelectClusteringAlgo />
+        </FormField>
+      </MiddleRow>
       <Buttons>
         <Button
           type="submit"
@@ -151,6 +166,7 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
         >Cancel</Button>
       </Buttons>
     </Form>
+    </FormContext>
   )
 }))
 
@@ -165,6 +181,12 @@ const Form = styled.form<{ visible: boolean }>`
   }
 `
 const TopRow = styled.div`
+  display: flex;
+  & > *:not(:first-child) {
+    margin-left: 1rem;
+  }
+`
+const MiddleRow = styled.div`
   display: flex;
   & > *:not(:first-child) {
     margin-left: 1rem;
