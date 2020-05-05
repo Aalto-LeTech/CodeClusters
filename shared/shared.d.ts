@@ -163,11 +163,13 @@ declare module 'shared' {
     title: string
     description: string
   }
-  export type IModelParams = IRunNgramParams
+  export type IModelParams = INgramParams | IMetricsParams
   export type IRunModelResponse = IRunNgramResponse
   // Metrics model API
-  export interface IRunMetricsParams {
+  export interface IMetricsParams {
     model_id: string
+  }
+  export interface IRunMetricsParams extends IMetricsParams {
     submissions: { id: string, code: string }[]
   }
   export interface IRunMetricsResponse {
@@ -176,14 +178,43 @@ declare module 'shared' {
   }
   // Ngram model API
   export const NgramModelId: 'ngram'
-  export interface IRunNgramParams {
+  export interface IDBSCANParams {
+    name: 'DBSCAN'
+    eps?: number
+  }
+  export interface IHDBSCANParams {
+    name: 'HDBSCAN'
+    min_cluster_size?: number
+    return_dendrogram?: boolean
+  }
+  export interface IKMeansParams {
+    name: 'Kmeans'
+    clusters?: number
+  }
+  export interface ITSNEParams {
+    name: 'TSNE'
+    perplexity?: number
+  }
+  export interface IUMAPParams {
+    name: 'UMAP'
+    n_neighbors?: number
+    min_dist?: number
+    n_components?: number
+  }
+  export type ClusteringAlgoType = 'DBSCAN' | 'HDBSCAN' | 'Kmeans'
+  export type ClusteringAlgo = IDBSCANParams | IHDBSCANParams | IKMeansParams
+  export type DimVisualization = ITSNEParams | IUMAPParams
+  export type TokenSetType = 'modified' | 'keywords'
+  export interface INgramParams {
     model_id: string
-    token_set?: 'modified' | 'keywords'
+    token_set?: TokenSetType
     ngrams?: [number, number]
     svd_n_components?: number
-    cluster_algo?: 'DBSCAN' | 'HDBSCAN'
-    dim_visualization?: 'TSNE' | 'UMAP'
+    clustering_params?: ClusteringAlgo
+    dim_visualization_params?: DimVisualization
     random_seed?: number
+  }
+  export interface IRunNgramParams extends INgramParams {
     submissions: { id: string, code: string }[]
   }
   export interface IRunNgramResponse {
@@ -192,13 +223,6 @@ declare module 'shared' {
       clusters: { [id: string]: string[] }
       '2d': { id: string, x: number, y: number, cluster: number }[]
     }
-    filter: {
-      filters: string[]
-      ids: number[]
-      matches: number[][]
-      counts: number[]
-      score: number[]
-    } | {}
     // job_id: number
     // documents_used: number
     // status_url: string

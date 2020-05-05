@@ -4,7 +4,7 @@ import * as modelApi from '../api/model.api'
 // import { persist } from './persist'
 
 import {
-  IModel, IRunModelResponse, IRunNgramParams, NgramModelId
+  IModel, IModelParams, IRunModelResponse, INgramParams, NgramModelId
 } from 'shared'
 import { ToastStore } from './ToastStore'
 import { SearchStore } from './SearchStore'
@@ -23,9 +23,10 @@ export class ModelStore {
   @observable selectedModel?: IModel = undefined
   @observable runModels: IRunModelResponse[] = []
   @observable modelParameters: { 
-    [NgramModelId]: Partial<IRunNgramParams>
+    [NgramModelId]: INgramParams
   } = {
     [NgramModelId]: {
+      model_id: NgramModelId,
       token_set: 'modified',
       ngrams: [5, 5],
       svd_n_components: 40
@@ -50,11 +51,11 @@ export class ModelStore {
     this.selectedModel = this.models.find(m => m.title === title)
   }
 
-  @action updateModelParameters(model_id: string, data: Partial<IRunNgramParams>) {
+  @action updateModelParameters(model_id: string, data: Partial<INgramParams>) {
     this.modelParameters[model_id] = { ...this.modelParameters[model_id], ...data }
   }
 
-  @action runModel = async (model_id: string) => {
+  @action runModel = async (data: IModelParams) => {
     const submissions = await this.searchStore.searchAll()
     if (submissions === undefined) {
       this.toastStore.createToast('Bad search parameters', 'danger')
@@ -65,18 +66,17 @@ export class ModelStore {
       return undefined
     }
     const payload = {
-      ...this.modelParameters[model_id],
-      model_id,
+      ...data,
       submissions: submissions.map(s => ({ id: s.id, code: s.code[0] }))
     }
     this.localSearchStore.setSubmissions(submissions)
     this.localSearchStore.setActive(true)
-    const result = await modelApi.runModel(model_id, payload)
+    const result = await modelApi.runModel(data.model_id, payload)
     runInAction(() => {
       if (result) {
         this.toastStore.createToast('Model ran successfully', 'success')
         this.runModels.push(result)
-        if (model_id === NgramModelId) {
+        if (data.model_id === NgramModelId) {
           this.clustersStore.setLatestNgramModel(result)
           const firstCluster = Object.keys(result.ngram.clusters)[0]
           if (firstCluster) {

@@ -11,6 +11,7 @@ type Option<K extends KeyValue, V extends React.ReactNode> = {
 }
 interface IProps<K extends KeyValue, V extends React.ReactNode> {
   className?: string
+  id?: string
   options: Option<K, V>[]
   selected?: K
   disabled?: boolean
@@ -27,7 +28,7 @@ DropdownEl.defaultProps = {
 
 function DropdownEl<K extends KeyValue, V extends React.ReactNode>(props: IProps<K, V>) {
   const {
-    className, options, selected, disabled, required, placeholder, fullWidth, renderMenu, onSelect
+    className, id, options, selected, disabled, required, placeholder, fullWidth, renderMenu, onSelect
   } = props
 
   function closeMenu() {
@@ -66,7 +67,7 @@ function DropdownEl<K extends KeyValue, V extends React.ReactNode>(props: IProps
   useClickOutside(ref, (e) => closeMenu(), menuOpen)
   return (
     <Container className={className} ref={ref} fullWidth={fullWidth}>
-      <Button onClick={toggleMenu} disabled={isDisabled()} type="button" aria-haspopup aria-label="Dropdown menu">
+      <Button onClick={toggleMenu} disabled={isDisabled()} id={id} type="button" aria-haspopup aria-label="Dropdown menu">
         {renderButtonContent()}
       </Button>
       <DropdownList open={menuOpen}>

@@ -1,117 +1,153 @@
 import React, { memo, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { inject, observer } from 'mobx-react'
+import { useForm } from 'react-hook-form'
 
 import { Button } from '../../elements/Button'
 import { Input } from '../../elements/Input'
 import { GenericDropdown } from '../../elements/Dropdown'
 
-import { IRunNgramParams, IRunNgramResponse, NgramModelId } from 'shared'
+import { INgramParams, TokenSetType, NgramModelId } from 'shared'
 import { Stores } from '../../stores'
 
+type TokenSetOption = { key: TokenSetType, value: string }
+
+const TOKEN_SET_OPTIONS = [
+  { key: 'modified', value: 'modified' },
+  { key: 'keywords', value: 'keywords' }
+] as TokenSetOption[]
+const DEFAULT_TOKEN_SET = 'modified'
+const DEFAULT_MIN_NGRAMS = 5
+const DEFAULT_MAX_NGRAMS = 5
+const DEFAULT_SVD_N_COMPONENTS = 40
+const DEFAULT_RANDOM_SEED = -1
+
+interface INgramFormParams {
+  token_set: 'modified' | 'keywords'
+  min_ngrams: string
+  max_ngrams: string
+  svd_n_components: string
+  // clustering_params?: ClusteringAlgo
+  // dim_visualization_params?: DimVisualization
+  random_seed?: string
+}
 interface IProps {
   className?: string
-  data?: Partial<IRunNgramParams>
-  onUpdate?: (data: Partial<IRunNgramParams>) => void
-  onSubmit?: () => Promise<IRunNgramResponse | undefined>
   visible: boolean
+  initialData?: Partial<INgramParams>
+  onUpdate?: (data: INgramParams) => void
+  onSubmit?: (data: INgramParams) => Promise<any | undefined>
+  onCancel?: () => void
 }
 
-type TokenSetType = 'modified' | 'keywords'
-const TOKEN_SET_OPTIONS = [
-  { key: 'modified', value: 'modified'},
-  { key: 'keywords', value: 'keywords' }
-] as { key: TokenSetType, value: string }[]
-const DEFAULT_TOKEN_SET = 'modified'
-const DEFAULT_NGRAMS = [5, 5] as [number, number]
-const DEFAULT_NCOMPONENTS = 50
-
 const NgramParametersFormEl = inject((stores: Stores) => ({
-  data: stores.modelStore.modelParameters[NgramModelId],
-  onUpdate: (data: Partial<IRunNgramParams>) => stores.modelStore.updateModelParameters(NgramModelId, data),
-  onSubmit: () => stores.modelStore.runModel(NgramModelId)
+  initialData: stores.modelStore.modelParameters[NgramModelId],
+  onSubmit: (data: INgramParams) => stores.modelStore.runModel(data)
 }))
 (observer((props: IProps) => {
-  const { className, data, onUpdate, onSubmit, visible } = props
+  const { className, initialData, onSubmit, onCancel, visible } = props
+  const { register, errors, reset, handleSubmit } = useForm<INgramFormParams>({
+    defaultValues: {
+      svd_n_components: (initialData && initialData.svd_n_components || DEFAULT_SVD_N_COMPONENTS).toString(),
+      random_seed: (initialData && initialData.random_seed || DEFAULT_RANDOM_SEED).toString(),
+      min_ngrams: (initialData && initialData.ngrams && initialData.ngrams[0] || DEFAULT_MIN_NGRAMS).toString(),
+      max_ngrams: (initialData && initialData.ngrams && initialData.ngrams[1] || DEFAULT_MAX_NGRAMS).toString(),
+    }
+  })
   const [tokenSet, setTokenSet] = useState<TokenSetType>(DEFAULT_TOKEN_SET)
-  const [ngrams, setNgrams] = useState(DEFAULT_NGRAMS)
-  const [svd_n_components, setSvdNComponents] = useState(DEFAULT_NCOMPONENTS)
   const [submitInProgress, setSubmitInProgress] = useState(false)
 
-  useEffect(() => {
-    if (data && data.token_set) setTokenSet(data.token_set)
-    if (data && data.ngrams) setNgrams(data.ngrams)
-    if (data && data.svd_n_components) setSvdNComponents(data.svd_n_components)
-  }, [])
-
-  function hasNoError() {
-    return true
+  function handleTokenSetChange(o: TokenSetOption) {
+    setTokenSet(o.key)
   }
-  function handleTokenSetChange(opt: { key: TokenSetType, value: string }) {
-    setTokenSet(opt.key)
-    onUpdate!({ token_set: opt.key })
-  }
-  function handleNgramsChange(val: string) {
-    const n = parseInt(val)
-    const tuple = [n, n] as [number, number]
-    setNgrams(tuple)
-    onUpdate!({ ngrams: tuple })
-  }
-  function handleNcomponentsChange(val: string) {
-    const n = parseInt(val)
-    setSvdNComponents(n)
-    onUpdate!({ svd_n_components: n })
-  }
-  function handleDelete() {
-    
-  }
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (hasNoError()) {
-      setSubmitInProgress(true)
-      onSubmit!().then((result) => {
-        setSubmitInProgress(false)
-      })
+  const onFormSubmit = async (data: INgramFormParams, e?: React.BaseSyntheticEvent) => {
+    setSubmitInProgress(true)
+    const {
+      min_ngrams, max_ngrams, svd_n_components, random_seed
+    } = data
+    const payload = {
+      model_id: NgramModelId,
+      token_set: tokenSet,
+      ngrams: [parseInt(min_ngrams), parseInt(max_ngrams)] as [number, number],
+      svd_n_components: parseInt(svd_n_components),
+      // clustering_params?: ClusteringAlgo
+      // dim_visualization_params?: DimVisualization
+      // random_seed: parseInt(random_seed),
     }
+    onSubmit!(payload).then(result => {
+      setSubmitInProgress(false)
+    })
   }
   return (
-    <Form onSubmit={handleSubmit} className={className} visible={visible}>
+    <Form onSubmit={handleSubmit(onFormSubmit)} className={className} visible={visible}>
       <TopRow>
         <FormField>
-          <label>Token set</label>
+          <label htmlFor="token_set">Token set</label>
           <TokenSetDropdown
+            id="token_set"
             selected={tokenSet}
             options={TOKEN_SET_OPTIONS}
             onSelect={handleTokenSetChange}
           />
         </FormField>
         <FormField>
-          <label>Ngrams</label>
-          <Input
-            type="number"
-            value={ngrams[0]}
-            onChange={handleNgramsChange}
-          ></Input>
+          <label htmlFor="ngrams">N-grams</label>
+          <MinMaxGram>
+            <Input
+              id="min_ngrams"
+              name="min_ngrams"
+              type="number"
+              placeholder="Min n"
+              fullWidth
+              ref={register({
+                required: true,
+                min: 1,
+                max: 9,
+              })}/>
+            <Input
+              id="max_ngrams"
+              name="max_ngrams"
+              type="number"
+              placeholder="Max n"
+              fullWidth
+              ref={register({
+                required: true,
+                min: 1,
+                max: 9,
+              })}/>
+          </MinMaxGram>
+          <Error>
+            {errors.min_ngrams && 'Min n-gram must be 1-9 and lower than the max n-gram'}
+          </Error>
+          <Error>
+            {errors.max_ngrams && 'Max n-gram must be between 1-9'}
+          </Error>
         </FormField>
         <FormField>
-          <label>N components</label>
+          <label htmlFor="svd_n_components">SVD n-components</label>
           <Input
             type="number"
-            value={svd_n_components}
-            onChange={handleNcomponentsChange}
-          ></Input>
+            name="svd_n_components"
+            id="svd_n_components"
+            ref={register({
+              required: true,
+              minLength: 1
+            })}/>
+            <Error>
+              {errors.svd_n_components && 'Review requires message with at least 1 character.'}
+            </Error>
         </FormField>
       </TopRow>
       <Buttons>
         <Button
           type="submit"
           intent="success"
-          disabled={!hasNoError() || submitInProgress}
+          disabled={submitInProgress}
           loading={submitInProgress}
         >Submit</Button>
         <Button
-          intent="danger"
-          onClick={handleDelete}
+          intent="transparent"
+          onClick={onCancel}
         >Cancel</Button>
       </Buttons>
     </Form>
@@ -137,6 +173,13 @@ const TopRow = styled.div`
 const FormField = styled.div`
   display: flex;
   flex-direction: column;
+`
+const Error = styled.small`
+  color: red;
+`
+const MinMaxGram = styled.div`
+  display: flex;
+  width: 150px;
 `
 const Buttons = styled.div`
   display: flex;

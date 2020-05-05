@@ -1,7 +1,7 @@
 import { action, autorun, computed, runInAction, observable } from 'mobx'
 import * as reviewFlowApi from '../api/review_flow.api'
 
-import { IReviewFlow, IReviewFlowRunParams, IReviewFlowStep, ISearchCodeParams } from 'shared'
+import { IReviewFlow, IReviewFlowRunParams, IReviewFlowStep, ISearchCodeParams, IModelParams } from 'shared'
 import { ToastStore } from './ToastStore'
 import { AuthStore } from './AuthStore'
 import { CourseStore } from './CourseStore'
@@ -155,8 +155,8 @@ export class ReviewFlowStore {
       searchResult = await this.searchStore.search(searchParams)
     }
     if (searchResult && params.steps[1] && params.steps[1].action === 'Model') {
-      const modelingParams = this.getStepParams(params.steps[1])
-      modelingResult = await this.modelStore.runModel(modelingParams.model_id)
+      const modelingParams = this.getStepParams(params.steps[1]) as unknown as IModelParams
+      modelingResult = await this.modelStore.runModel(modelingParams)
     }
     if (searchResult && modelingResult) {
       this.toastStore.createToast('Review flow run', 'success')
