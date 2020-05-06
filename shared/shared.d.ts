@@ -180,16 +180,26 @@ declare module 'shared' {
   export const NgramModelId: 'ngram'
   export interface IDBSCANParams {
     name: 'DBSCAN'
+    min_samples?: number
     eps?: number
+    metric?: string
   }
   export interface IHDBSCANParams {
     name: 'HDBSCAN'
     min_cluster_size?: number
-    return_dendrogram?: boolean
+    min_samples?: number
+    metric?: string
+    show_linkage_tree?: boolean
+  }
+  export interface IOPTICSParams {
+    name: 'OPTICS'
+    min_samples?: number
+    max_eps?: number
+    metric?: string
   }
   export interface IKMeansParams {
-    name: 'Kmeans'
-    clusters?: number
+    name: 'KMeans'
+    k_clusters?: number
   }
   export interface ITSNEParams {
     name: 'TSNE'
@@ -201,8 +211,8 @@ declare module 'shared' {
     min_dist?: number
     n_components?: number
   }
-  export type ClusteringAlgoType = 'DBSCAN' | 'HDBSCAN' | 'Kmeans'
-  export type ClusteringAlgo = IDBSCANParams | IHDBSCANParams | IKMeansParams
+  export type ClusteringAlgoType = 'DBSCAN' | 'HDBSCAN' | 'OPTICS' | 'KMeans'
+  export type ClusteringAlgo = IDBSCANParams | IHDBSCANParams | IOPTICSParams | IKMeansParams
   export type DimVisualization = ITSNEParams | IUMAPParams
   export type TokenSetType = 'modified' | 'keywords'
   export interface INgramParams {

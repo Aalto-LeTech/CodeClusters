@@ -2,13 +2,17 @@ import React, { memo, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { inject, observer } from 'mobx-react'
 import { FormContext, useForm, useFormContext } from 'react-hook-form'
+import * as yup from 'yup'
 
 import { SelectClusteringAlgo } from './SelectClusteringAlgo'
 import { Button } from '../../elements/Button'
 import { Input } from '../../elements/Input'
 import { GenericDropdown } from '../../elements/Dropdown'
 
-import { INgramParams, TokenSetType, NgramModelId, ClusteringAlgo } from 'shared'
+import {
+  INgramParams, TokenSetType, NgramModelId, ClusteringAlgo, ClusteringAlgoType,
+  IDBSCANParams, IHDBSCANParams, IOPTICSParams, IKMeansParams
+} from 'shared'
 import { Stores } from '../../stores'
 
 type TokenSetOption = { key: TokenSetType, value: string }
@@ -18,19 +22,51 @@ const TOKEN_SET_OPTIONS = [
   { key: 'keywords', value: 'keywords' }
 ] as TokenSetOption[]
 const DEFAULT_TOKEN_SET = 'modified'
-const DEFAULT_MIN_NGRAMS = 5
-const DEFAULT_MAX_NGRAMS = 5
-const DEFAULT_SVD_N_COMPONENTS = 40
-const DEFAULT_RANDOM_SEED = -1
+
+// A schema is required to convert the numbers and booleans, as otherwise all values are strings
+// It isn't really necessary for validation, as it's done inside the components
+const NgramFormSchema = yup.object().shape({
+  token_set: yup.string(),
+  min_ngrams: yup.number(),
+  max_ngrams: yup.number(),
+  svd_n_components: yup.number(),
+  random_seed: yup.number(),
+  selected_clustering_algo: yup.string().required(),
+  DBSCAN: yup.object().shape({
+    min_samples: yup.number(),
+    eps: yup.number(),
+    metric: yup.string(),
+  }),
+  HDBSCAN: yup.object().shape({
+    min_cluster_size: yup.number(),
+    min_samples: yup.number(),
+    metric: yup.string(),
+    show_linkage_tree: yup.boolean(),
+  }),
+  OPTICS: yup.object().shape({
+    min_samples: yup.number(),
+    max_eps: yup.number(),
+    metric: yup.string(),
+  }),
+  KMeans: yup.object().shape({
+    k_clusters: yup.number(),
+  }),
+})
 
 export interface INgramFormParams {
   token_set: 'modified' | 'keywords'
-  min_ngrams: string
-  max_ngrams: string
-  svd_n_components: string
-  clustering_params: ClusteringAlgo
+  min_ngrams: number
+  max_ngrams: number
+  svd_n_components: number
+  random_seed?: number
+  selected_clustering_algo: ClusteringAlgoType
+  // This Required-Omit hack omits the name, and makes all properties defined.
+  // Otherwise the errors-object won't infer the maybe values eg eps?: number
+  DBSCAN: Required<Omit<IDBSCANParams, 'name'>>
+  HDBSCAN: Required<Omit<IHDBSCANParams, 'name'>>
+  OPTICS: Required<Omit<IOPTICSParams, 'name'>>
+  KMeans: Required<Omit<IKMeansParams, 'name'>>
   // dim_visualization_params?: DimVisualization
-  random_seed?: string
 }
 interface IProps {
   className?: string
@@ -48,15 +84,32 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
 (observer((props: IProps) => {
   const { className, initialData, onSubmit, onCancel, visible } = props
   const methods = useForm<INgramFormParams>({
+    validationSchema: NgramFormSchema,
     defaultValues: {
-      svd_n_components: (initialData?.svd_n_components || DEFAULT_SVD_N_COMPONENTS).toString(),
-      random_seed: (initialData?.random_seed || DEFAULT_RANDOM_SEED).toString(),
-      min_ngrams: (initialData?.ngrams && initialData.ngrams[0] || DEFAULT_MIN_NGRAMS).toString(),
-      max_ngrams: (initialData?.ngrams && initialData.ngrams[1] || DEFAULT_MAX_NGRAMS).toString(),
-      clustering_params: {
-        name: initialData?.clustering_params?.name || 'DBSCAN',
-        ...initialData?.clustering_params
-      }
+      svd_n_components: initialData?.svd_n_components || 40,
+      random_seed: initialData?.random_seed || -1,
+      min_ngrams: initialData?.ngrams && initialData.ngrams[0] || 5,
+      max_ngrams: initialData?.ngrams && initialData.ngrams[1] || 5,
+      selected_clustering_algo: initialData?.clustering_params?.name || 'DBSCAN',
+      DBSCAN: initialData?.clustering_params?.name !== 'DBSCAN' ? {
+        min_samples: 5,
+        eps: 0.25,
+        metric: 'euclidean',
+      } : initialData?.clustering_params,
+      HDBSCAN: initialData?.clustering_params?.name !== 'HDBSCAN' ? {
+        min_cluster_size: 2,
+        min_samples: 5,
+        metric: 'euclidean',
+        show_linkage_tree: false,
+      } : initialData?.clustering_params,
+      OPTICS: initialData?.clustering_params?.name !== 'OPTICS' ? {
+        min_samples: 5,
+        max_eps: 0.25,
+        metric: 'euclidean',
+      } : initialData?.clustering_params,
+      KMeans: initialData?.clustering_params?.name !== 'KMeans' ? {
+        k_clusters: 2,
+      } : initialData?.clustering_params,
     }
   })
   const { register, errors, reset, handleSubmit } = methods
@@ -70,16 +123,18 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
     setSubmitInProgress(true)
     console.log(data)
     const {
-      min_ngrams, max_ngrams, svd_n_components, random_seed, clustering_params
+      min_ngrams, max_ngrams, svd_n_components, random_seed, selected_clustering_algo
     } = data
-    const getCp = (cp: any) => ({ name: cp.name, eps: parseFloat(cp.eps) })
+
     const payload = {
       model_id: NgramModelId,
       token_set: tokenSet,
-      ngrams: [parseInt(min_ngrams), parseInt(max_ngrams)] as [number, number],
-      svd_n_components: parseInt(svd_n_components),
-      clustering_params: getCp(clustering_params),
-      // clustering_params?: ClusteringAlgo
+      ngrams: [min_ngrams, max_ngrams] as [number, number],
+      svd_n_components: svd_n_components,
+      clustering_params: {
+        name: selected_clustering_algo,
+        ...data[selected_clustering_algo]
+      },
       // dim_visualization_params?: DimVisualization
       // random_seed: parseInt(random_seed),
     }
@@ -202,6 +257,9 @@ const Error = styled.small`
 const MinMaxGram = styled.div`
   display: flex;
   width: 150px;
+  > * + * {
+    margin-left: 1rem;
+  }
 `
 const Buttons = styled.div`
   display: flex;
