@@ -182,20 +182,17 @@ declare module 'shared' {
     name: 'DBSCAN'
     min_samples?: number
     eps?: number
-    metric?: string
   }
   export interface IHDBSCANParams {
     name: 'HDBSCAN'
     min_cluster_size?: number
     min_samples?: number
-    metric?: string
     show_linkage_tree?: boolean
   }
   export interface IOPTICSParams {
     name: 'OPTICS'
     min_samples?: number
     max_eps?: number
-    metric?: string
   }
   export interface IKMeansParams {
     name: 'KMeans'

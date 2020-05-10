@@ -35,18 +35,15 @@ const NgramFormSchema = yup.object().shape({
   DBSCAN: yup.object().shape({
     min_samples: yup.number(),
     eps: yup.number(),
-    metric: yup.string(),
   }),
   HDBSCAN: yup.object().shape({
     min_cluster_size: yup.number(),
     min_samples: yup.number(),
-    metric: yup.string(),
     show_linkage_tree: yup.boolean(),
   }),
   OPTICS: yup.object().shape({
     min_samples: yup.number(),
     max_eps: yup.number(),
-    metric: yup.string(),
   }),
   KMeans: yup.object().shape({
     k_clusters: yup.number(),
@@ -60,8 +57,8 @@ export interface INgramFormParams {
   svd_n_components: number
   random_seed?: number
   selected_clustering_algo: ClusteringAlgoType
-  // This Required-Omit hack omits the name, and makes all properties defined.
-  // Otherwise the errors-object won't infer the maybe values eg eps?: number
+  // This Required-Omit hack omits the name, and makes all the properties defined.
+  // Otherwise the errors-object won't infer the maybe values eg. eps?: number
   DBSCAN: Required<Omit<IDBSCANParams, 'name'>>
   HDBSCAN: Required<Omit<IHDBSCANParams, 'name'>>
   OPTICS: Required<Omit<IOPTICSParams, 'name'>>
@@ -94,18 +91,15 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
       DBSCAN: initialData?.clustering_params?.name !== 'DBSCAN' ? {
         min_samples: 5,
         eps: 0.25,
-        metric: 'euclidean',
       } : initialData?.clustering_params,
       HDBSCAN: initialData?.clustering_params?.name !== 'HDBSCAN' ? {
         min_cluster_size: 2,
         min_samples: 5,
-        metric: 'euclidean',
         show_linkage_tree: false,
       } : initialData?.clustering_params,
       OPTICS: initialData?.clustering_params?.name !== 'OPTICS' ? {
         min_samples: 5,
-        max_eps: 0.25,
-        metric: 'euclidean',
+        max_eps: -1,
       } : initialData?.clustering_params,
       KMeans: initialData?.clustering_params?.name !== 'KMeans' ? {
         k_clusters: 2,
@@ -121,7 +115,7 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
   }
   const onFormSubmit = async (data: INgramFormParams, e?: React.BaseSyntheticEvent) => {
     setSubmitInProgress(true)
-    console.log(data)
+
     const {
       min_ngrams, max_ngrams, svd_n_components, random_seed, selected_clustering_algo
     } = data
@@ -204,9 +198,7 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
         </FormField>
       </TopRow>
       <MiddleRow>
-        <FormField>
-          <SelectClusteringAlgo />
-        </FormField>
+        <SelectClusteringAlgo />
       </MiddleRow>
       <Buttons>
         <Button

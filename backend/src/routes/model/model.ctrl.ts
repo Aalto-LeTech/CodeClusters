@@ -11,23 +11,20 @@ export const DBSCAN_SCHEMA = Joi.object({
   name: Joi.string().valid('DBSCAN').required(),
   min_samples: Joi.number().integer().min(0),
   eps: Joi.number().min(0).max(1),
-  metric: Joi.string(),
 })
 export const HDBSCAN_SCHEMA = Joi.object({
   name: Joi.string().valid('HDBSCAN').required(),
   min_cluster_size: Joi.number().integer().min(2),
   min_samples: Joi.number().integer().min(0),
-  metric: Joi.string(),
   show_linkage_tree: Joi.boolean(),
 })
 export const OPTICS_SCHEMA = Joi.object({
   name: Joi.string().valid('OPTICS').required(),
   min_samples: Joi.number().integer().min(0),
-  max_eps: Joi.number().min(0).max(1),
-  metric: Joi.string(),
+  max_eps: Joi.number().min(-1),
 })
 export const KMEANS_SCHEMA = Joi.object({
-  name: Joi.string().valid('Kmeans').required(),
+  name: Joi.string().valid('KMeans').required(),
   k_clusters: Joi.number().integer().min(2),
 })
 export const RUN_NGRAM_PARAMS = Joi.object({
