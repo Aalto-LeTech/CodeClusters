@@ -1,8 +1,9 @@
 import React, { memo, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { inject, observer } from 'mobx-react'
-import { FormContext, useForm, useFormContext } from 'react-hook-form'
-import * as yup from 'yup'
+import { FormContext, useForm } from 'react-hook-form'
+import Joi from "@hapi/joi"
+import merge from 'lodash.merge'
 
 import { SelectClusteringAlgo } from './SelectClusteringAlgo'
 import { Button } from '../../elements/Button'
@@ -24,31 +25,53 @@ const TOKEN_SET_OPTIONS = [
 const DEFAULT_TOKEN_SET = 'modified'
 
 // A schema is required to convert the numbers and booleans, as otherwise all values are strings
-// It isn't really necessary for validation, as it's done inside the components
-const NgramFormSchema = yup.object().shape({
-  token_set: yup.string(),
-  min_ngrams: yup.number(),
-  max_ngrams: yup.number(),
-  svd_n_components: yup.number(),
-  random_seed: yup.number(),
-  selected_clustering_algo: yup.string().required(),
-  DBSCAN: yup.object().shape({
-    min_samples: yup.number(),
-    eps: yup.number(),
+const validationSchema = Joi.object({
+  token_set: Joi.string().valid('modified', 'keywords'),
+  min_ngrams: Joi.number().integer().min(1),
+  max_ngrams: Joi.number().integer().min(1),
+  svd_n_components: Joi.number().integer().min(1),
+  random_seed: Joi.number().integer().min(-1),
+  selected_clustering_algo: Joi.string().required(),
+  DBSCAN: Joi.object({
+    min_samples: Joi.number().min(0),
+    eps: Joi.number().min(0),
   }),
-  HDBSCAN: yup.object().shape({
-    min_cluster_size: yup.number(),
-    min_samples: yup.number(),
-    show_linkage_tree: yup.boolean(),
+  HDBSCAN: Joi.object({
+    min_cluster_size: Joi.number().min(2),
+    min_samples: Joi.number().min(0),
+    show_linkage_tree: Joi.boolean(),
   }),
-  OPTICS: yup.object().shape({
-    min_samples: yup.number(),
-    max_eps: yup.number(),
+  OPTICS: Joi.object({
+    min_samples: Joi.number().min(0),
+    max_eps: Joi.number().min(0).empty('').optional()
   }),
-  KMeans: yup.object().shape({
-    k_clusters: yup.number(),
+  KMeans: Joi.object({
+    k_clusters: Joi.number().min(2),
   }),
 })
+
+const resolver = (data: INgramFormParams, validationContext?: object) => {
+  const { error, value: values } = validationSchema.validate(data, {
+    abortEarly: false
+  })
+  function createError(msg: string, path: string[]) : Object {
+    if (path.length > 1) {
+      return {
+        [path[0]]: createError(msg, path.slice(1))
+      }
+    }
+    return {
+      [path[0]]: { msg }
+    }
+  }
+  const errors = error?.details.reduce((acc, currentError) => (
+    merge(acc, createError(currentError.message, currentError.path.map(p => p.toString())))
+  ), {}) || {}
+  return {
+    values,
+    errors,
+  }
+}
 
 export interface INgramFormParams {
   token_set: 'modified' | 'keywords'
@@ -81,7 +104,7 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
 (observer((props: IProps) => {
   const { className, initialData, onSubmit, onCancel, visible } = props
   const methods = useForm<INgramFormParams>({
-    validationSchema: NgramFormSchema,
+    validationResolver: resolver,
     defaultValues: {
       svd_n_components: initialData?.svd_n_components || 40,
       random_seed: initialData?.random_seed || -1,
@@ -99,7 +122,7 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
       } : initialData?.clustering_params,
       OPTICS: initialData?.clustering_params?.name !== 'OPTICS' ? {
         min_samples: 5,
-        max_eps: -1,
+        max_eps: undefined,
       } : initialData?.clustering_params,
       KMeans: initialData?.clustering_params?.name !== 'KMeans' ? {
         k_clusters: 2,
@@ -158,22 +181,14 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
               type="number"
               placeholder="Min n"
               fullWidth
-              ref={register({
-                required: true,
-                min: 1,
-                max: 9,
-              })}/>
+              ref={register}/>
             <Input
               id="max_ngrams"
               name="max_ngrams"
               type="number"
               placeholder="Max n"
               fullWidth
-              ref={register({
-                required: true,
-                min: 1,
-                max: 9,
-              })}/>
+              ref={register}/>
           </MinMaxGram>
           <Error>
             {errors.min_ngrams && 'Min n-gram must be 1-9 and lower than the max n-gram'}
@@ -188,12 +203,9 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
             type="number"
             name="svd_n_components"
             id="svd_n_components"
-            ref={register({
-              required: true,
-              minLength: 1
-            })}/>
+            ref={register}/>
             <Error>
-              {errors.svd_n_components && 'Review requires message with at least 1 character.'}
+              {errors.svd_n_components && 'At least 30 is recommended'}
             </Error>
         </FormField>
       </TopRow>

@@ -15,7 +15,6 @@ interface IProps<K extends KeyValue, V extends React.ReactNode> {
   options: Option<K, V>[]
   selected?: K
   disabled?: boolean
-  required?: boolean
   placeholder?: string
   fullWidth?: boolean
   renderMenu?: (content: React.ReactNode) => React.ReactNode
@@ -28,7 +27,7 @@ DropdownEl.defaultProps = {
 
 function DropdownEl<K extends KeyValue, V extends React.ReactNode>(props: IProps<K, V>) {
   const {
-    className, id, options, selected, disabled, required, placeholder, fullWidth, renderMenu, onSelect
+    className, id, options, selected, disabled, placeholder, fullWidth, renderMenu, onSelect
   } = props
 
   function closeMenu() {

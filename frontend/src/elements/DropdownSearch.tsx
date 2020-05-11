@@ -17,7 +17,6 @@ interface IProps {
   selected?: string
   value: string
   disabled?: boolean
-  required?: boolean
   placeholder?: string
   fullWidth?: boolean
   onChange: (val: string) => void
@@ -30,7 +29,7 @@ DropdownSearchEl.defaultProps = {
 
 function DropdownSearchEl(props: IProps) {
   const {
-    className, value, options, selected, disabled, required, placeholder, fullWidth, onChange, onSelect
+    className, value, options, selected, disabled, placeholder, fullWidth, onChange, onSelect
   } = props
   const [shownItems, setShownItems] = useState(options.map(o => true))
   const ref = useRef(null)

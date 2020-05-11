@@ -10,7 +10,7 @@ import { IRunNgramParams, IRunMetricsParams } from 'shared'
 export const DBSCAN_SCHEMA = Joi.object({
   name: Joi.string().valid('DBSCAN').required(),
   min_samples: Joi.number().integer().min(0),
-  eps: Joi.number().min(0).max(1),
+  eps: Joi.number().min(0),
 })
 export const HDBSCAN_SCHEMA = Joi.object({
   name: Joi.string().valid('HDBSCAN').required(),
@@ -21,7 +21,7 @@ export const HDBSCAN_SCHEMA = Joi.object({
 export const OPTICS_SCHEMA = Joi.object({
   name: Joi.string().valid('OPTICS').required(),
   min_samples: Joi.number().integer().min(0),
-  max_eps: Joi.number().min(-1),
+  max_eps: Joi.number().min(0),
 })
 export const KMEANS_SCHEMA = Joi.object({
   name: Joi.string().valid('KMeans').required(),
@@ -30,8 +30,8 @@ export const KMEANS_SCHEMA = Joi.object({
 export const RUN_NGRAM_PARAMS = Joi.object({
   model_id: Joi.string().valid('ngram').required(),
   token_set: Joi.string().valid('modified', 'keywords'),
-  ngrams: Joi.array().items(Joi.number().integer()).length(2),
-  svd_n_components: Joi.number().integer(),
+  ngrams: Joi.array().items(Joi.number().integer().min(1)).length(2),
+  svd_n_components: Joi.number().integer().min(1),
   clustering_params: Joi.alternatives().try(DBSCAN_SCHEMA, HDBSCAN_SCHEMA, OPTICS_SCHEMA, KMEANS_SCHEMA),
   submissions: Joi.array().items(Joi.object({
     id: Joi.string().length(36).required(),

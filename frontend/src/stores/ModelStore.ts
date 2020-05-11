@@ -27,13 +27,6 @@ export class ModelStore {
   } = {
     [NgramModelId]: {
       model_id: NgramModelId,
-      token_set: 'modified',
-      ngrams: [5, 5],
-      svd_n_components: 40,
-      clustering_params: {
-        name: 'DBSCAN',
-        eps: 0.25,
-      }
     }
   }
   toastStore: ToastStore
@@ -53,10 +46,6 @@ export class ModelStore {
 
   @action setSelectedModel(title?: string) {
     this.selectedModel = this.models.find(m => m.title === title)
-  }
-
-  @action updateModelParameters(model_id: string, data: Partial<INgramParams>) {
-    this.modelParameters[model_id] = { ...this.modelParameters[model_id], ...data }
   }
 
   @action runModel = async (data: IModelParams) => {
