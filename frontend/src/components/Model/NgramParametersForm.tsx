@@ -11,7 +11,7 @@ import { Input } from '../../elements/Input'
 import { GenericDropdown } from '../../elements/Dropdown'
 
 import {
-  INgramParams, TokenSetType, NgramModelId, ClusteringAlgo, ClusteringAlgoType,
+  INgramParams, TokenSetType, NgramModelId, ClusteringAlgoType,
   IDBSCANParams, IHDBSCANParams, IOPTICSParams, IKMeansParams
 } from 'shared'
 import { Stores } from '../../stores'
@@ -23,6 +23,12 @@ const TOKEN_SET_OPTIONS = [
   { key: 'keywords', value: 'keywords' }
 ] as TokenSetOption[]
 const DEFAULT_TOKEN_SET = 'modified'
+const CLUSTERING_OPTIONS = [
+  'DBSCAN',
+  'HDBSCAN',
+  'OPTICS',
+  'KMeans',
+]
 
 // A schema is required to convert the numbers and booleans, as otherwise all values are strings
 const validationSchema = Joi.object({
@@ -43,7 +49,7 @@ const validationSchema = Joi.object({
   }),
   OPTICS: Joi.object({
     min_samples: Joi.number().min(0),
-    max_eps: Joi.number().min(0).empty('').optional()
+    max_eps: Joi.number().min(0).empty('')
   }),
   KMeans: Joi.object({
     k_clusters: Joi.number().min(2),
@@ -64,9 +70,14 @@ const resolver = (data: INgramFormParams, validationContext?: object) => {
       [path[0]]: { msg }
     }
   }
-  const errors = error?.details.reduce((acc, currentError) => (
-    merge(acc, createError(currentError.message, currentError.path.map(p => p.toString())))
-  ), {}) || {}
+  const errors = error?.details.reduce((acc, currentError) => {
+    const key = currentError.path[0].toString()
+    // Omit errors from clustering algos that are not currently selected
+    if (CLUSTERING_OPTIONS.includes(key) && key !== values.selected_clustering_algo) {
+      return acc
+    }
+    return merge(acc, createError(currentError.message, currentError.path.map(p => p.toString())))
+  }, {}) || {}
   return {
     values,
     errors,
@@ -161,70 +172,70 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
   }
   return (
     <FormContext {...methods} >
-    <Form onSubmit={handleSubmit(onFormSubmit)} className={className} visible={visible}>
-      <TopRow>
-        <FormField>
-          <label htmlFor="token_set">Token set</label>
-          <TokenSetDropdown
-            id="token_set"
-            selected={tokenSet}
-            options={TOKEN_SET_OPTIONS}
-            onSelect={handleTokenSetChange}
-          />
-        </FormField>
-        <FormField>
-          <label htmlFor="ngrams">N-grams</label>
-          <MinMaxGram>
-            <Input
-              id="min_ngrams"
-              name="min_ngrams"
-              type="number"
-              placeholder="Min n"
-              fullWidth
-              ref={register}/>
-            <Input
-              id="max_ngrams"
-              name="max_ngrams"
-              type="number"
-              placeholder="Max n"
-              fullWidth
-              ref={register}/>
-          </MinMaxGram>
-          <Error>
-            {errors.min_ngrams && 'Min n-gram must be 1-9 and lower than the max n-gram'}
-          </Error>
-          <Error>
-            {errors.max_ngrams && 'Max n-gram must be between 1-9'}
-          </Error>
-        </FormField>
-        <FormField>
-          <label htmlFor="svd_n_components">SVD n-components</label>
-          <Input
-            type="number"
-            name="svd_n_components"
-            id="svd_n_components"
-            ref={register}/>
+      <Form onSubmit={handleSubmit(onFormSubmit)} className={className} visible={visible}>
+        <TopRow>
+          <FormField>
+            <label htmlFor="token_set">Token set</label>
+            <TokenSetDropdown
+              id="token_set"
+              selected={tokenSet}
+              options={TOKEN_SET_OPTIONS}
+              onSelect={handleTokenSetChange}
+            />
+          </FormField>
+          <FormField>
+            <label htmlFor="ngrams">N-grams</label>
+            <MinMaxGram>
+              <Input
+                id="min_ngrams"
+                name="min_ngrams"
+                type="number"
+                placeholder="Min n"
+                fullWidth
+                ref={register}/>
+              <Input
+                id="max_ngrams"
+                name="max_ngrams"
+                type="number"
+                placeholder="Max n"
+                fullWidth
+                ref={register}/>
+            </MinMaxGram>
             <Error>
-              {errors.svd_n_components && 'At least 30 is recommended'}
+              {errors.min_ngrams && 'Min n-gram must be 1-9 and lower than the max n-gram'}
             </Error>
-        </FormField>
-      </TopRow>
-      <MiddleRow>
-        <SelectClusteringAlgo />
-      </MiddleRow>
-      <Buttons>
-        <Button
-          type="submit"
-          intent="success"
-          disabled={submitInProgress}
-          loading={submitInProgress}
-        >Submit</Button>
-        <Button
-          intent="transparent"
-          onClick={onCancel}
-        >Cancel</Button>
-      </Buttons>
-    </Form>
+            <Error>
+              {errors.max_ngrams && 'Max n-gram must be between 1-9'}
+            </Error>
+          </FormField>
+          <FormField>
+            <label htmlFor="svd_n_components">SVD n-components</label>
+            <Input
+              type="number"
+              name="svd_n_components"
+              id="svd_n_components"
+              ref={register}/>
+              <Error>
+                {errors.svd_n_components && 'At least 30 is recommended'}
+              </Error>
+          </FormField>
+        </TopRow>
+        <MiddleRow>
+          <SelectClusteringAlgo />
+        </MiddleRow>
+        <Buttons>
+          <Button
+            type="submit"
+            intent="success"
+            disabled={submitInProgress}
+            loading={submitInProgress}
+          >Submit</Button>
+          <Button
+            intent="transparent"
+            onClick={onCancel}
+          >Cancel</Button>
+        </Buttons>
+      </Form>
     </FormContext>
   )
 }))

@@ -37,7 +37,7 @@ const ModelParametersEl = inject('modelStore')(observer((props: IProps) => {
       </Header>
       <Body minimized={minimized}>
         <h2>{modelStore!.selectedModel?.title}</h2>
-        <p dangerouslySetInnerHTML={{ __html: modelStore!.selectedModel?.description || '' }} />
+        <Description>{modelStore!.selectedModel?.description}</Description>
         <NgramParametersForm visible={modelStore!.selectedModel?.model_id === 'ngram'}/>
       </Body>
     </Container>
@@ -74,6 +74,9 @@ const Body = styled.div<{ minimized: boolean}>`
   max-width: 700px;
   visibility: ${({ minimized }) => minimized ? 'hidden' : 'initial'};
   width: 100%;
+`
+const Description = styled.p`
+  white-space: pre-wrap;
 `
 
 export const ModelParameters = styled(ModelParametersEl)``
