@@ -29,7 +29,7 @@ export const KMEANS_SCHEMA = Joi.object({
 })
 export const RUN_NGRAM_PARAMS = Joi.object({
   model_id: Joi.string().valid('ngram').required(),
-  token_set: Joi.string().valid('modified', 'keywords'),
+  token_set: Joi.string().valid('modified', 'complete', 'keywords'),
   ngrams: Joi.array().items(Joi.number().integer().min(1)).length(2),
   svd_n_components: Joi.number().integer().min(1),
   clustering_params: Joi.alternatives().try(DBSCAN_SCHEMA, HDBSCAN_SCHEMA, OPTICS_SCHEMA, KMEANS_SCHEMA),

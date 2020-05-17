@@ -20,6 +20,7 @@ type TokenSetOption = { key: TokenSetType, value: string }
 
 const TOKEN_SET_OPTIONS = [
   { key: 'modified', value: 'modified' },
+  { key: 'complete', value: 'complete' },
   { key: 'keywords', value: 'keywords' }
 ] as TokenSetOption[]
 const DEFAULT_TOKEN_SET = 'modified'

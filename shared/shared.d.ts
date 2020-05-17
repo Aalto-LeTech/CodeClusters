@@ -211,7 +211,7 @@ declare module 'shared' {
   export type ClusteringAlgoType = 'DBSCAN' | 'HDBSCAN' | 'OPTICS' | 'KMeans'
   export type ClusteringAlgo = IDBSCANParams | IHDBSCANParams | IOPTICSParams | IKMeansParams
   export type DimVisualization = ITSNEParams | IUMAPParams
-  export type TokenSetType = 'modified' | 'keywords'
+  export type TokenSetType = 'modified' | 'complete' | 'keywords'
   export interface INgramParams {
     model_id: string
     token_set?: TokenSetType
