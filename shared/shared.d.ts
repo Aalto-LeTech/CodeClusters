@@ -210,6 +210,7 @@ declare module 'shared' {
   }
   export type ClusteringAlgoType = 'DBSCAN' | 'HDBSCAN' | 'OPTICS' | 'KMeans'
   export type ClusteringAlgo = IDBSCANParams | IHDBSCANParams | IOPTICSParams | IKMeansParams
+  export type DimVisualizationType = 'TSNE' | 'UMAP'
   export type DimVisualization = ITSNEParams | IUMAPParams
   export type TokenSetType = 'modified' | 'complete' | 'keywords'
   export interface INgramParams {

@@ -2,13 +2,10 @@ import React, { useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { useFormContext } from 'react-hook-form'
 
-import { Button } from '../../elements/Button'
 import { Input } from '../../elements/Input'
 import { GenericDropdown } from '../../elements/Dropdown'
 
-import {
-  ClusteringAlgoType
-} from 'shared'
+import { ClusteringAlgoType } from 'shared'
 import { INgramFormParams } from './NgramParametersForm'
 
 interface IProps {
@@ -21,6 +18,7 @@ const CLUSTERING_OPTIONS = [
   { key: 'OPTICS', value: 'OPTICS' },
   { key: 'KMeans', value: 'K-means' },
 ] as { key: ClusteringAlgoType, value: string }[]
+
 const CLUSTERING_INFO = [
   {
     key: 'DBSCAN',

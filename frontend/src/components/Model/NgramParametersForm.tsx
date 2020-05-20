@@ -6,13 +6,15 @@ import Joi from "@hapi/joi"
 import merge from 'lodash.merge'
 
 import { SelectClusteringAlgo } from './SelectClusteringAlgo'
+import { SelectDimVisualization } from './SelectDimVisualization'
 import { Button } from '../../elements/Button'
 import { Input } from '../../elements/Input'
 import { GenericDropdown } from '../../elements/Dropdown'
 
 import {
-  INgramParams, TokenSetType, NgramModelId, ClusteringAlgoType,
-  IDBSCANParams, IHDBSCANParams, IOPTICSParams, IKMeansParams
+  INgramParams, TokenSetType, NgramModelId,
+  ClusteringAlgoType, IDBSCANParams, IHDBSCANParams, IOPTICSParams, IKMeansParams,
+  DimVisualizationType, ITSNEParams, IUMAPParams,
 } from 'shared'
 import { Stores } from '../../stores'
 
@@ -30,6 +32,10 @@ const CLUSTERING_OPTIONS = [
   'OPTICS',
   'KMeans',
 ]
+const DIM_VISUALIZATION_OPTIONS = [
+  'TSNE',
+  'UMAP'
+]
 
 // A schema is required to convert the numbers and booleans, as otherwise all values are strings
 const validationSchema = Joi.object({
@@ -39,6 +45,7 @@ const validationSchema = Joi.object({
   svd_n_components: Joi.number().integer().min(1),
   random_seed: Joi.number().integer().min(-1),
   selected_clustering_algo: Joi.string().required(),
+  selected_dim_visualization: Joi.string().required(),
   DBSCAN: Joi.object({
     min_samples: Joi.number().min(0),
     eps: Joi.number().min(0),
@@ -54,6 +61,13 @@ const validationSchema = Joi.object({
   }),
   KMeans: Joi.object({
     k_clusters: Joi.number().min(2),
+  }),
+  TSNE: Joi.object({
+    perplexity: Joi.number().min(0),
+  }),
+  UMAP: Joi.object({
+    n_neighbors: Joi.number().integer().min(0),
+    min_dist: Joi.number().min(0),
   }),
 })
 
@@ -77,6 +91,10 @@ const resolver = (data: INgramFormParams, validationContext?: object) => {
     if (CLUSTERING_OPTIONS.includes(key) && key !== values.selected_clustering_algo) {
       return acc
     }
+    // Same but for dim visualization
+    if (DIM_VISUALIZATION_OPTIONS.includes(key) && key !== values.selected_dim_visualization) {
+      return acc
+    }
     return merge(acc, createError(currentError.message, currentError.path.map(p => p.toString())))
   }, {}) || {}
   return {
@@ -92,13 +110,15 @@ export interface INgramFormParams {
   svd_n_components: number
   random_seed?: number
   selected_clustering_algo: ClusteringAlgoType
+  selected_dim_visualization: DimVisualizationType
   // This Required-Omit hack omits the name, and makes all the properties defined.
   // Otherwise the errors-object won't infer the maybe values eg. eps?: number
   DBSCAN: Required<Omit<IDBSCANParams, 'name'>>
   HDBSCAN: Required<Omit<IHDBSCANParams, 'name'>>
   OPTICS: Required<Omit<IOPTICSParams, 'name'>>
   KMeans: Required<Omit<IKMeansParams, 'name'>>
-  // dim_visualization_params?: DimVisualization
+  TSNE: Required<Omit<ITSNEParams, 'name'>>
+  UMAP: Required<Omit<IUMAPParams, 'name'>>
 }
 interface IProps {
   className?: string
@@ -123,6 +143,7 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
       min_ngrams: initialData?.ngrams && initialData.ngrams[0] || 5,
       max_ngrams: initialData?.ngrams && initialData.ngrams[1] || 5,
       selected_clustering_algo: initialData?.clustering_params?.name || 'DBSCAN',
+      selected_dim_visualization: initialData?.dim_visualization_params?.name || 'TSNE',
       DBSCAN: initialData?.clustering_params?.name !== 'DBSCAN' ? {
         min_samples: 5,
         eps: 0.25,
@@ -139,6 +160,13 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
       KMeans: initialData?.clustering_params?.name !== 'KMeans' ? {
         k_clusters: 2,
       } : initialData?.clustering_params,
+      TSNE: initialData?.dim_visualization_params?.name !== 'TSNE' ? {
+        perplexity: 30,
+      }: initialData?.dim_visualization_params,
+      UMAP: initialData?.dim_visualization_params?.name !== 'UMAP' ? {
+        n_neighbors: 30,
+        min_dist: 0.0,
+      }: initialData?.dim_visualization_params,
     }
   })
   const { register, errors, reset, handleSubmit } = methods
@@ -152,7 +180,7 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
     setSubmitInProgress(true)
 
     const {
-      min_ngrams, max_ngrams, svd_n_components, random_seed, selected_clustering_algo
+      min_ngrams, max_ngrams, svd_n_components, random_seed, selected_clustering_algo, selected_dim_visualization
     } = data
 
     const payload = {
@@ -164,7 +192,10 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
         name: selected_clustering_algo,
         ...data[selected_clustering_algo]
       },
-      // dim_visualization_params?: DimVisualization
+      dim_visualization_params: {
+        name: selected_dim_visualization,
+        ...data[selected_dim_visualization]
+      }
       // random_seed: parseInt(random_seed),
     }
     onSubmit!(payload).then(result => {
@@ -223,6 +254,7 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
         </TopRow>
         <MiddleRow>
           <SelectClusteringAlgo />
+          <SelectDimVisualization />
         </MiddleRow>
         <Buttons>
           <Button
