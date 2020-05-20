@@ -42,7 +42,6 @@ const validationSchema = Joi.object({
   token_set: Joi.string().valid('modified', 'keywords'),
   min_ngrams: Joi.number().integer().min(1),
   max_ngrams: Joi.number().integer().min(1),
-  svd_n_components: Joi.number().integer().min(1),
   random_seed: Joi.number().integer().min(-1),
   selected_clustering_algo: Joi.string().required(),
   selected_dim_visualization: Joi.string().required(),
@@ -63,10 +62,11 @@ const validationSchema = Joi.object({
     k_clusters: Joi.number().min(2),
   }),
   TSNE: Joi.object({
+    svd_n_components: Joi.number().min(1).empty(''),
     perplexity: Joi.number().min(0),
   }),
   UMAP: Joi.object({
-    n_neighbors: Joi.number().integer().min(0),
+    n_neighbors: Joi.number().integer().min(2),
     min_dist: Joi.number().min(0),
   }),
 })
@@ -107,8 +107,7 @@ export interface INgramFormParams {
   token_set: 'modified' | 'keywords'
   min_ngrams: number
   max_ngrams: number
-  svd_n_components: number
-  random_seed?: number
+  random_seed: number
   selected_clustering_algo: ClusteringAlgoType
   selected_dim_visualization: DimVisualizationType
   // This Required-Omit hack omits the name, and makes all the properties defined.
@@ -138,7 +137,6 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
   const methods = useForm<INgramFormParams>({
     validationResolver: resolver,
     defaultValues: {
-      svd_n_components: initialData?.svd_n_components || 40,
       random_seed: initialData?.random_seed || -1,
       min_ngrams: initialData?.ngrams && initialData.ngrams[0] || 5,
       max_ngrams: initialData?.ngrams && initialData.ngrams[1] || 5,
@@ -161,6 +159,7 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
         k_clusters: 2,
       } : initialData?.clustering_params,
       TSNE: initialData?.dim_visualization_params?.name !== 'TSNE' ? {
+        svd_n_components: undefined,
         perplexity: 30,
       }: initialData?.dim_visualization_params,
       UMAP: initialData?.dim_visualization_params?.name !== 'UMAP' ? {
@@ -180,14 +179,14 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
     setSubmitInProgress(true)
 
     const {
-      min_ngrams, max_ngrams, svd_n_components, random_seed, selected_clustering_algo, selected_dim_visualization
+      min_ngrams, max_ngrams, random_seed, selected_clustering_algo, selected_dim_visualization
     } = data
 
     const payload = {
       model_id: NgramModelId,
       token_set: tokenSet,
       ngrams: [min_ngrams, max_ngrams] as [number, number],
-      svd_n_components: svd_n_components,
+      random_seed,
       clustering_params: {
         name: selected_clustering_algo,
         ...data[selected_clustering_algo]
@@ -196,7 +195,6 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
         name: selected_dim_visualization,
         ...data[selected_dim_visualization]
       }
-      // random_seed: parseInt(random_seed),
     }
     onSubmit!(payload).then(result => {
       setSubmitInProgress(false)
@@ -240,16 +238,17 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
               {errors.max_ngrams && 'Max n-gram must be between 1-9'}
             </Error>
           </FormField>
-          <FormField>
-            <label htmlFor="svd_n_components">SVD n-components</label>
+          <FormField className="random_seed">
+            <label htmlFor="random_seed">Random seed</label>
             <Input
               type="number"
-              name="svd_n_components"
-              id="svd_n_components"
+              name="random_seed"
+              id="random_seed"
+              fullWidth
               ref={register}/>
-              <Error>
-                {errors.svd_n_components && 'At least 30 is recommended'}
-              </Error>
+            <Error>
+              {errors.random_seed && '-1 or empty for no seed, otherwise >=0'}
+            </Error>
           </FormField>
         </TopRow>
         <MiddleRow>
@@ -298,6 +297,9 @@ const MiddleRow = styled.div`
 const FormField = styled.div`
   display: flex;
   flex-direction: column;
+  &.random_seed > ${Input} {
+    width: 80px;
+  }
 `
 const Error = styled.small`
   color: red;

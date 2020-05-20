@@ -201,6 +201,7 @@ declare module 'shared' {
   export interface ITSNEParams {
     name: 'TSNE'
     perplexity?: number
+    svd_n_components?: number
   }
   export interface IUMAPParams {
     name: 'UMAP'
@@ -217,7 +218,6 @@ declare module 'shared' {
     model_id: string
     token_set?: TokenSetType
     ngrams?: [number, number]
-    svd_n_components?: number
     clustering_params?: ClusteringAlgo
     dim_visualization_params?: DimVisualization
     random_seed?: number

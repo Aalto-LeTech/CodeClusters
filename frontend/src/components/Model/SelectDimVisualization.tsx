@@ -20,7 +20,7 @@ const DIM_VISUALIZATION_OPTIONS = [
 const DIM_VISUALIZATION_INFO = [
   {
     key: 'TSNE',
-    text: 'The staple method for visualizing high-dimensional data in lower dimensions.',
+    text: 'The staple method for visualizing high-dimensional data in lower dimension.',
     link: 'https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html'
   },
   {
@@ -91,6 +91,20 @@ function TSNEFields({ visible }: IDimVisualizationFieldsProps) {
           {errors?.TSNE?.perplexity && 'Perplexity should be higher than 0'}
         </Error>
       </FormField>
+      <FormField>
+        <label htmlFor="TSNE.svd_n_components">SVD n-components</label>
+        <Input
+          type="number"
+          name="TSNE.svd_n_components"
+          id="TSNE.svd_n_components"
+          placeholder="Empty for all dimensions"
+          title="Empty for all dimensions"
+          fullWidth
+          ref={register}/>
+        <Error>
+          {errors?.TSNE?.svd_n_components && 'Empty or >0, at least 30 is recommended'}
+        </Error>
+      </FormField>
     </DimVisualizationFields>
   )
 }
@@ -100,7 +114,7 @@ function UMAPFields({ visible }: IDimVisualizationFieldsProps) {
   return (
     <DimVisualizationFields visible={visible}>
       <FormField>
-        <label htmlFor="UMAP.n_neighbors">Min neighbors size</label>
+        <label htmlFor="UMAP.n_neighbors">N neighbors</label>
         <Input
           id="UMAP.n_neighbors"
           name="UMAP.n_neighbors"
@@ -110,7 +124,7 @@ function UMAPFields({ visible }: IDimVisualizationFieldsProps) {
           ref={register}
         />
         <Error>
-          {errors?.UMAP?.n_neighbors && 'UMAP min neighbors must be higher than 1'}
+          {errors?.UMAP?.n_neighbors && 'N neighbors must be greater than 1'}
         </Error>
       </FormField>
       <FormField>
@@ -120,11 +134,12 @@ function UMAPFields({ visible }: IDimVisualizationFieldsProps) {
           name="UMAP.min_dist"
           type="number"
           placeholder="Must be >=0.0"
+          step={0.1}
           fullWidth
           ref={register}
         />
         <Error>
-          {errors?.UMAP?.min_dist && 'Min distance should be higher or equal than 0.0'}
+          {errors?.UMAP?.min_dist && 'Min distance should be >=0.0'}
         </Error>
       </FormField>
     </DimVisualizationFields>

@@ -185,6 +185,7 @@ function OPTICSFields({ visible }: IClusteringFieldsProps) {
           name="OPTICS.max_eps"
           type="number"
           placeholder="Empty for np.inf"
+          title="Empty for np.inf"
           step={0.01}
           fullWidth
           ref={register}

@@ -14,6 +14,7 @@ interface IProps {
   fullWidth?: boolean
   disabled?: boolean
   placeholder?: string
+  title?: string
   required?: boolean
   onChange?: (value: string) => void // Basically one of: string | file (numbers are strings)
   onFocus?: () => void
@@ -23,7 +24,8 @@ interface IProps {
 
 const InputEl = forwardRef((props: IProps, ref?: React.Ref<any>) => {
   const {
-    className, value, type, id, name, autocomplete, step, icon, iconPadding, placeholder, disabled, required, fullWidth,
+    className, value, type, id, name, autocomplete, step, icon, iconPadding, placeholder, disabled, required,
+    title, fullWidth,
     onChange, onFocus, onBlur, onKeyPress
   } = props
   function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -39,6 +41,7 @@ const InputEl = forwardRef((props: IProps, ref?: React.Ref<any>) => {
           id={id}
           name={name}
           placeholder={placeholder}
+          title={title}
           disabled={disabled}
           required={required}
           onChange={handleChange}
@@ -57,6 +60,7 @@ const InputEl = forwardRef((props: IProps, ref?: React.Ref<any>) => {
           autocomplete={autocomplete}
           iconPadding={iconPadding}
           placeholder={placeholder}
+          title={title}
           disabled={disabled}
           required={required}
           onChange={handleChange}
