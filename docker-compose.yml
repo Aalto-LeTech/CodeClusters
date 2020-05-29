@@ -1,15 +1,23 @@
-version: '3'
+version: '3.5'
 
 services:
+  reverse_proxy:
+    build:
+      context: ./local-reverse-proxy
+    ports:
+      - 9080:80
+    restart: always
   frontend:
     build:
-      context: ./frontend
+      context: .
+      dockerfile: frontend/Dockerfile
     restart: always
   backend:
     build:
-      context: ./backend
+      context: .
+      dockerfile: backend/Dockerfile
     ports:
-      - 9600:8600 
+      - 9600:8600
     environment:
       NODE_ENV: production
       PORT: 8600
@@ -53,3 +61,7 @@ services:
       - ./solr/data:/var/solr
     command: ["solr-precreate", "gettingstarted"]
     # command: ["solr-precreate", "submission-search", "/opt/solr-8.4.1/config"]
+
+networks:
+  default:
+    name: codeclusters-local
