@@ -61,3 +61,17 @@ The instructions for this are still a little bit hazy. In theory what you should
 8. Select the "gettingstarted" core from the `Core Selector` dropdown
 9. Go to the `Query` page and click `Execute Query` without adding any parameters
 10. This should return 112 records. If not, Google is your best friend
+
+# How to launch manually in production
+
+Requires a virtual machine eg Ubuntu 18.04 with root privileges. Expects git, Docker, Docker Compose to be installed.
+
+1. Create app folder: `sudo mkdir /opt/codeclusters-app/`
+2. Create user group that can access the app: `groupadd codeclusters`
+3. Grant the folder's ownership to the user group: `chgrp codeclusters /opt/codeclusters-app/`
+4. Create user: `sudo useradd codeclusters-app-user`
+5. Add the user to the group: `sudo usermod -a -G groupname codeclusters-app-user`
+6. Cd to the app folder: `cd /opt/codeclusters-app/`
+7. Clone the repositories: `git clone https://github.com/Aalto-LeTech/CodeClusters && git clone https://github.com/Aalto-LeTech/CodeClustersModeling`
+8. Cd to the main app folder: `cd CodeClusters`
+9. Start up the Docker Compose stack with Let's Encrypt (in codeclusters.cs.aalto.fi domain): `./init-certbot.sh`

@@ -1,0 +1,76 @@
+version: '3.5'
+
+services:
+  reverse_proxy:
+    build:
+      context: ./prod-reverse-proxy
+    container_name: reverse_proxy
+    restart: unless-stopped
+    ports:
+      - 443:443
+      - 80:80
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+      - ./data/reverse-proxy-logs:/var/log/nginx
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+  certbot:
+    image: certbot/certbot:v1.5.0
+    container_name: certbot
+    restart: unless-stopped
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+      - ./data/certbot-logs:/var/log/letsencrypt
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: frontend
+    restart: always
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: backend
+    env_file:
+      - .backend.env
+    environment:
+      NODE_ENV: production
+      PORT: 8600
+    restart: always
+  flyway_migration:
+    image: flyway/flyway:6.1.3-alpine
+    container_name: flyway_migration
+    entrypoint: ["sh", "-c", "/flyway/wait-for-it.sh postgres:5432 -- /flyway/flyway migrate"]
+    volumes:
+      - ./db/migrations:/flyway/sql
+      - ./db/seed/afterMigrate.sql:/flyway/sql/afterMigrate.sql # Should I do this automatically or as another docker job?
+      - ./db/scripts/wait-for-it.sh:/flyway/wait-for-it.sh
+    env_file:
+      - .flyway.env
+  postgres:
+    image: postgres:11.6-alpine
+    container_name: postgres
+    ports:
+      - 5600:5432
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+    env_file:
+      - .db.env
+    restart: always
+  solr:
+    build:
+      context: ./solr
+    container_name: solr
+    ports:
+      - 8983:8983
+    volumes:
+      - ./solr/data:/var/solr
+    command: ["solr-precreate", "gettingstarted"]
+    restart: always
+
+networks:
+  default:
+    name: codeclusters-prod
