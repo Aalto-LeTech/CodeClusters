@@ -129,3 +129,6 @@ EOF
 14. Run the seeding: `./init-prod.sh seed`
 15. Run the test data generator: `./init-prod.sh testdata`
 16. Create the Solr data: `./init-prod.sh data-import`
+17. Go to the modeling repo: `cd ../CodeClustersModeling`
+18. Build and launch the modeling server: `sudo docker-compose -f prod-docker-compose.yml up -d`
+19. The app should be running at https://codeclusters.cs.aalto.fi/
