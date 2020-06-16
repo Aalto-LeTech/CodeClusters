@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-CORE_NAME="gettingstarted"
+CORE_NAME="submission-search"
 
 case "$1" in
   bash)

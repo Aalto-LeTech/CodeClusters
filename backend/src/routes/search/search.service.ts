@@ -28,7 +28,7 @@ export const searchService = {
     // Highlighted fields
     const hlfields = `hl=on&hl.fl=code&hl.simple.pre=<mark>&hl.simple.post=</mark>&hl.fragsize=${num_lines}&hl.method=unified`
     const query = `${general}&${fields}&${hlfields}`
-    return axiosService.get<ISolrSearchCodeResponse>(url(`solr/gettingstarted/select?${query}`))
+    return axiosService.get<ISolrSearchCodeResponse>(url(`solr/submission-search/select?${query}`))
   },
   searchAllSubmissions: (params: ISearchCodeParams) : Promise<ISolrSearchAllCodeResponse | undefined> => {
     const {
@@ -46,7 +46,7 @@ export const searchService = {
     // Fields used in the Solr results (required for the highlighting)
     const fields = 'fl=code,id,+student_id,+course_id,+timestamp'
     const query = `${general}&${fields}`
-    return axiosService.get<ISolrSearchAllCodeResponse>(url(`solr/gettingstarted/select?${query}`))
+    return axiosService.get<ISolrSearchAllCodeResponse>(url(`solr/submission-search/select?${query}`))
   },
   searchAllSubmissionIds: (params: ISearchCodeParams) : Promise<ISolrSearchAllIdsResponse | undefined> => {
     const {
@@ -64,6 +64,6 @@ export const searchService = {
     // Fields used in the Solr results (required for the highlighting)
     const fields = 'fl=id,+student_id,+course_id,+timestamp'
     const query = `${general}&${fields}`
-    return axiosService.get<ISolrSearchAllIdsResponse>(url(`solr/gettingstarted/select?${query}`))
+    return axiosService.get<ISolrSearchAllIdsResponse>(url(`solr/submission-search/select?${query}`))
   }
 }

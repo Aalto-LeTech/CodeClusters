@@ -98,11 +98,11 @@ After the features have been produced for each document, they are transformed in
 For the dimensionality visualization either t-SNE or UMAP can be used. For t-SNE dimensionality reduction can be done with SVD, although with small datasets the results will look a lot alike. The SVD n-components have to be the size of the dataset or the size of the features at maximum. The UMAP should in theory stretch the points between the clusters a bit more, yet with small datasets the difference will not be very noticeable. Due to low size also the scale of the projection might vary highly, thus a random seed can be used to ensure the same result each time for the same features.
 
 Parameters:
-- token_set [string]: Used token set, either "modified", "complete" or "keywords". Default "modified".
-- ngrams [int, int]: The range of used n-grams. Default [5,5].
-- random_seed [int]: Used random seed. -1 or empty for no seed.
-- clustering_algo_params [Object]: The parameters for the clustering algorithm. 
-- dim_visualization_params [Object]: The dimensional reduction for 2d visualization parameters.
+- token_set <string>: Used token set, either "modified", "complete" or "keywords". Default "modified".
+- ngrams <[int, int]>: The range of used n-grams. Default [5,5].
+- random_seed <int>: Used random seed. -1 or empty for no seed.
+- clustering_algo_params <Object>: The parameters for the clustering algorithm. 
+- dim_visualization_params <Object>: The dimensional reduction for 2d visualization parameters.
 ');
 INSERT INTO model (model_id, title, description)
 VALUES ('keyword_metrics', 'Keyword metrics',
