@@ -67,11 +67,65 @@ The instructions for this are still a little bit hazy. In theory what you should
 Requires a virtual machine eg Ubuntu 18.04 with root privileges. Expects git, Docker, Docker Compose to be installed.
 
 1. Create app folder: `sudo mkdir /opt/codeclusters-app/`
-2. Create user group that can access the app: `groupadd codeclusters`
-3. Grant the folder's ownership to the user group: `chgrp codeclusters /opt/codeclusters-app/`
-4. Create user: `sudo useradd codeclusters-app-user`
-5. Add the user to the group: `sudo usermod -a -G groupname codeclusters-app-user`
+2. Create user group that can access the app: `sudo groupadd codeclusters`
+3. Create user: `sudo useradd codeclusters-app-user`
+4. Add the user to the group: `sudo usermod -a -G codeclusters codeclusters-app-user`
+5. Grant the folder's ownership to the user group: `sudo chown -R codeclusters-app-user:codeclusters /opt/codeclusters-app/`
 6. Cd to the app folder: `cd /opt/codeclusters-app/`
 7. Clone the repositories: `git clone https://github.com/Aalto-LeTech/CodeClusters && git clone https://github.com/Aalto-LeTech/CodeClustersModeling`
 8. Cd to the main app folder: `cd CodeClusters`
-9. Start up the Docker Compose stack with Let's Encrypt (in codeclusters.cs.aalto.fi domain): `./init-certbot.sh`
+9. Create Solr Docker volume folder with correct permissions: `mkdir -p ./solr/data && sudo chown -R 8983:8983 ./solr/data`
+10. Create the environment variables:
+
+```bash
+cat > .db.env <<EOF
+POSTGRES_USER=code-clusters-app-user
+POSTGRES_PASSWORD=<32 char postgres password>
+POSTGRES_DB=code_clusters_prod
+EOF
+```
+
+```bash
+cat > .backend.env <<EOF
+NODE_ENV=production
+PORT=8600
+LOG_LEVEL=info
+
+CORS_SAME_ORIGIN=true
+JWT_SECRET=<128 char [a-z|A-Z|0-9]>
+
+# Docker machine's internal IP for Ubuntu
+DB_HOST=172.17.0.1
+DB_PORT=5600
+DB_USER=code-clusters-app-user
+DB_PASSWORD=<32 char postgres password>
+DB_NAME=code_clusters_prod
+
+MODEL_SERVER_URL=http://172.17.0.1:8500
+SOLR_URL=http://172.17.0.1:8983
+EOF
+```
+
+```bash
+cat > .flyway.env <<EOF
+FLYWAY_USER=code-clusters-app-user
+FLYWAY_PASSWORD=<32 char postgres password>
+FLYWAY_NAME=code_clusters_prod
+FLYWAY_URL=jdbc:postgresql://postgres:5432/code_clusters_prod
+EOF
+```
+
+```bash
+cat > .test_data.env <<EOF
+EMAIL=admin@asdf.fi
+PASSWORD=asdfasdf
+API_URL=http://172.17.0.1:8600/api
+EOF
+```
+
+11. Change the Solr db credentials and Docker IP (host.docker.internal to 172.17.0.1): `nano solr/data-config.xml`
+12. Start up the Docker Compose stack with Let's Encrypt (in codeclusters.cs.aalto.fi domain): `./init-prod.sh certbot`
+13. Run the migrations: `./init-prod.sh migrate`
+14. Run the seeding: `./init-prod.sh seed`
+15. Run the test data generator: `./init-prod.sh testdata`
+16. Create the Solr data: `./init-prod.sh data-import`
