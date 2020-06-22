@@ -52,7 +52,6 @@ function NavLinks(props: { user?: IUser }) {
   return (
     <>
       <Link to="/">Search</Link>
-      <Link to="/model">Model</Link>
       <Link to="/reviews">Reviews</Link>
     </>
   )
