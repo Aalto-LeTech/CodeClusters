@@ -62,7 +62,7 @@ function NavLinks(props: { user?: IUser }) {
 }
 
 const Container = styled.div`
-  background: ${({ theme }) => theme.color.primary};
+  background: ${({ theme }) => theme.color.primaryDark};
   box-shadow: 0 0 2px 2px rgba(0,0,0,0.18);
   padding: 1rem;
 `
@@ -73,7 +73,7 @@ const Nav = styled.nav`
 `
 const Link = styled(NavLink)`
   box-sizing: border-box;
-  color: ${({ theme }) => theme.color.textDark};
+  color: ${({ theme }) => theme.color.white};
   cursor: pointer;
   font-size: ${({ theme }) => theme.fontSize.medium};
   padding: 0.5rem 1rem;

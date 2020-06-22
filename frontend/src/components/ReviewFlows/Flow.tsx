@@ -54,6 +54,7 @@ const FlowEl = inject((stores: Stores) => ({
       </FlowStepsList>
       <Controls>
         <Button intent="success" loading={loading} onClick={handleClickRunReviewFlow}>Run and review</Button>
+        <Button intent="transparent">Edit</Button>
       </Controls>
     </Container>
   )
@@ -94,6 +95,9 @@ const Parameters = styled.div``
 const Controls = styled.div`
   display: flex;
   margin-top: 1rem;
+  > * + * {
+    margin-left: 1rem;
+  }
 `
 
 export const Flow = styled(FlowEl)``

@@ -5,6 +5,7 @@ import styled from '../../theme/styled'
 import { Flow } from './Flow'
 import { TabsMenu } from '../../elements/TabsMenu'
 import { DropdownSearch } from '../../elements/DropdownSearch'
+import { Button } from '../../elements/Button'
 
 import { IReviewFlow } from 'shared'
 import { ReviewFlowStore, ReviewFlowFilterType } from '../../stores/ReviewFlowStore'
@@ -47,13 +48,16 @@ const ReviewFlowsEl = inject('reviewFlowStore')(observer((props: IProps) => {
           selected={reviewFlowStore!.getCurrentFilterOption}
           onSelect={handleSelectTabOption}
         />
-        <DropdownSearch
-          fullWidth
-          options={reviewFlowStore!.getCurrentFlows.map(r => ({ key: r.title, value: r.title }))}
-          value={searchValue}
-          onChange={handleSearchChange}
-          onSelect={handleSelectReviewFlow}
-        />
+        <Controls>
+          <DropdownSearch
+            fullWidth
+            options={reviewFlowStore!.getCurrentFlows.map(r => ({ key: r.title, value: r.title }))}
+            value={searchValue}
+            onChange={handleSearchChange}
+            onSelect={handleSelectReviewFlow}
+          />
+          <Button>New flow</Button>
+        </Controls>
         <Flow/>
       </Body>
     </Container>
@@ -66,6 +70,14 @@ const Container = styled.section<{ visible: boolean}>`
   flex-direction: column;
   visibility: ${({ visible }) => visible ? 'initial' : 'hidden'};
 `
+const Controls = styled.div`
+  display: flex;
+  margin: 1rem;
+  & > ${DropdownSearch} {
+    margin-right: 1rem;
+    width: 400px;
+  }
+`
 const Body = styled.div`
   display: flex;
   flex-direction: column;
@@ -73,10 +85,6 @@ const Body = styled.div`
   margin-top: 0;
   max-width: 700px;
   width: 100%;
-  & > ${DropdownSearch} {
-    margin: 1rem 0 0 1rem;
-    width: 400px;
-  }
 `
 
 export const ReviewFlows = styled(ReviewFlowsEl)``

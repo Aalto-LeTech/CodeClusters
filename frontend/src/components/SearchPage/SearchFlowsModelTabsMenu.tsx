@@ -88,8 +88,8 @@ const TabButton = styled.button<{ disabled?: boolean }>`
   background: transparent;
   border: 0;
   cursor: ${({ disabled }) => disabled ? 'cursor' : 'pointer'};
-  font-size: 20px;
-  padding: 0.5rem 1rem;
+  font-size: 18px;
+  padding: 0.75rem 1.25rem;
   text-transform: uppercase;
   &:focus {
     outline: 2px solid ${({ theme }) => theme.color.gray.base};

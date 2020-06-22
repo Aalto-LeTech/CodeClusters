@@ -10,7 +10,7 @@ export const breakpoints = {
 
 export const defaultTheme : ITheme = {
   color: {
-    bg: '#eeffff',
+    bg: '#009aea26',
     gray: {
       lightest: 'rgba(0, 0, 0, 0.08)',
       lighter: '#eee',
@@ -18,9 +18,9 @@ export const defaultTheme : ITheme = {
       base: '#aaa',
     },
     primary: '#17b2ff', //'#1d9eff',
-    primaryDark: '#0070cb', // Using https://material.io/resources/color/#!/?view.left=0&view.right=1&primary.color=1d9eff
+    primaryDark: '#005a87', // Using https://material.io/resources/color/#!/?view.left=0&view.right=1&primary.color=1d9eff
     primaryLight: '#6fcfff',
-    // lightGreen: '#96FF9A', or // #00dfff; // #a9d5ff // #00aaff
+    // lightGreen: '#96FF9A', or // #00dfff; // #a9d5ff // #00aaff // #7fd5ff
     green: '#00e676',
     blue: '#425EC2',
     red: '#ff5d5d',
