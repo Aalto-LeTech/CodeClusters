@@ -13,6 +13,9 @@ export const GlobalStyle = createGlobalStyle`
     font-family: ${({ theme }) => theme.font.header};
     font-weight: 600;
   }
+  h1 {
+    margin: 2rem 0;
+  }
   * {
     box-sizing: border-box;
     font-family: ${({ theme }) => theme.font.text};

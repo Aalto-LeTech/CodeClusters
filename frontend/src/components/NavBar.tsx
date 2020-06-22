@@ -21,15 +21,17 @@ export const NavBar = inject('authStore')(observer((props: IProps) => {
   const { className, authStore, history } = props
   const { user, isAuthenticated } = authStore!
   return (
-    <NavContainer className={className}>
-      <MainLinks>
-        <NavLinks user={user}/>
-      </MainLinks>
-      { isAuthenticated ?
-      <Link to="#" role="button" onClick={handleLogout}>Logout</Link> :
-      <Link to="/login">Login</Link>
-      }
-    </NavContainer>
+    <Container className={className}>
+      <Nav>
+        <MainLinks>
+          <NavLinks user={user}/>
+        </MainLinks>
+        { isAuthenticated ?
+        <Link to="#" role="button" onClick={handleLogout}>Logout</Link> :
+        <Link to="/login">Login</Link>
+        }
+      </Nav>
+    </Container>
   )
 }))
 
@@ -37,46 +39,52 @@ function NavLinks(props: { user?: IUser }) {
   const { user } = props
   if (!user) {
     return (
-      <Link to="/">Frontpage</Link>
+      <>
+        <Link to="/" className="frontpage">CodeClusters</Link>
+      </>
     )
   }
   if (user.role === 'STUDENT') {
     const reviewUrl = `/review/${user.student_id}`
     return (
       <>
-        <Link to="/">Search</Link>
+        <Link to="/" className="frontpage">CodeClusters</Link>
         <Link to={reviewUrl}>My reviews</Link>
       </>
     )
   }
   return (
     <>
-      <Link to="/">Search</Link>
+      <Link to="/" className="frontpage">CodeClusters</Link>
       <Link to="/reviews">Reviews</Link>
     </>
   )
 }
 
-const NavContainer = styled.nav`
+const Container = styled.div`
+  background: ${({ theme }) => theme.color.primary};
+  box-shadow: 0 0 2px 2px rgba(0,0,0,0.18);
+  padding: 1rem;
+`
+const Nav = styled.nav`
   align-items: center;
   display: flex;
   justify-content: space-between;
-  margin: 1rem;
 `
 const Link = styled(NavLink)`
-  background-color: ${({ theme }) => theme.color.white};
-  border: 1px solid ${({ theme }) => theme.color.textDark};
   box-sizing: border-box;
   color: ${({ theme }) => theme.color.textDark};
   cursor: pointer;
   font-size: ${({ theme }) => theme.fontSize.medium};
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   text-decoration: none;
-  &:hover {
-    background-color: ${({ theme }) => theme.color.primary};
-    color: ${({ theme }) => theme.color.white};
-  }
   transition: 0.2s all;
+  &:hover {
+    text-decoration: underline;
+  }
+  &.frontpage {
+    font-family: ${({ theme }) => theme.font.header};
+  }
 `
 const MainLinks = styled.div`
   display: flex;

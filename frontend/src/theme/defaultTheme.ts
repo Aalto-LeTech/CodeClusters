@@ -17,7 +17,7 @@ export const defaultTheme : ITheme = {
       light: '#ccc',
       base: '#aaa',
     },
-    primary: '#1d9eff',
+    primary: '#17b2ff', //'#1d9eff',
     primaryDark: '#0070cb', // Using https://material.io/resources/color/#!/?view.left=0&view.right=1&primary.color=1d9eff
     primaryLight: '#6fcfff',
     // lightGreen: '#96FF9A', or // #00dfff; // #a9d5ff // #00aaff

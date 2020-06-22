@@ -49,9 +49,6 @@ const Container = styled.div`
   > * + * {
     margin: 2rem 0;
   }
-  h1 {
-    margin: 2rem 0;
-  }
 `
 const MainInputs = styled.div`
   > * + * {

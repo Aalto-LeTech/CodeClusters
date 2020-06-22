@@ -69,18 +69,17 @@ const TabList = styled.ul`
 `
 const TabListItem = styled.li<{ disabled?: boolean, selected: boolean }>`
   background: ${({ selected, theme }) => selected ? theme.color.white : 'transparent'};
-  /* border: 1px solid ${({ selected, theme }) => selected ? 'rgba(0,0,0,.95)' : 'transparent'}; */
-  /* border-bottom: 2px solid ${({ selected, theme }) => selected ? theme.color.blue : 'transparent'}; */
   border-radius: 4px 4px 0 0;
   box-shadow: ${({ selected, theme }) => selected && '0 0 2px 2px rgba(0,0,0,0.18)'};
+  clip-path: inset(-5px -5px 0 -5px);
   color: ${({ selected, theme }) => selected ? theme.color.textDark : theme.color.textLight};
   display: flex;
   font-weight: ${({ selected }) => selected ? 'bold' : 400};
   margin-right: 15px;
-  /* padding: 10px 0 5px 0; */
   &:hover {
     border-color: ${({ disabled, theme }) => !disabled && theme.color.blue};
     box-shadow: ${({ disabled, theme }) => !disabled && '0 0 2px 2px rgba(0,0,0,0.18)'};
+    clip-path: inset(-5px -5px 0 -5px);
     color: ${({ disabled, theme }) => !disabled && theme.color.textDark};
     font-weight: ${({ disabled }) => !disabled && 'bold'};
   }
@@ -103,7 +102,6 @@ const ShownView = styled.div`
     background: #fff;
     border-radius: 4px;
     box-shadow: 0 0 2px 2px rgba(0,0,0,0.18);
-    clip-path: inset(0px -5px -5px -5px);
     &:first-child {
       border-radius: 0 4px 4px 4px;
     }

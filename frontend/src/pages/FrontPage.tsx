@@ -21,15 +21,12 @@ export const FrontPage = inject((stores: Stores) => ({
   return (
     <Container>
       <Header>
-        <a href="https://github.com/Aalto-LeTech/CodeClusters"><h1>Code Clusters</h1></a>
+        <a href="https://github.com/Aalto-LeTech/CodeClusters" target="_blank"><h1>CodeClusters</h1></a>
       </Header>
       <SearchView/>
       <DeleteReviewSelectionModal />
       <ReviewSubmissionsModal />
       <FloatingMenu />
-      <ImgContainer>
-        <img width={1200} src={'/img/architecture.jpg'} alt="Architecture"/>
-      </ImgContainer>
     </Container>
   )
 }))
@@ -39,15 +36,4 @@ const Container = styled.div`
 const Header = styled.header`
   display: flex;
   justify-content: center;
-  & > h1 {
-
-  }
-`
-const ImgContainer = styled.figure`
-  & > img {
-    position: absolute;
-    max-width: 100vw;
-    left: 0;
-    padding: 1rem;
-  }
 `

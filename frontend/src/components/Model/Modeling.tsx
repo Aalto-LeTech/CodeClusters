@@ -4,6 +4,7 @@ import styled from '../../theme/styled'
 import { FiTrash } from 'react-icons/fi'
 import { MdKeyboardArrowRight } from 'react-icons/md'
 
+import { ModelDescription } from './ModelDescription'
 import { ModelParameters } from './ModelParameters'
 import { ClusteringResults } from './ClusteringResults'
 import { LocalSearchForm } from './LocalSearchForm'
@@ -65,6 +66,7 @@ const ModelingEl = inject('modelStore')(observer((props: IProps) => {
             />
             <Icon button onClick={handleModelTrashClick}><FiTrash size={18}/></Icon>
           </DropdownField>
+          <ModelDescription />
           <ModelParameters />
         </ModelControlsWrapper>
         <LocalSearchForm />

@@ -68,7 +68,7 @@ const Container = styled.div`
 `
 const CheckBoxText = styled.label`
   align-items: center;
-  background: #0094ff; // ${({ theme }) => theme.color.green};
+  background: ${({ theme }) => theme.color.primary};
   border-radius: 4px;
   color: #fff;
   display: flex;

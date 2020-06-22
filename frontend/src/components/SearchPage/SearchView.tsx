@@ -42,7 +42,7 @@ const Info = styled.div`
   align-items: center;
   display: flex;
   justify-content: center;
-  margin: 0 0 1rem 1rem;
+  margin: 0 0 2rem 1rem;
 `
 const InfoText = styled.p`
   margin: 0;

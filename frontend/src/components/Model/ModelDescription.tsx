@@ -17,7 +17,7 @@ interface IProps {
   modelStore?: ModelStore
 }
 
-const ModelParametersEl = inject('modelStore')(observer((props: IProps) => {
+const ModelDescriptionEl = inject('modelStore')(observer((props: IProps) => {
   const { className, modelStore } = props
   const [minimized, setMinimized] = useState(true)
 
@@ -29,14 +29,15 @@ const ModelParametersEl = inject('modelStore')(observer((props: IProps) => {
       <Header>
         <Button onClick={handleClickToggle} intent="success" disabled={modelStore!.selectedModel === undefined}>
           <Icon><MdKeyboardArrowRight size={24}/></Icon>
-          <Title>{`${minimized ? 'Set' : 'Hide'} model parameters`}</Title>
+          <Title>{`${minimized ? 'Show' : 'Hide'} model description`}</Title>
         </Button>
         <Icon button onClick={handleClickToggle} disabled={modelStore!.selectedModel === undefined}>
           { minimized ? <FiChevronDown size={18}/> : <FiChevronUp size={18}/>}
         </Icon>
       </Header>
       <Body minimized={minimized}>
-        <NgramParametersForm visible={modelStore!.selectedModel?.model_id === 'ngram'}/>
+        <h2>{modelStore!.selectedModel?.title}</h2>
+        <Description>{modelStore!.selectedModel?.description}</Description>
       </Body>
     </Container>
   )
@@ -76,4 +77,4 @@ const Description = styled.p`
   white-space: pre-wrap;
 `
 
-export const ModelParameters = styled(ModelParametersEl)``
+export const ModelDescription = styled(ModelDescriptionEl)``
