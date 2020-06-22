@@ -42,16 +42,6 @@ services:
     environment:
       NODE_ENV: production
       PORT: 8600
-  flyway_migration:
-    image: flyway/flyway:6.1.3-alpine
-    container_name: flyway_migration
-    entrypoint: ["sh", "-c", "/flyway/wait-for-it.sh postgres:5432 -- /flyway/flyway migrate"]
-    volumes:
-      - ./db/migrations:/flyway/sql
-      - ./db/seed/afterMigrate.sql:/flyway/sql/afterMigrate.sql # Should I do this automatically or as another docker job?
-      - ./db/scripts/wait-for-it.sh:/flyway/wait-for-it.sh
-    env_file:
-      - .flyway.env
   postgres:
     image: postgres:11.6-alpine
     container_name: postgres

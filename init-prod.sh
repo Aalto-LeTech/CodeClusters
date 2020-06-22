@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# A minimal script to launch Let's Encrypt & nginx reverse proxy
-# modified from https://github.com/wmnnd/nginx-certbot/blob/master/init-letsencrypt.sh
-
 CORE_NAME="submission-search"
 
 case "$1" in
   certbot)
+    # A minimal script to launch Let's Encrypt & nginx reverse proxy
+    # modified from https://github.com/wmnnd/nginx-certbot/blob/master/init-letsencrypt.sh
+
     sudo docker-compose -f prod-docker-compose.yml up -d
 
     sudo cp prod-reverse-proxy/ssl-dhparams.pem ./data/certbot/conf
