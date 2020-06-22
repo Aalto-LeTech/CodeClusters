@@ -79,7 +79,7 @@ const Header = styled.div`
   justify-content: center;
   width: 100%;
 `
-const Title = styled.h4`
+const Title = styled.div`
   margin: 0;
 `
 const Wrapper = styled.div`

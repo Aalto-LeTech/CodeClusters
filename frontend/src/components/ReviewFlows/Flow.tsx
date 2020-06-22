@@ -60,8 +60,6 @@ const FlowEl = inject((stores: Stores) => ({
 }))
 
 const Container = styled.div`
-  background: #ededed;
-  border-radius: 0.25rem;
   display: flex;
   flex-direction: column;
   margin: 1rem;

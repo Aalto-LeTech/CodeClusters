@@ -61,7 +61,7 @@ const Header = styled.div`
     padding: 0.5rem 0.75rem 0.5rem 1rem;
   }
 `
-const Title = styled.h2`
+const Title = styled.div`
   font-weight: bold;
   font-size: 1.5rem;
   margin: 0 1rem;

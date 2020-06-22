@@ -20,7 +20,7 @@ export const defaultTheme : ITheme = {
     primary: '#1d9eff',
     primaryDark: '#0070cb', // Using https://material.io/resources/color/#!/?view.left=0&view.right=1&primary.color=1d9eff
     primaryLight: '#6fcfff',
-    // lightGreen: '#96FF9A',
+    // lightGreen: '#96FF9A', or // #00dfff; // #a9d5ff // #00aaff
     green: '#00e676',
     blue: '#425EC2',
     red: '#ff5d5d',
@@ -39,6 +39,7 @@ export const defaultTheme : ITheme = {
     largeIcon: '50px'
   },
   font: {
+    header: '\'IBM Plex Mono\', monospace',
     text: '\'Raleway\', sans-serif',
   },
   transitions: {

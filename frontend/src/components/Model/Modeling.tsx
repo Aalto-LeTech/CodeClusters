@@ -1,7 +1,7 @@
-import React, { memo, useMemo, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../../theme/styled'
-import { FiChevronDown, FiChevronUp, FiTrash } from 'react-icons/fi'
+import { FiTrash } from 'react-icons/fi'
 import { MdKeyboardArrowRight } from 'react-icons/md'
 
 import { ModelParameters } from './ModelParameters'
@@ -15,14 +15,14 @@ import { ModelStore } from '../../stores/ModelStore'
 
 interface IProps {
   className?: string
+  visible: boolean
   modelStore?: ModelStore
 }
 
 const ModelingEl = inject('modelStore')(observer((props: IProps) => {
   const {
-    className, modelStore
+    className, visible, modelStore
   } = props
-  const [minimized, setMinimized] = useState(true)
   const [loading, setLoading] = useState(false)
   const modelOptions = modelStore!.models.map(m => ({ key: m.model_id, value: m.title }))
 
@@ -47,20 +47,9 @@ const ModelingEl = inject('modelStore')(observer((props: IProps) => {
       </>
     )
   }
-  function handleClickToggle() {
-    setMinimized(!minimized)
-  }
   return (
-    <Container className={className}>
-      <Header>
-        <Button onClick={handleClickToggle}>
-          <Title>{`${minimized ? 'Show' : 'Hide'} modeling`}</Title>
-        </Button>
-        <Icon button onClick={handleClickToggle}>
-          { minimized ? <FiChevronDown size={18}/> : <FiChevronUp size={18}/>}
-        </Icon>
-      </Header>
-      <Body minimized={minimized}>
+    <Container className={className} visible={visible}>
+      <Body>
         <ModelControlsWrapper>
           <InfoText>
             Currently only N-gram model is supported.
@@ -85,34 +74,21 @@ const ModelingEl = inject('modelStore')(observer((props: IProps) => {
   )
 }))
 
-const Container = styled.section`
+const Container = styled.section<{ visible: boolean}>`
   align-items: center;
-  display: flex;
+  display: ${({ visible }) => visible ? 'flex' : 'none'};
   flex-direction: column;
   margin: 1rem;
-  margin-top: 0.75rem;
+  margin-top: 0;
+  visibility: ${({ visible }) => visible ? 'initial' : 'hidden'};
 `
-const Header = styled.div`
+const Body = styled.div`
   align-items: center;
   display: flex;
-  justify-content: space-between;
-  max-width: 700px;
-  width: 100%;
-`
-const Title = styled.h2`
-  margin: 0;
-`
-const Body = styled.div<{ minimized: boolean}>`
-  align-items: center;
-  background: #fff;
-  border-radius: 4px;
-  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.18);
-  display: ${({ minimized }) => minimized ? 'none' : 'flex'};
   flex-direction: column;
   justify-content: space-around;
-  margin-top: 0.75rem;
+  margin-top: 0;
   padding: 1rem;
-  visibility: ${({ minimized }) => minimized ? 'hidden' : 'initial'};
   width: 100%;
 `
 const ModelControlsWrapper = styled.div`

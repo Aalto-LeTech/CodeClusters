@@ -21,7 +21,7 @@ export const FrontPage = inject((stores: Stores) => ({
   return (
     <Container>
       <Header>
-        <h1><a href="https://github.com/Aalto-LeTech/CodeClusters">Code Clusters</a></h1>
+        <a href="https://github.com/Aalto-LeTech/CodeClusters"><h1>Code Clusters</h1></a>
       </Header>
       <SearchView/>
       <DeleteReviewSelectionModal />

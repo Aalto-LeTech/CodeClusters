@@ -77,8 +77,9 @@ const TabButton = styled.button<{ disabled?: boolean }>`
 `
 const ItemsCountWrapper = styled.span`
   align-items: center;
-  background: #fff;
+  background: #18b2ff;
   border-radius: 100%;
+  color: #fff;
   display: inline-flex;
   margin-left: 8px;
   justify-content: center;

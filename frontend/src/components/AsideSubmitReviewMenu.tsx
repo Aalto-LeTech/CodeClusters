@@ -27,7 +27,7 @@ const EMPTY_REVIEW_FORM_PARAMS: IReviewFormParams = {
   metadata: ''
 }
 
-const FloatingReviewMenuEl = inject((stores: Stores) => ({
+const AsideSubmitReviewMenuEl = inject((stores: Stores) => ({
   reviewStore: stores.reviewStore,
   openDeleteReviewSelectionModal: (params: any) => stores.modalStore.openModal(EModal.DELETE_REVIEW_SELECTION, params),
 }))
@@ -241,4 +241,4 @@ const Buttons = styled.div`
   }
 `
 
-export const FloatingReviewMenu = styled(FloatingReviewMenuEl)``
+export const AsideSubmitReviewMenu = styled(AsideSubmitReviewMenuEl)``

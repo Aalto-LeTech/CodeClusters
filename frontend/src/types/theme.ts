@@ -33,6 +33,7 @@ export type Intent = 'primary' | 'secondary' | 'success' | 'danger' | 'warning' 
 export interface ITheme {
   color: IThemeColor
   font: {
+    header: string
     text: string
   }
   fontSize: {

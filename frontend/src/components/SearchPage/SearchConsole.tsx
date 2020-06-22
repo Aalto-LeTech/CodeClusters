@@ -28,6 +28,7 @@ function createSearchQueryParams(obj: {[key: string]: any}) {
 
 interface IProps extends RouteComponentProps {
   className?: string
+  visible: boolean
   courseId?: number
   exerciseId?: number
   searchParams?: ISearchCodeParams
@@ -44,7 +45,7 @@ const SearchConsoleEl = inject((stores: Stores) => ({
 }))
 (observer(withRouter((props: IProps) => {
   const {
-    className, history, search, deactivateLocalSearch, searchParams, courseId, exerciseId
+    className, history, search, deactivateLocalSearch, searchParams, courseId, exerciseId, visible
   } = props
   const { register, setValue, handleSubmit } = useForm({})
   const [filterText, setFilterText] = useState('')
@@ -107,7 +108,7 @@ const SearchConsoleEl = inject((stores: Stores) => ({
     }
   }
   return (
-    <Container className={className}>
+    <Container className={className} visible={visible}>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <TopRow>
           <FormField>
@@ -191,15 +192,19 @@ const SearchConsoleEl = inject((stores: Stores) => ({
   )
 })))
 
-const Container = styled.div`
+const Container = styled.div<{ visible: boolean}>`
   align-items: center;
-  display: flex;
+  display: ${({ visible }) => visible ? 'flex' : 'none'};
   flex-direction: column;
+  visibility: ${({ visible }) => visible ? 'initial' : 'hidden'};
 `
 const Form = styled.form`
   align-items: center;
   display: flex;
   flex-direction: column;
+  padding: 1rem;
+  padding-bottom: 2rem;
+  width: 700px;
   & > * {
     margin-top: 1rem;
   }
@@ -218,7 +223,7 @@ const CheckBoxText = styled.label`
 `
 const TopRow = styled.div`
   display: flex;
-  width: 600px;
+  width: 100%;
   & > ${FormField} {
     width: 100%;
     &:first-child {
@@ -228,13 +233,13 @@ const TopRow = styled.div`
 `
 const MiddleRow = styled.div`
   display: flex;
-  width: 600px;
+  width: 100%;
   & > ${FormField} {
     width: 100%;
   }
 `
 const SearchRow = styled.div`
-  width: 600px;
+  width: 100%;
 `
 const BottomRow = styled.div`
   align-items: center;

@@ -3,7 +3,6 @@ import { createGlobalStyle } from './styled'
 export const GlobalStyle = createGlobalStyle`
   html {
     box-sizing: border-box;
-    font-family: 'Raleway',sans-serif;
     font-size: 16px;
   }
   body {
@@ -11,7 +10,8 @@ export const GlobalStyle = createGlobalStyle`
     padding: 0;
   }
   h1,h2,h3,h4 {
-    font-family: ${({ theme }) => theme.font.text};
+    font-family: ${({ theme }) => theme.font.header};
+    font-weight: 600;
   }
   * {
     box-sizing: border-box;
