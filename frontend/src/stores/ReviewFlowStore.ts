@@ -1,12 +1,15 @@
 import { action, autorun, computed, runInAction, observable } from 'mobx'
 import * as reviewFlowApi from '../api/review_flow.api'
 
-import { IReviewFlow, IReviewFlowRunParams, IReviewFlowStep, ISearchCodeParams, IModelParams } from 'shared'
+import {
+  IReviewFlow, IReviewFlowRunParams, IReviewFlowStep, ISearchCodeParams, IModelParams,
+  IModel, INgramParams, NgramModelId
+} from 'shared'
 import { ToastStore } from './ToastStore'
 import { AuthStore } from './AuthStore'
 import { CourseStore } from './CourseStore'
 import { ClustersStore } from './ClustersStore'
-import { SearchStore } from './SearchStore'
+import { EMPTY_QUERY, SearchStore } from './SearchStore'
 import { ModelStore } from './ModelStore'
 
 export type ReviewFlowFilterType = 'course' | 'exercise' | 'all' | 'user'
@@ -57,6 +60,15 @@ export class ReviewFlowStore {
   @observable filteredBy: ReviewFlowFilterType = 'all'
   @observable filteredFlows: { [key: string]: IReviewFlow[] } = { ...EMPTY_FILTERED_FLOWS }
   @observable tabFilterOptions: ITabOption[] = FILTER_OPTIONS.map(o => ({ ...o, disabled: false, itemCount: 0 }))
+  @observable newReviewFlowSearchParams: ISearchCodeParams = EMPTY_QUERY
+  @observable newReviewFlowSelectedModel?: IModel = undefined
+  @observable newReviewFlowModelParameters: { 
+    [NgramModelId]: INgramParams
+  } = {
+    [NgramModelId]: {
+      model_id: NgramModelId,
+    }
+  }
   toastStore: ToastStore
   authStore: AuthStore
   courseStore: CourseStore
@@ -122,6 +134,10 @@ export class ReviewFlowStore {
         user: []
       } as { [key: string]: IReviewFlow[] }
     )
+  }
+
+  @action setSelectedNewReviewFlowModel = (model?: IModel) => {
+    this.newReviewFlowSelectedModel = model
   }
 
   watchFilteringChanges = () => {

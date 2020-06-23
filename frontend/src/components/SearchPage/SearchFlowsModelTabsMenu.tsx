@@ -4,7 +4,7 @@ import styled from '../../theme/styled'
 
 import { SearchConsole } from './SearchConsole'
 import { ReviewFlows } from '../ReviewFlows'
-import { Modeling } from '../Model'
+import { ModelTabView } from '../Model/ModelTabView'
 
 import { Stores } from '../../stores'
 
@@ -46,7 +46,7 @@ const SearchFlowsModelTabsMenuEl = inject((stores: Stores) => ({
       <ShownView>
         <SearchConsole visible={options[selectedIdx].key === 'search'}/>
         <ReviewFlows visible={options[selectedIdx].key === 'review_flows'}/>
-        <Modeling visible={options[selectedIdx].key === 'model'}/>
+        <ModelTabView visible={options[selectedIdx].key === 'model'}/>
       </ShownView>
     </Container>
   )
@@ -104,6 +104,9 @@ const ShownView = styled.div`
     box-shadow: 0 0 2px 2px rgba(0,0,0,0.18);
     &:first-child {
       border-radius: 0 4px 4px 4px;
+      & > form {
+        padding: 1rem 1rem 2rem 1rem;
+      }
     }
   }
 `

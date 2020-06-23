@@ -14,7 +14,7 @@ interface IProps {
   localSearchStore: LocalSearchStore
 }
 
-const EMPTY_QUERY: ISearchCodeParams = {
+export const EMPTY_QUERY: ISearchCodeParams = {
   q: '*',
   course_id: undefined,
   exercise_id: undefined,

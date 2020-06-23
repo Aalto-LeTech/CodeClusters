@@ -194,10 +194,9 @@ const Form = styled.form`
   align-items: center;
   display: flex;
   flex-direction: column;
-  padding: 1rem;
-  padding-bottom: 2rem;
+  padding-bottom: 1rem;
   width: 700px;
-  & > * {
+  & > * + * {
     margin-top: 1rem;
   }
 `

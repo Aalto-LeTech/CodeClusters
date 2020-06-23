@@ -7,12 +7,13 @@ import useClickOutside from '../hooks/useClickOutside'
 import useScrollLock from '../hooks/useScrollLock'
 
 import { SearchForm } from '../components/SearchPage/SearchForm'
+import { SelectModel } from '../components/Model/SelectModel'
 import { AddReviewForm, IAddReviewFormParams } from '../components/AddReviewForm'
 import { Modal } from '../elements/Modal'
 import { Button } from '../elements/Button'
 import { Icon } from '../elements/Icon'
 
-import { IReviewCreateParams, ISearchCodeParams } from 'shared'
+import { IReviewCreateParams, ISearchCodeParams, IModel, IModelParams, INgramParams } from 'shared'
 import { Stores } from '../stores'
 import { IModal, EModal } from '../stores/ModalStore'
 
@@ -25,6 +26,13 @@ interface IProps {
   closeModal?: () => void
   addReview?: (message: string, metadata: string) => Promise<any>
   resetSelections?: () => void
+  models?: IModel[]
+  selectedModel?: IModel
+  modelParameters?: {
+    ngram: INgramParams
+  }
+  setSelectedModel?: (model?: IModel) => void
+  runModel?: (data: IModelParams) => Promise<any>
 }
 
 export const CreateReviewFlowModal = inject((stores: Stores) => ({
@@ -35,11 +43,17 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
   closeModal: () => stores.modalStore.closeModal(EModal.CREATE_REVIEW_FLOW),
   addReview: stores.reviewStore.addReview,
   resetSelections: stores.reviewStore.resetSelections,
+  models: stores.modelStore.models,
+  selectedModel: stores.reviewFlowStore.newReviewFlowSelectedModel,
+  modelParameters: stores.reviewFlowStore.newReviewFlowModelParameters,
+  setSelectedModel: stores.reviewFlowStore.setSelectedNewReviewFlowModel,
+  runModel: stores.modelStore.runModel,
 }))
 (observer((props: IProps) => {
   const {
     className, courseId, exerciseId, searchParams, modal,
-    closeModal, addReview, resetSelections
+    models, selectedModel, modelParameters, setSelectedModel, runModel,
+    closeModal, addReview, resetSelections,
   } = props
   function handleClose() {
     closeModal!()
@@ -64,6 +78,9 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
     } else {
       onError()
     }
+  }
+  function handleReviewFlowSubmit() {
+
   }
   const ref = useRef(null)
   useClickOutside(ref, (e) => handleClose(), modal!.isOpen)
@@ -95,11 +112,28 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
               <Title>Model</Title>
               <div><Button>Use current model</Button></div>
             </ModelHeader>
+            <SelectModel
+              models={models}
+              selectedModel={selectedModel}
+              modelParameters={modelParameters}
+              setSelectedModel={setSelectedModel}
+              runModel={runModel}
+            />
           </ModelParams>
-          <AddReviewForm
-            onSubmit={handleReviewSubmit}
-            onCancel={handleClose}
-          />
+          <ReviewParams>
+            <ReviewHeader>
+              <Title>Review</Title>
+              <div></div>
+            </ReviewHeader>
+            <AddReviewForm
+              onSubmit={handleReviewSubmit}
+              onCancel={handleClose}
+            />
+          </ReviewParams>
+          <ButtonControls>
+            <Button intent="success" onClick={handleReviewFlowSubmit}>Create</Button>
+            <Button intent="transparent" onClick={onCancel}>Cancel</Button>
+          </ButtonControls>
         </Body>
       }
     ></Modal>
@@ -132,6 +166,7 @@ const Header = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
+  margin-bottom: 1rem;
   width: 100%;
 `
 const TitleWrapper = styled.div`
@@ -148,6 +183,8 @@ const TitleWrapper = styled.div`
 `
 const Title = styled.h3``
 const SearchParams = styled.div`
+  max-width: 700px;
+  width: 100%;
 `
 const SearchHeader = styled.div`
   align-items: center;
@@ -157,6 +194,8 @@ const SearchHeader = styled.div`
   }
 `
 const ModelParams = styled.div`
+  max-width: 700px;
+  width: 100%;
 `
 const ModelHeader = styled.div`
   align-items: center;
@@ -165,12 +204,20 @@ const ModelHeader = styled.div`
     margin-right: 2rem;
   }
 `
-const Buttons = styled.div`
+const ReviewParams = styled.div`
+  max-width: 700px;
+  width: 100%;
+`
+const ReviewHeader = styled.div`
+  align-items: center;
+  display: flex;
+`
+const ButtonControls = styled.div`
   align-items: center;
   display: flex;
   justify-content: center;
   width: 100%;
-  & > *:first-child {
-    margin-right: 1rem;
+  & > * + * {
+    margin-left: 1rem;
   }
 `

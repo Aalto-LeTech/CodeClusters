@@ -44,8 +44,8 @@ export class ModelStore {
   @action reset() {
   }
 
-  @action setSelectedModel = (title?: string) => {
-    this.selectedModel = this.models.find(m => m.title === title)
+  @action setSelectedModel = (model?: IModel) => {
+    this.selectedModel = model
   }
 
   @action runModel = async (data: IModelParams) => {

@@ -1,46 +1,48 @@
-import React, { memo, useEffect, useState } from 'react'
-import styled from 'styled-components'
+import React, { useState, useEffect } from 'react'
 import { inject, observer } from 'mobx-react'
-
-import { MdKeyboardArrowRight } from 'react-icons/md'
+import styled from '../../theme/styled'
 import { FiTrash } from 'react-icons/fi'
+import { MdKeyboardArrowRight } from 'react-icons/md'
 
+import { ModelDescription } from './ModelDescription'
+import { ModelParameters } from './ModelParameters'
 import { Icon } from '../../elements/Icon'
 import { Dropdown } from '../../elements/Dropdown'
 
+import {
+  IModel, IModelParams, INgramParams
+} from 'shared'
 import { Stores } from '../../stores'
-import { ModelStore } from '../../stores/ModelStore'
-import { SearchStore } from '../../stores/SearchStore'
 
 interface IProps {
   className?: string
-  modelStore?: ModelStore
-  searchStore?: SearchStore
+  models?: IModel[]
+  selectedModel?: IModel
+  modelParameters?: {
+    ngram: INgramParams
+  }
+  setSelectedModel?: (model?: IModel) => void
+  runModel?: (data: IModelParams) => Promise<any>
 }
 
-const SelectModelEl = inject((stores: Stores) => ({
-  modelStore: stores.modelStore,
-  searchStore: stores.searchStore,
-}))
-(observer((props: IProps) => {
+const SelectModelEl = observer((props: IProps) => {
   const {
-    className, modelStore, searchStore
+    className, models, selectedModel, modelParameters, setSelectedModel, runModel
   } = props
-  const [loading, setLoading] = useState(false)
-  const modelOptions = modelStore!.models.map(m => ({ key: m.model_id, value: m.title }))
+  const [modelOptions, setModelOptions] = useState(models!.map(m => ({ key: m.model_id, value: m.title })))
 
   useEffect(() => {
-    setLoading(true)
-    modelStore!.getModels().then((models) => {
-      setLoading(false)
-    })
-  }, [])
+    setModelOptions(models!.map(m => ({ key: m.model_id, value: m.title })))
+  }, [models])
 
   function handleSelectModel(option: { key: string, value: string }) {
-    modelStore!.setSelectedModel(option.value)
+    setSelectedModel!(models?.find(m => m.title === option.value))
   }
   function handleModelTrashClick() {
-    modelStore!.setSelectedModel()
+    setSelectedModel!()
+  }
+  function handleRunModel(data: IModelParams) {
+    return runModel!(data)
   }
   function renderDropdownMenu(content: React.ReactNode) {
     return (
@@ -50,7 +52,6 @@ const SelectModelEl = inject((stores: Stores) => ({
       </>
     )
   }
-
   return (
     <Container className={className}>
       <InfoText>
@@ -58,7 +59,7 @@ const SelectModelEl = inject((stores: Stores) => ({
       </InfoText>
       <DropdownField>
         <SelectModelDropdown
-          selected={modelStore!.selectedModel?.model_id}
+          selected={selectedModel?.model_id}
           options={modelOptions}
           placeholder="Select model"
           fullWidth
@@ -67,18 +68,24 @@ const SelectModelEl = inject((stores: Stores) => ({
         />
         <Icon button onClick={handleModelTrashClick}><FiTrash size={18}/></Icon>
       </DropdownField>
+      <ModelDescription selectedModel={selectedModel}/>
+      <ModelParameters
+        selectedModel={selectedModel}
+        modelParameters={modelParameters!}
+        runModel={handleRunModel}
+      />
     </Container>
   )
-}))
+})
 
-const Container = styled.section`
-  align-items: center;
+const Container = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 1rem 1rem 0 1rem;
+  max-width: 700px;
+  width: 100%;
 `
 const InfoText = styled.p`
-  margin: 0 0 1rem 1rem;
+  margin: 1rem 0;
 `
 const DropdownField = styled.div`
   display: flex;
