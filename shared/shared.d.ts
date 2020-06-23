@@ -159,15 +159,16 @@ declare module 'shared' {
   }
   // Model
   export interface IModel {
-    model_id: string // basically 'ngram'
+    model_id: IModelId // basically 'ngram'
     title: string
     description: string
   }
   export type IModelParams = INgramParams | IMetricsParams
+  export type IModelId = 'ngram'
   export type IRunModelResponse = IRunNgramResponse
   // Metrics model API
   export interface IMetricsParams {
-    model_id: string
+    model_id: IModelId
   }
   export interface IRunMetricsParams extends IMetricsParams {
     submissions: { id: string, code: string }[]
@@ -215,7 +216,7 @@ declare module 'shared' {
   export type DimVisualization = ITSNEParams | IUMAPParams
   export type TokenSetType = 'modified' | 'complete' | 'keywords'
   export interface INgramParams {
-    model_id: string
+    model_id: IModelId
     token_set?: TokenSetType
     ngrams?: [number, number]
     clustering_params?: ClusteringAlgo
@@ -226,7 +227,7 @@ declare module 'shared' {
     submissions: { id: string, code: string }[]
   }
   export interface IRunNgramResponse {
-    model_id: string
+    model_id: IModelId
     ngram: {
       clusters: { [id: string]: string[] }
       '2d': { id: string, x: number, y: number, cluster: number }[]

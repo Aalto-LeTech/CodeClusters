@@ -1,24 +1,22 @@
-import React, { memo, useMemo, useState, useEffect } from 'react'
-import { inject, observer } from 'mobx-react'
+import React, { useState } from 'react'
+import { observer } from 'mobx-react'
 import styled from '../../theme/styled'
 
 import { MdKeyboardArrowRight } from 'react-icons/md'
-import { FiChevronDown, FiChevronUp, FiTrash } from 'react-icons/fi'
+import { FiChevronDown, FiChevronUp } from 'react-icons/fi'
 
 import { Button } from '../../elements/Button'
 import { Icon } from '../../elements/Icon'
 
-import { NgramParametersForm } from './NgramParametersForm'
-
-import { ModelStore } from '../../stores/ModelStore'
+import { IModel } from 'shared'
 
 interface IProps {
   className?: string
-  modelStore?: ModelStore
+  selectedModel?: IModel
 }
 
-const ModelDescriptionEl = inject('modelStore')(observer((props: IProps) => {
-  const { className, modelStore } = props
+const ModelDescriptionEl = observer((props: IProps) => {
+  const { className, selectedModel } = props
   const [minimized, setMinimized] = useState(true)
 
   function handleClickToggle() {
@@ -27,21 +25,21 @@ const ModelDescriptionEl = inject('modelStore')(observer((props: IProps) => {
   return (
     <Container className={className}>
       <Header>
-        <Button onClick={handleClickToggle} intent="success" disabled={modelStore!.selectedModel === undefined}>
+        <Button onClick={handleClickToggle} intent="success" disabled={selectedModel === undefined}>
           <Icon><MdKeyboardArrowRight size={24}/></Icon>
           <Title>{`${minimized ? 'Show' : 'Hide'} model description`}</Title>
         </Button>
-        <Icon button onClick={handleClickToggle} disabled={modelStore!.selectedModel === undefined}>
+        <Icon button onClick={handleClickToggle} disabled={selectedModel === undefined}>
           { minimized ? <FiChevronDown size={18}/> : <FiChevronUp size={18}/>}
         </Icon>
       </Header>
       <Body minimized={minimized}>
-        <h2>{modelStore!.selectedModel?.title}</h2>
-        <Description>{modelStore!.selectedModel?.description}</Description>
+        <h2>{selectedModel?.title}</h2>
+        <Description>{selectedModel?.description}</Description>
       </Body>
     </Container>
   )
-}))
+})
 
 const Container = styled.section`
   align-items: center;

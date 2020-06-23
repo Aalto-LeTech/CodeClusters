@@ -6,18 +6,21 @@ import { FiX } from 'react-icons/fi'
 import useClickOutside from '../hooks/useClickOutside'
 import useScrollLock from '../hooks/useScrollLock'
 
+import { SearchForm } from '../components/SearchPage/SearchForm'
 import { AddReviewForm, IAddReviewFormParams } from '../components/AddReviewForm'
 import { Modal } from '../elements/Modal'
 import { Button } from '../elements/Button'
 import { Icon } from '../elements/Icon'
 
-import { IReviewCreateParams } from 'shared'
+import { IReviewCreateParams, ISearchCodeParams } from 'shared'
 import { Stores } from '../stores'
 import { IModal, EModal } from '../stores/ModalStore'
 
 interface IProps {
   className?: string
-  currentSelectionCount?: number
+  courseId?: number
+  exerciseId?: number
+  searchParams?: ISearchCodeParams
   modal?: IModal
   closeModal?: () => void
   addReview?: (message: string, metadata: string) => Promise<any>
@@ -25,13 +28,19 @@ interface IProps {
 }
 
 export const CreateReviewFlowModal = inject((stores: Stores) => ({
+  courseId: stores.courseStore.courseId,
+  exerciseId: stores.courseStore.exerciseId,
+  searchParams: stores.searchStore.searchParams,
   modal: stores.modalStore.modals[EModal.CREATE_REVIEW_FLOW],
   closeModal: () => stores.modalStore.closeModal(EModal.CREATE_REVIEW_FLOW),
   addReview: stores.reviewStore.addReview,
   resetSelections: stores.reviewStore.resetSelections,
 }))
 (observer((props: IProps) => {
-  const { className, modal, closeModal, addReview, resetSelections } = props
+  const {
+    className, courseId, exerciseId, searchParams, modal,
+    closeModal, addReview, resetSelections
+  } = props
   function handleClose() {
     closeModal!()
   }
@@ -41,6 +50,10 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
   }
   function onCancel() {
     closeModal!()
+  }
+  function handleSearch(params: ISearchCodeParams) {
+    console.log(params)
+    return Promise.resolve()
   }
   async function handleReviewSubmit(payload: IAddReviewFormParams, onSuccess: () => void, onError: () => void) {
     const result = await addReview!(payload.message, payload.metadata)
@@ -65,12 +78,24 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
             <Icon button onClick={handleClose}><FiX size={24}/></Icon>
           </Header>
           <SearchParams>
-            <SearchTitle>Search</SearchTitle>
-            <div><Button>Use current search</Button></div>
+            <SearchHeader>
+              <Title>Search</Title>
+              <div><Button>Use current search</Button></div>
+            </SearchHeader>
+            <SearchForm
+              id="reviewflow_search"
+              visible={true}
+              courseId={courseId}
+              exerciseId={exerciseId}
+              onSearch={handleSearch}
+            />
           </SearchParams>
-          <SubmissionsVisualization>
-            this should visualize the selected submissions as eg diff of submissions
-          </SubmissionsVisualization>
+          <ModelParams>
+            <ModelHeader>
+              <Title>Model</Title>
+              <div><Button>Use current model</Button></div>
+            </ModelHeader>
+          </ModelParams>
           <AddReviewForm
             onSubmit={handleReviewSubmit}
             onCancel={handleClose}
@@ -88,10 +113,14 @@ const Body = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  max-width: 600px;
+  max-width: 1200px;
   padding: 20px;
-  text-align: center;
-  width: calc(100% - 20px);
+  position: absolute;
+  top: 0;
+  width: calc(100% - 20px - 2rem);
+  @media only screen and (max-width: ${({ theme }) => theme.breakpoints.DEFAULT_WIDTH}) {
+    max-width: 800px;
+  }
   .close-icon {
     align-self: flex-end;
     position: relative;
@@ -117,16 +146,24 @@ const TitleWrapper = styled.div`
     padding: 0;
   }
 `
-const SearchTitle = styled.h3``
+const Title = styled.h3``
 const SearchParams = styled.div`
-  align-items: center;
-  display: flex;
 `
-const SubmissionsVisualization = styled.div`
+const SearchHeader = styled.div`
   align-items: center;
   display: flex;
-  justify-content: center;
-  padding: 2rem 0;
+  & > *:first-child {
+    margin-right: 2rem;
+  }
+`
+const ModelParams = styled.div`
+`
+const ModelHeader = styled.div`
+  align-items: center;
+  display: flex;
+  & > *:first-child {
+    margin-right: 2rem;
+  }
 `
 const Buttons = styled.div`
   align-items: center;

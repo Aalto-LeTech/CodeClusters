@@ -122,18 +122,13 @@ export interface INgramFormParams {
 interface IProps {
   className?: string
   visible: boolean
-  initialData?: Partial<INgramParams>
-  onUpdate?: (data: INgramParams) => void
-  onSubmit?: (data: INgramParams) => Promise<any | undefined>
-  onCancel?: () => void
+  initialData: Partial<INgramParams>
+  onSubmit: (data: INgramParams) => Promise<any>
+  onCancel: () => void
 }
 
-const NgramParametersFormEl = inject((stores: Stores) => ({
-  initialData: stores.modelStore.modelParameters[NgramModelId],
-  onSubmit: (data: INgramParams) => stores.modelStore.runModel(data)
-}))
-(observer((props: IProps) => {
-  const { className, initialData, onSubmit, onCancel, visible } = props
+const NgramParametersFormEl = observer((props: IProps) => {
+  const { className, visible, initialData, onSubmit, onCancel } = props
   const methods = useForm<INgramFormParams>({
     validationResolver: resolver,
     defaultValues: {
@@ -270,7 +265,7 @@ const NgramParametersFormEl = inject((stores: Stores) => ({
       </Form>
     </FormContext>
   )
-}))
+})
 
 const TokenSetDropdown = GenericDropdown<TokenSetType, string>()
 

@@ -10,37 +10,51 @@ import { Icon } from '../../elements/Icon'
 
 import { NgramParametersForm } from './NgramParametersForm'
 
-import { ModelStore } from '../../stores/ModelStore'
+import {
+  IModel, IModelId, IModelParams, INgramParams, NgramModelId
+} from 'shared'
 
 interface IProps {
   className?: string
-  modelStore?: ModelStore
+  selectedModel?: IModel
+  modelParameters: {
+    ngram: INgramParams
+  }
+  runModel: (data: IModelParams) => Promise<any>
 }
 
-const ModelParametersEl = inject('modelStore')(observer((props: IProps) => {
-  const { className, modelStore } = props
+const ModelParametersEl = observer((props: IProps) => {
+  const { className, selectedModel, modelParameters, runModel } = props
   const [minimized, setMinimized] = useState(true)
 
   function handleClickToggle() {
     setMinimized(!minimized)
   }
+  function handleModelSubmit(data: IModelParams) {
+    return runModel!(data)
+  }
   return (
     <Container className={className}>
       <Header>
-        <Button onClick={handleClickToggle} intent="success" disabled={modelStore!.selectedModel === undefined}>
+        <Button onClick={handleClickToggle} intent="success" disabled={selectedModel === undefined}>
           <Icon><MdKeyboardArrowRight size={24}/></Icon>
           <Title>{`${minimized ? 'Set' : 'Hide'} model parameters`}</Title>
         </Button>
-        <Icon button onClick={handleClickToggle} disabled={modelStore!.selectedModel === undefined}>
+        <Icon button onClick={handleClickToggle} disabled={selectedModel === undefined}>
           { minimized ? <FiChevronDown size={18}/> : <FiChevronUp size={18}/>}
         </Icon>
       </Header>
       <Body minimized={minimized}>
-        <NgramParametersForm visible={modelStore!.selectedModel?.model_id === 'ngram'}/>
+        <NgramParametersForm
+          visible={selectedModel?.model_id === NgramModelId}
+          initialData={modelParameters![NgramModelId]}
+          onSubmit={handleModelSubmit}
+          onCancel={() => setMinimized(true)}
+        />
       </Body>
     </Container>
   )
-}))
+})
 
 const Container = styled.section`
   align-items: center;
@@ -71,9 +85,6 @@ const Body = styled.div<{ minimized: boolean}>`
   max-width: 700px;
   visibility: ${({ minimized }) => minimized ? 'hidden' : 'initial'};
   width: 100%;
-`
-const Description = styled.p`
-  white-space: pre-wrap;
 `
 
 export const ModelParameters = styled(ModelParametersEl)``

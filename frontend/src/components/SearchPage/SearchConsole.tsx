@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { inject, observer } from 'mobx-react'
 import { withRouter, RouteComponentProps } from 'react-router'
@@ -58,15 +58,16 @@ const SearchConsoleEl = inject((stores: Stores) => ({
     className, history, setInitialSearchParams, search, deactivateLocalSearch, initialSearchParams,
     searchParams, courseId, exerciseId, visible
   } = props
-
+  const [mounted, setMounted] = useState(false)
   useEffect(() => {
     const current = createSearchQueryParams(removeEmptyValues(searchParams!))
-    if (history.location.search !== current) {
+    if (history.location.search !== current && !mounted) {
       const searchQuery = parseSearchQueryParams(history.location.search)
       setInitialSearchParams!(searchQuery)
     } else {
       history.push(current)
     }
+    setMounted(true)
   }, [searchParams])
 
   function handleChange() {
@@ -79,6 +80,7 @@ const SearchConsoleEl = inject((stores: Stores) => ({
   return (
     <SearchForm
       className={className}
+      id="main_search"
       visible={visible}
       courseId={courseId}
       exerciseId={exerciseId}

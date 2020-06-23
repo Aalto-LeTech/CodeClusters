@@ -12,33 +12,57 @@ import { Button } from '../../elements/Button'
 import { Icon } from '../../elements/Icon'
 import { Dropdown } from '../../elements/Dropdown'
 
-import { ModelStore } from '../../stores/ModelStore'
+import {
+  IModel, IModelParams, IRunModelResponse, INgramParams
+} from 'shared'
+import { Stores } from '../../stores'
 
 interface IProps {
   className?: string
   visible: boolean
-  modelStore?: ModelStore
+  models?: IModel[]
+  selectedModel?: IModel
+  modelParameters?: {
+    ngram: INgramParams
+  }
+  getModels?: () => Promise<IModel[] | undefined>
+  setSelectedModel?: (title?: string) => void
+  runModel?: (data: IModelParams) => Promise<any>
 }
 
-const ModelingEl = inject('modelStore')(observer((props: IProps) => {
+const ModelingEl = inject((stores: Stores) => ({
+  models: stores.modelStore.models,
+  selectedModel: stores.modelStore.selectedModel,
+  modelParameters: stores.modelStore.modelParameters,
+  getModels: stores.modelStore.getModels,
+  setSelectedModel: stores.modelStore.setSelectedModel,
+  runModel: stores.modelStore.runModel,
+}))
+(observer((props: IProps) => {
   const {
-    className, visible, modelStore
+    className, visible, models, selectedModel, modelParameters, getModels, setSelectedModel, runModel
   } = props
   const [loading, setLoading] = useState(false)
-  const modelOptions = modelStore!.models.map(m => ({ key: m.model_id, value: m.title }))
+  const [modelOptions, setModelOptions] = useState(models!.map(m => ({ key: m.model_id, value: m.title })))
 
   useEffect(() => {
     setLoading(true)
-    modelStore!.getModels().then((models) => {
+    getModels!().then((result) => {
       setLoading(false)
+      if (result) {
+        setModelOptions(result.map(m => ({ key: m.model_id, value: m.title })))
+      }
     })
   }, [])
 
   function handleSelectModel(option: { key: string, value: string }) {
-    modelStore!.setSelectedModel(option.value)
+    setSelectedModel!(option.value)
   }
   function handleModelTrashClick() {
-    modelStore!.setSelectedModel()
+    setSelectedModel!()
+  }
+  function handleRunModel(data: IModelParams) {
+    return runModel!(data)
   }
   function renderDropdownMenu(content: React.ReactNode) {
     return (
@@ -57,7 +81,7 @@ const ModelingEl = inject('modelStore')(observer((props: IProps) => {
           </InfoText>
           <DropdownField>
             <SelectModelDropdown
-              selected={modelStore!.selectedModel?.model_id}
+              selected={selectedModel?.model_id}
               options={modelOptions}
               placeholder="Select model"
               fullWidth
@@ -66,8 +90,12 @@ const ModelingEl = inject('modelStore')(observer((props: IProps) => {
             />
             <Icon button onClick={handleModelTrashClick}><FiTrash size={18}/></Icon>
           </DropdownField>
-          <ModelDescription />
-          <ModelParameters />
+          <ModelDescription selectedModel={selectedModel}/>
+          <ModelParameters
+            selectedModel={selectedModel}
+            modelParameters={modelParameters!}
+            runModel={handleRunModel}
+          />
         </ModelControlsWrapper>
         <LocalSearchForm />
         <ClusteringResults />
