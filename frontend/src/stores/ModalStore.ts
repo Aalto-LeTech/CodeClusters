@@ -14,7 +14,8 @@ export enum EModal {
   DELETE_REVIEWS = 'DELETE_REVIEWS',
   EDIT_SUBMISSION_REVIEW = 'EDIT_SUBMISSION_REVIEW',
   REVIEW_SUBMISSIONS = 'REVIEW_SUBMISSIONS',
-  SUBMISSION_REVIEWS = 'SUBMISSION_REVIEWS'
+  SUBMISSION_REVIEWS = 'SUBMISSION_REVIEWS',
+  CREATE_REVIEW_FLOW = 'CREATE_REVIEW_FLOW'
 }
 
 export class ModalStore {
@@ -53,6 +54,11 @@ export class ModalStore {
       params: {
         submission: {},
         reviews: [],
+      }
+    },
+    [EModal.CREATE_REVIEW_FLOW]: {
+      isOpen: false,
+      params: {
       }
     },
   }

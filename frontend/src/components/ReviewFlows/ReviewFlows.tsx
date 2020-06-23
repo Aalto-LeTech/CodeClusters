@@ -7,17 +7,23 @@ import { TabsMenu } from '../../elements/TabsMenu'
 import { DropdownSearch } from '../../elements/DropdownSearch'
 import { Button } from '../../elements/Button'
 
-import { IReviewFlow } from 'shared'
+import { Stores } from '../../stores'
+import { EModal } from '../../stores/ModalStore'
 import { ReviewFlowStore, ReviewFlowFilterType } from '../../stores/ReviewFlowStore'
 
 interface IProps {
   className?: string
   visible: boolean
   reviewFlowStore?: ReviewFlowStore
+  openCreateReviewFlowModal?: () => void
 }
 
-const ReviewFlowsEl = inject('reviewFlowStore')(observer((props: IProps) => {
-  const { className, visible, reviewFlowStore } = props
+const ReviewFlowsEl = inject((stores: Stores) => ({
+  reviewFlowStore: stores.reviewFlowStore,
+  openCreateReviewFlowModal: () => stores.modalStore.openModal(EModal.CREATE_REVIEW_FLOW),
+}))
+(observer((props: IProps) => {
+  const { className, visible, reviewFlowStore, openCreateReviewFlowModal } = props
   const [loading, setLoading] = useState(false)
   const [searchValue, setSearchValue] = useState('')
 
@@ -56,7 +62,7 @@ const ReviewFlowsEl = inject('reviewFlowStore')(observer((props: IProps) => {
             onChange={handleSearchChange}
             onSelect={handleSelectReviewFlow}
           />
-          <Button>New flow</Button>
+          <Button onClick={() => openCreateReviewFlowModal!()}>New flow</Button>
         </Controls>
         <Flow/>
       </Body>
@@ -72,7 +78,7 @@ const Container = styled.section<{ visible: boolean}>`
 `
 const Controls = styled.div`
   display: flex;
-  margin: 1rem;
+  margin: 1rem 1rem 0 1rem;
   & > ${DropdownSearch} {
     margin-right: 1rem;
     width: 400px;

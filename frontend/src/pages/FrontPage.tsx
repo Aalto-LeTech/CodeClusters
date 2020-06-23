@@ -5,6 +5,7 @@ import styled from '../theme/styled'
 import { SearchView } from '../components/SearchPage'
 import { DeleteReviewSelectionModal } from '../modals/DeleteReviewSelectionModal'
 import { ReviewSubmissionsModal } from '../modals/ReviewSubmissionsModal'
+import { CreateReviewFlowModal } from '../modals/CreateReviewFlowModal'
 import { FloatingMenu } from '../components/FloatingMenu'
 
 import { Stores } from '../stores'
@@ -26,6 +27,7 @@ export const FrontPage = inject((stores: Stores) => ({
       <SearchView/>
       <DeleteReviewSelectionModal />
       <ReviewSubmissionsModal />
+      <CreateReviewFlowModal />
       <FloatingMenu />
     </Container>
   )

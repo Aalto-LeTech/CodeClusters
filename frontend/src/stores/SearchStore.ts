@@ -37,6 +37,8 @@ export class SearchStore {
   @observable searchResults: ISearchCodeResult[] = []
   @observable selectedSearchResult = EMPTY_RESULT
   @observable searchParams: ISearchCodeParams = EMPTY_QUERY
+  // For updating SearchConsole using review flows
+  @observable initialSearchParams: ISearchCodeParams = EMPTY_QUERY
   toastStore: ToastStore
   localSearchStore: LocalSearchStore
 
@@ -75,6 +77,11 @@ export class SearchStore {
       docs
     }
     return searchResult
+  }
+
+  @action setInitialSearchParams = (payload: ISearchCodeParams) => {
+    this.searchParams = payload
+    this.initialSearchParams = payload
   }
 
   @action addSearchResult(result: ISolrSearchCodeResponse) {

@@ -152,6 +152,7 @@ export class ReviewFlowStore {
     let modelingResult
     if (params.steps[0] && params.steps[0].action === 'Search') {
       const searchParams = this.getStepParams(params.steps[0]) as unknown as ISearchCodeParams
+      this.searchStore.setInitialSearchParams(searchParams)
       searchResult = await this.searchStore.search(searchParams)
     }
     if (searchResult && params.steps[1] && params.steps[1].action === 'Model') {

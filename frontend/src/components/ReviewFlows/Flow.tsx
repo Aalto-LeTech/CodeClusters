@@ -54,7 +54,7 @@ const FlowEl = inject((stores: Stores) => ({
       </FlowStepsList>
       <Controls>
         <Button intent="success" loading={loading} onClick={handleClickRunReviewFlow}>Run and review</Button>
-        <Button intent="transparent">Edit</Button>
+        <Button intent="success">Edit</Button>
       </Controls>
     </Container>
   )
