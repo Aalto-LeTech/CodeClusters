@@ -2,7 +2,7 @@ import React, { memo } from 'react'
 import styled from 'styled-components'
 
 import { SelectCourseExercise } from '../SelectCourseExercise'
-import { SearchFlowsModelTabsMenu } from './SearchFlowsModelTabsMenu'
+import { SearchFlowsModelTabsMenu } from '../SearchFlowsModelTabsMenu'
 import { SearchConsole } from './SearchConsole'
 import { SearchResultsList } from './SearchResultsList'
 import { LeftPanel } from './LeftPanel'

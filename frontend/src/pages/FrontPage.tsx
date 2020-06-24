@@ -2,7 +2,7 @@ import React from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../theme/styled'
 
-import { SearchView } from '../components/SearchPage'
+import { SearchView } from '../components/Search'
 import { DeleteReviewSelectionModal } from '../modals/DeleteReviewSelectionModal'
 import { ReviewSubmissionsModal } from '../modals/ReviewSubmissionsModal'
 import { CreateReviewFlowModal } from '../modals/CreateReviewFlowModal'

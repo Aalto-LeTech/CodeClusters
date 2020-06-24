@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { inject, observer } from 'mobx-react'
 import { useForm } from 'react-hook-form'
 
-import { SearchBar } from '../SearchPage/SearchBar'
+import { SearchBar } from '../Search/SearchBar'
 import { CheckBox } from '../../elements/CheckBox'
 import { Input } from '../../elements/Input'
 

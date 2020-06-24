@@ -6,7 +6,7 @@ import { FiX } from 'react-icons/fi'
 import useClickOutside from '../hooks/useClickOutside'
 import useScrollLock from '../hooks/useScrollLock'
 
-import { SearchForm } from '../components/SearchPage/SearchForm'
+import { SearchForm } from '../components/Search/SearchForm'
 import { SelectModel } from '../components/Model/SelectModel'
 import { AddReviewForm, IAddReviewFormParams } from '../components/AddReviewForm'
 import { Modal } from '../elements/Modal'
@@ -149,14 +149,14 @@ const Body = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  max-width: 1200px;
+  max-width: 800px;
   padding: 20px;
   position: absolute;
   top: 0;
   width: calc(100% - 20px - 2rem);
-  @media only screen and (max-width: ${({ theme }) => theme.breakpoints.DEFAULT_WIDTH}) {
+  /* @media only screen and (max-width: ${({ theme }) => theme.breakpoints.DEFAULT_WIDTH}) {
     max-width: 800px;
-  }
+  } */
   .close-icon {
     align-self: flex-end;
     position: relative;

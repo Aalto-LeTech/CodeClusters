@@ -1,12 +1,12 @@
 import React, { memo, useState } from 'react'
 import { inject, observer } from 'mobx-react'
-import styled from '../../theme/styled'
+import styled from '../theme/styled'
 
-import { SearchConsole } from './SearchConsole'
-import { ReviewFlows } from '../ReviewFlows'
-import { ModelTabView } from '../Model/ModelTabView'
+import { SearchConsole } from './Search/SearchConsole'
+import { ReviewFlows } from './ReviewFlows'
+import { ModelTabView } from './Model/ModelTabView'
 
-import { Stores } from '../../stores'
+import { Stores } from '../stores'
 
 interface IProps {
   className?: string
