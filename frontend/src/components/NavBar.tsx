@@ -14,7 +14,7 @@ interface IProps extends RouteComponentProps<{}> {
 }
 
 export const NavBar = inject('authStore')(observer((props: IProps) => {
-  function handleLogout(e : React.MouseEvent<HTMLElement>) {
+  function handleLogout(e : React.MouseEvent<any>) {
     authStore!.logout()
     history.push('/')
   }
