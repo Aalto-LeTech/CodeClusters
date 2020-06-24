@@ -1,9 +1,9 @@
-import React, { memo, useMemo, useState, useEffect } from 'react'
-import { inject, observer } from 'mobx-react'
+import React, { forwardRef, useState } from 'react'
+import { observer } from 'mobx-react'
 import styled from '../../theme/styled'
 
 import { MdKeyboardArrowRight } from 'react-icons/md'
-import { FiChevronDown, FiChevronUp, FiTrash } from 'react-icons/fi'
+import { FiChevronDown, FiChevronUp } from 'react-icons/fi'
 
 import { Button } from '../../elements/Button'
 import { Icon } from '../../elements/Icon'
@@ -17,21 +17,18 @@ import {
 interface IProps {
   className?: string
   selectedModel?: IModel
-  modelParameters: {
+  initialModelParameters: {
     ngram: INgramParams
   }
-  runModel: (data: IModelParams) => Promise<any>
+  onModelSubmit?: (data: IModelParams) => Promise<any>
 }
 
-const ModelParametersEl = observer((props: IProps) => {
-  const { className, selectedModel, modelParameters, runModel } = props
+const ModelParametersEl = observer(forwardRef((props: IProps, ref) => {
+  const { className, selectedModel, initialModelParameters, onModelSubmit } = props
   const [minimized, setMinimized] = useState(true)
 
-  function handleClickToggle() {
+  async function handleClickToggle() {
     setMinimized(!minimized)
-  }
-  function handleModelSubmit(data: IModelParams) {
-    return runModel!(data)
   }
   return (
     <Container className={className}>
@@ -46,15 +43,16 @@ const ModelParametersEl = observer((props: IProps) => {
       </Header>
       <Body minimized={minimized}>
         <NgramParametersForm
+          ref={ref}
           visible={selectedModel?.model_id === NgramModelId}
-          initialData={modelParameters![NgramModelId]}
-          onSubmit={handleModelSubmit}
+          initialData={initialModelParameters![NgramModelId]}
+          onSubmit={onModelSubmit}
           onCancel={() => setMinimized(true)}
         />
       </Body>
     </Container>
   )
-})
+}))
 
 const Container = styled.section`
   align-items: center;

@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useState } from 'react'
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { observer } from 'mobx-react'
 import { useForm } from 'react-hook-form'
@@ -39,11 +39,11 @@ interface IProps {
   onSearch: (payload: ISearchCodeParams) => Promise<any>
 }
 
-const SearchFormEl = observer((props: IProps) => {
+const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
   const {
     className, id, defaultSearchParams, courseId, exerciseId, onChange, onSearch,
   } = props
-  const { register, setValue, handleSubmit } = useForm<ISearchParams>({})
+  const { register, setValue, getValues, triggerValidation, handleSubmit } = useForm<ISearchParams>({})
   const [filterText, setFilterText] = useState('')
   const [wordFilters, setWordFilters] = useState([] as string[])
   const [submitInProgress, setSubmitInProgress] = useState(false)
@@ -60,6 +60,10 @@ const SearchFormEl = observer((props: IProps) => {
     })
     setValue(values)
   }, [defaultSearchParams])
+
+  useImperativeHandle(ref, () => ({
+    getValidatedData: () => Promise.all([triggerValidation(), normalizeFormData(getValues())])
+  }))
 
   function handleChange() {
     debouncedSearch()
@@ -79,7 +83,7 @@ const SearchFormEl = observer((props: IProps) => {
       submitButtonRef.current.click()
     }
   }
-  const onSubmit = async (data: ISearchParams, e?: React.BaseSyntheticEvent) => {
+  function normalizeFormData(data: ISearchParams) {
     const payload: ISearchCodeParams = data
     if (payload.q === undefined || payload.q === '') {
       payload.q = '*'
@@ -93,8 +97,11 @@ const SearchFormEl = observer((props: IProps) => {
     setSubmitInProgress(true)
     // Remove false, undefined and empty values since they are their default values
     // to keep the URL from being cluttered with redundant parameters
-    const pruned = removeEmptyValues(payload) as ISearchCodeParams
-    onSearch!(pruned).finally(() => {
+    return removeEmptyValues(payload) as ISearchCodeParams
+  }
+  const onSubmit = async (data: ISearchParams, e?: React.BaseSyntheticEvent) => {
+    setSubmitInProgress(true)
+    onSearch!(normalizeFormData(data)).finally(() => {
       setSubmitInProgress(false)
     })
   }
@@ -179,7 +186,7 @@ const SearchFormEl = observer((props: IProps) => {
       <HiddenSubmitButton type="submit" ref={submitButtonRef}></HiddenSubmitButton>
     </Form>
   )
-})
+}))
 
 const Form = styled.form`
   align-items: center;

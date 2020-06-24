@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { forwardRef, memo, useImperativeHandle, useEffect, useState } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../theme/styled'
 import { useForm } from 'react-hook-form'
@@ -6,28 +6,30 @@ import { useForm } from 'react-hook-form'
 import { Button } from '../elements/Button'
 import { Input } from '../elements/Input'
 
+import { IReviewCreateFormParams } from 'shared'
+
 interface IProps {
   className?: string
-  initialData?: IAddReviewFormParams
-  onUpdate?: (data: IAddReviewFormParams) => void
-  onSubmit: (data: IAddReviewFormParams, onSuccess: () => void, onError: () => void) => Promise<void>
+  ref?: React.RefObject<HTMLFormElement>
+  initialData?: IReviewCreateFormParams
+  onUpdate?: (data: IReviewCreateFormParams) => void
+  onSubmit?: (data: IReviewCreateFormParams, onSuccess: () => void, onError: () => void) => Promise<void>
   onCancel?: () => void
 }
-export interface IAddReviewFormParams {
-  message: string
-  metadata: string
-}
 
-const AddReviewFormEl = memo((props: IProps) => {
-  const { className, initialData, onUpdate, onCancel } = props
-  const { register, errors, reset, handleSubmit } = useForm<IAddReviewFormParams>({
+const AddReviewFormEl = memo(forwardRef((props: IProps, ref: any) => {
+  const { className, initialData, onCancel, onSubmit } = props
+  const { register, errors, reset, triggerValidation, getValues, handleSubmit } = useForm<IReviewCreateFormParams>({
     defaultValues: initialData
   })
   const [submitInProgress, setSubmitInProgress] = useState(false)
 
-  const onSubmit = async (data: IAddReviewFormParams, e?: React.BaseSyntheticEvent) => {
+  useImperativeHandle(ref, () => ({
+    getValidatedData: () => Promise.all([triggerValidation(), getValues()])
+  }))
+  const onSubmitForm = async (data: IReviewCreateFormParams, e?: React.BaseSyntheticEvent) => {
     setSubmitInProgress(true)
-    props.onSubmit(data, () => {
+    onSubmit!(data, () => {
       setSubmitInProgress(false)
       reset()
     }, () => {
@@ -35,7 +37,7 @@ const AddReviewFormEl = memo((props: IProps) => {
     })
   }
   return (
-    <Form onSubmit={handleSubmit(onSubmit)} className={className}>
+    <Form className={className} onSubmit={handleSubmit(onSubmitForm)}>
       <FormField>
         <label htmlFor="message">Message</label>
         <Input
@@ -46,9 +48,9 @@ const AddReviewFormEl = memo((props: IProps) => {
             required: true,
             minLength: 1
           })}/>
-          <Error>
-            {errors.message && 'Review requires message with at least 1 character.'}
-          </Error>
+        <Error>
+          {errors.message && 'Review requires message with at least 1 character.'}
+        </Error>
       </FormField>
       <FormField>
         <label htmlFor="metadata">Metadata</label>
@@ -58,7 +60,7 @@ const AddReviewFormEl = memo((props: IProps) => {
           name="metadata"
           ref={register}/>
       </FormField>
-      <Buttons>
+      { onSubmit && <Buttons>
         <Button
           type="submit"
           intent="success"
@@ -69,10 +71,10 @@ const AddReviewFormEl = memo((props: IProps) => {
           intent="transparent"
           onClick={onCancel}
         >Cancel</Button>
-      </Buttons>
+      </Buttons>}
     </Form>
   )
-})
+}))
 
 const Form = styled.form`
   width: 100%;

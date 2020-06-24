@@ -5,7 +5,7 @@ import { FiTrash, FiX } from 'react-icons/fi'
 
 import { Icon } from '../../elements/Icon'
 import { Button } from '../../elements/Button'
-import { AddReviewForm, IAddReviewFormParams } from '../AddReviewForm'
+import { AddReviewForm } from '../AddReviewForm'
 
 import { IReview } from 'shared'
 import { Stores } from '../../stores'

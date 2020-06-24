@@ -189,7 +189,7 @@ export class ReviewStore {
     return result
   }
 
-  @action addReview = async (message: string, metadata: string) => {
+  @action addReview = async (message: string, metadata?: string) => {
     const payload = {
       message,
       metadata,

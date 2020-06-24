@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { forwardRef, useState, useEffect } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../../theme/styled'
 import { FiTrash } from 'react-icons/fi'
@@ -18,16 +18,16 @@ interface IProps {
   className?: string
   models?: IModel[]
   selectedModel?: IModel
-  modelParameters?: {
+  initialModelParameters?: {
     ngram: INgramParams
   }
   setSelectedModel?: (model?: IModel) => void
-  runModel?: (data: IModelParams) => Promise<any>
+  onModelSubmit?: (data: IModelParams) => Promise<any>
 }
 
-const SelectModelEl = observer((props: IProps) => {
+const SelectModelEl = observer(forwardRef((props: IProps, ref) => {
   const {
-    className, models, selectedModel, modelParameters, setSelectedModel, runModel
+    className, models, selectedModel, initialModelParameters, setSelectedModel, onModelSubmit
   } = props
   const [modelOptions, setModelOptions] = useState(models!.map(m => ({ key: m.model_id, value: m.title })))
 
@@ -40,9 +40,6 @@ const SelectModelEl = observer((props: IProps) => {
   }
   function handleModelTrashClick() {
     setSelectedModel!()
-  }
-  function handleRunModel(data: IModelParams) {
-    return runModel!(data)
   }
   function renderDropdownMenu(content: React.ReactNode) {
     return (
@@ -70,13 +67,14 @@ const SelectModelEl = observer((props: IProps) => {
       </DropdownField>
       <ModelDescription selectedModel={selectedModel}/>
       <ModelParameters
+        ref={ref}
         selectedModel={selectedModel}
-        modelParameters={modelParameters!}
-        runModel={handleRunModel}
+        initialModelParameters={initialModelParameters!}
+        onModelSubmit={onModelSubmit}
       />
     </Container>
   )
-})
+}))
 
 const Container = styled.div`
   display: flex;

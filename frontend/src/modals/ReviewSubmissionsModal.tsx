@@ -6,12 +6,12 @@ import { FiX } from 'react-icons/fi'
 import useClickOutside from '../hooks/useClickOutside'
 import useScrollLock from '../hooks/useScrollLock'
 
-import { AddReviewForm, IAddReviewFormParams } from '../components/AddReviewForm'
+import { AddReviewForm } from '../components/AddReviewForm'
 import { Modal } from '../elements/Modal'
 import { Button } from '../elements/Button'
 import { Icon } from '../elements/Icon'
 
-import { IReviewCreateParams } from 'shared'
+import { IReviewCreateFormParams } from 'shared'
 import { Stores } from '../stores'
 import { IModal, EModal } from '../stores/ModalStore'
 
@@ -20,7 +20,7 @@ interface IProps {
   currentSelectionCount?: number
   modal?: IModal
   closeModal?: () => void
-  addReview?: (message: string, metadata: string) => Promise<any>
+  addReview?: (message: string, metadata?: string) => Promise<any>
   resetSelections?: () => void
 }
 
@@ -43,7 +43,7 @@ export const ReviewSubmissionsModal = inject((stores: Stores) => ({
   function onCancel() {
     closeModal!()
   }
-  async function handleReviewSubmit(payload: IAddReviewFormParams, onSuccess: () => void, onError: () => void) {
+  async function handleReviewSubmit(payload: IReviewCreateFormParams, onSuccess: () => void, onError: () => void) {
     const result = await addReview!(payload.message, payload.metadata)
     if (result) {
       onSuccess()

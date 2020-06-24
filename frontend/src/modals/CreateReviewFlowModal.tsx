@@ -8,15 +8,18 @@ import useScrollLock from '../hooks/useScrollLock'
 
 import { SearchForm } from '../components/Search/SearchForm'
 import { SelectModel } from '../components/Model/SelectModel'
-import { AddReviewForm, IAddReviewFormParams } from '../components/AddReviewForm'
+import { AddReviewForm } from '../components/AddReviewForm'
 import { Modal } from '../elements/Modal'
 import { Button } from '../elements/Button'
 import { Icon } from '../elements/Icon'
 
-import { IReviewCreateParams, ISearchCodeParams, IModel, IModelParams, INgramParams } from 'shared'
+import { ISearchCodeParams, IModel, IModelParams, INgramParams, IReviewCreateFormParams } from 'shared'
 import { Stores } from '../stores'
 import { IModal, EModal } from '../stores/ModalStore'
 
+interface IFormRefMethods<T> {
+  getValidatedData: () => Promise<[boolean, T]>
+}
 interface IProps {
   className?: string
   courseId?: number
@@ -55,6 +58,7 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
     models, selectedModel, modelParameters, setSelectedModel, runModel,
     closeModal, addReview, resetSelections,
   } = props
+
   function handleClose() {
     closeModal!()
   }
@@ -69,19 +73,27 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
     console.log(params)
     return Promise.resolve()
   }
-  async function handleReviewSubmit(payload: IAddReviewFormParams, onSuccess: () => void, onError: () => void) {
-    const result = await addReview!(payload.message, payload.metadata)
-    if (result) {
-      onSuccess()
-      resetSelections!()
-      closeModal!()
-    } else {
-      onError()
+  async function handleReviewFlowSubmit() {
+    let hasError = false
+    const searchFormData = await searchFormRef?.current?.getValidatedData()
+    const modelFormData = await modelFormRef?.current?.getValidatedData()
+    const reviewFormData = await reviewFormRef?.current?.getValidatedData()
+    if (searchFormData && !searchFormData[0]) {
+      hasError = true
     }
+    if (modelFormData && !modelFormData[0]) {
+      hasError = true
+    }
+    if (reviewFormData && !reviewFormData[0]) {
+      hasError = true
+    }
+    console.log(searchFormData)
+    console.log(modelFormData)
+    console.log(reviewFormData)
   }
-  function handleReviewFlowSubmit() {
-
-  }
+  const searchFormRef = useRef<IFormRefMethods<ISearchCodeParams>>(null)
+  const modelFormRef = useRef<IFormRefMethods<IModelParams>>(null)
+  const reviewFormRef = useRef<IFormRefMethods<IReviewCreateFormParams>>(null)
   const ref = useRef(null)
   useClickOutside(ref, (e) => handleClose(), modal!.isOpen)
   useScrollLock(modal!.isOpen)
@@ -101,6 +113,7 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
               <div><Button>Use current search</Button></div>
             </SearchHeader>
             <SearchForm
+              ref={searchFormRef}
               id="reviewflow_search"
               courseId={courseId}
               exerciseId={exerciseId}
@@ -114,11 +127,11 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
               <div><Button>Use current model</Button></div>
             </ModelHeader>
             <SelectModel
+              ref={modelFormRef}
               models={models}
               selectedModel={selectedModel}
-              modelParameters={modelParameters}
+              initialModelParameters={modelParameters}
               setSelectedModel={setSelectedModel}
-              runModel={runModel}
             />
           </ModelParams>
           <Divider />
@@ -127,10 +140,7 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
               <Title>Review</Title>
               <div></div>
             </ReviewHeader>
-            <AddReviewForm
-              onSubmit={handleReviewSubmit}
-              onCancel={handleClose}
-            />
+            <AddReviewForm ref={reviewFormRef}/>
           </ReviewParams>
           <ButtonControls>
             <Button intent="success" onClick={handleReviewFlowSubmit}>Create</Button>
@@ -223,10 +233,17 @@ const ReviewHeader = styled.div`
   align-items: center;
   display: flex;
 `
+const Errors = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+const Error = styled.small`
+  color: red;
+`
 const ButtonControls = styled.div`
   align-items: center;
   display: flex;
-  justify-content: center;
+  margin-top: 2rem;
   width: 100%;
   & > * + * {
     margin-left: 1rem;

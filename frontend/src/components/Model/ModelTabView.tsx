@@ -53,9 +53,9 @@ const ModelTabViewEl = inject((stores: Stores) => ({
         <SelectModel
           models={models}
           selectedModel={selectedModel}
-          modelParameters={modelParameters}
+          initialModelParameters={modelParameters}
           setSelectedModel={setSelectedModel}
-          runModel={runModel}
+          onModelSubmit={runModel}
         />
         <LocalSearchForm />
         <ClusteringResults />

@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { forwardRef, useImperativeHandle, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { inject, observer } from 'mobx-react'
 import { FormContext, useForm } from 'react-hook-form'
@@ -123,11 +123,11 @@ interface IProps {
   className?: string
   visible: boolean
   initialData: Partial<INgramParams>
-  onSubmit: (data: INgramParams) => Promise<any>
+  onSubmit?: (data: INgramParams) => Promise<any>
   onCancel: () => void
 }
 
-const NgramParametersFormEl = observer((props: IProps) => {
+const NgramParametersFormEl = observer(forwardRef((props: IProps, ref) => {
   const { className, visible, initialData, onSubmit, onCancel } = props
   const methods = useForm<INgramFormParams>({
     validationResolver: resolver,
@@ -163,20 +163,18 @@ const NgramParametersFormEl = observer((props: IProps) => {
       }: initialData?.dim_visualization_params,
     }
   })
-  const { register, errors, reset, handleSubmit } = methods
+  const { register, errors, triggerValidation, getValues, handleSubmit } = methods
   const [tokenSet, setTokenSet] = useState<TokenSetType>(DEFAULT_TOKEN_SET)
   const [submitInProgress, setSubmitInProgress] = useState(false)
 
-  function handleTokenSetChange(o: TokenSetOption) {
-    setTokenSet(o.key)
-  }
-  const onFormSubmit = async (data: INgramFormParams, e?: React.BaseSyntheticEvent) => {
-    setSubmitInProgress(true)
+  useImperativeHandle(ref, () => ({
+    getValidatedData: () => Promise.all([triggerValidation(), normalizeFormData(getValues())])
+  }))
 
+  function normalizeFormData(data: any) {
     const {
       min_ngrams, max_ngrams, random_seed, selected_clustering_algo, selected_dim_visualization
     } = data
-
     const payload = {
       model_id: NgramModelId,
       token_set: tokenSet,
@@ -191,7 +189,14 @@ const NgramParametersFormEl = observer((props: IProps) => {
         ...data[selected_dim_visualization]
       }
     }
-    onSubmit!(payload).then(result => {
+    return payload
+  }
+  function handleTokenSetChange(o: TokenSetOption) {
+    setTokenSet(o.key)
+  }
+  const onFormSubmit = async (data: INgramFormParams, e?: React.BaseSyntheticEvent) => {
+    setSubmitInProgress(true)
+    onSubmit!(normalizeFormData(data)).then(result => {
       setSubmitInProgress(false)
     })
   }
@@ -250,7 +255,7 @@ const NgramParametersFormEl = observer((props: IProps) => {
           <SelectClusteringAlgo />
           <SelectDimVisualization />
         </MiddleRow>
-        <Buttons>
+        { onSubmit && <Buttons>
           <Button
             type="submit"
             intent="success"
@@ -261,11 +266,11 @@ const NgramParametersFormEl = observer((props: IProps) => {
             intent="transparent"
             onClick={onCancel}
           >Cancel</Button>
-        </Buttons>
+        </Buttons>}
       </Form>
     </FormContext>
   )
-})
+}))
 
 const TokenSetDropdown = GenericDropdown<TokenSetType, string>()
 

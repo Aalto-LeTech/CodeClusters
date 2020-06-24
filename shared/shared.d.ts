@@ -53,6 +53,10 @@ declare module 'shared' {
     message: string
     metadata?: string
   }
+  export interface IReviewCreateFormParams {
+    message: string
+    metadata?: string
+  }
   export interface IAcceptReviewsParams {
     reviewIds: number[]
   }
