@@ -59,7 +59,6 @@ const Container = styled.section`
   margin: 1rem;
 `
 const TabList = styled.ul`
-  /* border-bottom: 1px solid ${({ theme }) => theme.color.gray.lighter}; */
   display: flex;
   list-style: none;
   margin: 0 15px;
@@ -98,16 +97,22 @@ const TabButton = styled.button<{ disabled?: boolean }>`
   }
 `
 const ShownView = styled.div`
+  width: 100%;
   & > * {
     background: #fff;
     border-radius: 4px;
     box-shadow: 0 0 2px 2px rgba(0,0,0,0.18);
+    margin: 0 auto;
+    max-width: 700px;
     &:first-child {
       border-radius: 0 4px 4px 4px;
       & > form {
         padding: 1rem 1rem 2rem 1rem;
       }
     }
+  }
+  & > ${ModelTabView} {
+    max-width: 100%;
   }
 `
 

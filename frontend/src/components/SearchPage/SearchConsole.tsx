@@ -78,18 +78,21 @@ const SearchConsoleEl = inject((stores: Stores) => ({
     return search!(payload)
   }
   return (
-    <SearchForm
-      className={className}
-      id="main_search"
-      visible={visible}
-      courseId={courseId}
-      exerciseId={exerciseId}
-      defaultSearchParams={initialSearchParams}
-      onChange={handleChange}
-      onSearch={handleSearch}
-    />
+    <Container className={className} visible={visible}>
+      <SearchForm
+        id="main_search"
+        courseId={courseId}
+        exerciseId={exerciseId}
+        defaultSearchParams={initialSearchParams}
+        onChange={handleChange}
+        onSearch={handleSearch}
+      />
+    </Container>
   )
 })))
 
-export const SearchConsole = styled(SearchConsoleEl)`
+const Container = styled.section<{ visible: boolean }>`
+  display: ${({ visible }) => visible ? 'block' : 'none'};
+  visibility: ${({ visible }) => visible ? 'initial' : 'hidden'};
 `
+export const SearchConsole = styled(SearchConsoleEl)``

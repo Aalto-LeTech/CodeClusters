@@ -1,4 +1,4 @@
-import React, { memo, forwardRef } from 'react'
+import React, { memo, forwardRef, useState } from 'react'
 import styled from 'styled-components'
 import { FiSearch } from 'react-icons/fi'
 
@@ -17,14 +17,21 @@ const SearchBarEl = memo(forwardRef((props: IProps, ref) => {
   const {
     className, name, id, onSearch
   } = props
+  const [wrapperFocused, setWrapperFocused] = useState(false)
   const debouncedSearch = useDebouncedCallback(onSearch, 500)
 
   function handleChange(newVal: string) {
     debouncedSearch(newVal)
   }
+  function handleFocus() {
+    setWrapperFocused(true)
+  }
+  function handleBlur() {
+    setWrapperFocused(false)
+  }
   return (
     <div className={className}>
-      <SearchWrapper>
+      <SearchWrapper focused={wrapperFocused}>
         <IconWrapper >
           <SearchIcon size={18} />
         </IconWrapper>
@@ -37,28 +44,25 @@ const SearchBarEl = memo(forwardRef((props: IProps, ref) => {
           id={id}
           ref={ref}
           onChange={handleChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
       </SearchWrapper>
     </div>
   )
 }))
 
-const SearchWrapper = styled.div`
+const SearchWrapper = styled.div<{ focused: boolean }>`
   display: flex;
   align-items: center;
   border: 1px solid;
   border-radius: 4px;
   justify-content: space-between;
-  &:hover, &:active, &:focus {
-    border-color: #40a9ff;
-    color: ${({ theme }) => theme.color.textDark};
-    outline: auto 5px;
-    outline-color: rgba(0, 103, 244, 0.247);
-    outline-offset: -1px;
-  }
+  outline: ${({ focused }) => focused && 'auto 5px'};
+  outline-color: ${({ focused }) => focused && '-webkit-focus-ring-color'};
 `
 const StyledInput = styled(Input)`
-  border: 0;
+  border: 1px solid transparent;
   & > input {
     border: 0;
     font-size: 1.2rem;

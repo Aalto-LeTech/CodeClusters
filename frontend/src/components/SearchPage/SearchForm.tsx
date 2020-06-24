@@ -32,7 +32,6 @@ interface ISearchParams {
 interface IProps {
   className?: string
   id: string
-  visible: boolean
   courseId?: number
   exerciseId?: number
   defaultSearchParams?: ISearchCodeParams
@@ -42,7 +41,7 @@ interface IProps {
 
 const SearchFormEl = observer((props: IProps) => {
   const {
-    className, id, visible, defaultSearchParams, courseId, exerciseId, onChange, onSearch,
+    className, id, defaultSearchParams, courseId, exerciseId, onChange, onSearch,
   } = props
   const { register, setValue, handleSubmit } = useForm<ISearchParams>({})
   const [filterText, setFilterText] = useState('')
@@ -100,102 +99,93 @@ const SearchFormEl = observer((props: IProps) => {
     })
   }
   return (
-    <Container className={className} visible={visible}>
-      <Form onSubmit={handleSubmit(onSubmit)} id={id}>
-        <TopRow>
-          <FormField>
-            <label htmlFor={`${id}_num_results`}>Results per page</label>
-            <Input
-              fullWidth
-              type="number"
-              name="num_results"
-              id={`${id}_num_results`}
-              placeholder="20"
-              ref={register}
-              onChange={handleChange}
-            ></Input>
-          </FormField>
-          <FormField>
-            <label htmlFor={`${id}_num_lines`}>Lines per result</label>
-            <Input
-              fullWidth
-              type="number"
-              name="num_lines"
-              id={`${id}_num_lines`}
-              placeholder="0 - return all the lines"
-              ref={register}
-              onChange={handleChange}
-            ></Input>
-          </FormField>
-        </TopRow>
-        <MiddleRow>
-          <FormField>
-            <label htmlFor={`${id}_custom_filters`}>Custom filters</label>
-            <MultiInput
-              fullWidth
-              type="text"
-              name="custom_filters"
-              id={`${id}_custom_filters`}
-              placeholder="Eg. student_id=1"
-              value={filterText}
-              items={wordFilters}
-              onChange={handleFilterTextChange}
-              onAddItem={handleWordAdd}
-              onRemoveItem={handleWordRemove}
-            ></MultiInput>
-          </FormField>
-        </MiddleRow>
-        <SearchRow>
-          <label htmlFor={`${id}_search`}>Search</label>
-          <SearchBar name="q" id={`${id}_search`} ref={register} onSearch={handleSearch}/>
-        </SearchRow>
-        <BottomRow>
-          <CheckBoxField>
-            <CheckBox
-              id={`${id}_case_sensitive`}
-              name="case_sensitive"
-              ref={register}
-              onChange={handleChange}
-            />
-            <CheckBoxText htmlFor={`${id}_case_sensitive`}>Case sensitive</CheckBoxText>
-          </CheckBoxField>
-          <CheckBoxField>
-            <CheckBox
-              id={`${id}_use_regex`}
-              name="regex"
-              ref={register}
-              onChange={handleChange}
-            />
-            <CheckBoxText htmlFor={`${id}_use_regex`}>Use regex</CheckBoxText>
-          </CheckBoxField>
-          <CheckBoxField>
-            <CheckBox
-              id={`${id}_use_whole_words`}
-              name="whole_words"
-              ref={register}
-              onChange={handleChange}
-            />
-            <CheckBoxText htmlFor={`${id}_use_whole_words`}>Whole words</CheckBoxText>
-          </CheckBoxField>
-        </BottomRow>
-        <HiddenSubmitButton type="submit" ref={submitButtonRef}></HiddenSubmitButton>
-      </Form>
-    </Container>
+    <Form className={className} onSubmit={handleSubmit(onSubmit)} id={id}>
+      <TopRow>
+        <FormField>
+          <label htmlFor={`${id}_num_results`}>Results per page</label>
+          <Input
+            fullWidth
+            type="number"
+            name="num_results"
+            id={`${id}_num_results`}
+            placeholder="20"
+            ref={register}
+            onChange={handleChange}
+          ></Input>
+        </FormField>
+        <FormField>
+          <label htmlFor={`${id}_num_lines`}>Lines per result</label>
+          <Input
+            fullWidth
+            type="number"
+            name="num_lines"
+            id={`${id}_num_lines`}
+            placeholder="0 - return all the lines"
+            ref={register}
+            onChange={handleChange}
+          ></Input>
+        </FormField>
+      </TopRow>
+      <MiddleRow>
+        <FormField>
+          <label htmlFor={`${id}_custom_filters`}>Custom filters</label>
+          <MultiInput
+            fullWidth
+            type="text"
+            name="custom_filters"
+            id={`${id}_custom_filters`}
+            placeholder="Eg. student_id=1"
+            value={filterText}
+            items={wordFilters}
+            onChange={handleFilterTextChange}
+            onAddItem={handleWordAdd}
+            onRemoveItem={handleWordRemove}
+          ></MultiInput>
+        </FormField>
+      </MiddleRow>
+      <SearchRow>
+        <label htmlFor={`${id}_search`}>Search</label>
+        <SearchBar name="q" id={`${id}_search`} ref={register} onSearch={handleSearch}/>
+      </SearchRow>
+      <BottomRow>
+        <CheckBoxField>
+          <CheckBox
+            id={`${id}_case_sensitive`}
+            name="case_sensitive"
+            ref={register}
+            onChange={handleChange}
+          />
+          <CheckBoxText htmlFor={`${id}_case_sensitive`}>Case sensitive</CheckBoxText>
+        </CheckBoxField>
+        <CheckBoxField>
+          <CheckBox
+            id={`${id}_use_regex`}
+            name="regex"
+            ref={register}
+            onChange={handleChange}
+          />
+          <CheckBoxText htmlFor={`${id}_use_regex`}>Use regex</CheckBoxText>
+        </CheckBoxField>
+        <CheckBoxField>
+          <CheckBox
+            id={`${id}_use_whole_words`}
+            name="whole_words"
+            ref={register}
+            onChange={handleChange}
+          />
+          <CheckBoxText htmlFor={`${id}_use_whole_words`}>Whole words</CheckBoxText>
+        </CheckBoxField>
+      </BottomRow>
+      <HiddenSubmitButton type="submit" ref={submitButtonRef}></HiddenSubmitButton>
+    </Form>
   )
 })
 
-const Container = styled.div<{ visible: boolean}>`
-  align-items: center;
-  display: ${({ visible }) => visible ? 'flex' : 'none'};
-  flex-direction: column;
-  visibility: ${({ visible }) => visible ? 'initial' : 'hidden'};
-`
 const Form = styled.form`
   align-items: center;
   display: flex;
   flex-direction: column;
-  padding-bottom: 1rem;
-  width: 700px;
+  width: 100%;
   & > * + * {
     margin-top: 1rem;
   }

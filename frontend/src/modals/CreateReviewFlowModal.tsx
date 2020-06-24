@@ -94,6 +94,7 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
             <TitleWrapper><h2>Create new review flow</h2></TitleWrapper>
             <Icon button onClick={handleClose}><FiX size={24}/></Icon>
           </Header>
+          <Divider />
           <SearchParams>
             <SearchHeader>
               <Title>Search</Title>
@@ -101,12 +102,12 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
             </SearchHeader>
             <SearchForm
               id="reviewflow_search"
-              visible={true}
               courseId={courseId}
               exerciseId={exerciseId}
               onSearch={handleSearch}
             />
           </SearchParams>
+          <Divider />
           <ModelParams>
             <ModelHeader>
               <Title>Model</Title>
@@ -120,6 +121,7 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
               runModel={runModel}
             />
           </ModelParams>
+          <Divider />
           <ReviewParams>
             <ReviewHeader>
               <Title>Review</Title>
@@ -166,7 +168,12 @@ const Header = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 1rem;
+  width: 100%;
+`
+const Divider = styled.hr`
+  border: 0;
+  border-bottom: 1px solid #222;
+  margin: 1rem 0;
   width: 100%;
 `
 const TitleWrapper = styled.div`
@@ -181,9 +188,12 @@ const TitleWrapper = styled.div`
     padding: 0;
   }
 `
-const Title = styled.h3``
+const Title = styled.h3`
+  margin: 0.5rem 0 1rem 0;
+`
 const SearchParams = styled.div`
   max-width: 700px;
+  margin-bottom: 0.5rem;
   width: 100%;
 `
 const SearchHeader = styled.div`
@@ -195,6 +205,7 @@ const SearchHeader = styled.div`
 `
 const ModelParams = styled.div`
   max-width: 700px;
+  margin-bottom: 1rem;
   width: 100%;
 `
 const ModelHeader = styled.div`
