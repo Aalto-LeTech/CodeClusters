@@ -18,6 +18,7 @@ import { Stores } from '../stores'
 import { IModal, EModal } from '../stores/ModalStore'
 
 interface IFormRefMethods<T> {
+  executeSubmit: (handler: (data: T) => Promise<void>) => Promise<void>
   getValidatedData: () => Promise<[boolean, T]>
 }
 interface IProps {
@@ -75,13 +76,18 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
   }
   async function handleReviewFlowSubmit() {
     let hasError = false
+    const modelFormData : IModelParams | undefined = await new Promise((resolve, reject) => {
+      modelFormRef?.current?.executeSubmit((data: IModelParams) => {
+        resolve(data)
+        return Promise.resolve()
+      })
+    })
     const searchFormData = await searchFormRef?.current?.getValidatedData()
-    const modelFormData = await modelFormRef?.current?.getValidatedData()
     const reviewFormData = await reviewFormRef?.current?.getValidatedData()
     if (searchFormData && !searchFormData[0]) {
       hasError = true
     }
-    if (modelFormData && !modelFormData[0]) {
+    if (modelFormData && selectedModel && !modelFormData[0]) {
       hasError = true
     }
     if (reviewFormData && !reviewFormData[0]) {

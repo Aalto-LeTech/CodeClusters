@@ -167,11 +167,21 @@ const NgramParametersFormEl = observer(forwardRef((props: IProps, ref) => {
   const [tokenSet, setTokenSet] = useState<TokenSetType>(DEFAULT_TOKEN_SET)
   const [submitInProgress, setSubmitInProgress] = useState(false)
 
+  // This kludge is for programmatically triggering submit from the CreateReviewFlowModal of the form.
+  // This way the data is validated and parsed using the Joi schema (and transformed with normalizeFormData)
+  // Other ways would have been even more annoying, this will do for now
   useImperativeHandle(ref, () => ({
-    getValidatedData: () => Promise.all([triggerValidation(), normalizeFormData(getValues())])
+    executeSubmit: (handler: (data: INgramParams) => Promise<void>) => handleSubmit(handleExecuteSubmit(handler))(),
   }))
 
-  function normalizeFormData(data: any) {
+  // JavaScript currying from hell. But hey at least I omitted the implicit return for the last one.
+  const handleExecuteSubmit =
+    (handler: (data: INgramParams) => Promise<void>) =>
+    (data: INgramFormParams, e?: React.BaseSyntheticEvent) => {
+    return handler(normalizeFormData(data))
+  }
+  
+  function normalizeFormData(data: INgramFormParams) : INgramParams {
     const {
       min_ngrams, max_ngrams, random_seed, selected_clustering_algo, selected_dim_visualization
     } = data
