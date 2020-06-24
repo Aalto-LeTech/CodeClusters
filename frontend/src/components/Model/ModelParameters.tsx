@@ -41,7 +41,7 @@ const ModelParametersEl = observer(forwardRef((props: IProps, ref) => {
           { minimized ? <FiChevronDown size={18}/> : <FiChevronUp size={18}/>}
         </Icon>
       </Header>
-      <Body minimized={minimized}>
+      { selectedModel && <Body minimized={minimized}>
         <NgramParametersForm
           ref={ref}
           visible={selectedModel?.model_id === NgramModelId}
@@ -49,7 +49,7 @@ const ModelParametersEl = observer(forwardRef((props: IProps, ref) => {
           onSubmit={onModelSubmit}
           onCancel={() => setMinimized(true)}
         />
-      </Body>
+      </Body> }
     </Container>
   )
 }))

@@ -24,9 +24,15 @@ const AddReviewFormEl = memo(forwardRef((props: IProps, ref: any) => {
   })
   const [submitInProgress, setSubmitInProgress] = useState(false)
 
+  // See NgramParametersForm.tsx for explanation
   useImperativeHandle(ref, () => ({
-    getValidatedData: () => Promise.all([triggerValidation(), getValues()])
+    executeSubmit: (handler: (data: IReviewCreateFormParams) => Promise<void>) => handleSubmit(handleExecuteSubmit(handler))(),
   }))
+
+  const handleExecuteSubmit =
+    (handler: (data: IReviewCreateFormParams) => Promise<void>) =>
+    (data: IReviewCreateFormParams, e?: React.BaseSyntheticEvent) => handler(data)
+
   const onSubmitForm = async (data: IReviewCreateFormParams, e?: React.BaseSyntheticEvent) => {
     setSubmitInProgress(true)
     onSubmit!(data, () => {

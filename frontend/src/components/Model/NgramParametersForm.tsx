@@ -180,7 +180,7 @@ const NgramParametersFormEl = observer(forwardRef((props: IProps, ref) => {
     (data: INgramFormParams, e?: React.BaseSyntheticEvent) => {
     return handler(normalizeFormData(data))
   }
-  
+
   function normalizeFormData(data: INgramFormParams) : INgramParams {
     const {
       min_ngrams, max_ngrams, random_seed, selected_clustering_algo, selected_dim_visualization

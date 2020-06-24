@@ -61,9 +61,16 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
     setValue(values)
   }, [defaultSearchParams])
 
+  // See NgramParametersForm.tsx for explanation
   useImperativeHandle(ref, () => ({
-    getValidatedData: () => Promise.all([triggerValidation(), normalizeFormData(getValues())])
+    executeSubmit: (handler: (data: ISearchCodeParams) => Promise<void>) => handleSubmit(handleExecuteSubmit(handler))(),
   }))
+
+  const handleExecuteSubmit =
+    (handler: (data: ISearchCodeParams) => Promise<void>) =>
+    (data: ISearchParams, e?: React.BaseSyntheticEvent) => {
+    return handler(normalizeFormData(data))
+  }
 
   function handleChange() {
     debouncedSearch()
@@ -84,8 +91,10 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
     }
   }
   function normalizeFormData(data: ISearchParams) {
-    const payload: ISearchCodeParams = data
-    if (payload.q === undefined || payload.q === '') {
+    // Remove false, undefined and empty values since they are their default values
+    // to keep the URL from being cluttered with redundant parameters
+    const payload = removeEmptyValues(data) as ISearchCodeParams 
+    if (payload.q === undefined) {
       payload.q = '*'
     }
     if (courseId) {
@@ -94,10 +103,7 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
     if (exerciseId) {
       payload.exercise_id = exerciseId
     }
-    setSubmitInProgress(true)
-    // Remove false, undefined and empty values since they are their default values
-    // to keep the URL from being cluttered with redundant parameters
-    return removeEmptyValues(payload) as ISearchCodeParams
+    return payload
   }
   const onSubmit = async (data: ISearchParams, e?: React.BaseSyntheticEvent) => {
     setSubmitInProgress(true)

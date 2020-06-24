@@ -74,25 +74,21 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
     console.log(params)
     return Promise.resolve()
   }
-  async function handleReviewFlowSubmit() {
-    let hasError = false
-    const modelFormData : IModelParams | undefined = await new Promise((resolve, reject) => {
-      modelFormRef?.current?.executeSubmit((data: IModelParams) => {
+  const executeFormSubmit = <T extends unknown>(ref: React.RefObject<IFormRefMethods<any>>) => {
+    return new Promise((resolve, reject) => {
+      ref?.current?.executeSubmit((data: T) => {
+        console.log(data)
         resolve(data)
         return Promise.resolve()
       })
-    })
-    const searchFormData = await searchFormRef?.current?.getValidatedData()
-    const reviewFormData = await reviewFormRef?.current?.getValidatedData()
-    if (searchFormData && !searchFormData[0]) {
-      hasError = true
-    }
-    if (modelFormData && selectedModel && !modelFormData[0]) {
-      hasError = true
-    }
-    if (reviewFormData && !reviewFormData[0]) {
-      hasError = true
-    }
+    }) as T | undefined
+  }
+  async function handleReviewFlowSubmit() {
+    let hasError = false
+    const searchFormData = await executeFormSubmit<ISearchCodeParams>(searchFormRef)
+    // Conditional incase no model selected, thus no validation/submit needed
+    const modelFormData = selectedModel ? await executeFormSubmit<IModelParams>(modelFormRef) : undefined
+    const reviewFormData = await executeFormSubmit<IReviewCreateFormParams>(reviewFormRef)
     console.log(searchFormData)
     console.log(modelFormData)
     console.log(reviewFormData)
