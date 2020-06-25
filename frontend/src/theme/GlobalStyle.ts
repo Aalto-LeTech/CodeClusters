@@ -14,11 +14,11 @@ export const GlobalStyle = createGlobalStyle`
     font-weight: 600;
   }
   h1 {
-    font-size: 2.5rem;
+    font-size: 2.25rem;
     margin: 2rem 0;
   }
   h2 {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
   h3 {
     font-size: 1.5rem;

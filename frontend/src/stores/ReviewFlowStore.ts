@@ -167,12 +167,12 @@ export class ReviewFlowStore {
     let searchResult
     let modelingResult
     if (params.steps[0] && params.steps[0].action === 'Search') {
-      const searchParams = this.getStepParams(params.steps[0]) as unknown as ISearchCodeParams
+      const searchParams = params.steps[0].data as unknown as ISearchCodeParams
       this.searchStore.setInitialSearchParams(searchParams)
       searchResult = await this.searchStore.search(searchParams)
     }
     if (searchResult && params.steps[1] && params.steps[1].action === 'Model') {
-      const modelingParams = this.getStepParams(params.steps[1]) as unknown as IModelParams
+      const modelingParams = params.steps[1].data as unknown as IModelParams
       modelingResult = await this.modelStore.runModel(modelingParams)
     }
     if (searchResult && modelingResult) {
@@ -180,11 +180,5 @@ export class ReviewFlowStore {
       return true
     }
     return undefined
-  }
-
-  getStepParams(step: IReviewFlowStep) {
-    const params = new URLSearchParams(step.parameters) as any
-    const arr = Array.from(params) as [string, string][]
-    return arr.reduce((acc, cur) => ({ ...acc, [cur[0]]: cur[1] }), {} as {[key: string]: string})
   }
 }
