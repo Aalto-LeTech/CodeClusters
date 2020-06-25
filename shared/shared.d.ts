@@ -69,19 +69,20 @@ declare module 'shared' {
     index: number
     action: string
     parameters: string
+    data: Object
   }
   export interface IReviewFlow {
     review_flow_id: number
     course_id: number | null
     exercise_id: number | null
     user_id: number
-    public: boolean
+    public?: boolean
     title: string
     description: string
     steps: IReviewFlowStep[]
   }
   // Review flow API
-  export interface IReviewFlowCreateParams {
+  export interface IReviewFlow {
     course_id: number | null
     exercise_id: number | null
     user_id: number
@@ -89,6 +90,15 @@ declare module 'shared' {
     description: string
     public?: boolean
     tags?: string[]
+    steps: IReviewFlowStep[]
+  }
+  export interface IReviewFlowCreateParams {
+    course_id?: number
+    exercise_id?: number
+    user_id: number
+    title: string
+    description: string
+    tags: string[]
     steps: IReviewFlowStep[]
   }
   export interface IReviewFlowRunParams {

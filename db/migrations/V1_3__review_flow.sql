@@ -9,10 +9,13 @@ CREATE TABLE review_flow (
 	tags TEXT[] NOT NULL DEFAULT array[]::TEXT[]
 );
 
+CREATE TYPE review_flow_step_action AS ENUM ('Search', 'Model', 'Review');
+
 CREATE TABLE review_flow_step (
 	review_flow_step_id SERIAL PRIMARY KEY,
 	index INTEGER NOT NULL,
-	action TEXT NOT NULL,
+	action review_flow_step_action NOT NULL,
+	data JSONB NOT NULL,
 	parameters TEXT NOT NULL
 );
 

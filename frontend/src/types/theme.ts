@@ -11,6 +11,7 @@ export interface IThemeColor {
   textLight: string
   textDark: string
   bg: string
+  bgLight: string
   white: string
   primary: string
   primaryDark: string

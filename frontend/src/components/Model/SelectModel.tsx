@@ -1,5 +1,5 @@
 import React, { forwardRef, useState, useEffect } from 'react'
-import { inject, observer } from 'mobx-react'
+import { observer } from 'mobx-react'
 import styled from '../../theme/styled'
 import { FiTrash } from 'react-icons/fi'
 import { MdKeyboardArrowRight } from 'react-icons/md'
@@ -12,7 +12,6 @@ import { Dropdown } from '../../elements/Dropdown'
 import {
   IModel, IModelParams, INgramParams
 } from 'shared'
-import { Stores } from '../../stores'
 
 interface IProps {
   className?: string

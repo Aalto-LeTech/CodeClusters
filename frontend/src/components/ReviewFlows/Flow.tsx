@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../../theme/styled'
 
+import { FlowSteps } from './FlowSteps'
 import { Button } from '../../elements/Button'
 
 import { Stores } from '../../stores'
@@ -44,14 +45,7 @@ const FlowEl = inject((stores: Stores) => ({
         <Description>{selectedFlow.description}</Description>
         <Note>This review has been ran before with these parameters!</Note>
       </Header>
-      <FlowStepsList>
-        {selectedFlow.steps.map((s =>
-        <FlowStepItem key={s.index}>
-          <Action>{s.action}</Action>
-          <Parameters>{s.parameters}</Parameters>
-        </FlowStepItem>
-        ))}
-      </FlowStepsList>
+      <FlowSteps steps={selectedFlow.steps}/>
       <Controls>
         <Button intent="success" loading={loading} onClick={handleClickRunReviewFlow}>Run and review</Button>
         <Button intent="success">Edit</Button>
@@ -75,23 +69,6 @@ const Description = styled.p`
   margin: 1rem 0;
 `
 const Note = styled.small``
-const FlowStepsList = styled.div`
-  display: flex;
-  flex-direction: column;
-`
-const FlowStepItem = styled.div`
-  border: 2px solid black;
-  border-radius: 0.25rem;
-  display: flex;
-  padding: 0.5rem;
-  &:not(:first-child) {
-    margin-top: 0.5rem;
-  }
-`
-const Action = styled.div`
-  width: 100px;
-`
-const Parameters = styled.div``
 const Controls = styled.div`
   display: flex;
   margin-top: 1rem;
