@@ -15,8 +15,7 @@ CREATE TABLE review_flow_step (
 	review_flow_step_id SERIAL PRIMARY KEY,
 	index INTEGER NOT NULL,
 	action review_flow_step_action NOT NULL,
-	data JSONB NOT NULL,
-	parameters TEXT NOT NULL
+	data JSONB NOT NULL
 );
 
 CREATE TABLE review_flow_steps (

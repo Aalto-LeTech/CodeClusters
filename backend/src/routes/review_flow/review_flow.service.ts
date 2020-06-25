@@ -9,7 +9,7 @@ export const reviewFlowService = {
       json_agg(json_build_object(
         'index', review_flow_step.index,
         'action', review_flow_step.action,
-        'parameters', review_flow_step.parameters
+        'data', review_flow_step.data
       )) AS steps FROM review_flow
       JOIN review_flow_steps ON review_flow.review_flow_id = review_flow_steps.review_flow_id
       JOIN review_flow_step ON review_flow_step.review_flow_step_id = review_flow_steps.review_flow_step_id
@@ -24,12 +24,11 @@ export const reviewFlowService = {
       params.user_id,
       params.title,
       params.description || '',
-      params.public,
       params.tags
     ]
     const savedReviewFlow = await dbService.queryOne<IReviewFlow | undefined>(`
-      INSERT INTO review_flow (course_id, exercise_id, user_id, title, description, public, tags)
-      VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *
+      INSERT INTO review_flow (course_id, exercise_id, user_id, title, description, tags)
+      VALUES ($1, $2, $3, $4, $5, $6) RETURNING *
     `, reviewFlowParams)
 
     function createValues(params: IReviewFlowCreateParams) {
@@ -37,7 +36,7 @@ export const reviewFlowService = {
       return params.steps.reduce((acc, cur, i) => {
         const start = i === 0 ? '' : `${acc[0]},`
         const str = `${start} ($${acc[1]}, $${acc[1] + 1}, $${acc[1] + 2})`
-        const val = [...acc[2], i, cur.action, cur.parameters]
+        const val = [...acc[2], i, cur.action, cur.data]
         return [str, acc[1] + 3, val]
       }, ['', 1, []] as insertedRow)
     }

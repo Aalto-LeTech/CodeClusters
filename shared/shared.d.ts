@@ -68,7 +68,6 @@ declare module 'shared' {
   export interface IReviewFlowStep {
     index: number
     action: string
-    parameters: string
     data: Object
   }
   export interface IReviewFlow {
