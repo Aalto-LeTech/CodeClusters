@@ -130,6 +130,7 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
             </ModelHeader>
             <SelectModel
               ref={modelFormRef}
+              id="new_reviewflow"
               models={models}
               selectedModel={selectedModel}
               initialModelParameters={modelParameters}
@@ -146,6 +147,7 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
           </ReviewParams>
           <ButtonControls>
             <Button intent="success" onClick={handleReviewFlowSubmit}>Create</Button>
+            <Button intent="info">Test run</Button>
             <Button intent="transparent" onClick={onCancel}>Cancel</Button>
           </ButtonControls>
         </Body>

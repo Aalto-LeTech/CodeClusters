@@ -10,6 +10,7 @@ import { INgramFormParams } from './NgramParametersForm'
 
 interface IProps {
   className?: string
+  id: string
 }
 
 const CLUSTERING_OPTIONS = [
@@ -43,7 +44,7 @@ const CLUSTERING_INFO = [
 ]
 
 const SelectClusteringAlgoEl = (props: IProps) => {
-  const { className } = props
+  const { className, id } = props
   const { register, getValues, setValue } = useFormContext<INgramFormParams>()
   const [clusteringAlgo, setClusteringAlgo] = useState<ClusteringAlgoType>(getValues('selected_clustering_algo'))
   const clusteringInfo = useMemo(() => CLUSTERING_INFO.find(c => c.key === clusteringAlgo), [clusteringAlgo])
@@ -74,27 +75,28 @@ const SelectClusteringAlgoEl = (props: IProps) => {
             Documentation
           </ClusteringLink>
         </FormField>
-        <DBSCANFields visible={clusteringAlgo === 'DBSCAN'}/>
-        <HDBSCANFields visible={clusteringAlgo === 'HDBSCAN'}/>
-        <OPTICSFields visible={clusteringAlgo === 'OPTICS'}/>
-        <KMeansFields visible={clusteringAlgo === 'KMeans'}/>
+        <DBSCANFields id={id} visible={clusteringAlgo === 'DBSCAN'}/>
+        <HDBSCANFields id={id} visible={clusteringAlgo === 'HDBSCAN'}/>
+        <OPTICSFields id={id} visible={clusteringAlgo === 'OPTICS'}/>
+        <KMeansFields id={id} visible={clusteringAlgo === 'KMeans'}/>
       </Body>
     </Container>
   )
 }
 
 interface IClusteringFieldsProps {
+  id: string
   visible: boolean
 }
 
-function DBSCANFields({ visible }: IClusteringFieldsProps) {
+function DBSCANFields({ id, visible }: IClusteringFieldsProps) {
   const { register, errors } = useFormContext<INgramFormParams>()
   return (
     <ClusteringFields visible={visible}>
       <FormField>
-        <label htmlFor="DBSCAN.min_samples">Min samples</label>
+        <label htmlFor={`${id}_DBSCAN.min_samples`}>Min samples</label>
         <Input
-          id="DBSCAN.min_samples"
+          id={`${id}_DBSCAN.min_samples`}
           name="DBSCAN.min_samples"
           type="number"
           placeholder="Must be >0"
@@ -106,9 +108,9 @@ function DBSCANFields({ visible }: IClusteringFieldsProps) {
         </Error>
       </FormField>
       <FormField>
-        <label htmlFor="DBSCAN.eps">Eps</label>
+        <label htmlFor={`${id}_DBSCAN.eps`}>Eps</label>
         <Input
-          id="DBSCAN.eps"
+          id={`${id}_DBSCAN.eps`}
           name="DBSCAN.eps"
           type="number"
           placeholder="DBSCAN eps"
@@ -124,14 +126,14 @@ function DBSCANFields({ visible }: IClusteringFieldsProps) {
   )
 }
 
-function HDBSCANFields({ visible }: IClusteringFieldsProps) {
+function HDBSCANFields({ id, visible }: IClusteringFieldsProps) {
   const { register, errors } = useFormContext<INgramFormParams>()
   return (
     <ClusteringFields visible={visible}>
       <FormField>
-        <label htmlFor="HDBSCAN.min_cluster_size">Min cluster size</label>
+        <label htmlFor={`${id}_DBSCAN.min_cluster_size`}>Min cluster size</label>
         <Input
-          id="HDBSCAN.min_cluster_size"
+          id={`${id}_DBSCAN.min_cluster_size`}
           name="HDBSCAN.min_cluster_size"
           type="number"
           placeholder="Must be >1"
@@ -143,9 +145,9 @@ function HDBSCANFields({ visible }: IClusteringFieldsProps) {
         </Error>
       </FormField>
       <FormField>
-        <label htmlFor="HDBSCAN.min_samples">Min samples</label>
+        <label htmlFor={`${id}_HDBSCAN.min_samples`}>Min samples</label>
         <Input
-          id="HDBSCAN.min_samples"
+          id={`${id}_HDBSCAN.min_samples`}
           name="HDBSCAN.min_samples"
           type="number"
           placeholder="Must be >0"
@@ -160,14 +162,14 @@ function HDBSCANFields({ visible }: IClusteringFieldsProps) {
   )
 }
 
-function OPTICSFields({ visible }: IClusteringFieldsProps) {
+function OPTICSFields({ id, visible }: IClusteringFieldsProps) {
   const { register, errors } = useFormContext<INgramFormParams>()
   return (
     <ClusteringFields visible={visible}>
       <FormField>
-        <label htmlFor="OPTICS.min_samples">Min samples</label>
+        <label htmlFor={`${id}_OPTICS.min_samples`}>Min samples</label>
         <Input
-          id="OPTICS.min_samples"
+          id={`${id}_OPTICS.min_samples`}
           name="OPTICS.min_samples"
           type="number"
           placeholder="Must be >0"
@@ -179,9 +181,9 @@ function OPTICSFields({ visible }: IClusteringFieldsProps) {
         </Error>
       </FormField>
       <FormField>
-        <label htmlFor="OPTICS.max_eps">Max eps</label>
+        <label htmlFor={`${id}_OPTICS.max_eps`}>Max eps</label>
         <Input
-          id="OPTICS.max_eps"
+          id={`${id}_OPTICS.max_eps`}
           name="OPTICS.max_eps"
           type="number"
           placeholder="Empty for np.inf"
@@ -198,14 +200,14 @@ function OPTICSFields({ visible }: IClusteringFieldsProps) {
   )
 }
 
-function KMeansFields({ visible }: IClusteringFieldsProps) {
+function KMeansFields({ id, visible }: IClusteringFieldsProps) {
   const { register, errors } = useFormContext<INgramFormParams>()
   return (
     <ClusteringFields visible={visible}>
       <FormField>
-        <label htmlFor="KMeans.k_clusters">K clusters</label>
+        <label htmlFor={`${id}_KMeans.k_clusters`}>K clusters</label>
         <Input
-          id="KMeans.k_clusters"
+          id={`${id}_KMeans.k_clusters`}
           name="KMeans.k_clusters"
           type="number"
           placeholder="K must be >1"
@@ -234,7 +236,7 @@ const ClusteringDescription = styled.p`
   width: 200px;
 `
 const ClusteringLink = styled.a``
-const ClusteringFields = styled.div<IClusteringFieldsProps>`
+const ClusteringFields = styled.div<{ visible: boolean }>`
   display: ${({ visible }) => visible ? 'block' : 'none'};
   margin-left: 1rem;
   visibility: ${({ visible }) => visible ? 'visible' : 'hidden'};

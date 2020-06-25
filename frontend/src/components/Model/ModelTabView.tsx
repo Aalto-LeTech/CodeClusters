@@ -51,6 +51,7 @@ const ModelTabViewEl = inject((stores: Stores) => ({
     <Container className={className} visible={visible}>
       <Body>
         <SelectModel
+          id="modeltab"
           models={models}
           selectedModel={selectedModel}
           initialModelParameters={modelParameters}

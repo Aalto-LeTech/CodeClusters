@@ -10,6 +10,7 @@ import { INgramFormParams } from './NgramParametersForm'
 
 interface IProps {
   className?: string
+  id: string
 }
 
 const DIM_VISUALIZATION_OPTIONS = [
@@ -31,7 +32,7 @@ const DIM_VISUALIZATION_INFO = [
 ]
 
 const SelectDimVisualizationEl = (props: IProps) => {
-  const { className } = props
+  const { className, id } = props
   const { register, getValues, setValue } = useFormContext<INgramFormParams>()
   const [dimVisualization, setDimVisualization] = useState<DimVisualizationType>(getValues('selected_dim_visualization'))
   const clusteringInfo = useMemo(() => DIM_VISUALIZATION_INFO.find(c => c.key === dimVisualization), [dimVisualization])
@@ -62,25 +63,26 @@ const SelectDimVisualizationEl = (props: IProps) => {
             Documentation
           </DimVisualizationLink>
         </FormField>
-        <TSNEFields visible={dimVisualization === 'TSNE'}/>
-        <UMAPFields visible={dimVisualization === 'UMAP'}/>
+        <TSNEFields id={id} visible={dimVisualization === 'TSNE'}/>
+        <UMAPFields id={id} visible={dimVisualization === 'UMAP'}/>
       </Body>
     </Container>
   )
 }
 
 interface IDimVisualizationFieldsProps {
+  id: string
   visible: boolean
 }
 
-function TSNEFields({ visible }: IDimVisualizationFieldsProps) {
+function TSNEFields({ id, visible }: IDimVisualizationFieldsProps) {
   const { register, errors } = useFormContext<INgramFormParams>()
   return (
     <DimVisualizationFields visible={visible}>
       <FormField>
-        <label htmlFor="TSNE.perplexity">Perplexity</label>
+        <label htmlFor={`${id}_TSNE.perplexity`}>Perplexity</label>
         <Input
-          id="TSNE.perplexity"
+          id={`${id}_TSNE.perplexity`}
           name="TSNE.perplexity"
           type="number"
           placeholder="Must be >0"
@@ -92,11 +94,11 @@ function TSNEFields({ visible }: IDimVisualizationFieldsProps) {
         </Error>
       </FormField>
       <FormField>
-        <label htmlFor="TSNE.svd_n_components">SVD n-components</label>
+        <label htmlFor={`${id}_TSNE.svd_n_components`}>SVD n-components</label>
         <Input
+          id={`${id}_TSNE.svd_n_components`}
           type="number"
           name="TSNE.svd_n_components"
-          id="TSNE.svd_n_components"
           placeholder="Empty for all dimensions"
           title="Empty for all dimensions"
           fullWidth
@@ -109,14 +111,14 @@ function TSNEFields({ visible }: IDimVisualizationFieldsProps) {
   )
 }
 
-function UMAPFields({ visible }: IDimVisualizationFieldsProps) {
+function UMAPFields({ id, visible }: IDimVisualizationFieldsProps) {
   const { register, errors } = useFormContext<INgramFormParams>()
   return (
     <DimVisualizationFields visible={visible}>
       <FormField>
-        <label htmlFor="UMAP.n_neighbors">N neighbors</label>
+        <label htmlFor={`${id}_UMAP.n_neighbors`}>N neighbors</label>
         <Input
-          id="UMAP.n_neighbors"
+          id={`${id}_UMAP.n_neighbors`}
           name="UMAP.n_neighbors"
           type="number"
           placeholder="Must be >1"
@@ -128,9 +130,9 @@ function UMAPFields({ visible }: IDimVisualizationFieldsProps) {
         </Error>
       </FormField>
       <FormField>
-        <label htmlFor="UMAP.min_dist">Min distance</label>
+        <label htmlFor={`${id}_UMAP.min_dist`}>Min distance</label>
         <Input
-          id="UMAP.min_dist"
+          id={`${id}_UMAP.min_dist`}
           name="UMAP.min_dist"
           type="number"
           placeholder="Must be >=0.0"
@@ -160,7 +162,7 @@ const DimVisualizationDescription = styled.p`
   width: 200px;
 `
 const DimVisualizationLink = styled.a``
-const DimVisualizationFields = styled.div<IDimVisualizationFieldsProps>`
+const DimVisualizationFields = styled.div<{ visible: boolean }>`
   display: ${({ visible }) => visible ? 'block' : 'none'};
   margin-left: 1rem;
   visibility: ${({ visible }) => visible ? 'visible' : 'hidden'};

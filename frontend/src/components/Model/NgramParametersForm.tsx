@@ -121,6 +121,7 @@ export interface INgramFormParams {
 }
 interface IProps {
   className?: string
+  id: string
   visible: boolean
   initialData: Partial<INgramParams>
   onSubmit?: (data: INgramParams) => Promise<any>
@@ -128,7 +129,7 @@ interface IProps {
 }
 
 const NgramParametersFormEl = observer(forwardRef((props: IProps, ref) => {
-  const { className, visible, initialData, onSubmit, onCancel } = props
+  const { className, id, visible, initialData, onSubmit, onCancel } = props
   const methods = useForm<INgramFormParams>({
     validationResolver: resolver,
     defaultValues: {
@@ -212,29 +213,27 @@ const NgramParametersFormEl = observer(forwardRef((props: IProps, ref) => {
   }
   return (
     <FormContext {...methods} >
-      <Form onSubmit={handleSubmit(onFormSubmit)} className={className} visible={visible}>
+      <Form className={className} id={`${id}_ngram_parameters`} visible={visible} onSubmit={handleSubmit(onFormSubmit)}>
         <TopRow>
           <FormField>
-            <label htmlFor="token_set">Token set</label>
+            <label htmlFor={`${id}_ngram_token_set`}>Token set</label>
             <TokenSetDropdown
-              id="token_set"
+              id={`${id}_ngram_token_set`}
               selected={tokenSet}
               options={TOKEN_SET_OPTIONS}
               onSelect={handleTokenSetChange}
             />
           </FormField>
           <FormField>
-            <label htmlFor="ngrams">N-grams</label>
+            <label>N-grams</label>
             <MinMaxGram>
               <Input
-                id="min_ngrams"
                 name="min_ngrams"
                 type="number"
                 placeholder="Min n"
                 fullWidth
                 ref={register}/>
               <Input
-                id="max_ngrams"
                 name="max_ngrams"
                 type="number"
                 placeholder="Max n"
@@ -249,11 +248,11 @@ const NgramParametersFormEl = observer(forwardRef((props: IProps, ref) => {
             </Error>
           </FormField>
           <FormField className="random_seed">
-            <label htmlFor="random_seed">Random seed</label>
+            <label htmlFor={`${id}_ngram_random_seed`}>Random seed</label>
             <Input
+              id={`${id}_ngram_random_seed`}
               type="number"
               name="random_seed"
-              id="random_seed"
               fullWidth
               ref={register}/>
             <Error>
@@ -262,8 +261,8 @@ const NgramParametersFormEl = observer(forwardRef((props: IProps, ref) => {
           </FormField>
         </TopRow>
         <MiddleRow>
-          <SelectClusteringAlgo />
-          <SelectDimVisualization />
+          <SelectClusteringAlgo id={id}/>
+          <SelectDimVisualization id={id}/>
         </MiddleRow>
         { onSubmit && <Buttons>
           <Button

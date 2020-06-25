@@ -16,6 +16,7 @@ import {
 
 interface IProps {
   className?: string
+  id: string
   selectedModel?: IModel
   initialModelParameters: {
     ngram: INgramParams
@@ -24,14 +25,14 @@ interface IProps {
 }
 
 const ModelParametersEl = observer(forwardRef((props: IProps, ref) => {
-  const { className, selectedModel, initialModelParameters, onModelSubmit } = props
+  const { className, id, selectedModel, initialModelParameters, onModelSubmit } = props
   const [minimized, setMinimized] = useState(true)
 
   async function handleClickToggle() {
     setMinimized(!minimized)
   }
   return (
-    <Container className={className}>
+    <Container className={className} id={`${id}_model_parameters`}>
       <Header>
         <Button onClick={handleClickToggle} intent="success" disabled={selectedModel === undefined}>
           <Icon><MdKeyboardArrowRight size={24}/></Icon>
@@ -44,6 +45,7 @@ const ModelParametersEl = observer(forwardRef((props: IProps, ref) => {
       { selectedModel && <Body minimized={minimized}>
         <NgramParametersForm
           ref={ref}
+          id={id}
           visible={selectedModel?.model_id === NgramModelId}
           initialData={initialModelParameters![NgramModelId]}
           onSubmit={onModelSubmit}

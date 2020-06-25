@@ -15,6 +15,7 @@ import {
 
 interface IProps {
   className?: string
+  id: string
   models?: IModel[]
   selectedModel?: IModel
   initialModelParameters?: {
@@ -26,7 +27,7 @@ interface IProps {
 
 const SelectModelEl = observer(forwardRef((props: IProps, ref) => {
   const {
-    className, models, selectedModel, initialModelParameters, setSelectedModel, onModelSubmit
+    className, id, models, selectedModel, initialModelParameters, setSelectedModel, onModelSubmit
   } = props
   const [modelOptions, setModelOptions] = useState(models!.map(m => ({ key: m.model_id, value: m.title })))
 
@@ -49,7 +50,7 @@ const SelectModelEl = observer(forwardRef((props: IProps, ref) => {
     )
   }
   return (
-    <Container className={className}>
+    <Container className={className} id={`${id}_select_model`}>
       <InfoText>
         Currently only N-gram model is supported.
       </InfoText>
@@ -67,6 +68,7 @@ const SelectModelEl = observer(forwardRef((props: IProps, ref) => {
       <ModelDescription selectedModel={selectedModel}/>
       <ModelParameters
         ref={ref}
+        id={id}
         selectedModel={selectedModel}
         initialModelParameters={initialModelParameters!}
         onModelSubmit={onModelSubmit}
