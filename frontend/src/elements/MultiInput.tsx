@@ -15,7 +15,6 @@ interface IProps {
   fullWidth?: boolean
   disabled?: boolean
   placeholder?: string
-  required?: boolean
   onChange: (value: string) => void
   onAddItem: (item: string) => void
   onRemoveItem: (item: string) => void
@@ -25,30 +24,29 @@ interface IProps {
 
 MultiInputEl.defaultProps = {
   autocomplete: 'off',
-  required: false,
   type: 'text',
   disabled: false,
 }
 
 function MultiInputEl(props: IProps) {
   const {
-    className, value, items, type, id, name, autocomplete, icon, iconPadding, placeholder, disabled, required,
-    fullWidth, onFocus, onBlur
+    className, value, items, type, id, name, autocomplete, icon, iconPadding, placeholder, disabled,
+    fullWidth, onFocus, onBlur, onChange, onAddItem, onRemoveItem
   } = props
   function handleClickX(item: string) {
-    !disabled && props.onRemoveItem(item)
+    !disabled && onRemoveItem(item)
   }
   function handleKeyPress(event: React.KeyboardEvent) {
     if (event.key === 'Enter') {
       event.preventDefault()
       if (!disabled && value) {
-        props.onAddItem(value)
-        props.onChange('')
+        onAddItem(value)
+        onChange('')
       }
     }
   }
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-    !disabled && props.onChange(event.target.value)
+    !disabled && onChange(event.target.value)
   }
   return (
     <Container className={className} fullWidth={fullWidth}>
@@ -68,7 +66,6 @@ function MultiInputEl(props: IProps) {
         iconPadding={iconPadding}
         placeholder={placeholder}
         disabled={disabled}
-        required={required}
         onChange={handleChange}
         onKeyPress={handleKeyPress}
         onFocus={onFocus}
@@ -93,10 +90,10 @@ const SvgWrapper = styled.span`
 type ContainerProps = { fullWidth?: boolean }
 const Container = styled.div<ContainerProps>`
   align-items: center;
-  border: 1px solid ${({ theme }) => theme.color.textDark};
   border-radius: 4px;
   display: flex;
   flex-wrap: wrap;
+  margin-top: 6px;
   position: relative;
   width: ${({ fullWidth }) => fullWidth ? '100%' : '180px'};
   &:focus {
@@ -117,7 +114,7 @@ const Item = styled.div`
   display: flex;
   justify-content: center;
   min-width: 0px;
-  margin: 4px;
+  margin: 0 6px 6px 0;
 `
 const ItemText = styled.span`
   color: rgb(51, 51, 51);
@@ -134,7 +131,7 @@ interface InputProps {
 }
 const StyledInput = styled.input<InputProps>`
   background-color: ${({ theme }) => theme.color.white};
-  border: 0;
+  border: 1px solid ${({ theme }) => theme.color.textDark};
   border-radius: 4px;
   color: ${({ theme }) => theme.color.textDark};
   font-size: ${({ theme }) => theme.fontSize.medium};

@@ -11,7 +11,7 @@ import { Icon } from '../../elements/Icon'
 import { NgramParametersForm } from './NgramParametersForm'
 
 import {
-  IModel, IModelId, IModelParams, INgramParams, NgramModelId
+  IModel, IModelParams, INgramParams, NgramModelId
 } from 'shared'
 
 interface IProps {

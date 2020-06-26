@@ -1,9 +1,8 @@
-import React, { memo, useState } from 'react'
-import { inject, observer } from 'mobx-react'
+import React, { useState } from 'react'
 import styled from '../theme/styled'
 
 import { SearchConsole } from './Search/SearchConsole'
-import { ReviewFlows } from './ReviewFlows'
+import { ReviewFlows } from './ReviewFlows/ReviewFlows'
 import { ModelTabView } from './Model/ModelTabView'
 
 import { Stores } from '../stores'
@@ -12,9 +11,7 @@ interface IProps {
   className?: string
 }
 
-const SearchFlowsModelTabsMenuEl = inject((stores: Stores) => ({
-}))
-(observer((props: IProps) => {
+function SearchFlowsModelTabsMenuEl(props: IProps) {
   const { className } = props
   const options = [
     {
@@ -50,7 +47,7 @@ const SearchFlowsModelTabsMenuEl = inject((stores: Stores) => ({
       </ShownView>
     </Container>
   )
-}))
+}
 
 const Container = styled.section`
   align-items: center;

@@ -10,7 +10,7 @@ import { MultiInput } from '../../elements/MultiInput'
 
 import { useDebouncedCallback } from '../../hooks/useDebounce'
 
-import { ISearchCodeParams, ISolrSearchCodeResponse } from 'shared'
+import { ISearchCodeParams } from 'shared'
 
 function removeEmptyValues(obj: {[key: string]: any}) {
   return Object.keys(obj).reduce((acc, key) => {
@@ -43,10 +43,9 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
   const {
     className, id, defaultSearchParams, courseId, exerciseId, onChange, onSearch,
   } = props
-  const { register, setValue, getValues, triggerValidation, handleSubmit } = useForm<ISearchParams>({})
+  const { register, setValue, handleSubmit } = useForm<ISearchParams>({})
   const [filterText, setFilterText] = useState('')
   const [wordFilters, setWordFilters] = useState([] as string[])
-  const [submitInProgress, setSubmitInProgress] = useState(false)
   const submitButtonRef = useRef<HTMLButtonElement>(null)
   const debouncedSearch = useDebouncedCallback(handleSearch, 500)
 
@@ -106,10 +105,7 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
     return payload
   }
   const onSubmit = async (data: ISearchParams, e?: React.BaseSyntheticEvent) => {
-    setSubmitInProgress(true)
-    onSearch!(normalizeFormData(data)).finally(() => {
-      setSubmitInProgress(false)
-    })
+    onSearch!(normalizeFormData(data))
   }
   return (
     <Form className={className} onSubmit={handleSubmit(onSubmit)} id={id}>

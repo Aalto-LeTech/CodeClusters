@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../theme/styled'
 import { FiTrash, FiMaximize2 } from 'react-icons/fi'

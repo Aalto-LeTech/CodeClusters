@@ -5,8 +5,6 @@ import styled from '../../theme/styled'
 import { SelectModel } from './SelectModel'
 import { ClusteringResults } from './ClusteringResults'
 import { LocalSearchForm } from './LocalSearchForm'
-import { Icon } from '../../elements/Icon'
-import { Dropdown } from '../../elements/Dropdown'
 
 import {
   IModel, IModelParams, INgramParams

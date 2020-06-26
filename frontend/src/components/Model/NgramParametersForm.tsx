@@ -164,7 +164,7 @@ const NgramParametersFormEl = observer(forwardRef((props: IProps, ref) => {
       }: initialData?.dim_visualization_params,
     }
   })
-  const { register, errors, triggerValidation, getValues, handleSubmit } = methods
+  const { register, errors, handleSubmit } = methods
   const [tokenSet, setTokenSet] = useState<TokenSetType>(DEFAULT_TOKEN_SET)
   const [submitInProgress, setSubmitInProgress] = useState(false)
 

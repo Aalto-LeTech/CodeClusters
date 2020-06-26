@@ -73,7 +73,6 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
     closeModal!()
   }
   function handleSearch(params: ISearchCodeParams) {
-    console.log(params)
     return Promise.resolve()
   }
   async function handleReviewFlowSubmit() {
@@ -118,6 +117,7 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
         }
       }
     } catch (err) {
+      setSubmitInProgress(false)
       console.log(err)
     }
   }
@@ -185,8 +185,14 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
             <AddReviewForm ref={reviewFormRef}/>
           </ReviewParams>
           <ButtonControls>
-            <Button intent="success" onClick={handleReviewFlowSubmit}>Create</Button>
-            <Button intent="info">Test run</Button>
+            <Button
+              type="submit"
+              intent="success"
+              disabled={submitInProgress}
+              loading={submitInProgress}
+              onClick={handleReviewFlowSubmit}
+            >Submit</Button>
+            <Button intent="info">Test flow</Button>
             <Button intent="transparent" onClick={onCancel}>Cancel</Button>
           </ButtonControls>
         </Body>

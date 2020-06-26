@@ -18,10 +18,11 @@ interface IProps {
 }
 
 function ButtonEl(props: IProps) {
-  function handleClick(e: React.MouseEvent) {
-    return !props.disabled && props.onClick && props.onClick()
-  }
   const { className, children, onClick, type, disabled, loading, href } = props
+
+  function handleClick(e: React.MouseEvent) {
+    return !disabled && onClick && onClick()
+  }
   return (
     <>
     { type === 'link' ?

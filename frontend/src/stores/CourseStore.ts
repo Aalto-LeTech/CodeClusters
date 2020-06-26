@@ -5,7 +5,6 @@ import { persist } from './persist'
 
 import { ICourse, IExercise } from 'shared'
 import { ToastStore } from './ToastStore'
-import { SearchStore } from './SearchStore'
 
 export class CourseStore {
   @observable courses: ICourse[] = []

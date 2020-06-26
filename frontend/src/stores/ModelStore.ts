@@ -1,4 +1,4 @@
-import { action, computed, runInAction, observable } from 'mobx'
+import { action, runInAction, observable } from 'mobx'
 import * as modelApi from '../api/model.api'
 
 // import { persist } from './persist'

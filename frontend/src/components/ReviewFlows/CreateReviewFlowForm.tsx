@@ -77,13 +77,16 @@ const CreateReviewFlowFormEl = memo(forwardRef((props: IProps, ref: any) => {
           onAddItem={(item: string) => append({ id: item, name: item })}
           onRemoveItem={(item: string) => remove(fields.findIndex(f => f.name === item))}
         />
+        <Error>
+          {errors.tags && 'You must have at least 1 tag.'}
+        </Error>
         {fields.map((item, index) => (
         <input
           key={`${index}_${item.id}`}
           type="hidden"
           name={`tags[${index}]`}
           defaultValue={item.name}
-          ref={register}
+          ref={register()}
         />
         ))}
       </FormField>

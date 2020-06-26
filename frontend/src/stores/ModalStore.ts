@@ -1,12 +1,8 @@
-import { computed, action, observable } from 'mobx'
+import { action, observable } from 'mobx'
 
 export interface IModal {
   isOpen: boolean
   params: any
-}
-
-type IModals = {
-  [key in EModal]: IModal
 }
 
 export enum EModal {

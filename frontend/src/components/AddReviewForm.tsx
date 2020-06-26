@@ -19,7 +19,7 @@ interface IProps {
 
 const AddReviewFormEl = memo(forwardRef((props: IProps, ref: any) => {
   const { className, initialData, onCancel, onSubmit } = props
-  const { register, errors, reset, triggerValidation, getValues, handleSubmit } = useForm<IReviewCreateFormParams>({
+  const { register, errors, reset, handleSubmit } = useForm<IReviewCreateFormParams>({
     defaultValues: initialData
   })
   const [submitInProgress, setSubmitInProgress] = useState(false)
