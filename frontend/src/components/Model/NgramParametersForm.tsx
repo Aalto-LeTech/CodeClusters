@@ -172,15 +172,14 @@ const NgramParametersFormEl = observer(forwardRef((props: IProps, ref) => {
   // This way the data is validated and parsed using the Joi schema (and transformed with normalizeFormData)
   // Other ways would have been even more annoying, this will do for now
   useImperativeHandle(ref, () => ({
-    executeSubmit: (handler: (data: INgramParams) => Promise<void>) => handleSubmit(handleExecuteSubmit(handler))(),
+    executeSubmit: () => new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => reject('NgramParametersForm'), 500)
+      handleSubmit((data: INgramFormParams, e?: React.BaseSyntheticEvent) => {
+        clearTimeout(timeout)
+        resolve(normalizeFormData(data))
+      })()
+    })
   }))
-
-  // JavaScript currying from hell. But hey at least I omitted the implicit return for the last one.
-  const handleExecuteSubmit =
-    (handler: (data: INgramParams) => Promise<void>) =>
-    (data: INgramFormParams, e?: React.BaseSyntheticEvent) => {
-    return handler(normalizeFormData(data))
-  }
 
   function normalizeFormData(data: INgramFormParams) : INgramParams {
     const {

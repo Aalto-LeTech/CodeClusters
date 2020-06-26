@@ -6,6 +6,7 @@ import { FiX } from 'react-icons/fi'
 import useClickOutside from '../hooks/useClickOutside'
 import useScrollLock from '../hooks/useScrollLock'
 
+import { CreateReviewFlowForm } from '../components/ReviewFlows/CreateReviewFlowForm'
 import { SearchForm } from '../components/Search/SearchForm'
 import { SelectModel } from '../components/Model/SelectModel'
 import { AddReviewForm } from '../components/AddReviewForm'
@@ -13,13 +14,12 @@ import { Modal } from '../elements/Modal'
 import { Button } from '../elements/Button'
 import { Icon } from '../elements/Icon'
 
-import { ISearchCodeParams, IModel, IModelParams, INgramParams, IReviewCreateFormParams } from 'shared'
+import { IReviewFlowCreateParams, ISearchCodeParams, IModel, IModelParams, INgramParams, IReviewCreateFormParams } from 'shared'
 import { Stores } from '../stores'
 import { IModal, EModal } from '../stores/ModalStore'
 
 interface IFormRefMethods<T> {
-  executeSubmit: (handler: (data: T) => Promise<void>) => Promise<void>
-  getValidatedData: () => Promise<[boolean, T]>
+  executeSubmit: () => Promise<T>
 }
 interface IProps {
   className?: string
@@ -44,27 +44,20 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
   exerciseId: stores.courseStore.exerciseId,
   searchParams: stores.searchStore.searchParams,
   modal: stores.modalStore.modals[EModal.CREATE_REVIEW_FLOW],
-  closeModal: () => stores.modalStore.closeModal(EModal.CREATE_REVIEW_FLOW),
-  addReview: stores.reviewStore.addReview,
-  resetSelections: stores.reviewStore.resetSelections,
   models: stores.modelStore.models,
   selectedModel: stores.reviewFlowStore.newReviewFlowSelectedModel,
   modelParameters: stores.reviewFlowStore.newReviewFlowModelParameters,
   setSelectedModel: stores.reviewFlowStore.setSelectedNewReviewFlowModel,
   runModel: stores.modelStore.runModel,
+  closeModal: () => stores.modalStore.closeModal(EModal.CREATE_REVIEW_FLOW),
 }))
 (observer((props: IProps) => {
   const {
     className, courseId, exerciseId, searchParams, modal,
-    models, selectedModel, modelParameters, setSelectedModel, runModel,
-    closeModal, addReview, resetSelections,
+    models, selectedModel, modelParameters, setSelectedModel, runModel, closeModal,
   } = props
 
   function handleClose() {
-    closeModal!()
-  }
-  function onAccept() {
-    modal!.params?.submit()
     closeModal!()
   }
   function onCancel() {
@@ -74,25 +67,28 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
     console.log(params)
     return Promise.resolve()
   }
-  const executeFormSubmit = <T extends unknown>(ref: React.RefObject<IFormRefMethods<any>>) => {
-    return new Promise((resolve, reject) => {
-      ref?.current?.executeSubmit((data: T) => {
-        console.log(data)
-        resolve(data)
-        return Promise.resolve()
-      })
-    }) as T | undefined
-  }
   async function handleReviewFlowSubmit() {
-    let hasError = false
-    const searchFormData = await executeFormSubmit<ISearchCodeParams>(searchFormRef)
-    // Conditional incase no model selected, thus no validation/submit needed
-    const modelFormData = selectedModel ? await executeFormSubmit<IModelParams>(modelFormRef) : undefined
-    const reviewFormData = await executeFormSubmit<IReviewCreateFormParams>(reviewFormRef)
-    console.log(searchFormData)
-    console.log(modelFormData)
-    console.log(reviewFormData)
+    try {
+      const reviewFlowForm = await reviewFlowFormRef?.current?.executeSubmit()
+      const searchFormData = await searchFormRef?.current?.executeSubmit()
+      // Conditional incase no model selected, thus no validation/submit needed
+      const modelFormData = selectedModel ? await modelFormRef?.current?.executeSubmit() : undefined
+      const reviewFormData = await reviewFormRef?.current?.executeSubmit()
+      console.log(reviewFlowForm)
+      console.log(searchFormData)
+      console.log(modelFormData)
+      console.log(reviewFormData)
+      // onSubmit!(data, () => {
+      //   setSubmitInProgress(false)
+      //   reset()
+      // }, () => {
+      //   setSubmitInProgress(false)
+      // })
+    } catch (err) {
+      console.log(err)
+    }
   }
+  const reviewFlowFormRef = useRef<IFormRefMethods<IReviewCreateFormParams>>(null)
   const searchFormRef = useRef<IFormRefMethods<ISearchCodeParams>>(null)
   const modelFormRef = useRef<IFormRefMethods<IModelParams>>(null)
   const reviewFormRef = useRef<IFormRefMethods<IReviewCreateFormParams>>(null)
@@ -108,6 +104,9 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
             <TitleWrapper><h2>Create new review flow</h2></TitleWrapper>
             <Icon button onClick={handleClose}><FiX size={24}/></Icon>
           </Header>
+          <ReviewFlowParams>
+            <CreateReviewFlowForm ref={reviewFlowFormRef}/>
+          </ReviewFlowParams>
           <Divider />
           <SearchParams>
             <SearchHeader>
@@ -166,7 +165,7 @@ const Body = styled.div`
   max-width: 800px;
   padding: 20px;
   position: absolute;
-  top: 0;
+  top: 10px;
   width: calc(100% - 20px - 2rem);
   /* @media only screen and (max-width: ${({ theme }) => theme.breakpoints.DEFAULT_WIDTH}) {
     max-width: 800px;
@@ -205,6 +204,11 @@ const TitleWrapper = styled.div`
 const Title = styled.h3`
   margin: 0.5rem 0 1rem 0;
 `
+const ReviewFlowParams = styled.div`
+  margin: 1rem 0;
+  max-width: 700px;
+  width: 100%;
+`
 const SearchParams = styled.div`
   max-width: 700px;
   margin-bottom: 0.5rem;
@@ -236,13 +240,6 @@ const ReviewParams = styled.div`
 const ReviewHeader = styled.div`
   align-items: center;
   display: flex;
-`
-const Errors = styled.div`
-  display: flex;
-  flex-direction: column;
-`
-const Error = styled.small`
-  color: red;
 `
 const ButtonControls = styled.div`
   align-items: center;

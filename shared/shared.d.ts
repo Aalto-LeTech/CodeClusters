@@ -91,6 +91,13 @@ declare module 'shared' {
     tags?: string[]
     steps: IReviewFlowStep[]
   }
+  export interface IReviewFlowCreateFormParams {
+    course_id?: number
+    exercise_id?: number
+    title: string
+    description: string
+    tags: string[]
+  }
   export interface IReviewFlowCreateParams {
     course_id?: number
     exercise_id?: number

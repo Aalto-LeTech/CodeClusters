@@ -63,14 +63,14 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
 
   // See NgramParametersForm.tsx for explanation
   useImperativeHandle(ref, () => ({
-    executeSubmit: (handler: (data: ISearchCodeParams) => Promise<void>) => handleSubmit(handleExecuteSubmit(handler))(),
+    executeSubmit: () => new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => reject('SearchForm'), 500)
+      handleSubmit((data: ISearchParams, e?: React.BaseSyntheticEvent) => {
+        clearTimeout(timeout)
+        resolve(normalizeFormData(data))
+      })()
+    })
   }))
-
-  const handleExecuteSubmit =
-    (handler: (data: ISearchCodeParams) => Promise<void>) =>
-    (data: ISearchParams, e?: React.BaseSyntheticEvent) => {
-    return handler(normalizeFormData(data))
-  }
 
   function handleChange() {
     debouncedSearch()

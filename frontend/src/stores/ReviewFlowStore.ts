@@ -2,8 +2,8 @@ import { action, autorun, computed, runInAction, observable } from 'mobx'
 import * as reviewFlowApi from '../api/review_flow.api'
 
 import {
-  IReviewFlow, IReviewFlowRunParams, IReviewFlowStep, ISearchCodeParams, IModelParams,
-  IModel, INgramParams, NgramModelId
+  IReviewFlow, IReviewFlowRunParams, IReviewFlowStep, IReviewFlowCreateParams,
+  ISearchCodeParams, IModelParams, IModel, INgramParams, NgramModelId
 } from 'shared'
 import { ToastStore } from './ToastStore'
 import { AuthStore } from './AuthStore'
@@ -180,5 +180,15 @@ export class ReviewFlowStore {
       return true
     }
     return undefined
+  }
+
+
+  @action addReviewFlow = async (params: IReviewFlowCreateParams) => {
+    const payload = params
+    const result = await reviewFlowApi.addReviewFlow(payload)
+    if (result) {
+      this.toastStore.createToast('Review flow created', 'success')
+    }
+    return result
   }
 }
