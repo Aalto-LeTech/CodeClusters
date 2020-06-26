@@ -45,45 +45,37 @@ VALUES (2, (SELECT submission_id FROM submission WHERE student_id = 1), array[2,
 INSERT INTO review_submissions (review_id, submission_id, selection)
 VALUES (2, (SELECT submission_id FROM submission WHERE student_id = 2), array[2, 71, 135]);
 
-INSERT INTO review_flow (course_id, exercise_id, user_id, title, description, public, tags)
+INSERT INTO review_flow (course_id, exercise_id, user_id, title, description, tags)
 VALUES (2, 4, 1, 'Too lengthy code',
 'Generic evaluation of code based on its length. In this exercise the optimal solution shouldn''t be much longer than the model answer (150).',
-TRUE, array['complexity', 'metric']);
-INSERT INTO review_flow (course_id, exercise_id, user_id, title, description, public, tags)
+array['complexity', 'metric']);
+INSERT INTO review_flow (course_id, exercise_id, user_id, title, description, tags)
 VALUES (null, null, 2, 'High cyclomatic complexity',
 'Generic evaluation of code cyclomatic complexity. In general score of higher than 20 is regarded as hard to test, and especially in a programming course students should strive for simplistic code.',
-TRUE, array['cyclomatic', 'complexity', 'metric']);
-INSERT INTO review_flow (course_id, exercise_id, user_id, title, description, public, tags)
-VALUES (null, null, 2, 'Hurr durr', 'Morty, you are an idiot.', FALSE, array['performance']);
+array['cyclomatic', 'complexity', 'metric']);
+INSERT INTO review_flow (course_id, exercise_id, user_id, title, description, tags)
+VALUES (null, null, 2, 'Hurr durr', 'Morty, you are an idiot.', array['performance']);
 
-INSERT INTO review_flow_step (index, action, data)
-VALUES (1, 'Search', '{"q": "*", "code_length": ">250"}');
-INSERT INTO review_flow_step (index, action, data)
-VALUES (2, 'Review', '{"message": "Your solution shouldn''t be much longer than the model solution (150)."}');
+INSERT INTO review_flow_step (review_flow_id, index, action, data)
+VALUES (1, 1, 'Search', '{"q": "*", "code_length": ">250"}');
+INSERT INTO review_flow_step (review_flow_id, index, action, data)
+VALUES (1, 2, 'Review', '{"message": "Your solution shouldn''t be much longer than the model solution (150)."}');
 
-INSERT INTO review_flow_step (index, action, data)
-VALUES (1, 'Search', '{"q": "*", "cyclomatic": ">20"}');
-INSERT INTO review_flow_step (index, action, data)
-VALUES (2, 'Review', '{"message": "Your submission has the cyclomatic complexity of over 20. Please see the material to see how it can be reduced to reasonable level 1-19."}');
+INSERT INTO review_flow_step (review_flow_id, index, action, data)
+VALUES (2, 1, 'Search', '{"q": "*", "cyclomatic": ">20"}');
+INSERT INTO review_flow_step (review_flow_id, index, action, data)
+VALUES (2, 2, 'Review', '{"message": "Your submission has the cyclomatic complexity of over 20. Please see the material to see how it can be reduced to reasonable level 1-19."}');
 
-INSERT INTO review_flow_step (index, action, data)
-VALUES (1, 'Search', '{"q": "*", "student_ids": [1]}');
-INSERT INTO review_flow_step (index, action, data)
-VALUES (2, 'Model',
+INSERT INTO review_flow_step (review_flow_id, index, action, data)
+VALUES (3, 1, 'Search', '{"q": "*", "student_ids": [1]}');
+INSERT INTO review_flow_step (review_flow_id, index, action, data)
+VALUES (3, 2, 'Model',
 '{"model_id":"ngram","token_set":"modified","ngrams":[5,5],"random_seed":-1,
   "clustering_params":{"name":"DBSCAN","min_samples":5,"eps":0.25},
   "dim_visualization_params":{"name":"TSNE","perplexity":30}
 }');
-INSERT INTO review_flow_step (index, action, data)
-VALUES (3, 'Review', '{"message": "You are a moron Morty. You have the brains of a catfish with a down syndrome."}');
-
-INSERT INTO review_flow_steps (review_flow_id, review_flow_step_id) VALUES (1, 1);
-INSERT INTO review_flow_steps (review_flow_id, review_flow_step_id) VALUES (1, 2);
-INSERT INTO review_flow_steps (review_flow_id, review_flow_step_id) VALUES (2, 3);
-INSERT INTO review_flow_steps (review_flow_id, review_flow_step_id) VALUES (2, 4);
-INSERT INTO review_flow_steps (review_flow_id, review_flow_step_id) VALUES (3, 5);
-INSERT INTO review_flow_steps (review_flow_id, review_flow_step_id) VALUES (3, 6);
-INSERT INTO review_flow_steps (review_flow_id, review_flow_step_id) VALUES (3, 7);
+INSERT INTO review_flow_step (review_flow_id, index, action, data)
+VALUES (3, 3, 'Review', '{"message": "You are a moron Morty. You have the brains of a catfish with a down syndrome."}');
 
 INSERT INTO model (model_id, title, description)
 VALUES ('ngram', 'N-gram',

@@ -5,21 +5,15 @@ CREATE TABLE review_flow (
 	user_id INTEGER REFERENCES app_user ON DELETE CASCADE DEFAULT NULL,
 	title TEXT NOT NULL,
 	description TEXT NOT NULL,
-	public BOOLEAN DEFAULT FALSE,
 	tags TEXT[] NOT NULL DEFAULT array[]::TEXT[]
 );
 
 CREATE TYPE review_flow_step_action AS ENUM ('Search', 'Model', 'Review');
 
 CREATE TABLE review_flow_step (
-	review_flow_step_id SERIAL PRIMARY KEY,
+	review_flow_id INTEGER NOT NULL REFERENCES review_flow ON DELETE CASCADE,
 	index INTEGER NOT NULL,
 	action review_flow_step_action NOT NULL,
-	data JSONB NOT NULL
-);
-
-CREATE TABLE review_flow_steps (
-	review_flow_id INTEGER NOT NULL REFERENCES review_flow ON DELETE CASCADE,
-	review_flow_step_id INTEGER NOT NULL REFERENCES review_flow_step ON DELETE CASCADE,
-	PRIMARY KEY(review_flow_id, review_flow_step_id)
+	data JSONB NOT NULL,
+	PRIMARY KEY(review_flow_id, index)
 );

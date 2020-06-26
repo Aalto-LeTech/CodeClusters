@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../theme/styled'
 import { FiX } from 'react-icons/fi'
@@ -14,7 +14,10 @@ import { Modal } from '../elements/Modal'
 import { Button } from '../elements/Button'
 import { Icon } from '../elements/Icon'
 
-import { IReviewFlowCreateParams, ISearchCodeParams, IModel, IModelParams, INgramParams, IReviewCreateFormParams } from 'shared'
+import {
+  IReviewFlowCreateParams, IReviewFlowCreateFormParams, ISearchCodeParams, IModel, IModelParams,
+  INgramParams, IReviewCreateFormParams
+} from 'shared'
 import { Stores } from '../stores'
 import { IModal, EModal } from '../stores/ModalStore'
 
@@ -25,11 +28,9 @@ interface IProps {
   className?: string
   courseId?: number
   exerciseId?: number
+  userId?: number
   searchParams?: ISearchCodeParams
   modal?: IModal
-  closeModal?: () => void
-  addReview?: (message: string, metadata: string) => Promise<any>
-  resetSelections?: () => void
   models?: IModel[]
   selectedModel?: IModel
   modelParameters?: {
@@ -37,11 +38,14 @@ interface IProps {
   }
   setSelectedModel?: (model?: IModel) => void
   runModel?: (data: IModelParams) => Promise<any>
+  addReviewFlow?: (payload: IReviewFlowCreateParams) => Promise<any>
+  closeModal?: () => void
 }
 
 export const CreateReviewFlowModal = inject((stores: Stores) => ({
   courseId: stores.courseStore.courseId,
   exerciseId: stores.courseStore.exerciseId,
+  userId: stores.authStore.user?.user_id,
   searchParams: stores.searchStore.searchParams,
   modal: stores.modalStore.modals[EModal.CREATE_REVIEW_FLOW],
   models: stores.modelStore.models,
@@ -49,13 +53,15 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
   modelParameters: stores.reviewFlowStore.newReviewFlowModelParameters,
   setSelectedModel: stores.reviewFlowStore.setSelectedNewReviewFlowModel,
   runModel: stores.modelStore.runModel,
+  addReviewFlow: stores.reviewFlowStore.addReviewFlow,
   closeModal: () => stores.modalStore.closeModal(EModal.CREATE_REVIEW_FLOW),
 }))
 (observer((props: IProps) => {
   const {
-    className, courseId, exerciseId, searchParams, modal,
-    models, selectedModel, modelParameters, setSelectedModel, runModel, closeModal,
+    className, courseId, exerciseId, userId, searchParams, modal,
+    models, selectedModel, modelParameters, setSelectedModel, runModel, addReviewFlow, closeModal,
   } = props
+  const [submitInProgress, setSubmitInProgress] = useState(false)
 
   function handleClose() {
     closeModal!()
@@ -78,17 +84,41 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
       console.log(searchFormData)
       console.log(modelFormData)
       console.log(reviewFormData)
-      // onSubmit!(data, () => {
-      //   setSubmitInProgress(false)
-      //   reset()
-      // }, () => {
-      //   setSubmitInProgress(false)
-      // })
+      if (reviewFlowForm && searchFormData && reviewFormData) {
+        const payload: IReviewFlowCreateParams = {
+          ...reviewFlowForm,
+          user_id: userId ? userId : 0,
+          steps: [{
+            index: 0,
+            action: 'Search',
+            data: searchFormData
+          }]
+        }
+        if (modelFormData) {
+          payload.steps.push({
+            index: payload.steps.length,
+            action: 'Model',
+            data: modelFormData
+          })
+        }
+        payload.steps.push({
+          index: payload.steps.length,
+          action: 'Review',
+          data: reviewFormData
+        })
+        setSubmitInProgress(true)
+        const result = await addReviewFlow!(payload)
+        if (result) {
+          setSubmitInProgress(false)
+        } else {
+          setSubmitInProgress(false)
+        }
+      }
     } catch (err) {
       console.log(err)
     }
   }
-  const reviewFlowFormRef = useRef<IFormRefMethods<IReviewCreateFormParams>>(null)
+  const reviewFlowFormRef = useRef<IFormRefMethods<IReviewFlowCreateFormParams>>(null)
   const searchFormRef = useRef<IFormRefMethods<ISearchCodeParams>>(null)
   const modelFormRef = useRef<IFormRefMethods<IModelParams>>(null)
   const reviewFormRef = useRef<IFormRefMethods<IReviewCreateFormParams>>(null)

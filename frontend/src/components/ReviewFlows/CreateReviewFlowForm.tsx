@@ -46,7 +46,7 @@ const CreateReviewFlowFormEl = memo(forwardRef((props: IProps, ref: any) => {
             minLength: 1
           })}/>
         <Error>
-          {errors.title && 'Review requires title with at least 1 character.'}
+          {errors.title && 'Title must be at least 1 character long.'}
         </Error>
       </FormField>
       <FormField>
@@ -56,7 +56,13 @@ const CreateReviewFlowFormEl = memo(forwardRef((props: IProps, ref: any) => {
           type="textarea"
           id="new_review_flow_description"
           name="description"
-          ref={register}/>
+          ref={register({
+            required: true,
+            minLength: 1
+          })}/>
+        <Error>
+          {errors.description && 'Description must be at least 1 character long.'}
+        </Error>
       </FormField>
       <FormField>
         <label htmlFor="new_reviewflow_tags">Tags</label>

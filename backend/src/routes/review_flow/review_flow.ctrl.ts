@@ -7,7 +7,7 @@ import { IReviewFlowCreateParams } from 'shared'
 import { IReviewListQueryParams } from './review_flow.types'
 
 export const REVIEW_FLOW_STEP_SCHEMA = Joi.object({
-  index: Joi.number().min(1).max(10).required(),
+  index: Joi.number().min(0).max(10).required(),
   action: Joi.string().min(1).max(255).required(),
   data: Joi.object().required(),
 })
@@ -15,6 +15,7 @@ export const REVIEW_FLOW_STEP_SCHEMA = Joi.object({
 export const REVIEW_FLOW_CREATE_SCHEMA = Joi.object({
   course_id: Joi.number().integer(),
   exercise_id: Joi.number().integer(),
+  user_id: Joi.number().integer().required(),
   title: Joi.string().min(1).max(255).required(),
   description: Joi.string().min(1).max(102400).required(),
   tags: Joi.array().items(Joi.string()).required(),
