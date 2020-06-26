@@ -1,16 +1,25 @@
 import { action, observable } from 'mobx'
 
-import { IToast, IToastType } from '../types/ui'
+import { IToast, ToastLocation, ToastType } from '../types/ui'
 
 export class ToastStore {
   @observable toasts: IToast[] = []
+  @observable toasterLocation: ToastLocation = 'bottom-left'
   idCounter: number = 0
 
   @action reset() {
     this.toasts = []
   }
 
-  @action createToast = (message: string, type: IToastType = 'success', duration: number = 5000) => {
+  @action setToasterLocation = (topRight?: boolean) => {
+    if (topRight) {
+      this.toasterLocation = 'top-right'
+    } else {
+      this.toasterLocation = 'bottom-left'
+    }
+  }
+
+  @action createToast = (message: string, type: ToastType = 'success', duration: number = 5000) => {
     const newToast = {
       id: this.idCounter,
       message,

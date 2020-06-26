@@ -1,9 +1,10 @@
-export type IToastType = 'success' | 'danger' | 'warning' | 'info'
+export type ToastType = 'success' | 'danger' | 'warning' | 'info'
+export type ToastLocation = 'bottom-left' | 'top-right'
 
 export interface IToast {
   id: number
   message: string
-  type: IToastType
+  type: ToastType
   duration: number
 }
 

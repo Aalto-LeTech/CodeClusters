@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../theme/styled'
 import { FiX } from 'react-icons/fi'
@@ -39,6 +39,7 @@ interface IProps {
   setSelectedModel?: (model?: IModel) => void
   runModel?: (data: IModelParams) => Promise<any>
   addReviewFlow?: (payload: IReviewFlowCreateParams) => Promise<any>
+  setToasterLocation?: (topRight?: boolean) => void
   closeModal?: () => void
 }
 
@@ -54,12 +55,14 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
   setSelectedModel: stores.reviewFlowStore.setSelectedNewReviewFlowModel,
   runModel: stores.modelStore.runModel,
   addReviewFlow: stores.reviewFlowStore.addReviewFlow,
+  setToasterLocation: stores.toastStore.setToasterLocation,
   closeModal: () => stores.modalStore.closeModal(EModal.CREATE_REVIEW_FLOW),
 }))
 (observer((props: IProps) => {
   const {
     className, courseId, exerciseId, userId, searchParams, modal,
-    models, selectedModel, modelParameters, setSelectedModel, runModel, addReviewFlow, closeModal,
+    models, selectedModel, modelParameters,
+    setSelectedModel, runModel, addReviewFlow, closeModal, setToasterLocation
   } = props
   const [submitInProgress, setSubmitInProgress] = useState(false)
 
@@ -118,6 +121,13 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
       console.log(err)
     }
   }
+  useEffect(() => {
+    if (modal!.isOpen) {
+      setToasterLocation!(true)
+    } else {
+      setToasterLocation!(false)
+    }
+  }, [modal!.isOpen])
   const reviewFlowFormRef = useRef<IFormRefMethods<IReviewFlowCreateFormParams>>(null)
   const searchFormRef = useRef<IFormRefMethods<ISearchCodeParams>>(null)
   const modelFormRef = useRef<IFormRefMethods<IModelParams>>(null)

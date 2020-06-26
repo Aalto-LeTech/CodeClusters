@@ -70,7 +70,7 @@ const CreateReviewFlowFormEl = memo(forwardRef((props: IProps, ref: any) => {
           fullWidth
           name="tags"
           id="new_reviewflow_tags"
-          placeholder="Use enter to input"
+          placeholder="Press enter to input"
           value={tagText}
           items={fields.map(f => f.name)}
           onChange={(val: string) => setTagText(val)}

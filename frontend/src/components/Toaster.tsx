@@ -42,9 +42,9 @@ interface IProps {
 export const Toaster = inject('toastStore')(observer((props: IProps) => {
   const { className, toastStore } = props
   return (
-    <ToastsList className={className}>
+    <ToastsList className={`${className} ${toastStore!.toasterLocation}`}>
       { toastStore!.toasts.map(t =>
-      <Toast key={t.id} toast={t} removeToast={toastStore!.removeToast} />
+      <Toast key={t.id} toast={t} removeToast={toastStore!.removeToast}/>
       )}
     </ToastsList>
   )
@@ -95,22 +95,39 @@ const SvgAction = styled.button`
 `
 const ToastsList = styled.ul`
   align-items: start;
-  bottom: 20px;
   display: flex;
   flex-direction: column-reverse;
-  left: 20px;
   list-style: none;
   max-width: 600px;
-  padding: 10px;
+  padding: 0;
   position: fixed;
   width: 50vw;
-  z-index: 10;
+  z-index: 1000;
+  &.bottom-left {
+    bottom: 20px;
+    left: 20px;
+  }
+  &.top-right {
+    top: 20px;
+    right: 20px;
+  }
   @media only screen and (max-width: ${({ theme }) => theme.breakpoints.TABLET_WIDTH}) {
-    bottom: 0;
-    left: 0;
+    &.bottom-left {
+      bottom: 0;
+      left: 0;
+    }
+    &.top-right {
+      top: 0;
+      right: 0;
+    }
+  }
+  & > li:not(:last-child) {
+    margin-top: 10px;
   }
 `
-type ToastItemProps = { type: string }
+type ToastItemProps = {
+  type: string
+}
 const ToastItem = styled.li<ToastItemProps>`
   display: flex;
   background: #fff;
@@ -120,7 +137,6 @@ const ToastItem = styled.li<ToastItemProps>`
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.18);
   flex-direction: column;
   justify-content: space-between;
-  margin-top: 10px;
   min-width: 300px;
   max-width: 600px;
   padding: 5px 5px 0 0;
