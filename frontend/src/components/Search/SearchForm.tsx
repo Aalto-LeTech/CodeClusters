@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { observer } from 'mobx-react'
-import { useForm } from 'react-hook-form'
+import { useForm, useFieldArray } from 'react-hook-form'
 
 import { SearchBar } from './SearchBar'
 import { CheckBox } from '../../elements/CheckBox'
@@ -25,6 +25,7 @@ interface ISearchParams {
   num_results: number
   num_lines: number
   q: string
+  custom_filters: string[]
   case_sensitive: boolean
   use_regex: boolean
   use_whole_words: boolean
@@ -43,9 +44,12 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
   const {
     className, id, defaultSearchParams, courseId, exerciseId, onChange, onSearch,
   } = props
-  const { register, reset, setValue, handleSubmit } = useForm<ISearchParams>({})
+  const { register, reset, setValue, control, clearError, setError, handleSubmit } = useForm<ISearchParams>()
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'custom_filters',
+  })
   const [filterText, setFilterText] = useState('')
-  const [wordFilters, setWordFilters] = useState([] as string[])
   const submitButtonRef = useRef<HTMLButtonElement>(null)
   const debouncedSearch = useDebouncedCallback(handleSearch, 500)
 
@@ -74,16 +78,20 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
 
   function handleChange() {
     debouncedSearch()
-    onChange!()
+    if (onChange) onChange()
   }
   function handleFilterTextChange(val: string) {
     setFilterText(val)
   }
-  function handleWordAdd(item: string) {
-    setWordFilters([...wordFilters, item])
+  function addCustomFilter(item: string) {
+    clearError('custom_filters')
+    append({ id: item, name: item })
   }
-  function handleWordRemove(item: string) {
-    setWordFilters(wordFilters.filter(w => w !== item))
+  function removeCustomFilter(item: string) {
+    remove(fields.findIndex(f => f.name === item))
+    if (fields.length <= 1) {
+      setError('custom_filters', 'min_length', 'not enough')
+    }
   }
   function handleSearch() {
     if (submitButtonRef && submitButtonRef.current) {
@@ -146,11 +154,20 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
             id={`${id}_custom_filters`}
             placeholder="Eg. student_id=1"
             value={filterText}
-            items={wordFilters}
+            items={fields.map(f => f.name)}
             onChange={handleFilterTextChange}
-            onAddItem={handleWordAdd}
-            onRemoveItem={handleWordRemove}
+            onAddItem={addCustomFilter}
+            onRemoveItem={removeCustomFilter}
           ></MultiInput>
+          { fields.map((f, i) =>
+          <input
+            key={`cf_${f.id}_${i}`}
+            type="hidden"
+            name={`custom_filters[${i}]`}
+            defaultValue={f.name}
+            ref={register()}
+          />
+          )}
         </FormField>
       </MiddleRow>
       <SearchRow>

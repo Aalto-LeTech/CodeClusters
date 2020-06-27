@@ -28,8 +28,11 @@ const InputEl = forwardRef((props: IProps, ref?: React.Ref<any>) => {
     title, fullWidth,
     onChange, onFocus, onBlur, onKeyPress
   } = props
+
   function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    !disabled && onChange && onChange(event.target.value)
+    if (!disabled && onChange) {
+      onChange(event.target.value)
+    }
   }
   return (
     <Container className={className} fullWidth={fullWidth}>
