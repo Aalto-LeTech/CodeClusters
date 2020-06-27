@@ -43,7 +43,7 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
   const {
     className, id, defaultSearchParams, courseId, exerciseId, onChange, onSearch,
   } = props
-  const { register, setValue, handleSubmit } = useForm<ISearchParams>({})
+  const { register, reset, setValue, handleSubmit } = useForm<ISearchParams>({})
   const [filterText, setFilterText] = useState('')
   const [wordFilters, setWordFilters] = useState([] as string[])
   const submitButtonRef = useRef<HTMLButtonElement>(null)
@@ -68,7 +68,8 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
         clearTimeout(timeout)
         resolve(normalizeFormData(data))
       })()
-    })
+    }),
+    reset,
   }))
 
   function handleChange() {

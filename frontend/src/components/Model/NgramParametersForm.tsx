@@ -164,7 +164,7 @@ const NgramParametersFormEl = observer(forwardRef((props: IProps, ref) => {
       }: initialData?.dim_visualization_params,
     }
   })
-  const { register, errors, handleSubmit } = methods
+  const { register, reset, errors, handleSubmit } = methods
   const [tokenSet, setTokenSet] = useState<TokenSetType>(DEFAULT_TOKEN_SET)
   const [submitInProgress, setSubmitInProgress] = useState(false)
 
@@ -178,7 +178,8 @@ const NgramParametersFormEl = observer(forwardRef((props: IProps, ref) => {
         clearTimeout(timeout)
         resolve(normalizeFormData(data))
       })()
-    })
+    }),
+    reset,
   }))
 
   function normalizeFormData(data: INgramFormParams) : INgramParams {

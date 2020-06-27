@@ -187,6 +187,7 @@ export class ReviewFlowStore {
     const payload = params
     const result = await reviewFlowApi.addReviewFlow(payload)
     if (result) {
+      this.reviewFlows.push(result)
       this.toastStore.createToast('Review flow created', 'success')
     }
     return result

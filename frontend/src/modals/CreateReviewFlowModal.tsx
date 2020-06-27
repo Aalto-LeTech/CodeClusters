@@ -23,6 +23,7 @@ import { IModal, EModal } from '../stores/ModalStore'
 
 interface IFormRefMethods<T> {
   executeSubmit: () => Promise<T>
+  reset: () => void
 }
 interface IProps {
   className?: string
@@ -62,7 +63,7 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
   const {
     className, courseId, exerciseId, userId, searchParams, modal,
     models, selectedModel, modelParameters,
-    setSelectedModel, runModel, addReviewFlow, closeModal, setToasterLocation
+    setSelectedModel, runModel, addReviewFlow, setToasterLocation, closeModal
   } = props
   const [submitInProgress, setSubmitInProgress] = useState(false)
 
@@ -74,6 +75,12 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
   }
   function handleSearch(params: ISearchCodeParams) {
     return Promise.resolve()
+  }
+  function reset() {
+    reviewFlowFormRef?.current?.reset()
+    searchFormRef?.current?.reset()
+    modelFormRef?.current?.reset()
+    reviewFormRef?.current?.reset()
   }
   async function handleReviewFlowSubmit() {
     try {
@@ -111,7 +118,9 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
         setSubmitInProgress(true)
         const result = await addReviewFlow!(payload)
         if (result) {
+          reset()
           setSubmitInProgress(false)
+          closeModal!()
         } else {
           setSubmitInProgress(false)
         }

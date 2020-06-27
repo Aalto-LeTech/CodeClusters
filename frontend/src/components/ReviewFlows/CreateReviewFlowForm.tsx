@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
+import React, { forwardRef, useImperativeHandle, useState } from 'react'
 import styled from '../../theme/styled'
 import { useForm, useFieldArray } from 'react-hook-form'
 import Joi from "@hapi/joi"
@@ -24,7 +24,7 @@ const resolver = joiResolver(validationSchema)
 const CreateReviewFlowFormEl = forwardRef((props: IProps, ref: any) => {
   const { className } = props
   const {
-    register, errors, reset, setValue, setError, clearError, handleSubmit
+    register, errors, control, reset, setError, clearError, handleSubmit,
   } = useForm<IReviewFlowCreateFormParams>({
     validationResolver: resolver,
     defaultValues: {
@@ -33,17 +33,15 @@ const CreateReviewFlowFormEl = forwardRef((props: IProps, ref: any) => {
       tags: [],
     }
   })
-  const [tags, setTags] = useState<string[]>([])
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'tags',
+  })
   const [tagText, setTagText] = useState('')
-
-  useEffect(() => {
-    register('tags')
-  }, [])
 
   // See NgramParametersForm.tsx for explanation
   useImperativeHandle(ref, () => ({
     executeSubmit: () => new Promise((resolve, reject) => {
-      setValue('tags', tags)
       const timeout = setTimeout(() => reject('CreateReviewFlowForm'), 500)
       handleSubmit((data: IReviewFlowCreateFormParams, e?: React.BaseSyntheticEvent) => {
         clearTimeout(timeout)
@@ -54,14 +52,12 @@ const CreateReviewFlowFormEl = forwardRef((props: IProps, ref: any) => {
   }))
 
   function addTag(item: string) {
-    const newTags = [...tags, item]
-    setTags(newTags)
     clearError('tags')
+    append({ id: item, name: item })
   }
   function removeTag(item: string) {
-    const newTags = tags.filter(t => t !== item)
-    setTags(newTags)
-    if (newTags.length === 0) {
+    remove(fields.findIndex(t => t.name === item))
+    if (fields.length <= 1) {
       setError('tags', 'min_length', 'not enough')
     }
   }
@@ -98,11 +94,20 @@ const CreateReviewFlowFormEl = forwardRef((props: IProps, ref: any) => {
           id="new_reviewflow_tags"
           placeholder="Press enter to input"
           value={tagText}
-          items={tags}
+          items={fields.map(f => f.name)}
           onChange={(val: string) => setTagText(val)}
           onAddItem={addTag}
           onRemoveItem={removeTag}
         />
+        { fields.map((f, i) =>
+        <input
+          key={`f_${f.id}_${i}`}
+          type="hidden"
+          name={`tags[${i}]`}
+          defaultValue={f.name}
+          ref={register()}
+        />
+        )}
         <Error>
           { errors.tags && 'You must have at least 1 tag.'}
         </Error>

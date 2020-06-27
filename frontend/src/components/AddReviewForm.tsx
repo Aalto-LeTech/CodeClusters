@@ -32,7 +32,8 @@ const AddReviewFormEl = memo(forwardRef((props: IProps, ref: any) => {
         clearTimeout(timeout)
         resolve(data)
       })()
-    })
+    }),
+    reset,
   }))
 
   const onSubmitForm = async (data: IReviewCreateFormParams, e?: React.BaseSyntheticEvent) => {

@@ -93,7 +93,7 @@ function DropdownSearchEl(props: IProps) {
       </InputWrapper>
       <DropdownList open={menuOpen}>
         { options.map((o, i) =>
-        <OptionItem key={o.key} visible={shownItems[i]}>
+        <OptionItem key={`ds_${o.key}_${i}`} visible={shownItems[i]}>
           <OptionButton
             type="button"
             onClick={selectOption(o)}

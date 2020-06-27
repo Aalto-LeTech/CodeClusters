@@ -51,8 +51,8 @@ function MultiInputEl(props: IProps) {
   return (
     <Container className={className} fullWidth={fullWidth}>
       { icon }
-      { items.map(item =>
-      <Item key={item}>
+      { items.map((item, index) =>
+      <Item key={`mi_${index}_${item}`}>
         <ItemText>{item}</ItemText>
         <SvgWrapper onClick={() => handleClickX(item)}><FiX size={20}/></SvgWrapper>
       </Item>
