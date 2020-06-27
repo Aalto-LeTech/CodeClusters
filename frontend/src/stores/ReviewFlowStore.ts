@@ -186,10 +186,17 @@ export class ReviewFlowStore {
   @action addReviewFlow = async (params: IReviewFlowCreateParams) => {
     const payload = params
     const result = await reviewFlowApi.addReviewFlow(payload)
-    if (result) {
-      this.reviewFlows.push(result)
-      this.toastStore.createToast('Review flow created', 'success')
-    }
+    runInAction(() => {
+      if (result) {
+        this.reviewFlows.push(result)
+        const courseId = this.courseStore.selectedCourse?.course_id
+        const exerciseId = this.courseStore.selectedExercise?.exercise_id
+        const userId = this.authStore.user?.user_id
+        this.setFilteredFlows(this.reviewFlows, courseId, exerciseId, userId)
+        this.setFilterOptions()
+        this.toastStore.createToast('Review flow created', 'success')
+      }
+    })
     return result
   }
 }

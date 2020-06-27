@@ -37,7 +37,7 @@ export const getReviewFlows = async (req: IAuthRequest<{}, IReviewListQueryParam
 export const createReviewFlow = async (req: IAuthRequest<IReviewFlowCreateParams>, res: Response, next: NextFunction) => {
   try {
     const reviewFlow = await reviewFlowService.createReviewFlow(req.body)
-    res.json({ reviewFlow })
+    res.json(reviewFlow)
   } catch (err) {
     next(err)
   }

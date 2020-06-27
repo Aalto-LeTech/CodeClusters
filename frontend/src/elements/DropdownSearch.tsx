@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { memo, useRef, useState } from 'react'
 import styled from '../theme/styled'
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi'
 
@@ -23,13 +23,9 @@ interface IProps {
   onSelect: (option: IDropdownOption) => void
 }
 
-DropdownSearchEl.defaultProps = {
-  placeholder: 'Search',
-}
-
-function DropdownSearchEl(props: IProps) {
+const DropdownSearchEl = memo((props: IProps) => {
   const {
-    className, value, options, selected, disabled, placeholder, fullWidth, onChange, onSelect
+    className, value, options, selected, disabled, placeholder = 'Search', fullWidth, onChange, onSelect
   } = props
   const [shownItems, setShownItems] = useState(options.map(o => true))
   const ref = useRef(null)
@@ -104,7 +100,7 @@ function DropdownSearchEl(props: IProps) {
       </DropdownList>
     </Container>
   )
-}
+})
 
 const Container = styled.div<{ fullWidth?: boolean }>`
   background: transparent;
@@ -195,4 +191,5 @@ const OptionButton = styled.button<OptionButtonProps>`
     background-color: rgba(0, 0, 0, 0.08);
   }
 `
+
 export const DropdownSearch = styled(DropdownSearchEl)``

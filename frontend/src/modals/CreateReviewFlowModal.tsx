@@ -81,6 +81,7 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
     searchFormRef?.current?.reset()
     modelFormRef?.current?.reset()
     reviewFormRef?.current?.reset()
+    setSelectedModel!()
   }
   async function handleReviewFlowSubmit() {
     try {
@@ -89,10 +90,6 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
       // Conditional incase no model selected, thus no validation/submit needed
       const modelFormData = selectedModel ? await modelFormRef?.current?.executeSubmit() : undefined
       const reviewFormData = await reviewFormRef?.current?.executeSubmit()
-      console.log(reviewFlowForm)
-      console.log(searchFormData)
-      console.log(modelFormData)
-      console.log(reviewFormData)
       if (reviewFlowForm && searchFormData && reviewFormData) {
         const payload: IReviewFlowCreateParams = {
           ...reviewFlowForm,
@@ -127,7 +124,6 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
       }
     } catch (err) {
       setSubmitInProgress(false)
-      console.log(err)
     }
   }
   useEffect(() => {
@@ -272,8 +268,9 @@ const SearchParams = styled.div`
 const SearchHeader = styled.div`
   align-items: center;
   display: flex;
+  margin: 0.5rem 0 1rem 0;
   & > *:first-child {
-    margin-right: 2rem;
+    margin: 0 2rem 0 0;
   }
 `
 const ModelParams = styled.div`
@@ -284,8 +281,9 @@ const ModelParams = styled.div`
 const ModelHeader = styled.div`
   align-items: center;
   display: flex;
+  margin: 0.5rem 0;
   & > *:first-child {
-    margin-right: 2rem;
+    margin: 0 2rem 0 0;
   }
 `
 const ReviewParams = styled.div`
