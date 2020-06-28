@@ -15,7 +15,7 @@ export const SEARCH_QUERY_PARAMS = Joi.object({
   num_results: Joi.number().integer(),
   num_lines: Joi.number().integer(),
   results_start: Joi.number().integer(),
-  filters: Joi.array().items(Joi.string()),
+  custom_filters: Joi.array().items(Joi.string()),
   case_sensitive: Joi.boolean(),
   regex: Joi.boolean(),
   whole_words: Joi.boolean(),

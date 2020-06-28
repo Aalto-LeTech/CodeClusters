@@ -2,35 +2,12 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { inject, observer } from 'mobx-react'
 import { withRouter, RouteComponentProps } from 'react-router'
+import { createSearchQueryParams, parseSearchQueryParams } from '../../utils/url'
 
 import { SearchForm } from './SearchForm'
 
 import { Stores } from '../../stores'
 import { ISearchCodeParams, ISolrSearchCodeResponse } from 'shared'
-
-function removeEmptyValues(obj: {[key: string]: any}) {
-  return Object.keys(obj).reduce((acc, key) => {
-    if (!obj[key] || obj[key] === '' || obj[key].length === 0) {
-      return acc
-    }
-    return { ...acc, [key]: obj[key] }
-  }, {})
-}
-function createSearchQueryParams(obj: {[key: string]: any}) {
-  return Object.keys(obj).reduce((acc, cur, i) => cur !== 'q' ? `${acc}&${cur}=${obj[cur]}` : acc, `?q=${obj.q}`)
-}
-// TODO validate/filter params from a list?
-function parseSearchQueryParams(q: string) {
-  return q.split('&').reduce((acc: ISearchCodeParams, cur: string) => {
-    const params = cur.split('=')
-    if (cur.includes('?q=')) {
-      acc['q'] = params[1]
-    } else {
-      acc[params[0]] = params[1]
-    }
-    return acc
-  }, {} as ISearchCodeParams)
-}
 
 interface IProps extends RouteComponentProps {
   className?: string
@@ -60,7 +37,7 @@ const SearchConsoleEl = inject((stores: Stores) => ({
   } = props
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
-    const current = createSearchQueryParams(removeEmptyValues(searchParams!))
+    const current = createSearchQueryParams(searchParams!)
     if (history.location.search !== current && !mounted) {
       const searchQuery = parseSearchQueryParams(history.location.search)
       setInitialSearchParams!(searchQuery)

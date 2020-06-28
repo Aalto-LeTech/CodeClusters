@@ -2,6 +2,7 @@ import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } f
 import styled from 'styled-components'
 import { observer } from 'mobx-react'
 import { useForm, useFieldArray } from 'react-hook-form'
+import { removeEmptyValues } from '../../utils/url'
 
 import { SearchBar } from './SearchBar'
 import { CheckBox } from '../../elements/CheckBox'
@@ -11,15 +12,6 @@ import { MultiInput } from '../../elements/MultiInput'
 import { useDebouncedCallback } from '../../hooks/useDebounce'
 
 import { ISearchCodeParams } from 'shared'
-
-function removeEmptyValues(obj: {[key: string]: any}) {
-  return Object.keys(obj).reduce((acc, key) => {
-    if (!obj[key] || obj[key] === '' || obj[key].length === 0) {
-      return acc
-    }
-    return { ...acc, [key]: obj[key] }
-  }, {})
-}
 
 interface ISearchParams {
   num_results: number
@@ -44,7 +36,7 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
   const {
     className, id, defaultSearchParams, courseId, exerciseId, onChange, onSearch,
   } = props
-  const { register, reset, setValue, control, clearError, setError, handleSubmit } = useForm<ISearchParams>()
+  const { register, reset, control, clearError, setError, handleSubmit } = useForm<ISearchParams>()
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'custom_filters',
@@ -54,20 +46,18 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
   const debouncedSearch = useDebouncedCallback(handleSearch, 500)
 
   useEffect(() => {
-    const values = Object.keys(defaultSearchParams || {}).map(k => {
-      const val = defaultSearchParams![k]
-      if (k === 'q' && val === '*') {
-        return { [k]: '' }
-      }
-      return { [k]: val }
-    })
-    setValue(values)
+    if (defaultSearchParams) {
+      resetValues(defaultSearchParams)
+    }
   }, [defaultSearchParams])
 
   // See NgramParametersForm.tsx for explanation
   useImperativeHandle(ref, () => ({
-    executeSubmit: () => new Promise((resolve, reject) => {
+    executeSubmit: (defaultData?: ISearchCodeParams) => new Promise((resolve, reject) => {
       const timeout = setTimeout(() => reject('SearchForm'), 500)
+      if (defaultData) {
+        resetValues(defaultData)
+      }
       handleSubmit((data: ISearchParams, e?: React.BaseSyntheticEvent) => {
         clearTimeout(timeout)
         resolve(normalizeFormData(data))
@@ -76,6 +66,20 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
     reset,
   }))
 
+  function resetValues(data: ISearchCodeParams) {
+    const values = Object.keys(data).reduce((acc: any, k: string) => {
+      const val = data[k]
+      if (k === 'q' && val === '*') {
+        acc[k] = ''
+      } else if (k === 'custom_filters') {
+        acc[k] = val.map((f: string) => ({ name: f }))
+      } else {
+        acc[k] = val
+      }
+      return acc
+    }, {})
+    reset(values)
+  }
   function handleChange() {
     debouncedSearch()
     if (onChange) onChange()
@@ -86,12 +90,14 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
   function addCustomFilter(item: string) {
     clearError('custom_filters')
     append({ id: item, name: item })
+    handleChange()
   }
   function removeCustomFilter(item: string) {
     remove(fields.findIndex(f => f.name === item))
     if (fields.length <= 1) {
       setError('custom_filters', 'min_length', 'not enough')
     }
+    handleChange()
   }
   function handleSearch() {
     if (submitButtonRef && submitButtonRef.current) {

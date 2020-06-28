@@ -22,7 +22,7 @@ import { Stores } from '../stores'
 import { IModal, EModal } from '../stores/ModalStore'
 
 interface IFormRefMethods<T> {
-  executeSubmit: () => Promise<T>
+  executeSubmit: (defaultData?: any) => Promise<T>
   reset: () => void
 }
 interface IProps {
@@ -30,7 +30,7 @@ interface IProps {
   courseId?: number
   exerciseId?: number
   userId?: number
-  searchParams?: ISearchCodeParams
+  searchParameters?: ISearchCodeParams
   modal?: IModal
   models?: IModel[]
   selectedModel?: IModel
@@ -48,9 +48,9 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
   courseId: stores.courseStore.courseId,
   exerciseId: stores.courseStore.exerciseId,
   userId: stores.authStore.user?.user_id,
-  searchParams: stores.searchStore.searchParams,
   modal: stores.modalStore.modals[EModal.CREATE_REVIEW_FLOW],
   models: stores.modelStore.models,
+  searchParameters: stores.searchStore.searchParams,
   selectedModel: stores.reviewFlowStore.newReviewFlowSelectedModel,
   modelParameters: stores.reviewFlowStore.newReviewFlowModelParameters,
   setSelectedModel: stores.reviewFlowStore.setSelectedNewReviewFlowModel,
@@ -61,7 +61,7 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
 }))
 (observer((props: IProps) => {
   const {
-    className, courseId, exerciseId, userId, searchParams, modal,
+    className, courseId, exerciseId, userId, searchParameters, modal,
     models, selectedModel, modelParameters,
     setSelectedModel, runModel, addReviewFlow, setToasterLocation, closeModal
   } = props
@@ -75,6 +75,12 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
   }
   function handleSearch(params: ISearchCodeParams) {
     return Promise.resolve()
+  }
+  function handleUseCurrentSearch() {
+    searchFormRef?.current?.executeSubmit(searchParameters)
+  }
+  function handleUseCurrentModel() {
+
   }
   function reset() {
     reviewFlowFormRef?.current?.reset()
@@ -156,7 +162,7 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
           <SearchParams>
             <SearchHeader>
               <Title>Search</Title>
-              <div><Button>Use current search</Button></div>
+              <div><Button onClick={handleUseCurrentSearch}>Use current search</Button></div>
             </SearchHeader>
             <SearchForm
               ref={searchFormRef}
