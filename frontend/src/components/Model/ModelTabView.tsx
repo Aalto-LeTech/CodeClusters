@@ -7,8 +7,9 @@ import { ClusteringResults } from './ClusteringResults'
 import { LocalSearchForm } from './LocalSearchForm'
 
 import {
-  IModel, IModelParams, INgramParams
+  IModel, IModelId, IModelParams, INgramParams
 } from 'shared'
+import { ModelFormParams } from '../../types/forms'
 import { Stores } from '../../stores'
 
 interface IProps {
@@ -16,25 +17,28 @@ interface IProps {
   visible: boolean
   models?: IModel[]
   selectedModel?: IModel
-  modelParameters?: {
+  initialModelData?: {
     ngram: INgramParams
   }
   getModels?: () => Promise<IModel[] | undefined>
   setSelectedModel?: (model?: IModel) => void
+  updateModelFormData?: (modelId: IModelId, formData: ModelFormParams) => void
   runModel?: (data: IModelParams) => Promise<any>
 }
 
 const ModelTabViewEl = inject((stores: Stores) => ({
   models: stores.modelStore.models,
   selectedModel: stores.modelStore.selectedModel,
-  modelParameters: stores.modelStore.modelParameters,
+  initialModelData: stores.modelStore.initialModelData,
   getModels: stores.modelStore.getModels,
   setSelectedModel: stores.modelStore.setSelectedModel,
+  updateModelFormData: stores.modelStore.updateModelFormData,
   runModel: stores.modelStore.runModel,
 }))
 (observer((props: IProps) => {
   const {
-    className, visible, models, selectedModel, modelParameters, getModels, setSelectedModel, runModel
+    className, visible, models, selectedModel, initialModelData,
+    getModels, setSelectedModel, updateModelFormData, runModel
   } = props
   const [loading, setLoading] = useState(false)
 
@@ -45,6 +49,10 @@ const ModelTabViewEl = inject((stores: Stores) => ({
     })
   }, [])
 
+  function handleModelFormDataChange(formData: ModelFormParams) {
+    updateModelFormData!(selectedModel?.model_id!, formData)
+  }
+
   return (
     <Container className={className} visible={visible}>
       <Body>
@@ -52,8 +60,9 @@ const ModelTabViewEl = inject((stores: Stores) => ({
           id="modeltab"
           models={models}
           selectedModel={selectedModel}
-          initialModelParameters={modelParameters}
+          initialModelData={initialModelData!}
           setSelectedModel={setSelectedModel}
+          onModelFormChange={handleModelFormDataChange}
           onModelSubmit={runModel}
         />
         <LocalSearchForm />

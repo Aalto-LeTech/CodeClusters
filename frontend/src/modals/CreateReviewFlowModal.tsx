@@ -18,12 +18,13 @@ import {
   IReviewFlowCreateParams, IReviewFlowCreateFormParams, ISearchCodeParams, IModel, IModelParams,
   INgramParams, IReviewCreateFormParams
 } from 'shared'
+import { INgramFormParams, ModelFormParams } from '../types/forms'
 import { Stores } from '../stores'
 import { IModal, EModal } from '../stores/ModalStore'
 
 interface IFormRefMethods<T> {
   executeSubmit: (defaultData?: any) => Promise<T>
-  reset: () => void
+  reset: (formData?: any) => void
 }
 interface IProps {
   className?: string
@@ -34,7 +35,11 @@ interface IProps {
   modal?: IModal
   models?: IModel[]
   selectedModel?: IModel
-  modelParameters?: {
+  modelFormData?: {
+    ngram: INgramFormParams
+  }
+  newReviewFlowSelectedModel?: IModel
+  newReviewFlowInitialModelData?: {
     ngram: INgramParams
   }
   setSelectedModel?: (model?: IModel) => void
@@ -51,8 +56,10 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
   modal: stores.modalStore.modals[EModal.CREATE_REVIEW_FLOW],
   models: stores.modelStore.models,
   searchParameters: stores.searchStore.searchParams,
-  selectedModel: stores.reviewFlowStore.newReviewFlowSelectedModel,
-  modelParameters: stores.reviewFlowStore.newReviewFlowModelParameters,
+  selectedModel: stores.modelStore.selectedModel,
+  modelFormData: stores.modelStore.modelFormData,
+  newReviewFlowSelectedModel: stores.reviewFlowStore.newReviewFlowSelectedModel,
+  newReviewFlowInitialModelData: stores.reviewFlowStore.newReviewFlowInitialModelData,
   setSelectedModel: stores.reviewFlowStore.setSelectedNewReviewFlowModel,
   runModel: stores.modelStore.runModel,
   addReviewFlow: stores.reviewFlowStore.addReviewFlow,
@@ -62,7 +69,7 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
 (observer((props: IProps) => {
   const {
     className, courseId, exerciseId, userId, searchParameters, modal,
-    models, selectedModel, modelParameters,
+    models, selectedModel, modelFormData, newReviewFlowSelectedModel, newReviewFlowInitialModelData,
     setSelectedModel, runModel, addReviewFlow, setToasterLocation, closeModal
   } = props
   const [submitInProgress, setSubmitInProgress] = useState(false)
@@ -80,7 +87,17 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
     searchFormRef?.current?.executeSubmit(searchParameters)
   }
   function handleUseCurrentModel() {
-
+    if (selectedModel) {
+      modelFormRef?.current?.reset(modelFormData![selectedModel?.model_id])
+      setSelectedModel!(selectedModel)
+    }
+  }
+  function resetSearch() {
+    searchFormRef?.current?.reset()
+  }
+  function resetModel() {
+    modelFormRef?.current?.reset()
+    setSelectedModel!()
   }
   function reset() {
     reviewFlowFormRef?.current?.reset()
@@ -94,7 +111,7 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
       const reviewFlowForm = await reviewFlowFormRef?.current?.executeSubmit()
       const searchFormData = await searchFormRef?.current?.executeSubmit()
       // Conditional incase no model selected, thus no validation/submit needed
-      const modelFormData = selectedModel ? await modelFormRef?.current?.executeSubmit() : undefined
+      const modelFormData = newReviewFlowSelectedModel ? await modelFormRef?.current?.executeSubmit() : undefined
       const reviewFormData = await reviewFormRef?.current?.executeSubmit()
       if (reviewFlowForm && searchFormData && reviewFormData) {
         const payload: IReviewFlowCreateParams = {
@@ -162,7 +179,10 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
           <SearchParams>
             <SearchHeader>
               <Title>Search</Title>
-              <div><Button onClick={handleUseCurrentSearch}>Use current search</Button></div>
+              <ParamsHeaderButtons>
+                <Button onClick={handleUseCurrentSearch}>Use current search</Button>
+                <Button intent="transparent" onClick={resetSearch}>Reset</Button>
+              </ParamsHeaderButtons>
             </SearchHeader>
             <SearchForm
               ref={searchFormRef}
@@ -176,14 +196,17 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
           <ModelParams>
             <ModelHeader>
               <Title>Model</Title>
-              <div><Button>Use current model</Button></div>
+              <ParamsHeaderButtons>
+                <Button onClick={handleUseCurrentModel}>Use current model</Button>
+                <Button intent="transparent" onClick={resetModel}>Reset</Button>
+              </ParamsHeaderButtons>
             </ModelHeader>
             <SelectModel
               ref={modelFormRef}
               id="new_reviewflow"
               models={models}
-              selectedModel={selectedModel}
-              initialModelParameters={modelParameters}
+              selectedModel={newReviewFlowSelectedModel}
+              initialModelData={newReviewFlowInitialModelData!}
               setSelectedModel={setSelectedModel}
             />
           </ModelParams>
@@ -260,6 +283,13 @@ const TitleWrapper = styled.div`
 `
 const Title = styled.h3`
   margin: 0.5rem 0 1rem 0;
+`
+const ParamsHeaderButtons = styled.div`
+  align-items: center;
+  display: flex;
+  & > * + * {
+    margin-left: 1rem;
+  }
 `
 const ReviewFlowParams = styled.div`
   margin: 1rem 0;

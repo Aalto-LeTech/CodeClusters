@@ -184,7 +184,7 @@ declare module 'shared' {
     description: string
   }
   export type IModelParams = INgramParams | IMetricsParams
-  export type IModelId = 'ngram'
+  export type IModelId = 'ngram' | 'metrics'
   export type IRunModelResponse = IRunNgramResponse
   // Metrics model API
   export interface IMetricsParams {

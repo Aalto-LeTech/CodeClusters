@@ -62,7 +62,7 @@ export class ReviewFlowStore {
   @observable tabFilterOptions: ITabOption[] = FILTER_OPTIONS.map(o => ({ ...o, disabled: false, itemCount: 0 }))
   @observable newReviewFlowSearchParams: ISearchCodeParams = EMPTY_QUERY
   @observable newReviewFlowSelectedModel?: IModel = undefined
-  @observable newReviewFlowModelParameters: { 
+  @observable newReviewFlowInitialModelData: { 
     [NgramModelId]: INgramParams
   } = {
     [NgramModelId]: {

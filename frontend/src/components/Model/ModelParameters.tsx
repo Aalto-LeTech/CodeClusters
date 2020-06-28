@@ -13,22 +13,24 @@ import { NgramParametersForm } from './NgramParametersForm'
 import {
   IModel, IModelParams, INgramParams, NgramModelId
 } from 'shared'
+import { ModelFormParams } from '../../types/forms'
 
 interface IProps {
   className?: string
   id: string
   selectedModel?: IModel
-  initialModelParameters: {
+  initialModelData: {
     ngram: INgramParams
   }
+  onModelFormChange?: (formData: ModelFormParams) => void
   onModelSubmit?: (data: IModelParams) => Promise<any>
 }
 
 const ModelParametersEl = observer(forwardRef((props: IProps, ref) => {
-  const { className, id, selectedModel, initialModelParameters, onModelSubmit } = props
+  const { className, id, selectedModel, initialModelData, onModelFormChange, onModelSubmit } = props
   const [minimized, setMinimized] = useState(true)
 
-  async function handleClickToggle() {
+  function handleClickToggle() {
     setMinimized(!minimized)
   }
   return (
@@ -42,16 +44,17 @@ const ModelParametersEl = observer(forwardRef((props: IProps, ref) => {
           { minimized ? <FiChevronDown size={18}/> : <FiChevronUp size={18}/>}
         </Icon>
       </Header>
-      { selectedModel && <Body minimized={minimized}>
+      <Body minimized={minimized}>
         <NgramParametersForm
           ref={ref}
           id={id}
           visible={selectedModel?.model_id === NgramModelId}
-          initialData={initialModelParameters![NgramModelId]}
+          initialData={initialModelData![NgramModelId]}
           onSubmit={onModelSubmit}
+          onChange={onModelFormChange}
           onCancel={() => setMinimized(true)}
         />
-      </Body> }
+      </Body>
     </Container>
   )
 }))

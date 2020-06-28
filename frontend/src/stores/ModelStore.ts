@@ -4,8 +4,9 @@ import * as modelApi from '../api/model.api'
 // import { persist } from './persist'
 
 import {
-  IModel, IModelParams, IRunModelResponse, INgramParams, NgramModelId
+  IModel, IModelParams, IRunModelResponse, INgramParams, NgramModelId, IModelId
 } from 'shared'
+import { INgramFormParams, ModelFormParams } from '../types/forms'
 import { ToastStore } from './ToastStore'
 import { SearchStore } from './SearchStore'
 import { LocalSearchStore } from './LocalSearchStore'
@@ -20,14 +21,17 @@ interface IProps {
 
 export class ModelStore {
   @observable models: IModel[] = []
+  @observable ranModels: IRunModelResponse[] = []
   @observable selectedModel?: IModel = undefined
-  @observable runModels: IRunModelResponse[] = []
-  @observable modelParameters: { 
-    [NgramModelId]: INgramParams
+  @observable initialModelData: { 
+    [NgramModelId]: INgramParams | undefined
   } = {
-    [NgramModelId]: {
-      model_id: NgramModelId,
-    }
+    [NgramModelId]: undefined,
+  }
+  @observable modelFormData: { 
+    [NgramModelId]: INgramFormParams | undefined
+  } = {
+    [NgramModelId]: undefined,
   }
   toastStore: ToastStore
   searchStore: SearchStore
@@ -46,6 +50,10 @@ export class ModelStore {
 
   @action setSelectedModel = (model?: IModel) => {
     this.selectedModel = model
+  }
+
+  @action updateModelFormData = (modelId: IModelId, formData: ModelFormParams) => {
+    this.modelFormData[modelId] = formData
   }
 
   @action runModel = async (data: IModelParams) => {
@@ -68,7 +76,7 @@ export class ModelStore {
     runInAction(() => {
       if (result) {
         this.toastStore.createToast('Model ran successfully', 'success')
-        this.runModels.push(result)
+        this.ranModels.push(result)
         if (data.model_id === NgramModelId) {
           this.clustersStore.setLatestNgramModel(result)
           const firstCluster = Object.keys(result.ngram.clusters)[0]

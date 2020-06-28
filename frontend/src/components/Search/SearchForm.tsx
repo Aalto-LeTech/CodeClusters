@@ -63,7 +63,9 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
         resolve(normalizeFormData(data))
       })()
     }),
-    reset,
+    reset: () => {
+      reset({})
+    },
   }))
 
   function resetValues(data: ISearchCodeParams) {

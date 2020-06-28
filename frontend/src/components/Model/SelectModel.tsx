@@ -9,25 +9,25 @@ import { ModelParameters } from './ModelParameters'
 import { Icon } from '../../elements/Icon'
 import { Dropdown } from '../../elements/Dropdown'
 
-import {
-  IModel, IModelParams, INgramParams
-} from 'shared'
+import { IModel, IModelParams, INgramParams } from 'shared'
+import { ModelFormParams } from '../../types/forms'
 
 interface IProps {
   className?: string
   id: string
   models?: IModel[]
   selectedModel?: IModel
-  initialModelParameters?: {
+  initialModelData: {
     ngram: INgramParams
   }
   setSelectedModel?: (model?: IModel) => void
+  onModelFormChange?: (formData: ModelFormParams) => void
   onModelSubmit?: (data: IModelParams) => Promise<any>
 }
 
 const SelectModelEl = observer(forwardRef((props: IProps, ref) => {
   const {
-    className, id, models, selectedModel, initialModelParameters, setSelectedModel, onModelSubmit
+    className, id, models, selectedModel, initialModelData, setSelectedModel, onModelFormChange, onModelSubmit
   } = props
   const [modelOptions, setModelOptions] = useState(models!.map(m => ({ key: m.model_id, value: m.title })))
 
@@ -70,7 +70,8 @@ const SelectModelEl = observer(forwardRef((props: IProps, ref) => {
         ref={ref}
         id={id}
         selectedModel={selectedModel}
-        initialModelParameters={initialModelParameters!}
+        initialModelData={initialModelData}
+        onModelFormChange={onModelFormChange}
         onModelSubmit={onModelSubmit}
       />
     </Container>

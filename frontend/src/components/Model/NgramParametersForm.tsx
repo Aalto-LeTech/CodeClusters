@@ -1,6 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { inject, observer } from 'mobx-react'
+import { observer } from 'mobx-react'
 import { FormContext, useForm } from 'react-hook-form'
 import Joi from "@hapi/joi"
 import merge from 'lodash.merge'
@@ -13,10 +13,8 @@ import { GenericDropdown } from '../../elements/Dropdown'
 
 import {
   INgramParams, TokenSetType, NgramModelId,
-  ClusteringAlgoType, IDBSCANParams, IHDBSCANParams, IOPTICSParams, IKMeansParams,
-  DimVisualizationType, ITSNEParams, IUMAPParams,
 } from 'shared'
-import { Stores } from '../../stores'
+import { INgramFormParams } from '../../types/forms'
 
 type TokenSetOption = { key: TokenSetType, value: string }
 
@@ -25,7 +23,6 @@ const TOKEN_SET_OPTIONS = [
   { key: 'complete', value: 'complete' },
   { key: 'keywords', value: 'keywords' }
 ] as TokenSetOption[]
-const DEFAULT_TOKEN_SET = 'modified'
 const CLUSTERING_OPTIONS = [
   'DBSCAN',
   'HDBSCAN',
@@ -39,7 +36,7 @@ const DIM_VISUALIZATION_OPTIONS = [
 
 // A schema is required to convert the numbers and booleans, as otherwise all values are strings
 const validationSchema = Joi.object({
-  token_set: Joi.string().valid('modified', 'keywords'),
+  token_set: Joi.string().valid('modified', 'complete', 'keywords'),
   min_ngrams: Joi.number().integer().min(1),
   max_ngrams: Joi.number().integer().min(1),
   random_seed: Joi.number().integer().min(-1),
@@ -103,70 +100,71 @@ const resolver = (data: INgramFormParams, validationContext?: object) => {
   }
 }
 
-export interface INgramFormParams {
-  token_set: 'modified' | 'keywords'
-  min_ngrams: number
-  max_ngrams: number
-  random_seed: number
-  selected_clustering_algo: ClusteringAlgoType
-  selected_dim_visualization: DimVisualizationType
-  // This Required-Omit hack omits the name, and makes all the properties defined.
-  // Otherwise the errors-object won't infer the maybe values eg. eps?: number
-  DBSCAN: Required<Omit<IDBSCANParams, 'name'>>
-  HDBSCAN: Required<Omit<IHDBSCANParams, 'name'>>
-  OPTICS: Required<Omit<IOPTICSParams, 'name'>>
-  KMeans: Required<Omit<IKMeansParams, 'name'>>
-  TSNE: Required<Omit<ITSNEParams, 'name'>>
-  UMAP: Required<Omit<IUMAPParams, 'name'>>
+function generateDefaultData(initialData?: INgramParams) {
+  return ({
+    token_set: initialData?.token_set || 'modified',
+    random_seed: initialData?.random_seed || -1,
+    min_ngrams: initialData?.ngrams && initialData.ngrams[0] || 5,
+    max_ngrams: initialData?.ngrams && initialData.ngrams[1] || 5,
+    selected_clustering_algo: initialData?.clustering_params?.name || 'DBSCAN',
+    selected_dim_visualization: initialData?.dim_visualization_params?.name || 'TSNE',
+    DBSCAN: initialData?.clustering_params?.name !== 'DBSCAN' ? {
+      min_samples: 5,
+      eps: 0.25,
+    } : initialData?.clustering_params,
+    HDBSCAN: initialData?.clustering_params?.name !== 'HDBSCAN' ? {
+      min_cluster_size: 2,
+      min_samples: 5,
+      show_linkage_tree: false,
+    } : initialData?.clustering_params,
+    OPTICS: initialData?.clustering_params?.name !== 'OPTICS' ? {
+      min_samples: 5,
+      max_eps: undefined,
+    } : initialData?.clustering_params,
+    KMeans: initialData?.clustering_params?.name !== 'KMeans' ? {
+      k_clusters: 2,
+    } : initialData?.clustering_params,
+    TSNE: initialData?.dim_visualization_params?.name !== 'TSNE' ? {
+      svd_n_components: undefined,
+      perplexity: 30,
+    }: initialData?.dim_visualization_params,
+    UMAP: initialData?.dim_visualization_params?.name !== 'UMAP' ? {
+      n_neighbors: 30,
+      min_dist: 0.0,
+    }: initialData?.dim_visualization_params,
+  })
 }
+
 interface IProps {
   className?: string
   id: string
   visible: boolean
-  initialData: Partial<INgramParams>
+  initialData?: INgramParams
   onSubmit?: (data: INgramParams) => Promise<any>
+  onChange?: (formData: INgramFormParams) => void
   onCancel: () => void
 }
 
 const NgramParametersFormEl = observer(forwardRef((props: IProps, ref) => {
-  const { className, id, visible, initialData, onSubmit, onCancel } = props
+  const { className, id, visible, initialData, onSubmit, onChange, onCancel } = props
   const methods = useForm<INgramFormParams>({
     validationResolver: resolver,
-    defaultValues: {
-      random_seed: initialData?.random_seed || -1,
-      min_ngrams: initialData?.ngrams && initialData.ngrams[0] || 5,
-      max_ngrams: initialData?.ngrams && initialData.ngrams[1] || 5,
-      selected_clustering_algo: initialData?.clustering_params?.name || 'DBSCAN',
-      selected_dim_visualization: initialData?.dim_visualization_params?.name || 'TSNE',
-      DBSCAN: initialData?.clustering_params?.name !== 'DBSCAN' ? {
-        min_samples: 5,
-        eps: 0.25,
-      } : initialData?.clustering_params,
-      HDBSCAN: initialData?.clustering_params?.name !== 'HDBSCAN' ? {
-        min_cluster_size: 2,
-        min_samples: 5,
-        show_linkage_tree: false,
-      } : initialData?.clustering_params,
-      OPTICS: initialData?.clustering_params?.name !== 'OPTICS' ? {
-        min_samples: 5,
-        max_eps: undefined,
-      } : initialData?.clustering_params,
-      KMeans: initialData?.clustering_params?.name !== 'KMeans' ? {
-        k_clusters: 2,
-      } : initialData?.clustering_params,
-      TSNE: initialData?.dim_visualization_params?.name !== 'TSNE' ? {
-        svd_n_components: undefined,
-        perplexity: 30,
-      }: initialData?.dim_visualization_params,
-      UMAP: initialData?.dim_visualization_params?.name !== 'UMAP' ? {
-        n_neighbors: 30,
-        min_dist: 0.0,
-      }: initialData?.dim_visualization_params,
-    }
+    defaultValues: generateDefaultData(initialData),
   })
-  const { register, reset, errors, handleSubmit } = methods
-  const [tokenSet, setTokenSet] = useState<TokenSetType>(DEFAULT_TOKEN_SET)
+  const { register, reset, errors, watch, getValues, handleSubmit } = methods
+  const [tokenSet, setTokenSet] = useState<TokenSetType>(getValues('token_set'))
   const [submitInProgress, setSubmitInProgress] = useState(false)
+  const watchAllFields = watch()
+  const tokenSetChanged = watch('token_set')
+
+  useEffect(() => {
+    if (onChange) {
+      onChange(getValues() as unknown as INgramFormParams)
+    }
+  }, [watchAllFields])
+  useEffect(() => {
+    setTokenSet(getValues('token_set'))
+  }, [tokenSetChanged])
 
   // This kludge is for programmatically triggering submit from the CreateReviewFlowModal of the form.
   // This way the data is validated and parsed using the Joi schema (and transformed with normalizeFormData)
@@ -179,7 +177,13 @@ const NgramParametersFormEl = observer(forwardRef((props: IProps, ref) => {
         resolve(normalizeFormData(data))
       })()
     }),
-    reset,
+    reset: (formData?: any) => {
+      if (formData) {
+        reset(formData)
+      } else {
+        reset(generateDefaultData(initialData))
+      }
+    },
   }))
 
   function normalizeFormData(data: INgramFormParams) : INgramParams {
@@ -222,6 +226,11 @@ const NgramParametersFormEl = observer(forwardRef((props: IProps, ref) => {
               selected={tokenSet}
               options={TOKEN_SET_OPTIONS}
               onSelect={handleTokenSetChange}
+            />
+            <input
+              type="hidden"
+              name="token_set"
+              ref={register}
             />
           </FormField>
           <FormField>

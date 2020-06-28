@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { useFormContext } from 'react-hook-form'
 
@@ -6,7 +6,7 @@ import { Input } from '../../elements/Input'
 import { GenericDropdown } from '../../elements/Dropdown'
 
 import { ClusteringAlgoType } from 'shared'
-import { INgramFormParams } from './NgramParametersForm'
+import { INgramFormParams } from '../../types/forms'
 
 interface IProps {
   className?: string
@@ -45,11 +45,15 @@ const CLUSTERING_INFO = [
 
 const SelectClusteringAlgoEl = (props: IProps) => {
   const { className, id } = props
-  const { register, getValues, setValue } = useFormContext<INgramFormParams>()
+  const { register, watch, getValues, setValue } = useFormContext<INgramFormParams>()
   const [clusteringAlgo, setClusteringAlgo] = useState<ClusteringAlgoType>(getValues('selected_clustering_algo'))
   const clusteringInfo = useMemo(() => CLUSTERING_INFO.find(c => c.key === clusteringAlgo), [clusteringAlgo])
+  const clusteringAlgoChanged = watch('selected_clustering_algo')
+  useEffect(() => {
+    setClusteringAlgo(getValues('selected_clustering_algo'))
+  }, [clusteringAlgoChanged])
+
   function handleClustAlgoChange(opt: { key: ClusteringAlgoType, value: string }) {
-    setClusteringAlgo(opt.key)
     setValue('selected_clustering_algo', opt.key)
   }
   return (

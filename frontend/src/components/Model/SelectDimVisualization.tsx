@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { useFormContext } from 'react-hook-form'
 
@@ -6,7 +6,7 @@ import { Input } from '../../elements/Input'
 import { GenericDropdown } from '../../elements/Dropdown'
 
 import { DimVisualizationType } from 'shared'
-import { INgramFormParams } from './NgramParametersForm'
+import { INgramFormParams } from '../../types/forms'
 
 interface IProps {
   className?: string
@@ -33,11 +33,16 @@ const DIM_VISUALIZATION_INFO = [
 
 const SelectDimVisualizationEl = (props: IProps) => {
   const { className, id } = props
-  const { register, getValues, setValue } = useFormContext<INgramFormParams>()
+  const { register, watch, getValues, setValue } = useFormContext<INgramFormParams>()
   const [dimVisualization, setDimVisualization] = useState<DimVisualizationType>(getValues('selected_dim_visualization'))
   const clusteringInfo = useMemo(() => DIM_VISUALIZATION_INFO.find(c => c.key === dimVisualization), [dimVisualization])
+  const dimVisualizationChanged = watch('selected_dim_visualization')
+
+  useEffect(() => {
+    setDimVisualization(getValues('selected_dim_visualization'))
+  }, [dimVisualizationChanged])
+
   function handleDimVisualizationChange(opt: { key: DimVisualizationType, value: string }) {
-    setDimVisualization(opt.key)
     setValue('selected_dim_visualization', opt.key)
   }
   return (
