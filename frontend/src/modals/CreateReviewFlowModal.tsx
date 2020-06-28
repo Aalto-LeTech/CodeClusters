@@ -6,6 +6,7 @@ import { FiX } from 'react-icons/fi'
 import useClickOutside from '../hooks/useClickOutside'
 import useScrollLock from '../hooks/useScrollLock'
 
+import { SelectCourseExercise } from '../components/SelectCourseExercise'
 import { CreateReviewFlowForm } from '../components/ReviewFlows/CreateReviewFlowForm'
 import { SearchForm } from '../components/Search/SearchForm'
 import { SelectModel } from '../components/Model/SelectModel'
@@ -116,7 +117,9 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
       if (reviewFlowForm && searchFormData && reviewFormData) {
         const payload: IReviewFlowCreateParams = {
           ...reviewFlowForm,
-          user_id: userId ? userId : 0,
+          course_id: courseId,
+          exercise_id: exerciseId,
+          user_id: userId!,
           steps: [{
             index: 0,
             action: 'Search',
@@ -169,12 +172,21 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
       body={
         <Body ref={ref}>
           <Header>
-            <TitleWrapper><h2>Create new review flow</h2></TitleWrapper>
+            <ModalTitleWrapper><h2>Create new review flow</h2></ModalTitleWrapper>
             <Icon button onClick={handleClose}><FiX size={24}/></Icon>
           </Header>
           <ReviewFlowParams>
             <CreateReviewFlowForm ref={reviewFlowFormRef}/>
           </ReviewFlowParams>
+          <Divider />
+          <SelectCourseExerciseContainer>
+            <ParamsHeader>
+              <Title>Select optional course and exercise</Title>
+              <div></div>
+            </ParamsHeader>
+            <p>Select optional course and exercise for which this flow is intended.</p>
+            <SelectCourseExercise />
+          </SelectCourseExerciseContainer>
           <Divider />
           <SearchParams>
             <SearchHeader>
@@ -212,10 +224,10 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
           </ModelParams>
           <Divider />
           <ReviewParams>
-            <ReviewHeader>
+            <ParamsHeader>
               <Title>Review</Title>
               <div></div>
-            </ReviewHeader>
+            </ParamsHeader>
             <AddReviewForm ref={reviewFormRef}/>
           </ReviewParams>
           <ButtonControls>
@@ -269,7 +281,7 @@ const Divider = styled.hr`
   margin: 1rem 0;
   width: 100%;
 `
-const TitleWrapper = styled.div`
+const ModalTitleWrapper = styled.div`
   display: flex;
   justify-content: center;
   padding-left: 40px;
@@ -279,6 +291,17 @@ const TitleWrapper = styled.div`
     font-weight: 500;
     margin: 0;
     padding: 0;
+  }
+`
+const SelectCourseExerciseContainer = styled.div`
+  margin: 0 0 1rem 0;
+  max-width: 700px;
+  width: 100%;
+  & > p {
+    margin: 1rem 0 2rem 0;
+  }
+  & > ${SelectCourseExercise} {
+    align-items: flex-start;
   }
 `
 const Title = styled.h3`
@@ -326,7 +349,7 @@ const ReviewParams = styled.div`
   max-width: 700px;
   width: 100%;
 `
-const ReviewHeader = styled.div`
+const ParamsHeader = styled.div`
   align-items: center;
   display: flex;
 `

@@ -63,7 +63,7 @@ export class ModelStore {
       return undefined
     }
     if (submissions.length < 20) {
-      this.toastStore.createToast('Less than 20 search results', 'danger')
+      this.toastStore.createToast('Less than 20 search results for modeling', 'danger')
       return undefined
     }
     const payload = {
