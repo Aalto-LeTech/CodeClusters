@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useState, useEffect } from 'react'
+import React, { memo, useCallback, useMemo, useState, useEffect } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../../theme/styled'
 
@@ -33,8 +33,8 @@ const ResultItemEl = inject((stores: Stores) => ({
 }))
 (observer((props: IProps) => {
   const { className, result, selectedReviewId, getSelection, toggleSelection } = props
-  const [codeLines, setCodeLines] = useState([] as string[])
-  const [rawCodeLines, setRawCodeLines] = useState([] as string[])
+  const [codeLines, setCodeLines] = useState<string[]>([])
+  const [rawCodeLines, setRawCodeLines] = useState<string[]>([])
   const [matches, setMatches] = useState(0)
   const showMenuForThisReview = useMemo(() => selectedReviewId === result.id, [selectedReviewId])
 
@@ -58,7 +58,7 @@ const ResultItemEl = inject((stores: Stores) => ({
   function handleToggleSelection() {
     toggleSelection!(result.id)
   }
-  function handleLineClick(idx: number) {
+  const handleLineClick = useCallback((idx: number) => {
     const selection = rawCodeLines.reduce((acc, cur, i) => {
       if (i < idx) {
         acc[1] += cur.length + 1
@@ -68,9 +68,12 @@ const ResultItemEl = inject((stores: Stores) => ({
       return acc
     }, [idx, 0, 0] as [number, number, number])
     toggleSelection!(result.id, selection)
+  }, [rawCodeLines])
+  function handleContainerClick() {
+    handleToggleSelection()
   }
   return (
-    <Container className={className} active={isResultSelected()} onClick={handleToggleSelection}>
+    <Container className={className} active={isResultSelected()} onClick={handleContainerClick}>
       <CodeHeader>
         <HeaderLeft>
           <div>Student id: {result.student_id}</div>

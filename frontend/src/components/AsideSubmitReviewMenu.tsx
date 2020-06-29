@@ -99,7 +99,7 @@ const AsideSubmitReviewMenuEl = inject((stores: Stores) => ({
   )
 }))
 
-const Title = styled.h3`
+const Title = styled.h4`
   margin: 0;
 `
 const Wrapper = styled.div`

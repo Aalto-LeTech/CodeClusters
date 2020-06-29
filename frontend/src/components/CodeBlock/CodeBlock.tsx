@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { memo, useCallback } from 'react'
 import styled from '../../theme/styled'
 
 import { CodeLine } from './CodeLine'
@@ -19,6 +19,9 @@ export const CodeBlock = styled(memo((props: IProps) => {
   function isLineSelected(idx: number) {
     return activeSelection !== undefined && activeSelection[0] === idx
   }
+  const handleClickLine = useCallback((i: number) => {
+    onSelectCodeLine(i)
+  }, [])
   return (
     <Container className={className}>
       {codeLines.map((line, i) =>
@@ -28,7 +31,7 @@ export const CodeBlock = styled(memo((props: IProps) => {
         code={line}
         showMenu={isLineActive(i)}
         selected={isLineSelected(i)}
-        onClick={onSelectCodeLine}
+        onClick={handleClickLine}
       />
       )}
     </Container>
