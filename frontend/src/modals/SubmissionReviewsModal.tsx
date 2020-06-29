@@ -17,7 +17,7 @@ import { IModal, EModal } from '../stores/ModalStore'
 interface IProps {
   className?: string
   modal?: IModal
-  closeModal?: () => void
+  closeModal?: (modal: EModal) => void
 }
 
 function createCodeHTML(code: string, selection: [number, number, number]) {
@@ -26,7 +26,7 @@ function createCodeHTML(code: string, selection: [number, number, number]) {
 
 export const SubmissionReviewsModal = inject((stores: Stores) => ({
   modal: stores.modalStore.modals[EModal.SUBMISSION_REVIEWS],
-  closeModal: () => stores.modalStore.closeModal(EModal.SUBMISSION_REVIEWS),
+  closeModal: stores.modalStore.closeModal,
 }))
 (observer((props: IProps) => {
   const { className, modal, closeModal } = props
@@ -57,7 +57,7 @@ export const SubmissionReviewsModal = inject((stores: Stores) => ({
     }
   }
   function handleClose() {
-    closeModal!()
+    closeModal!(EModal.SUBMISSION_REVIEWS)
     setShownReviewIdx(-1)
     setEditingReviewSelection(false)
   }

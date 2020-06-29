@@ -13,7 +13,7 @@ import { EMPTY_QUERY, SearchStore } from './SearchStore'
 import { ModelStore } from './ModelStore'
 
 export type ReviewFlowFilterType = 'course' | 'exercise' | 'all' | 'user'
-interface ITabOption {
+export interface ITabOption {
   key: string
   value: string
   disabled: boolean

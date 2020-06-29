@@ -17,20 +17,18 @@ interface IProps {
   reviews?: IReview[]
   reviewSubmissions?: IReviewSubmission[]
   submissions?: ISubmission[]
-  openEditSubmissionReviewModal?: (params: any) => void
-  openSubmissionReviewsModal?: (params: any) => void
+  openModal?: (modal: EModal, params: any) => void
 }
 
 const SubmissionsReviewsGridEl = inject((stores: Stores) => ({
   reviews: stores.reviewStore.reviews,
   reviewSubmissions: stores.reviewStore.reviewSubmissions,
   submissions: stores.submissionStore.submissions,
-  openEditSubmissionReviewModal: (params: any) => stores.modalStore.openModal(EModal.EDIT_SUBMISSION_REVIEW, params),
-  openSubmissionReviewsModal: (params: any) => stores.modalStore.openModal(EModal.SUBMISSION_REVIEWS, params),
+  openModal: stores.modalStore.openModal,
 }))
 (observer((props: IProps) => {
   const {
-    className, reviews, reviewSubmissions, submissions, openEditSubmissionReviewModal, openSubmissionReviewsModal
+    className, reviews, reviewSubmissions, submissions, openModal
   } = props
   const [submissionReviewsRows, setSubmissionReviewsRows] = useState([] as (IReviewSubmission | undefined)[][])
   const [editedReviewId, setEditedReviewId] = useState(-1)
@@ -54,6 +52,12 @@ const SubmissionsReviewsGridEl = inject((stores: Stores) => ({
   const ref = useRef(null)
   useHover(ref, (e: MouseEvent) => handleHover(e), true)
 
+  function openEditSubmissionReviewModal(params: any) {
+    openModal!(EModal.EDIT_SUBMISSION_REVIEW, params)
+  }
+  function openSubmissionReviewsModal(params: any) {
+    openModal!(EModal.SUBMISSION_REVIEWS, params)
+  }
   function handleHover(e: MouseEvent) {
     // console.log(e)
   }

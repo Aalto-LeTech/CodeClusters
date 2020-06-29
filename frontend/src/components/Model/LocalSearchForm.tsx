@@ -1,4 +1,4 @@
-import React, { memo, useRef, useState } from 'react'
+import React, { memo, useCallback, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { inject, observer } from 'mobx-react'
 import { useForm } from 'react-hook-form'
@@ -15,12 +15,12 @@ import { ISearchCodeParams } from 'shared'
 interface IProps {
   className?: string
   search?: (payload: ISearchCodeParams) => void
-  activateLocalSearch?: () => void
+  activateLocalSearch?: (isActive: boolean) => void
 }
 
 const LocalSearchFormEl = inject((stores: Stores) => ({
   search: stores.localSearchStore.search,
-  activateLocalSearch: () => stores.localSearchStore.setActive(true),
+  activateLocalSearch: stores.localSearchStore.setActive,
 }))
 (observer((props: IProps) => {
   const {
@@ -28,17 +28,17 @@ const LocalSearchFormEl = inject((stores: Stores) => ({
   } = props
   const { register, handleSubmit } = useForm({})
   const submitButtonRef = useRef<HTMLButtonElement>(null)
+  const handleSearch = useCallback(() => {
+    activateLocalSearch!(true)
+    if (submitButtonRef && submitButtonRef.current) {
+      submitButtonRef.current.click()
+    }
+  }, [])
   const debouncedSearch = useDebouncedCallback(handleSearch, 500)
 
   function handleChange() {
     debouncedSearch()
-    activateLocalSearch!()
-  }
-  function handleSearch() {
-    activateLocalSearch!()
-    if (submitButtonRef && submitButtonRef.current) {
-      submitButtonRef.current.click()
-    }
+    activateLocalSearch!(true)
   }
   const onSubmit = async (data: any, e?: React.BaseSyntheticEvent) => {
     const payload = data

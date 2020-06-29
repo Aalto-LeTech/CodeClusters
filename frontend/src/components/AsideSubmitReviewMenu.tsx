@@ -15,7 +15,7 @@ import { EModal } from '../stores/ModalStore'
 interface IProps {
   className?: string
   reviewStore?: ReviewStore
-  openDeleteReviewSelectionModal?: (params: any) => void
+  openModal?: (modal: EModal, params: any) => void
 }
 interface IReviewFormParams {
   message: string
@@ -29,10 +29,10 @@ const EMPTY_REVIEW_FORM_PARAMS: IReviewFormParams = {
 
 const AsideSubmitReviewMenuEl = inject((stores: Stores) => ({
   reviewStore: stores.reviewStore,
-  openDeleteReviewSelectionModal: (params: any) => stores.modalStore.openModal(EModal.DELETE_REVIEW_SELECTION, params),
+  openModal: stores.modalStore.openModal,
 }))
 (observer((props: IProps) => {
-  const { className, reviewStore, openDeleteReviewSelectionModal } = props
+  const { className, reviewStore, openModal } = props
   const [review, setReview] = useState(EMPTY_REVIEW_FORM_PARAMS)
 
   /**
@@ -48,7 +48,7 @@ const AsideSubmitReviewMenuEl = inject((stores: Stores) => ({
   }
   function handleMultiSelectionToggle() {
     if (reviewStore!.hasManySelections && reviewStore!.isMultiSelection) {
-      openDeleteReviewSelectionModal!({
+      openModal!(EModal.DELETE_REVIEW_SELECTION, {
         submit: () => reviewStore!.toggleMultiSelection(),
         count: reviewStore!.currentSelectionCount - 1
       })

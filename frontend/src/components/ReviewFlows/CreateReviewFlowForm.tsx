@@ -49,7 +49,7 @@ const CreateReviewFlowFormEl = forwardRef((props: IProps, ref: any) => {
       })()
     }),
     reset,
-  }))
+  }), [])
 
   function addTag(item: string) {
     clearError('tags')

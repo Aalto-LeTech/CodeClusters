@@ -16,24 +16,24 @@ import { IModal, EModal } from '../stores/ModalStore'
 interface IProps {
   className?: string
   modal?: IModal
-  closeModal?: () => void
+  closeModal?: (modal: EModal) => void
 }
 
 export const DeleteReviewsModal = inject((stores: Stores) => ({
   modal: stores.modalStore.modals[EModal.DELETE_REVIEWS],
-  closeModal: () => stores.modalStore.closeModal(EModal.DELETE_REVIEWS),
+  closeModal: stores.modalStore.closeModal,
 }))
 (observer((props: IProps) => {
   const { className, modal, closeModal } = props
   function handleClose() {
-    closeModal!()
+    closeModal!(EModal.DELETE_REVIEWS)
   }
   function onAccept() {
     modal!.params?.submit()
-    closeModal!()
+    handleClose()
   }
   function onCancel() {
-    closeModal!()
+    handleClose()
   }
   const ref = useRef(null)
   useClickOutside(ref, (e) => handleClose(), modal!.isOpen)

@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react'
+import React, { useCallback } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../theme/styled'
 import { FiCheck, FiPlusSquare, FiFolderPlus, FiTrash } from 'react-icons/fi'
@@ -16,7 +16,7 @@ interface IProps {
   searchResultsCount?: number
   allSubmissions?: SolrSubmission[]
   shownSubmissions?: ISolrFullSubmissionWithDate[]
-  openReviewSubmissionsModal?: () => void
+  openModal?: (name: EModal, params?: any) => void
   toggleSelectShownSubmissions?: () => void
   selectAllSubmissions?: () => Promise<void>
   resetSelections?: () => void
@@ -26,18 +26,18 @@ export const FloatingMenu = inject((stores: Stores) => ({
   currentSelectionCount: stores.reviewStore.currentSelectionCount,
   searchResultsCount: stores.searchStore.searchResultsCount,
   shownSubmissionsCount: stores.searchStore.getShownSubmissions.length,
-  openReviewSubmissionsModal: () => stores.modalStore.openModal(EModal.REVIEW_SUBMISSIONS),
+  openModal: stores.modalStore.openModal,
   toggleSelectShownSubmissions: stores.reviewStore.toggleSelectShownSubmissions,
   selectAllSubmissions: stores.reviewStore.selectAllSubmissions,
   resetSelections: stores.reviewStore.resetSelections,
 }))
 (observer((props: IProps) => {
   const {
-    className, currentSelectionCount, searchResultsCount, openReviewSubmissionsModal,
+    className, currentSelectionCount, searchResultsCount, openModal,
     toggleSelectShownSubmissions, selectAllSubmissions, resetSelections
   } = props
   function handleReviewClick() {
-    openReviewSubmissionsModal!()
+    openModal!(EModal.REVIEW_SUBMISSIONS)
   }
   function handleToggleShownClick() {
     toggleSelectShownSubmissions!()

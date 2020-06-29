@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { observer } from 'mobx-react'
 import { useForm, useFieldArray } from 'react-hook-form'
@@ -43,6 +43,11 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
   })
   const [filterText, setFilterText] = useState('')
   const submitButtonRef = useRef<HTMLButtonElement>(null)
+  const handleSearch = useCallback(() => {
+    if (submitButtonRef && submitButtonRef.current) {
+      submitButtonRef.current.click()
+    }
+  }, [])
   const debouncedSearch = useDebouncedCallback(handleSearch, 500)
 
   useEffect(() => {
@@ -66,7 +71,7 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
     reset: () => {
       reset({})
     },
-  }))
+  }), [])
 
   function resetValues(data: ISearchCodeParams) {
     const values = Object.keys(data).reduce((acc: any, k: string) => {
@@ -100,11 +105,6 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
       setError('custom_filters', 'min_length', 'not enough')
     }
     handleChange()
-  }
-  function handleSearch() {
-    if (submitButtonRef && submitButtonRef.current) {
-      submitButtonRef.current.click()
-    }
   }
   function normalizeFormData(data: ISearchParams) {
     // Remove false, undefined and empty values since they are their default values

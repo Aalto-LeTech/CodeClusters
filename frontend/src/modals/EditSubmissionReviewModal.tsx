@@ -18,14 +18,14 @@ import { IReview, IReviewSubmission } from 'shared'
 interface IProps {
   className?: string
   modal?: IModal
-  closeModal?: () => void
+  closeModal?: (modal: EModal) => void
   updateReviewSubmission?: (reviewSubmission: IReviewSubmission) => Promise<boolean | undefined>
   deleteReviewSubmission?: (reviewSubmission: IReviewSubmission) => Promise<boolean | undefined>
 }
 
 export const EditSubmissionReviewModal = inject((stores: Stores) => ({
   modal: stores.modalStore.modals[EModal.EDIT_SUBMISSION_REVIEW],
-  closeModal: () => stores.modalStore.closeModal(EModal.EDIT_SUBMISSION_REVIEW),
+  closeModal: stores.modalStore.closeModal,
   updateReviewSubmission: stores.reviewStore.upsertReviewSubmission,
   deleteReviewSubmission: stores.reviewStore.deleteReviewSubmission,
 }))
@@ -59,7 +59,7 @@ export const EditSubmissionReviewModal = inject((stores: Stores) => ({
     setSelection(selection)
   }
   function handleClose() {
-    closeModal!()
+    closeModal!(EModal.EDIT_SUBMISSION_REVIEW)
   }
   async function onUpdate() {
     let result
@@ -71,17 +71,17 @@ export const EditSubmissionReviewModal = inject((stores: Stores) => ({
       })
     }
     if (result) {
-      closeModal!()
+      handleClose()
     }
   }
   async function onDelete() {
     const result = await deleteReviewSubmission!(modal!.params.reviewSubmission)
     if (result) {
-      closeModal!()
+      handleClose()
     }
   }
   function onCancel() {
-    closeModal!()
+    handleClose()
   }
   const ref = useRef(null)
   useClickOutside(ref, (e) => handleClose(), modal!.isOpen)

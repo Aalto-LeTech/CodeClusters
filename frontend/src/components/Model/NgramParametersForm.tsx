@@ -184,7 +184,7 @@ const NgramParametersFormEl = observer(forwardRef((props: IProps, ref) => {
         reset(generateDefaultData(initialData))
       }
     },
-  }))
+  }), [])
 
   function normalizeFormData(data: INgramFormParams) : INgramParams {
     const {

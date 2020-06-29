@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../theme/styled'
 import { FiX } from 'react-icons/fi'
@@ -47,7 +47,7 @@ interface IProps {
   runModel?: (data: IModelParams) => Promise<any>
   addReviewFlow?: (payload: IReviewFlowCreateParams) => Promise<any>
   setToasterLocation?: (topRight?: boolean) => void
-  closeModal?: () => void
+  closeModal?: (modal: EModal) => void
 }
 
 export const CreateReviewFlowModal = inject((stores: Stores) => ({
@@ -65,7 +65,7 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
   runModel: stores.modelStore.runModel,
   addReviewFlow: stores.reviewFlowStore.addReviewFlow,
   setToasterLocation: stores.toastStore.setToasterLocation,
-  closeModal: () => stores.modalStore.closeModal(EModal.CREATE_REVIEW_FLOW),
+  closeModal: stores.modalStore.closeModal,
 }))
 (observer((props: IProps) => {
   const {
@@ -75,11 +75,8 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
   } = props
   const [submitInProgress, setSubmitInProgress] = useState(false)
 
-  function handleClose() {
-    closeModal!()
-  }
   function onCancel() {
-    closeModal!()
+    closeModal!(EModal.CREATE_REVIEW_FLOW)
   }
   function handleSearch(params: ISearchCodeParams) {
     return Promise.resolve()
@@ -143,7 +140,7 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
         if (result) {
           reset()
           setSubmitInProgress(false)
-          closeModal!()
+          handleClose()
         } else {
           setSubmitInProgress(false)
         }
@@ -164,7 +161,10 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
   const modelFormRef = useRef<IFormRefMethods<IModelParams>>(null)
   const reviewFormRef = useRef<IFormRefMethods<IReviewCreateFormParams>>(null)
   const ref = useRef(null)
-  useClickOutside(ref, (e) => handleClose(), modal!.isOpen)
+  const handleClose = useCallback(() => {
+    closeModal!(EModal.CREATE_REVIEW_FLOW)
+  }, [])
+  useClickOutside(ref, handleClose, modal!.isOpen)
   useScrollLock(modal!.isOpen)
   return (
     <Modal className={className}

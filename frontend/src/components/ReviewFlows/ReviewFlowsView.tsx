@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../../theme/styled'
 
@@ -9,24 +9,34 @@ import { Button } from '../../elements/Button'
 
 import { Stores } from '../../stores'
 import { EModal } from '../../stores/ModalStore'
-import { ReviewFlowStore, ReviewFlowFilterType } from '../../stores/ReviewFlowStore'
+import { ReviewFlowStore, ReviewFlowFilterType, ITabOption } from '../../stores/ReviewFlowStore'
+import { IReviewFlow } from 'shared'
 
 interface IProps {
   className?: string
   visible: boolean
+  getCurrentFlows?: IReviewFlow[]
+  getCurrentFilterOption?: ITabOption
+  tabFilterOptions?: ITabOption[]
   reviewFlowStore?: ReviewFlowStore
-  openCreateReviewFlowModal?: () => void
+  openModal?: (modal: EModal) => void
 }
 
 const ReviewFlowsEl = inject((stores: Stores) => ({
+  getCurrentFlows: stores.reviewFlowStore.getCurrentFlows,
+  getCurrentFilterOption: stores.reviewFlowStore.getCurrentFilterOption,
+  tabFilterOptions: stores.reviewFlowStore.tabFilterOptions,
   reviewFlowStore: stores.reviewFlowStore,
-  openCreateReviewFlowModal: () => stores.modalStore.openModal(EModal.CREATE_REVIEW_FLOW),
+  openModal: stores.modalStore.openModal,
 }))
 (observer((props: IProps) => {
-  const { className, visible, reviewFlowStore, openCreateReviewFlowModal } = props
+  const {
+    className, visible, getCurrentFlows, getCurrentFilterOption, tabFilterOptions,
+    reviewFlowStore, openModal
+  } = props
   const [loading, setLoading] = useState(false)
   const [searchValue, setSearchValue] = useState('')
-
+  const dropdownOptions = useMemo(() => getCurrentFlows!.map(r => ({ key: r.title, value: r.title })), [getCurrentFlows])
   useEffect(() => {
     setLoading(true)
     reviewFlowStore!.getReviewFlows().then((flows) => {
@@ -37,6 +47,9 @@ const ReviewFlowsEl = inject((stores: Stores) => ({
     })
   }, [])
 
+  function handleOpenCreateReviewFlowModal() {
+    openModal!(EModal.CREATE_REVIEW_FLOW)
+  }
   function handleSelectTabOption(o: { key: string, value: string }) {
     reviewFlowStore!.setFilteredBy(o.key as ReviewFlowFilterType)
   }
@@ -50,19 +63,19 @@ const ReviewFlowsEl = inject((stores: Stores) => ({
     <Container className={className} visible={visible}>
       <Body>
         <TabsMenu
-          options={reviewFlowStore!.tabFilterOptions}
-          selected={reviewFlowStore!.getCurrentFilterOption}
+          options={tabFilterOptions!}
+          selected={getCurrentFilterOption!}
           onSelect={handleSelectTabOption}
         />
         <Controls>
           <DropdownSearch
             fullWidth
-            options={reviewFlowStore!.getCurrentFlows.map(r => ({ key: r.title, value: r.title }))}
+            options={dropdownOptions}
             value={searchValue}
             onChange={handleSearchChange}
             onSelect={handleSelectReviewFlow}
           />
-          <Button onClick={() => openCreateReviewFlowModal!()}>New flow</Button>
+          <Button onClick={handleOpenCreateReviewFlowModal}>New flow</Button>
         </Controls>
         <Flow/>
       </Body>

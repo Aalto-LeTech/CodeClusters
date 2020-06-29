@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styled from '../theme/styled'
 
 import { SearchConsole } from './Search/SearchConsole'
-import { ReviewFlows } from './ReviewFlows/ReviewFlows'
+import { ReviewFlows } from './ReviewFlows/ReviewFlowsView'
 import { ModelTabView } from './Model/ModelTabView'
 
 import { Stores } from '../stores'

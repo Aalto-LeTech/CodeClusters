@@ -37,11 +37,11 @@ export class LocalSearchStore {
     this.searchResults = []
   }
 
-  @action setActive(b: boolean) {
+  @action setActive = (b: boolean) => {
     this.active = b
   }
 
-  @action setSubmissions(submissions: ISolrFullSubmissionWithDate[]) {
+  @action setSubmissions = (submissions: ISolrFullSubmissionWithDate[]) => {
     this.submissions = submissions
   }
 

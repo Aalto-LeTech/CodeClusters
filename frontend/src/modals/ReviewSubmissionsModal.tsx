@@ -19,7 +19,7 @@ interface IProps {
   className?: string
   currentSelectionCount?: number
   modal?: IModal
-  closeModal?: () => void
+  closeModal?: (modal: EModal) => void
   addReview?: (message: string, metadata?: string) => Promise<any>
   resetSelections?: () => void
 }
@@ -27,28 +27,28 @@ interface IProps {
 export const ReviewSubmissionsModal = inject((stores: Stores) => ({
   currentSelectionCount: stores.reviewStore.currentSelectionCount,
   modal: stores.modalStore.modals[EModal.REVIEW_SUBMISSIONS],
-  closeModal: () => stores.modalStore.closeModal(EModal.REVIEW_SUBMISSIONS),
+  closeModal: stores.modalStore.closeModal,
   addReview: stores.reviewStore.addReview,
   resetSelections: stores.reviewStore.resetSelections,
 }))
 (observer((props: IProps) => {
   const { className, currentSelectionCount, modal, closeModal, addReview, resetSelections } = props
   function handleClose() {
-    closeModal!()
+    closeModal!(EModal.REVIEW_SUBMISSIONS)
   }
   function onAccept() {
     modal!.params?.submit()
-    closeModal!()
+    handleClose()
   }
   function onCancel() {
-    closeModal!()
+    handleClose()
   }
   async function handleReviewSubmit(payload: IReviewCreateFormParams, onSuccess: () => void, onError: () => void) {
     const result = await addReview!(payload.message, payload.metadata)
     if (result) {
       onSuccess()
       resetSelections!()
-      closeModal!()
+      handleClose()
     } else {
       onError()
     }

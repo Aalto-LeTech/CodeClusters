@@ -4,6 +4,7 @@
   "author": "https://github.com/teemukoivisto",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
+    "@welldone-software/why-did-you-render": "^4.2.5",
     "axios": "^0.19.2",
     "d3-scale": "^3.2.1",
     "d3-scale-chromatic": "^1.5.0",

@@ -12,23 +12,23 @@ interface IProps {
   className?: string
   reviews?: IReview[]
   acceptPendingReviews?: (reviewIds: number[]) => Promise<any>
-  openDeleteReviewsModal?: (params: any) => void
+  openModal?: (modal: EModal, params: any) => void
 }
 
 const ReviewSubmissionsControlsEl = inject((stores: Stores) => ({
   reviews: stores.reviewStore.reviews,
   acceptPendingReviews: stores.reviewStore.acceptPendingReviews,
-  openDeleteReviewsModal: (params: any) => stores.modalStore.openModal(EModal.DELETE_REVIEWS, params),
+  openModal: stores.modalStore.openModal,
 }))
 (observer((props: IProps) => {
   const {
-    className, reviews, acceptPendingReviews, openDeleteReviewsModal
+    className, reviews, acceptPendingReviews, openModal
   } = props
   function handleClickAcceptAll() {
     acceptPendingReviews!(reviews!.map(r => r.review_id))
   }
   function handleClickDeleteAll() {
-    openDeleteReviewsModal!({
+    openModal!(EModal.DELETE_REVIEWS, {
       submit: () => Promise.resolve(),
       count: reviews!.length
     })

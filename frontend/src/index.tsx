@@ -12,6 +12,13 @@ import { GlobalStyle } from './theme/GlobalStyle'
 import { Routes } from './routes'
 import { Toaster } from './components/Toaster'
 
+if (process.env.NODE_ENV === 'development') {
+  const whyDidYouRender = require('@welldone-software/why-did-you-render')
+  whyDidYouRender(React, {
+    trackAllPureComponents: true,
+  })
+}
+
 confMobx()
 
 export const stores = new Stores()

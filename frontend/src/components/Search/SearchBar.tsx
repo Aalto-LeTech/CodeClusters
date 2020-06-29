@@ -13,6 +13,7 @@ interface IProps {
   onSearch: (val: string) => void
 }
 
+let render = 0
 const SearchBarEl = memo(forwardRef((props: IProps, ref) => {
   const {
     className, name, id, onSearch
@@ -29,6 +30,7 @@ const SearchBarEl = memo(forwardRef((props: IProps, ref) => {
   function handleBlur() {
     setWrapperFocused(false)
   }
+  console.log(render++)
   return (
     <div className={className}>
       <SearchWrapper focused={wrapperFocused}>

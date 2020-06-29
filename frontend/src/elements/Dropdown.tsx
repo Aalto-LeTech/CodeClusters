@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import styled from '../theme/styled'
 import { FiChevronDown } from 'react-icons/fi'
 
@@ -30,17 +30,11 @@ function DropdownEl<K extends KeyValue, V extends React.ReactNode>(props: IProps
     className, id, options, selected, disabled, placeholder, fullWidth, renderMenu, onSelect
   } = props
 
-  function closeMenu() {
-    setMenuOpen(false)
-  }
   function toggleMenu() {
     !disabled && setMenuOpen(oldMenuOpen => !oldMenuOpen)
   }
   function isSelected(option: Option<K, V>) {
     return option.key === selected
-  }
-  function isDisabled() {
-    return disabled || options.length === 0
   }
   function renderButtonContent() {
     const content = (selected && options.length !== 0) ? options.find(o => o.key === selected)!.value : placeholder!
@@ -63,10 +57,12 @@ function DropdownEl<K extends KeyValue, V extends React.ReactNode>(props: IProps
   }
   const ref = useRef(null)
   const [menuOpen, setMenuOpen] = useState(false)
-  useClickOutside(ref, (e) => closeMenu(), menuOpen)
+  const isDisabled = useMemo(() => disabled || options.length === 0, [disabled, options])
+  const closeMenu = useCallback(() => setMenuOpen(false), [])
+  useClickOutside(ref, closeMenu, menuOpen)
   return (
     <Container className={className} ref={ref} fullWidth={fullWidth}>
-      <Button onClick={toggleMenu} disabled={isDisabled()} id={id} type="button" aria-haspopup aria-label="Dropdown menu">
+      <Button onClick={toggleMenu} disabled={isDisabled} id={id} type="button" aria-haspopup aria-label="Dropdown menu">
         {renderButtonContent()}
       </Button>
       <DropdownList open={menuOpen}>

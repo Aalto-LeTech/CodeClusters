@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { inject, observer } from 'mobx-react'
 
@@ -20,8 +20,12 @@ const SelectCourseExerciseEl = inject('courseStore')(observer((props: IProps) =>
     className, courseStore
   } = props
   const [loading, setLoading] = useState(false)
-  const courseOptions = courseStore!.courses.map(c => ({ key: c.course_id, value: c.name }))
-  const exerciseOptions = courseStore!.selectedCourse?.exercises?.map(e => ({ key: e.exercise_id, value: e.name })) || []
+  const courseOptions = useMemo(() =>
+    courseStore!.courses.map(c => ({ key: c.course_id, value: c.name }))
+    , [courseStore!.courses])
+  const exerciseOptions = useMemo(() =>
+    courseStore!.selectedCourse?.exercises?.map(e => ({ key: e.exercise_id, value: e.name })) || []
+    , [courseStore!.selectedCourse?.exercises])
 
   useEffect(() => {
     setLoading(true)
