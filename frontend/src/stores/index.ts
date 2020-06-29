@@ -1,34 +1,37 @@
 import { AuthStore } from './AuthStore'
-import { CourseStore } from './CourseStore'
-import { ReviewStore } from './ReviewStore'
-import { SubmissionStore } from './SubmissionStore'
 import { ClustersStore } from './ClustersStore'
-import { SearchStore } from './SearchStore'
+import { CourseStore } from './CourseStore'
 import { LocalSearchStore } from './LocalSearchStore'
-import { ModelStore } from './ModelStore'
-import { ReviewFlowStore } from './ReviewFlowStore'
 import { ModalStore } from './ModalStore'
+import { ModelStore } from './ModelStore'
+import { ReviewStore } from './ReviewStore'
+import { ReviewFlowStore } from './ReviewFlowStore'
+import { SearchStore } from './SearchStore'
+import { SolrStore } from './SolrStore'
+import { SubmissionStore } from './SubmissionStore'
 import { ToastStore } from './ToastStore'
 
 export class Stores {
   authStore: AuthStore
-  courseStore: CourseStore
-  reviewStore: ReviewStore
-  submissionStore: SubmissionStore
   clustersStore: ClustersStore
-  searchStore: SearchStore
+  courseStore: CourseStore
   localSearchStore: LocalSearchStore
-  modelStore: ModelStore
-  reviewFlowStore: ReviewFlowStore
   modalStore: ModalStore
+  modelStore: ModelStore
+  reviewStore: ReviewStore
+  reviewFlowStore: ReviewFlowStore
+  searchStore: SearchStore
+  solrStore: SolrStore
+  submissionStore: SubmissionStore
   toastStore: ToastStore
 
   constructor() {
+    this.authStore = new AuthStore(this.reset)
     this.modalStore = new ModalStore()
     this.toastStore = new ToastStore()
-    this.authStore = new AuthStore(this.reset)
-    this.localSearchStore = new LocalSearchStore(this.toastStore)
     this.courseStore = new CourseStore(this.toastStore)
+    this.localSearchStore = new LocalSearchStore(this.toastStore)
+    this.solrStore = new SolrStore(this.toastStore)
     this.submissionStore = new SubmissionStore(this.toastStore)
     this.searchStore = new SearchStore({
       toastStore: this.toastStore,

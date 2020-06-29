@@ -8,6 +8,7 @@ import * as reviewCtrl from './review/review.ctrl'
 import * as reviewSubmissionCtrl from './review_submission/review_submission.ctrl'
 import * as reviewFlowCtrl from './review_flow/review_flow.ctrl'
 import * as searchCtrl from './search/search.ctrl'
+import * as solrCtrl from './solr/solr.ctrl'
 import * as submissionCtrl from './submission/submission.ctrl'
 import * as userCtrl from './user/user.ctrl'
 
@@ -78,6 +79,10 @@ router.get('/search_ids',
   authenticate,
   parseQueryParams(searchCtrl.SEARCH_QUERY_PARAMS),
   searchCtrl.searchAllSubmissionIds)
+
+router.get('/solr/reindex',
+  authenticate,
+  solrCtrl.reindexSubmissions)
 
 router.get('/submissions',
   authenticate,

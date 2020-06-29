@@ -33,6 +33,7 @@ export const WrappedRoute = ({ component, ...rest } : IWrappedRoute) =>
 
 const MainWrapper = styled.div`
   background: ${({ theme }) => theme.color.bg};
+  min-height: 100vh;
 `
 const MainContainer = styled.main`
   margin: 40px auto 0 auto;
