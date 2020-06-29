@@ -28,9 +28,11 @@ export function removeEmptyValues(obj: {[key: string]: any}) {
 
 export function createSearchQueryParams(obj: {[key: string]: any}) {
   const pruned = removeEmptyValues(obj)
-  return Object.keys(pruned).reduce((acc, cur, i) =>
-      cur !== 'q' ? `${acc}&${cur}=${pruned[cur]}` : acc
-    , `?q=${pruned['q']}`)
+  const keys = Object.keys(pruned)
+  if (keys.includes('q')) {
+    return keys.reduce((acc, cur, i) => cur !== 'q' ? `${acc}&${cur}=${pruned[cur]}` : acc, `?q=${pruned['q']}`)
+  }
+  return ''
 }
 
 export function parseSearchQueryParams(url: string) {
