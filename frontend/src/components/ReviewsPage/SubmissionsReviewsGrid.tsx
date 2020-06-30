@@ -58,6 +58,9 @@ const SubmissionsReviewsGridEl = inject((stores: Stores) => ({
   function openSubmissionReviewsModal(params: any) {
     openModal!(EModal.SUBMISSION_REVIEWS, params)
   }
+  function openAcceptEditReviewModal(review: IReview) {
+    openModal!(EModal.ACCEPT_EDIT_REVIEW, { review })
+  }
   function handleHover(e: MouseEvent) {
     // console.log(e)
   }
@@ -88,11 +91,9 @@ const SubmissionsReviewsGridEl = inject((stores: Stores) => ({
           <Th>Length</Th>
           { reviews!.map(r =>
           <ReviewTh
-            key={r.review_id}
+            key={`rth-${r.review_id}`}
             review={r}
-            active={editedReviewId === r.review_id}
-            closeEditReviewMenu={() => setEditedReviewId(-1)}
-            onClick={() => setEditedReviewId(r.review_id)}
+            onClick={() => openAcceptEditReviewModal(r)}
           />)}
         </tr>
       </THead>
@@ -167,7 +168,7 @@ const ReviewsTable = styled.table`
       background: ${({ theme }) => theme.color.green};
     }
     &:hover {
-      background: ${({ theme }) => theme.color.gray.light};
+      background: ${({ theme }) => theme.color.primaryLight};
     }
   }
 `
@@ -180,7 +181,7 @@ const SubmissionTh = styled.th`
   border-radius: 2px;
   cursor: pointer;
   &:hover {
-    background: ${({ theme }) => theme.color.gray.light};
+    background: ${({ theme }) => theme.color.primaryLight};
   }
 `
 const TBody = styled.tbody`

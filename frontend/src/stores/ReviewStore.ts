@@ -202,7 +202,7 @@ export class ReviewStore {
     return result
   }
 
-  @action updateReview = async (reviewId: number, review: Partial<IReview>) => {
+  @action updateReview = async (reviewId: number, review: IReview) => {
     const result = await reviewApi.updateReview(reviewId, review)
     if (result) {
       runInAction(() => {

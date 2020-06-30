@@ -40,7 +40,6 @@ export const SubmissionReviewsModal = inject((stores: Stores) => ({
 
   function handleReviewHover(idx: number) {
     if (shownReviewIdx !== idx && !editingReviewSelection) {
-      console.log(createCodeHTML(modal!.params?.submission?.code, modal!.params?.reviews[idx]?.selection))
       setShownReviewIdx(idx)
       setCodeHTML(createCodeHTML(modal!.params?.submission?.code, modal!.params?.reviews[idx]?.selection))
     }
@@ -86,8 +85,14 @@ export const SubmissionReviewsModal = inject((stores: Stores) => ({
                 onMouseOver={() => handleReviewHover(i)}
                 tabIndex={0}
               >
-                <ReviewMessage>{review.message}</ReviewMessage>
-                { review.metadata && <ReviewMetadata>{review.metadata}</ReviewMetadata> }
+                <TextBox>
+                  <label>Message</label>
+                  <ReviewMessage>{review.message}</ReviewMessage>
+                </TextBox>
+                { review.metadata && <TextBox>
+                  <label>Metadata</label>
+                  <ReviewMetadata>{review.metadata}</ReviewMetadata>
+                </TextBox>}
               </ReviewItem>
               )}
             </ReviewsListUl>
@@ -148,33 +153,49 @@ const Content = styled.div`
     }
   }
 `
-const ReviewsListUl = styled.ul`
+const ReviewsListUl = styled.ol`
   max-width: 600px;
   overflow-y: scroll;
+  list-style: decimal;
   padding: 0.5rem;
   width: 100%;
+  & > * + * {
+    margin: 10px 0 0 0;
+  }
 `
 const ReviewItem = styled.li<{ active: boolean}>`
-  background: ${({ active, theme }) => active ? theme.color.red : '#ededed'};
+  background: ${({ active, theme }) => active ? 'rgba(0,0,0,0.08)' : theme.color.white};
   border-radius: 0.25rem;
+  box-shadow: 0 0 2px 2px rgba(0,0,0,0.18);
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  margin: 0 0 10px 0;
-  padding: 1rem;
+  text-align: left;
   &:hover {
-    background: ${({ theme }) => theme.color.red};
+    background: ${({ theme }) => 'rgba(0,0,0,0.08)'};
+  }
+`
+const TextBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 1rem;
+  &:not(:first-child) {
+    margin-top: 0;
   }
 `
 const ReviewMessage = styled.p`
+  background: #fff;
+  border: 1px solid #222;
+  border-radius: 4px;
   margin: 0;
+  padding: 0.5rem;
 `
 const ReviewMetadata = styled.p`
-  background: #222;
-  border-radius: 0.25rem;
-  color: #fff;
-  margin: 1rem 0 0 0;
-  padding: 10px;
+  background: #fff;
+  border: 1px solid #222;
+  border-radius: 4px;
+  margin: 0;
+  padding: 0.5rem;
 `
 const Buttons = styled.div`
   align-items: center;

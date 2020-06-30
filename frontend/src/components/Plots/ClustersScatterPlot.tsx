@@ -18,6 +18,22 @@ interface IProps {
   clusters: number
 }
 
+function CustomTooltip(props: TooltipProps) {
+  const { active, payload } = props
+  if (active && payload && payload.length) {
+    const data = payload[0] && payload[0].payload
+    return (
+      <div style={{
+        backgroundColor: '#fff', border: '1px solid #999', margin: 0, padding: 10,
+      }}
+      >
+        <p>Cluster: {data.cluster}</p>
+      </div>
+    )
+  }
+  return null
+}
+
 function ClustersScatterPlotEl(props: IProps) {
   const { className, data, clusters } = props
   const [colors, setColors] = useState([] as string[])
@@ -26,21 +42,21 @@ function ClustersScatterPlotEl(props: IProps) {
     setColors(data.map((d, i) => scale(d.cluster)))
   }, [data])
 
-  function renderTooltip(props: TooltipProps) {
-    const { active, payload } = props
-    if (active && payload && payload.length) {
-      const data = payload[0] && payload[0].payload
-      return (
-        <div style={{
-          backgroundColor: '#fff', border: '1px solid #999', margin: 0, padding: 10,
-        }}
-        >
-          <p>Cluster: {data.cluster}</p>
-        </div>
-      )
-    }
-    return null
-  }
+  // function renderTooltip(props: TooltipProps) {
+  //   const { active, payload } = props
+  //   if (active && payload && payload.length) {
+  //     const data = payload[0] && payload[0].payload
+  //     return (
+  //       <div style={{
+  //         backgroundColor: '#fff', border: '1px solid #999', margin: 0, padding: 10,
+  //       }}
+  //       >
+  //         <p>Cluster: {data.cluster}</p>
+  //       </div>
+  //     )
+  //   }
+  //   return null
+  // }
   return (
     <ScatterChart
       className={className}
@@ -53,7 +69,7 @@ function ClustersScatterPlotEl(props: IProps) {
       <CartesianGrid />
       <XAxis type="number" dataKey="x" name="x" />
       <YAxis type="number" dataKey="y" name="y" />
-      <Tooltip cursor={{ strokeDasharray: '3 3' }} content={renderTooltip}/>
+      <Tooltip cursor={{ strokeDasharray: '3 3' }} content={CustomTooltip}/>
       <Scatter name="Clusters" data={data} fill="#8884d8">
       {
         data.map((item, index) => <Cell key={`cell-${index}`} fill={colors[index]} />)

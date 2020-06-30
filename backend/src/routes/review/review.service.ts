@@ -28,8 +28,12 @@ export const reviewService = {
       WHERE status=$1 ${courseCondition} ${exerciseCondition}
     `, params)
   },
-  updateReview: (review: Partial<IReview>) => {
-    return undefined
+  updateReview: (reviewId: number, review: Partial<IReview>) => {
+    return dbService.queryOne<any>(`
+      UPDATE review SET message = $2, metadata = $3, tags = $4
+      WHERE review_id = $1
+      RETURNING review_id
+    `, [reviewId, review.message, review.metadata, review.tags])
   },
   deleteReview: (reviewId: number) => {
     return undefined

@@ -4,6 +4,10 @@ import {
   DimVisualizationType, ITSNEParams, IUMAPParams,
 } from 'shared'
 
+export interface IFormRefMethods<T> {
+  executeSubmit: (defaultData?: any) => Promise<T>
+  reset: (formData?: any) => void
+}
 export type ModelFormData = { 
   [NgramModelId]: INgramFormParams | undefined
 }

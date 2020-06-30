@@ -1,30 +1,24 @@
 import React from 'react'
 import styled from '../../theme/styled'
 
-import { FloatingEditReviewMenu } from './FloatingEditReviewMenu'
-
 import { IReview } from 'shared'
 
 interface IProps {
   className?: string
   review: IReview
-  active: boolean
   onClick: () => void
-  closeEditReviewMenu: () => void
 }
 
 export const ReviewTh = styled((props: IProps) => {
-  const { className, review, active, onClick, closeEditReviewMenu } = props
+  const { className, review, onClick } = props
   return (
-    <Th className={className} active={active} tabIndex={0} onClick={onClick}>
+    <Th className={className} tabIndex={0} onClick={onClick}>
       {review.message.substring(0, 8)}...
-      { active && <FloatingEditReviewMenu review={review} closeMenu={() => closeEditReviewMenu()}/>}
     </Th>
   )
 })``
 
-const Th = styled.th<{ active: boolean }>`
-  background: ${({ active, theme }) => active && theme.color.green};
+const Th = styled.th`
   border-radius: 2px;
   cursor: pointer;
   font-size: 0.8rem;
@@ -33,6 +27,6 @@ const Th = styled.th<{ active: boolean }>`
   width: 75px;
   word-break: break-all;
   &:hover {
-    background: ${({ active, theme }) => active ? theme.color.green : theme.color.gray.light};
+    background: ${({ theme }) => theme.color.primaryLight};
   }
 `

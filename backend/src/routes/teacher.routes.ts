@@ -50,6 +50,13 @@ router.post('/review',
   authenticate,
   validateBody(reviewCtrl.REVIEW_CREATE_SCHEMA),
   reviewCtrl.createReview)
+router.put('/review/:review_id(\\d+)',
+  authenticate,
+  validateBody(reviewCtrl.REVIEW_SCHEMA),
+  reviewCtrl.updateReview)
+router.delete('/review/:review_id(\\d+)',
+  authenticate,
+  reviewCtrl.deleteReview)
 
 router.put('/review_submission/:review_id(\\d+)/:submission_id',
   authenticate,

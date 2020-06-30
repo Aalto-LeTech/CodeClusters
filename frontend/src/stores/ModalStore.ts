@@ -6,6 +6,7 @@ export interface IModal {
 }
 
 export enum EModal {
+  ACCEPT_EDIT_REVIEW = 'ACCEPT_EDIT_REVIEW',
   DELETE_REVIEW_SELECTION = 'DELETE_REVIEW_SELECTION',
   DELETE_REVIEWS = 'DELETE_REVIEWS',
   EDIT_SUBMISSION_REVIEW = 'EDIT_SUBMISSION_REVIEW',
@@ -16,6 +17,12 @@ export enum EModal {
 
 export class ModalStore {
   @observable modals = {
+    [EModal.ACCEPT_EDIT_REVIEW]: {
+      isOpen: false,
+      params: {
+        review: undefined
+      }
+    },
     [EModal.DELETE_REVIEW_SELECTION]: {
       isOpen: false,
       params: {

@@ -19,14 +19,10 @@ import {
   IReviewFlowCreateParams, IReviewFlowCreateFormParams, ISearchCodeParams, IModel, IModelParams,
   INgramParams, IReviewCreateFormParams
 } from 'shared'
-import { INgramFormParams, ModelFormParams } from '../types/forms'
+import { IFormRefMethods, INgramFormParams, ModelFormParams } from '../types/forms'
 import { Stores } from '../stores'
 import { IModal, EModal } from '../stores/ModalStore'
 
-interface IFormRefMethods<T> {
-  executeSubmit: (defaultData?: any) => Promise<T>
-  reset: (formData?: any) => void
-}
 interface IProps {
   className?: string
   courseId?: number
@@ -298,7 +294,7 @@ const SelectCourseExerciseContainer = styled.div`
   max-width: 700px;
   width: 100%;
   & > p {
-    margin: 1rem 0 2rem 0;
+    margin: 0.5rem 0 1.5rem 0;
   }
   & > ${SelectCourseExercise} {
     align-items: flex-start;
