@@ -49,7 +49,12 @@ case "$1" in
   data-import)
     CURL=$(curl http://localhost:8983/solr/${CORE_NAME}/dataimport?command=full-import&entity=submission)
     ;;
+  update)
+    git pull
+    sudo docker-compose -f prod-docker-compose.yml build
+    sudo docker-compose -f prod-docker-compose.yml up -d
+    sudo docker system prune
   *)
-    echo $"Usage: $0 certbot|migrate|seed|testdata|data-import"
+    echo $"Usage: $0 certbot|migrate|seed|testdata|data-import|update"
     exit 1
 esac
