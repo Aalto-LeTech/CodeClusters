@@ -17,9 +17,14 @@ const ReviewsViewEl = memo((props: IProps) => {
   return (
     <Wrapper className={className}>
       <Container>
-        <header>
+        <Header>
           <h1>Reviews</h1>
-        </header>
+          <p>
+            Here you can see the sent and pending reviews for a given course and/or exercise. You may edit the reviews themselves,
+            the selections of the lines associated to submission's review or to which students they are given.
+            If everything looks fine you may then accept the reviews, only after which the reviews become visible to the student.
+          </p>
+        </Header>
         <MainInputs>
           <SelectCourseExercise />
           <PendingSentToggle />
@@ -48,6 +53,12 @@ const Container = styled.div`
   justify-content: center;
   > * + * {
     margin: 2rem 0;
+  }
+`
+const Header = styled.header`
+  max-width: 700px;
+  & > h1 {
+    text-align: center;
   }
 `
 const MainInputs = styled.div`

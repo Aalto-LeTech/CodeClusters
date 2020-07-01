@@ -56,7 +56,7 @@ const SubmissionsReviewsGridEl = inject((stores: Stores) => ({
     openModal!(EModal.EDIT_SUBMISSION_REVIEW, params)
   }
   function openSubmissionReviewsModal(params: any) {
-    openModal!(EModal.SUBMISSION_REVIEWS, params)
+    openModal!(EModal.VIEW_SUBMISSION_REVIEWS, params)
   }
   function openAcceptEditReviewModal(review: IReview) {
     openModal!(EModal.ACCEPT_EDIT_REVIEW, { review })

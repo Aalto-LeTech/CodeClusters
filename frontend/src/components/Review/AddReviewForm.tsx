@@ -1,12 +1,12 @@
 import React, { forwardRef, memo, useImperativeHandle, useState } from 'react'
-import styled from '../theme/styled'
+import styled from '../../theme/styled'
 import { useForm, useFieldArray } from 'react-hook-form'
 import Joi from '@hapi/joi'
-import { joiResolver } from '../utils/forms'
+import { joiResolver } from '../../utils/forms'
 
-import { Button } from '../elements/Button'
-import { Input } from '../elements/Input'
-import { MultiInput } from '../elements/MultiInput'
+import { Button } from '../../elements/Button'
+import { Input } from '../../elements/Input'
+import { MultiInput } from '../../elements/MultiInput'
 
 import { IReview, IReviewCreateFormParams } from 'shared'
 
@@ -101,6 +101,7 @@ const AddReviewFormEl = memo(forwardRef((props: IProps, ref: any) => {
           id={`${id}_message`}
           type="textarea"
           name="message"
+          placeholder="Message shown to the students"
           ref={register({
             required: true,
             minLength: 1
@@ -116,6 +117,7 @@ const AddReviewFormEl = memo(forwardRef((props: IProps, ref: any) => {
           id={`${id}_metadata`}
           type="textarea"
           name="metadata"
+          placeholder="Metadata only visible to the teachers"
           ref={register}/>
           {errors.metadata && 'Metadata must be less than 10240 characters.'}
       </FormField>

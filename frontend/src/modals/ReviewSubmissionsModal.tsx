@@ -6,7 +6,7 @@ import { FiX } from 'react-icons/fi'
 import useClickOutside from '../hooks/useClickOutside'
 import useScrollLock from '../hooks/useScrollLock'
 
-import { AddReviewForm } from '../components/AddReviewForm'
+import { AddReviewForm } from '../components/Review/AddReviewForm'
 import { Modal } from '../elements/Modal'
 import { Button } from '../elements/Button'
 import { Icon } from '../elements/Icon'

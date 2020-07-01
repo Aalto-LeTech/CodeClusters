@@ -6,7 +6,7 @@ import { FiX } from 'react-icons/fi'
 import useClickOutside from '../hooks/useClickOutside'
 import useScrollLock from '../hooks/useScrollLock'
 
-import { AddReviewForm } from '../components/AddReviewForm'
+import { AddReviewForm } from '../components/Review/AddReviewForm'
 import { Modal } from '../elements/Modal'
 import { Button } from '../elements/Button'
 import { Icon } from '../elements/Icon'
@@ -88,15 +88,11 @@ const Body = styled.div`
   border-radius: 5px;
   display: flex;
   flex-direction: column;
-  height: 100%;
   justify-content: space-between;
-  max-width: 1200px;
+  max-width: 600px;
   padding: 20px;
   text-align: center;
   width: calc(100% - 20px - 2rem);
-  @media only screen and (max-width: ${({ theme }) => theme.breakpoints.DEFAULT_WIDTH}) {
-    max-width: 600px;
-  }
 `
 const Header = styled.div`
   align-items: center;
@@ -124,12 +120,6 @@ const Content = styled.div`
   width: 100%;
   & > *:first-child {
     margin-bottom: 1rem;
-  }
-  @media only screen and (min-width: ${({ theme }) => theme.breakpoints.DEFAULT_WIDTH}) {
-    flex-direction: row;
-    & > *:first-child {
-      margin-right: 1rem;
-    }
   }
 `
 const Title = styled.h3`

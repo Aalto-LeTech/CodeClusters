@@ -70,6 +70,7 @@ const CreateReviewFlowFormEl = forwardRef((props: IProps, ref: any) => {
           fullWidth
           id="new_review_flow_title"
           name="title"
+          placeholder="Title of the review flow"
           ref={register}/>
         <Error>
           {errors.title && 'Title must be at least 1 character long.'}
@@ -82,6 +83,7 @@ const CreateReviewFlowFormEl = forwardRef((props: IProps, ref: any) => {
           type="textarea"
           id="new_review_flow_description"
           name="description"
+          placeholder="Description of what the flow does and why it's useful"
           ref={register}/>
         <Error>
           {errors.description && 'Description must be at least 1 character long.'}

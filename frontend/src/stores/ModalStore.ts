@@ -11,7 +11,7 @@ export enum EModal {
   DELETE_REVIEWS = 'DELETE_REVIEWS',
   EDIT_SUBMISSION_REVIEW = 'EDIT_SUBMISSION_REVIEW',
   REVIEW_SUBMISSIONS = 'REVIEW_SUBMISSIONS',
-  SUBMISSION_REVIEWS = 'SUBMISSION_REVIEWS',
+  VIEW_SUBMISSION_REVIEWS = 'VIEW_SUBMISSION_REVIEWS',
   CREATE_REVIEW_FLOW = 'CREATE_REVIEW_FLOW'
 }
 
@@ -52,7 +52,7 @@ export class ModalStore {
         count: 0
       }
     },
-    [EModal.SUBMISSION_REVIEWS]: {
+    [EModal.VIEW_SUBMISSION_REVIEWS]: {
       isOpen: false,
       params: {
         submission: {},

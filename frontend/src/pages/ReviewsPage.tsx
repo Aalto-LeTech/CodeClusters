@@ -3,7 +3,7 @@ import styled from '../theme/styled'
 
 import { ReviewsView } from '../components/ReviewsPage'
 import { AcceptEditReviewModal } from '../modals/AcceptEditReviewModal'
-import { SubmissionReviewsModal } from '../modals/SubmissionReviewsModal'
+import { SubmissionReviewsModal } from '../modals/ViewSubmissionReviewsModal'
 import { DeleteReviewsModal } from '../modals/DeleteReviewsModal'
 import { EditSubmissionReviewModal } from '../modals/EditSubmissionReviewModal'
 

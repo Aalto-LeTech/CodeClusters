@@ -7,6 +7,7 @@ import useClickOutside from '../hooks/useClickOutside'
 import useScrollLock from '../hooks/useScrollLock'
 
 import { Modal } from '../elements/Modal'
+import { Review } from '../components/Review/Review'
 import { Button } from '../elements/Button'
 import { Icon } from '../elements/Icon'
 import { CodeBlock } from '../components/CodeBlock'
@@ -96,19 +97,7 @@ export const EditSubmissionReviewModal = inject((stores: Stores) => ({
             <Icon button onClick={handleClose}><FiX size={24}/></Icon>
           </Header>
           <Content>
-            { review ?
-            <>
-            <ReviewField>
-              <label>Message</label>
-              <p>{review.message}</p>
-            </ReviewField>
-            <ReviewField>
-              <label>Metadata</label>
-              <p>{review.metadata}</p>
-            </ReviewField>
-            </>
-            : null
-            }
+            {review && <Review review={review} /> }
             <CodeBlock
               codeLines={codeLines}
               activeSelection={selection}
@@ -135,8 +124,9 @@ const Body = styled.div`
   border-radius: 5px;
   display: flex;
   flex-direction: column;
-  height: calc(100% - 2rem);
+  height: 100%;
   justify-content: space-between;
+  max-height: 1000px;
   max-width: 1200px;
   padding: 20px;
   width: calc(100% - 20px - 2rem);

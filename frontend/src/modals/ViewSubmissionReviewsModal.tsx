@@ -7,6 +7,7 @@ import useClickOutside from '../hooks/useClickOutside'
 import useScrollLock from '../hooks/useScrollLock'
 
 import { Modal } from '../elements/Modal'
+import { Review } from '../components/Review/Review'
 import { Button } from '../elements/Button'
 import { Icon } from '../elements/Icon'
 
@@ -25,7 +26,7 @@ function createCodeHTML(code: string, selection: [number, number, number]) {
 }
 
 export const SubmissionReviewsModal = inject((stores: Stores) => ({
-  modal: stores.modalStore.modals[EModal.SUBMISSION_REVIEWS],
+  modal: stores.modalStore.modals[EModal.VIEW_SUBMISSION_REVIEWS],
   closeModal: stores.modalStore.closeModal,
 }))
 (observer((props: IProps) => {
@@ -56,7 +57,7 @@ export const SubmissionReviewsModal = inject((stores: Stores) => ({
     }
   }
   function handleClose() {
-    closeModal!(EModal.SUBMISSION_REVIEWS)
+    closeModal!(EModal.VIEW_SUBMISSION_REVIEWS)
     setShownReviewIdx(-1)
     setEditingReviewSelection(false)
   }
@@ -71,7 +72,7 @@ export const SubmissionReviewsModal = inject((stores: Stores) => ({
       body={
         <Body ref={ref}>
           <Header>
-            <TitleWrapper><h2>Submission reviews</h2></TitleWrapper>
+            <TitleWrapper><h2>View submission reviews</h2></TitleWrapper>
             <Icon button onClick={handleClose}><FiX size={24}/></Icon>
           </Header>
           <Content>
@@ -85,14 +86,7 @@ export const SubmissionReviewsModal = inject((stores: Stores) => ({
                 onMouseOver={() => handleReviewHover(i)}
                 tabIndex={0}
               >
-                <TextBox>
-                  <label>Message</label>
-                  <ReviewMessage>{review.message}</ReviewMessage>
-                </TextBox>
-                { review.metadata && <TextBox>
-                  <label>Metadata</label>
-                  <ReviewMetadata>{review.metadata}</ReviewMetadata>
-                </TextBox>}
+                <Review review={review} />
               </ReviewItem>
               )}
             </ReviewsListUl>
@@ -111,6 +105,7 @@ const Body = styled.div`
   flex-direction: column;
   height: 100%;
   justify-content: space-between;
+  max-height: 1000px;
   max-width: 1200px;
   padding: 20px;
   text-align: center;
@@ -157,30 +152,23 @@ const ReviewsListUl = styled.ol`
   max-width: 600px;
   overflow-y: scroll;
   list-style: decimal;
-  padding: 0.5rem;
+  padding: 4px;
   width: 100%;
   & > * + * {
     margin: 10px 0 0 0;
   }
 `
-const ReviewItem = styled.li<{ active: boolean}>`
-  background: ${({ active, theme }) => active ? 'rgba(0,0,0,0.08)' : theme.color.white};
+const ReviewItem = styled.li<{ active: boolean }>`
+  background: ${({ active, theme }) => active ? '#ff5d5d' : theme.color.white};
   border-radius: 0.25rem;
   box-shadow: 0 0 2px 2px rgba(0,0,0,0.18);
   cursor: pointer;
   display: flex;
   flex-direction: column;
+  padding: 1rem;
   text-align: left;
   &:hover {
-    background: ${({ theme }) => 'rgba(0,0,0,0.08)'};
-  }
-`
-const TextBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 1rem;
-  &:not(:first-child) {
-    margin-top: 0;
+    background: ${({ theme }) => '#ff5d5d'};
   }
 `
 const ReviewMessage = styled.p`
