@@ -31,7 +31,6 @@ export const AcceptEditReviewModal = inject((stores: Stores) => ({
 (observer((props: IProps) => {
   const { className, modal, updateReview, closeModal } = props
   const [editing, setEditing] = useState(false)
-  const [review, setReview] = useState<IReview | undefined>()
 
   useEffect(() => {
     // setReview(modal!.params.review)
@@ -68,6 +67,7 @@ export const AcceptEditReviewModal = inject((stores: Stores) => ({
           <Content>
             <AddReviewForm
               ref={reviewFormRef}
+              id="accept-edit-review"
               onSubmit={handleSubmit}
               onCancel={() => undefined}
             />

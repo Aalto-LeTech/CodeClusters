@@ -69,6 +69,7 @@ export const ReviewSubmissionsModal = inject((stores: Stores) => ({
             this should visualize the selected submissions as eg diff of submissions
           </SubmissionsVisualization>
           <AddReviewForm
+            id="review-submissions"
             onSubmit={handleReviewSubmit}
             onCancel={handleClose}
           />

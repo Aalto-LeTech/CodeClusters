@@ -166,7 +166,7 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
             onChange={handleFilterTextChange}
             onAddItem={addCustomFilter}
             onRemoveItem={removeCustomFilter}
-          ></MultiInput>
+          />
           { fields.map((f, i) =>
           <input
             key={`cf_${f.id}_${i}`}

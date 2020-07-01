@@ -224,7 +224,7 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
               <Title>Review</Title>
               <div></div>
             </ParamsHeader>
-            <AddReviewForm ref={reviewFormRef}/>
+            <AddReviewForm id="create-review-flow" ref={reviewFormRef}/>
           </ReviewParams>
           <ButtonControls>
             <Button
