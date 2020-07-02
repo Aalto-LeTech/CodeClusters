@@ -46,7 +46,7 @@ declare module 'shared' {
   export interface IReviewListQueryParams {
     course_id?: number
     exercise_id?: number
-    status?: EReviewStatus
+    statuses: EReviewStatus[]
   }
   export interface IReviewCreateParams {
     selections: IReviewSelection[]

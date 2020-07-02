@@ -1,32 +1,46 @@
 import { dbService } from '../../db/db.service'
 
 import {
-  IReview, IReviewSubmission, IUserReview, IReviewCreateParams, IAcceptReviewsParams, EReviewStatus
+  IReview, IReviewSubmission, IUserReview, IReviewCreateParams, IAcceptReviewsParams, IReviewListQueryParams
 } from 'shared'
 
 export const reviewService = {
-  getReviews: (courseId?: number, exerciseId?: number, status: EReviewStatus = EReviewStatus.PENDING) => {
-    const courseCondition = courseId ? ' AND course_id=$2' : ''
-    const exerciseCondition = exerciseId ? ' AND exercise_id=$3' : ''
-    const params = [status, courseId, exerciseId].filter(e => e !== undefined)
+  getReviews: (params: IReviewListQueryParams) => {
+    const {
+      course_id,
+      exercise_id,
+      statuses,
+    } = params
+    const queryParams = [...statuses, course_id, exercise_id].filter(e => e !== undefined)
+    const bothStatuses = statuses.length === 2
+    const statusCondition = bothStatuses ? '(status=$1 OR status=$2)' : 'status=$1'
+    const courseCondition = course_id ? ` AND course_id=$${bothStatuses ? 3 : 2}` : ''
+    const exerciseCondition = exercise_id ? ` AND exercise_id=$${bothStatuses ? 4 : 3}` : ''
     return dbService.queryMany<IReview>(`
       SELECT r.review_id, message, metadata, status, tags, r.timestamp FROM review AS r
       JOIN review_submissions ON r.review_id = review_submissions.review_id
       JOIN submission ON review_submissions.submission_id = submission.submission_id
-      WHERE status=$1 ${courseCondition} ${exerciseCondition}
+      WHERE ${statusCondition} ${courseCondition} ${exerciseCondition}
       GROUP BY(r.review_id, message, metadata, status, tags, r.timestamp)
-    `, params)
+    `, queryParams)
   },
-  getReviewSubmissions: (courseId?: number, exerciseId?: number, status: EReviewStatus = EReviewStatus.PENDING) => {
-    const courseCondition = courseId ? ' AND course_id=$2' : ''
-    const exerciseCondition = exerciseId ? ' AND exercise_id=$3' : ''
-    const params = [status, courseId, exerciseId].filter(e => e !== undefined)
+  getReviewSubmissions: (params: IReviewListQueryParams) => {
+    const {
+      course_id,
+      exercise_id,
+      statuses,
+    } = params
+    const queryParams = [...statuses, course_id, exercise_id].filter(e => e !== undefined)
+    const bothStatuses = statuses.length === 2
+    const statusCondition = bothStatuses ? '(status=$1 OR status=$2)' : 'status=$1'
+    const courseCondition = course_id ? ` AND course_id=$${bothStatuses ? 3 : 2}` : ''
+    const exerciseCondition = exercise_id ? ` AND exercise_id=$${bothStatuses ? 4 : 3}` : ''
     return dbService.queryMany<IReviewSubmission>(`
       SELECT rs.review_id, rs.submission_id, selection FROM review_submissions AS rs
       JOIN submission ON rs.submission_id = submission.submission_id
       JOIN review ON review.review_id = rs.review_id
-      WHERE status=$1 ${courseCondition} ${exerciseCondition}
-    `, params)
+      WHERE ${statusCondition} ${courseCondition} ${exerciseCondition}
+    `, queryParams)
   },
   updateReview: (reviewId: number, review: Partial<IReview>) => {
     return dbService.queryOne<any>(`

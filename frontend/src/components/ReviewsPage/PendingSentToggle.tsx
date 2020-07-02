@@ -5,59 +5,67 @@ import styled from '../../theme/styled'
 import { CheckBox } from '../../elements/CheckBox'
 
 import { Stores } from '../../stores'
-import { EReviewStatus } from 'shared'
+import { IGetReviewsParams } from '../../types/forms'
 
 interface IProps {
   className?: string
-  fetchedReviewsStatus?: EReviewStatus
-  setFetchedReviewsStatus?: (status: EReviewStatus) => void
+  getReviewsParams?: IGetReviewsParams
+  setGetReviewsParams?: (params: Partial<IGetReviewsParams>) => void
 }
 
 const PendingSentToggleEl = inject((stores: Stores) => ({
-  fetchedReviewsStatus: stores.reviewStore.fetchedReviewsStatus,
-  setFetchedReviewsStatus: stores.reviewStore.setFetchedReviewsStatus
+  getReviewsParams: stores.reviewStore.getReviewsParams,
+  setGetReviewsParams: stores.reviewStore.setGetReviewsParams
 }))
 (observer((props: IProps) => {
   const {
-    className, fetchedReviewsStatus, setFetchedReviewsStatus
+    className, getReviewsParams, setGetReviewsParams
   } = props
+  function handleCheckSent(val: boolean) {
+    setGetReviewsParams!({ sent: val })
+  }
   function handleCheckPending(val: boolean) {
-    if (val) {
-      setFetchedReviewsStatus!(EReviewStatus.PENDING)
-    } else {
-      setFetchedReviewsStatus!(EReviewStatus.SENT)
-    }
+    setGetReviewsParams!({ pending: val })
   }
   return (
     <Container className={className}>
-      <CheckBoxText>Show {fetchedReviewsStatus} reviews</CheckBoxText>
-      <CheckBox
-        id="pending"
-        name="pending"
-        type="toggle"
-        title="Toggle SENT/PENDING"
-        checked={fetchedReviewsStatus === EReviewStatus.PENDING}
-        onChange={handleCheckPending}
-      />
+      <Row>
+        <CheckBoxText>Show SENT reviews</CheckBoxText>
+        <CheckBox
+          id="sent"
+          name="sent"
+          title="Check SENT reviews"
+          checked={getReviewsParams!.sent}
+          onChange={handleCheckSent}
+        />
+      </Row>
+      <Row>
+        <CheckBoxText>Show PENDING reviews</CheckBoxText>
+        <CheckBox
+          id="pending"
+          name="pending"
+          title="Check PENDING reviews"
+          checked={getReviewsParams!.pending}
+          onChange={handleCheckPending}
+        />
+      </Row>
     </Container>
   )
 }))
 
 const Container = styled.div`
   align-items: center;
-  display: flex;
   justify-content: space-between;
 `
-const CheckBoxText = styled.label`
+const Row = styled.div`
   align-items: center;
-  background: ${({ theme }) => theme.color.primary};
-  /* border: 1px solid #222; */
-  border-radius: 4px;
-  color: #fff;
   display: flex;
+`
+const CheckBoxText = styled.label`
+  color: #222;
   font-weight: bold;
   font-size: 1rem;
-  padding: 0.5rem 0.75rem 0.5rem 1rem;
+  margin: 0.5rem 1rem 0.5rem 0;
 `
 
 export const PendingSentToggle = styled(PendingSentToggleEl)``

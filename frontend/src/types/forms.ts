@@ -29,3 +29,10 @@ export interface INgramFormParams {
   TSNE: Required<Omit<ITSNEParams, 'name'>>
   UMAP: Required<Omit<IUMAPParams, 'name'>>
 }
+
+export interface IGetReviewsParams {
+  course_id?: number
+  exercise_id?: number
+  sent: boolean
+  pending: boolean
+}

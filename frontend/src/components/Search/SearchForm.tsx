@@ -235,7 +235,7 @@ const CheckBoxField = styled.div`
 const CheckBoxText = styled.label`
   align-items: center;
   display: flex;
-  padding: 3px 0;
+  margin-left: 8px;
 `
 const TopRow = styled.div`
   display: flex;

@@ -4,6 +4,7 @@ import * as reviewApi from '../api/review.api'
 import {
   IReview, IReviewedSubmission, IReviewCreateParams, IReviewSelection, IReviewSubmission, EReviewStatus
 } from 'shared'
+import { IGetReviewsParams } from '../types/forms'
 import { ToastStore } from './ToastStore'
 import { SearchStore } from './SearchStore'
 import { LocalSearchStore } from './LocalSearchStore'
@@ -20,7 +21,12 @@ export class ReviewStore {
   @observable reviewedSubmissions: IReviewedSubmission[] = []
   @observable selectedSubmissions: { [id: string]: IReviewSelection } = {}
   @observable selectedId = ''
-  @observable fetchedReviewsStatus = EReviewStatus.PENDING
+  @observable getReviewsParams: IGetReviewsParams = {
+    course_id: undefined,
+    exercise_id: undefined,
+    sent: false,
+    pending: true,
+  }
   @observable isMultiSelection: boolean = true
   toastStore: ToastStore
   searchStore: SearchStore
@@ -74,8 +80,8 @@ export class ReviewStore {
     this.selectedId = ''
   }
 
-  @action setFetchedReviewsStatus = (status: EReviewStatus) => {
-    this.fetchedReviewsStatus = status
+  @action setGetReviewsParams = (params: Partial<IGetReviewsParams>) => {
+    this.getReviewsParams = { ...this.getReviewsParams, ...params }
   }
 
   @action toggleMultiSelection = () => {
@@ -164,10 +170,13 @@ export class ReviewStore {
   }
 
   @action getReviews = async (courseId?: number, exerciseId?: number) => {
+    const statuses = []
+    if (this.getReviewsParams.sent) statuses.push(EReviewStatus.SENT)
+    if (this.getReviewsParams.pending) statuses.push(EReviewStatus.PENDING)
     const payload = {
+      statuses,
       course_id: courseId,
       exercise_id: exerciseId,
-      status: this.fetchedReviewsStatus,
     }
     const result = await reviewApi.getReviews(payload)
     runInAction(() => {

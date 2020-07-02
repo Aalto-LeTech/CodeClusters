@@ -5,7 +5,7 @@ import { reviewService } from './review.service'
 // import { CustomError } from '../../common'
 
 import { IAuthRequest } from '../../types/request'
-import { IReview, IReviewCreateParams, IAcceptReviewsParams, IReviewListQueryParams } from 'shared'
+import { IReview, IReviewCreateParams, IAcceptReviewsParams, IReviewListQueryParams, EReviewStatus } from 'shared'
 import { ValidationError } from '../../common'
 
 export const REVIEW_SELECTION_SCHEMA = Joi.object({
@@ -23,12 +23,12 @@ export const REVIEW_SCHEMA = Joi.object({
   metadata: Joi.string().allow('').max(10240).required(),
   tags: Joi.array().items(Joi.string()).required(),
   timestamp: Joi.string().required(),
-  status: Joi.string().valid('SENT', 'PENDING').required(),
+  status: Joi.string().valid(EReviewStatus.SENT, EReviewStatus.PENDING).required(),
 })
 export const REVIEW_LIST_QUERY_PARAMS = Joi.object({
   course_id: Joi.number().integer(),
   exercise_id: Joi.number().integer(),
-  status: Joi.string(),
+  statuses: Joi.array().items(Joi.string().valid(EReviewStatus.SENT, EReviewStatus.PENDING)).min(1).required(),
 })
 export const REVIEW_USER_LIST_QUERY_PARAMS = Joi.object({
   user_id: Joi.number().integer().required(),
@@ -39,9 +39,8 @@ export const REVIEW_PENDING_ACCEPT_PARAMS = Joi.object({
 
 export const getReviews = async (req: IAuthRequest<{}, IReviewListQueryParams>, res: Response, next: NextFunction) => {
   try {
-    const { course_id, exercise_id, status } = req.queryParams
-    const reviews = await reviewService.getReviews(course_id, exercise_id, status)
-    const reviewSubmissions = await reviewService.getReviewSubmissions(course_id, exercise_id, status)
+    const reviews = await reviewService.getReviews(req.queryParams)
+    const reviewSubmissions = await reviewService.getReviewSubmissions(req.queryParams)
     res.json({ reviews, reviewSubmissions })
   } catch (err) {
     next(err)

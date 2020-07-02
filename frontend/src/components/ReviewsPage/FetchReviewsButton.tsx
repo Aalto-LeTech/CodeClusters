@@ -11,7 +11,6 @@ interface IProps {
   className?: string
   courseId?: number
   exerciseId?: number
-  fetchedReviewsStatus?: EReviewStatus
   getPendingReviews?: (courseId?: number, exerciseId?: number) => Promise<any>
   getSubmissions?: (courseId?: number, exerciseId?: number) => Promise<any>
 }
@@ -19,7 +18,6 @@ interface IProps {
 const FetchReviewsButtonEl = inject((stores: Stores) => ({
   courseId: stores.courseStore.courseId,
   exerciseId: stores.courseStore.exerciseId,
-  fetchedReviewsStatus: stores.reviewStore.fetchedReviewsStatus,
   getPendingReviews: stores.reviewStore.getReviews,
   getSubmissions: stores.submissionStore.getSubmissions,
 }))
@@ -51,7 +49,7 @@ const FetchReviewsButtonEl = inject((stores: Stores) => ({
   return (
     <Container className={className}>
       { courseId === undefined ?
-      <CheckBoxText>You have to select at least course</CheckBoxText>
+      <NoCourseText>You have to select at least course</NoCourseText>
       :
       <Button
         loading={loading}
@@ -66,15 +64,15 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
 `
-const CheckBoxText = styled.label`
+const NoCourseText = styled.div`
   align-items: center;
   background: ${({ theme }) => theme.color.primary};
   border-radius: 4px;
   color: #fff;
   display: flex;
   font-weight: bold;
-  font-size: 1.25rem;
-  padding: 0.5rem 0.75rem 0.5rem 1rem;
+  font-size: 1rem;
+  padding: 0.5rem 1.5rem;
 `
 
 export const FetchReviewsButton = styled(FetchReviewsButtonEl)``

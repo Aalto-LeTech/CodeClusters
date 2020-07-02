@@ -81,6 +81,8 @@ const Slider = styled.div`
   }
 `
 const Wrapper = styled.label`
+  height: 25px;
+  width: 25px;
   &.toggle {
     position: relative;
     display: inline-block;
@@ -104,10 +106,7 @@ const Wrapper = styled.label`
   &.checkbox {
     display: block;
     position: relative;
-    padding-left: 35px;
-    margin-bottom: 12px;
     cursor: pointer;
-    font-size: 22px;
     user-select: none;
     &:hover input ~ ${CheckMark} {
       background-color: #bbb;
