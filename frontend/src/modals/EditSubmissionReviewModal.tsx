@@ -14,24 +14,32 @@ import { CodeBlock } from '../components/CodeBlock'
 
 import { Stores } from '../stores'
 import { IModal, EModal } from '../stores/ModalStore'
-import { IReview, IReviewSubmission } from 'shared'
+import { IReview, IReviewSubmission, ISubmission } from 'shared'
 
 interface IProps {
   className?: string
-  modal?: IModal
+  modal?: {
+    isOpen: false,
+    params: {
+      submission: ISubmission,
+      review: IReview,
+      reviewSubmission?: IReviewSubmission,
+    }
+  }
   closeModal?: (modal: EModal) => void
-  updateReviewSubmission?: (reviewSubmission: IReviewSubmission) => Promise<boolean | undefined>
-  deleteReviewSubmission?: (reviewSubmission: IReviewSubmission) => Promise<boolean | undefined>
+  upsertReviewSubmission?: (reviewSubmission: IReviewSubmission) => Promise<boolean | undefined>
+  deleteReviewSubmission?: (reviewId: number, submissionId: string) => Promise<boolean | undefined>
 }
 
 export const EditSubmissionReviewModal = inject((stores: Stores) => ({
   modal: stores.modalStore.modals[EModal.EDIT_SUBMISSION_REVIEW],
   closeModal: stores.modalStore.closeModal,
-  updateReviewSubmission: stores.reviewStore.upsertReviewSubmission,
+  upsertReviewSubmission: stores.reviewStore.upsertReviewSubmission,
   deleteReviewSubmission: stores.reviewStore.deleteReviewSubmission,
 }))
 (observer((props: IProps) => {
-  const { className, modal, closeModal, updateReviewSubmission, deleteReviewSubmission } = props
+  const { className, modal, closeModal, upsertReviewSubmission, deleteReviewSubmission } = props
+  const [loading, setLoading] = useState(false)
   const [hasCurrentReview, setHasCurrentReview] = useState(false)
   const [review, setReview] = useState<IReview | undefined>(undefined)
   const [codeLines, setCodeLines] = useState<string[]>([])
@@ -65,7 +73,7 @@ export const EditSubmissionReviewModal = inject((stores: Stores) => ({
   async function onUpdate() {
     let result
     if (hasCurrentReview) {
-      result = await updateReviewSubmission!({
+      result = await upsertReviewSubmission!({
         review_id: modal!.params.review.review_id,
         submission_id: modal!.params.submission.submission_id,
         selection,
@@ -75,11 +83,21 @@ export const EditSubmissionReviewModal = inject((stores: Stores) => ({
       handleClose()
     }
   }
-  async function onDelete() {
-    const result = await deleteReviewSubmission!(modal!.params.reviewSubmission)
-    if (result) {
-      handleClose()
+  async function onToggleAssociation() {
+    let result
+    if (hasCurrentReview) {
+      setLoading(true)
+      result = await deleteReviewSubmission!(modal!.params.review.review_id, modal!.params.submission.submission_id)
+    } else {
+      setLoading(true)
+      result = await upsertReviewSubmission!({
+        review_id: modal!.params.review.review_id,
+        submission_id: modal!.params.submission.submission_id,
+        selection,
+      })
     }
+    setHasCurrentReview(!hasCurrentReview)
+    setLoading(false)
   }
   function onCancel() {
     handleClose()
@@ -93,11 +111,16 @@ export const EditSubmissionReviewModal = inject((stores: Stores) => ({
       body={
         <Body ref={ref}>
           <Header>
-            <TitleWrapper><h2>Edit submission review</h2></TitleWrapper>
+            <TitleWrapper><h2>Enable/disable review on submission</h2></TitleWrapper>
             <Icon button onClick={handleClose}><FiX size={24}/></Icon>
           </Header>
           <Content>
+            <SubTitle>Review</SubTitle>
             {review && <Review review={review} /> }
+            <SubmissionHeader>
+              <SubTitle>Submission{}</SubTitle>
+              <div><IsLinkedTag linked={hasCurrentReview}>{hasCurrentReview ? 'Enabled' : 'Disabled'}</IsLinkedTag></div>
+            </SubmissionHeader>
             <CodeBlock
               codeLines={codeLines}
               activeSelection={selection}
@@ -106,8 +129,8 @@ export const EditSubmissionReviewModal = inject((stores: Stores) => ({
             />
           </Content>
           <Buttons>
-            <Button intent="danger" disabled={modal!.params.reviewSubmission === undefined} onClick={onDelete}>
-              Delete
+            <Button intent={hasCurrentReview ? 'danger' : 'success'} loading={loading} onClick={onToggleAssociation}>
+              {hasCurrentReview ? 'Disable' : 'Enable'}
             </Button>
             <Button intent="success" onClick={onUpdate}>Update</Button>
             <Button intent="transparent" onClick={onCancel}>Cancel</Button>
@@ -165,14 +188,21 @@ const Content = styled.div`
     width: max-content;
   }
 `
-const ReviewField = styled.div`
-  margin-bottom: 1rem;
-  & > p {
-    border: 1px solid #222;
-    border-radius: 4px;
-    margin: 0;
-    padding: 10px;
+const SubTitle = styled.h4``
+const SubmissionHeader = styled.div`
+  align-items: center;
+  display: flex;
+  & > ${SubTitle} {
+    margin-right: 1rem;
   }
+`
+const IsLinkedTag = styled.span<{ linked: boolean }>`
+  color: #fff;
+  font-size: 1rem;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  background: ${({ linked, theme }) => linked ? theme.color.green : theme.color.red};
+  border-radius: 4px;
+  padding: 4px 8px;
 `
 const Buttons = styled.div`
   align-items: center;

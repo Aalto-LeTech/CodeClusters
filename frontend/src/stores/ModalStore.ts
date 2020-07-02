@@ -1,4 +1,5 @@
 import { action, observable } from 'mobx'
+import { ToastStore } from './ToastStore'
 
 export interface IModal {
   isOpen: boolean
@@ -65,16 +66,22 @@ export class ModalStore {
       }
     },
   }
+  toastStore: ToastStore
 
+  constructor(toastStore: ToastStore) {
+    this.toastStore = toastStore
+  }
   // @action reset() {
   // }
 
   @action openModal = (name: EModal, params?: any) => {
     this.modals[name].isOpen = true
     this.modals[name].params = params
+    this.toastStore.setToasterLocation(true)
   }
  
   @action closeModal = (name: EModal) => {
     this.modals[name].isOpen = false
+    this.toastStore.setToasterLocation(false)
   }
 }

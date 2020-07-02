@@ -250,12 +250,11 @@ export class ReviewStore {
     return result
   }
 
-  @action deleteReviewSubmission = async (reviewSubmission: IReviewSubmission) => {
-    const { review_id, submission_id } = reviewSubmission
-    const result = await reviewApi.deleteReviewSubmission(review_id, submission_id)
+  @action deleteReviewSubmission = async (reviewId: number, submissionId: string) => {
+    const result = await reviewApi.deleteReviewSubmission(reviewId, submissionId)
     if (result) {
       runInAction(() => {
-        this.reviewSubmissions = this.reviewSubmissions.filter(r => r.review_id !== review_id || r.submission_id !== submission_id)
+        this.reviewSubmissions = this.reviewSubmissions.filter(r => r.review_id !== reviewId || r.submission_id !== submissionId)
       })
       this.toastStore.createToast('Review submission deleted', 'danger')
     }

@@ -27,8 +27,8 @@ export class Stores {
 
   constructor() {
     this.authStore = new AuthStore(this.reset)
-    this.modalStore = new ModalStore()
     this.toastStore = new ToastStore()
+    this.modalStore = new ModalStore(this.toastStore)
     this.courseStore = new CourseStore(this.toastStore)
     this.localSearchStore = new LocalSearchStore(this.toastStore)
     this.solrStore = new SolrStore(this.toastStore)

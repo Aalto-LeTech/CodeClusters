@@ -42,7 +42,6 @@ interface IProps {
   setSelectedModel?: (model?: IModel) => void
   runModel?: (data: IModelParams) => Promise<any>
   addReviewFlow?: (payload: IReviewFlowCreateParams) => Promise<any>
-  setToasterLocation?: (topRight?: boolean) => void
   closeModal?: (modal: EModal) => void
 }
 
@@ -60,14 +59,13 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
   setSelectedModel: stores.reviewFlowStore.setSelectedNewReviewFlowModel,
   runModel: stores.modelStore.runModel,
   addReviewFlow: stores.reviewFlowStore.addReviewFlow,
-  setToasterLocation: stores.toastStore.setToasterLocation,
   closeModal: stores.modalStore.closeModal,
 }))
 (observer((props: IProps) => {
   const {
     className, courseId, exerciseId, userId, searchParameters, modal,
     models, selectedModel, modelFormData, newReviewFlowSelectedModel, newReviewFlowInitialModelData,
-    setSelectedModel, runModel, addReviewFlow, setToasterLocation, closeModal
+    setSelectedModel, runModel, addReviewFlow, closeModal
   } = props
   const [submitInProgress, setSubmitInProgress] = useState(false)
 
@@ -145,13 +143,6 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
       setSubmitInProgress(false)
     }
   }
-  useEffect(() => {
-    if (modal!.isOpen) {
-      setToasterLocation!(true)
-    } else {
-      setToasterLocation!(false)
-    }
-  }, [modal!.isOpen])
   const reviewFlowFormRef = useRef<IFormRefMethods<IReviewFlowCreateFormParams>>(null)
   const searchFormRef = useRef<IFormRefMethods<ISearchCodeParams>>(null)
   const modelFormRef = useRef<IFormRefMethods<IModelParams>>(null)

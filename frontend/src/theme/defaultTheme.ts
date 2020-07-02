@@ -24,7 +24,7 @@ export const defaultTheme : ITheme = {
     // lightGreen: '#96FF9A', or // #00dfff; // #a9d5ff // #00aaff // #7fd5ff
     green: '#00e676',
     blue: '#425EC2',
-    red: '#ff5d5d',
+    red: '#ff5c77', // '#ff5d5d',
     orange: '#EF7F00',
     secondary: '#3f51b5',
     textLight: '#666',
