@@ -22,10 +22,14 @@ const PendingSentToggleEl = inject((stores: Stores) => ({
     className, getReviewsParams, setGetReviewsParams
   } = props
   function handleCheckSent(val: boolean) {
-    setGetReviewsParams!({ sent: val })
+    if (getReviewsParams!.pending) {
+      setGetReviewsParams!({ sent: val })
+    }
   }
   function handleCheckPending(val: boolean) {
-    setGetReviewsParams!({ pending: val })
+    if (getReviewsParams!.sent) {
+      setGetReviewsParams!({ pending: val })
+    }
   }
   return (
     <Container className={className}>
