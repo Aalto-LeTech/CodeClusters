@@ -54,6 +54,7 @@ case "$1" in
     sudo docker-compose -f prod-docker-compose.yml build
     sudo docker-compose -f prod-docker-compose.yml up -d
     sudo docker system prune
+    ;;
   *)
     echo $"Usage: $0 certbot|migrate|seed|testdata|data-import|update"
     exit 1
