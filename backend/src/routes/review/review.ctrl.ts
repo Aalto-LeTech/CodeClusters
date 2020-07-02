@@ -15,6 +15,7 @@ export const REVIEW_SELECTION_SCHEMA = Joi.object({
 export const REVIEW_CREATE_SCHEMA = Joi.object({
   message: Joi.string().min(1).max(102400).required(),
   metadata: Joi.string().allow('').max(102400),
+  tags: Joi.array().items(Joi.string()).required(),
   selections: Joi.array().items(REVIEW_SELECTION_SCHEMA).required()
 })
 export const REVIEW_SCHEMA = Joi.object({

@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import styled from '../../theme/styled'
 
-import { AsideSubmitReviewMenu } from '../AsideSubmitReviewMenu'
+import { AsideSubmissionAddReviewForm } from '../Review/AsideSubmissionAddReviewForm'
 
 interface IProps {
   className?: string
@@ -23,7 +23,7 @@ export const CodeLine = memo((props: IProps) => {
     <Wrapper className={className}>
       { showMenu &&
       <ReviewMenuWrapper>
-        <AsideSubmitReviewMenu />
+        <AsideSubmissionAddReviewForm />
       </ReviewMenuWrapper>}
       <Code
         active={showMenu}
@@ -37,7 +37,7 @@ export const CodeLine = memo((props: IProps) => {
 
 const ReviewMenuWrapper = styled.div`
   position: relative;
-  & > ${AsideSubmitReviewMenu} {
+  & > ${AsideSubmissionAddReviewForm} {
     left: -300px;
     position: absolute;
     top: 0;

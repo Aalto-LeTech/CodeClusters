@@ -2,7 +2,7 @@ import { action, computed, runInAction, observable } from 'mobx'
 import * as reviewApi from '../api/review.api'
 
 import {
-  IReview, IReviewedSubmission, IReviewCreateParams, IReviewSelection, IReviewSubmission, EReviewStatus
+  IReview, IReviewedSubmission, IReviewCreateFormParams, IReviewSelection, IReviewSubmission, EReviewStatus
 } from 'shared'
 import { IGetReviewsParams } from '../types/forms'
 import { ToastStore } from './ToastStore'
@@ -198,15 +198,14 @@ export class ReviewStore {
     return result
   }
 
-  @action addReview = async (message: string, metadata?: string) => {
+  @action addReview = async (data: IReviewCreateFormParams) => {
     const payload = {
-      message,
-      metadata,
+      ...data,
       selections: Object.values(this.selectedSubmissions),
     }
     const result = await reviewApi.addReview(payload)
     if (result) {
-      this.toastStore.createToast('Review sent', 'success')
+      this.toastStore.createToast('Review created', 'success')
     }
     return result
   }
@@ -245,7 +244,7 @@ export class ReviewStore {
           this.reviewSubmissions.push(reviewSubmission)
         }
       })
-      this.toastStore.createToast('Review submission updated', 'success')
+      this.toastStore.createToast('Updated submission to review link', 'success')
     }
     return result
   }
@@ -256,7 +255,7 @@ export class ReviewStore {
       runInAction(() => {
         this.reviewSubmissions = this.reviewSubmissions.filter(r => r.review_id !== reviewId || r.submission_id !== submissionId)
       })
-      this.toastStore.createToast('Review submission deleted', 'danger')
+      this.toastStore.createToast('Submission to review unlinked', 'danger')
     }
     return result
   }

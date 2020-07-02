@@ -119,7 +119,9 @@ const AddReviewFormEl = memo(forwardRef((props: IProps, ref: any) => {
           name="metadata"
           placeholder="Metadata only visible to the teachers"
           ref={register}/>
+        <Error>
           {errors.metadata && 'Metadata must be less than 10240 characters.'}
+        </Error>
       </FormField>
       <FormField>
         <label htmlFor={`${id}_tags`}>Tags</label>
@@ -174,6 +176,7 @@ const FormField = styled.div`
 `
 const Error = styled.small`
   color: red;
+  white-space: break-spaces;
 `
 const Buttons = styled.div`
   display: flex;

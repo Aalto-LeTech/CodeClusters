@@ -70,9 +70,9 @@ export const reviewService = {
   },
   createReview: async (params: IReviewCreateParams) : Promise<any> => {
     const savedReview = await dbService.queryOne<IReview | undefined>(`
-      INSERT INTO review (message, metadata)
-      VALUES($1, $2) RETURNING review_id, message, metadata, status, tags, timestamp
-    `, [params.message, params.metadata || ''])
+      INSERT INTO review (message, metadata, tags)
+      VALUES($1, $2, $3) RETURNING review_id, message, metadata, status, tags, timestamp
+    `, [params.message, params.metadata || '', params.tags || []])
 
     function createValues(params: IReviewCreateParams, reviewId: number) {
       return params.selections.reduce((acc, cur, i) => {

@@ -48,15 +48,13 @@ declare module 'shared' {
     exercise_id?: number
     statuses: EReviewStatus[]
   }
-  export interface IReviewCreateParams {
-    selections: IReviewSelection[]
-    message: string
-    metadata?: string
-  }
   export interface IReviewCreateFormParams {
     message: string
     metadata?: string
     tags?: string[]
+  }
+  export interface IReviewCreateParams extends IReviewCreateFormParams {
+    selections: IReviewSelection[]
   }
   export interface IAcceptReviewsParams {
     reviewIds: number[]

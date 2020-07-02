@@ -111,7 +111,7 @@ export const EditSubmissionReviewModal = inject((stores: Stores) => ({
       body={
         <Body ref={ref}>
           <Header>
-            <TitleWrapper><h2>Enable/disable review on submission</h2></TitleWrapper>
+            <TitleWrapper><h2>Link submission to review</h2></TitleWrapper>
             <Icon button onClick={handleClose}><FiX size={24}/></Icon>
           </Header>
           <Content>
@@ -119,8 +119,11 @@ export const EditSubmissionReviewModal = inject((stores: Stores) => ({
             {review && <Review review={review} /> }
             <SubmissionHeader>
               <SubTitle>Submission{}</SubTitle>
-              <div><IsLinkedTag linked={hasCurrentReview}>{hasCurrentReview ? 'Enabled' : 'Disabled'}</IsLinkedTag></div>
+              <div><IsLinkedTag linked={hasCurrentReview}>{hasCurrentReview ? 'Linked' : 'Unlinked'}</IsLinkedTag></div>
             </SubmissionHeader>
+            <p>
+              You may also edit the selection associated to this submission. By default the selection is the whole document. It's shown alongside the review to the student.
+            </p>
             <CodeBlock
               codeLines={codeLines}
               activeSelection={selection}
@@ -130,7 +133,7 @@ export const EditSubmissionReviewModal = inject((stores: Stores) => ({
           </Content>
           <Buttons>
             <Button intent={hasCurrentReview ? 'danger' : 'success'} loading={loading} onClick={onToggleAssociation}>
-              {hasCurrentReview ? 'Disable' : 'Enable'}
+              {hasCurrentReview ? 'Unlink' : 'Link'}
             </Button>
             <Button intent="success" onClick={onUpdate}>Update</Button>
             <Button intent="transparent" onClick={onCancel}>Cancel</Button>
