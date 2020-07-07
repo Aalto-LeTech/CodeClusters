@@ -4,7 +4,7 @@ import styled from '../theme/styled'
 
 import { SearchView } from '../components/Search'
 import { DeleteReviewSelectionModal } from '../modals/DeleteReviewSelectionModal'
-import { ReviewSubmissionsModal } from '../modals/ReviewSubmissionsModal'
+import { ReviewSubmissionsModal } from '../modals/AddReviewModal'
 import { CreateReviewFlowModal } from '../modals/CreateReviewFlowModal'
 import { FloatingMenu } from '../components/FloatingMenu'
 

@@ -62,7 +62,7 @@ export const ReviewSubmissionsModal = inject((stores: Stores) => ({
       body={
         <Body ref={ref}>
           <Header>
-            <TitleWrapper><h2>Add {currentSelectionCount} new pending reviews</h2></TitleWrapper>
+            <TitleWrapper><h2>Add review to {currentSelectionCount} submissions</h2></TitleWrapper>
             <Icon button onClick={handleClose}><FiX size={24}/></Icon>
           </Header>
           <SubmissionsVisualization>

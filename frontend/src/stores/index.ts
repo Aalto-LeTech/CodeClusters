@@ -1,13 +1,13 @@
 import { AuthStore } from './AuthStore'
 import { ClustersStore } from './ClustersStore'
 import { CourseStore } from './CourseStore'
+import { IndexStore } from './IndexStore'
 import { LocalSearchStore } from './LocalSearchStore'
 import { ModalStore } from './ModalStore'
 import { ModelStore } from './ModelStore'
 import { ReviewStore } from './ReviewStore'
 import { ReviewFlowStore } from './ReviewFlowStore'
 import { SearchStore } from './SearchStore'
-import { SolrStore } from './SolrStore'
 import { SubmissionStore } from './SubmissionStore'
 import { ToastStore } from './ToastStore'
 
@@ -21,7 +21,7 @@ export class Stores {
   reviewStore: ReviewStore
   reviewFlowStore: ReviewFlowStore
   searchStore: SearchStore
-  solrStore: SolrStore
+  indexStore: IndexStore
   submissionStore: SubmissionStore
   toastStore: ToastStore
 
@@ -31,7 +31,7 @@ export class Stores {
     this.modalStore = new ModalStore(this.toastStore)
     this.courseStore = new CourseStore(this.toastStore)
     this.localSearchStore = new LocalSearchStore(this.toastStore)
-    this.solrStore = new SolrStore(this.toastStore)
+    this.indexStore = new IndexStore(this.toastStore)
     this.submissionStore = new SubmissionStore(this.toastStore)
     this.searchStore = new SearchStore({
       toastStore: this.toastStore,

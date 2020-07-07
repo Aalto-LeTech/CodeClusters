@@ -11,13 +11,19 @@ import { Review } from '../components/Review/Review'
 import { Button } from '../elements/Button'
 import { Icon } from '../elements/Icon'
 
-import { IReviewWithSelection } from 'shared'
+import { ISubmission, IReviewWithSelection } from 'shared'
 import { Stores } from '../stores'
 import { IModal, EModal } from '../stores/ModalStore'
 
 interface IProps {
   className?: string
-  modal?: IModal
+  modal?: {
+    isOpen: false,
+    params: {
+      submission: ISubmission,
+      reviewsWithSelection: IReviewWithSelection[],
+    }
+  }
   closeModal?: (modal: EModal) => void
 }
 
@@ -32,7 +38,6 @@ export const SubmissionReviewsModal = inject((stores: Stores) => ({
 (observer((props: IProps) => {
   const { className, modal, closeModal } = props
   const [shownReviewIdx, setShownReviewIdx] = useState(-1)
-  const [editingReviewSelection, setEditingReviewSelection] = useState(false)
   const [codeHTML, setCodeHTML] = useState(modal!.params.submission?.code)
 
   useEffect(() => {
@@ -40,28 +45,23 @@ export const SubmissionReviewsModal = inject((stores: Stores) => ({
   }, [modal!.params])
 
   function handleReviewHover(idx: number) {
-    if (shownReviewIdx !== idx && !editingReviewSelection) {
+    if (shownReviewIdx !== idx) {
       setShownReviewIdx(idx)
-      setCodeHTML(createCodeHTML(modal!.params?.submission?.code, modal!.params?.reviews[idx]?.selection))
+      setCodeHTML(createCodeHTML(modal!.params?.submission?.code, modal!.params?.reviewsWithSelection[idx]?.selection))
     }
   }
   function handleReviewClick(idx: number) {
-    if (shownReviewIdx !== idx || !editingReviewSelection) {
+    if (shownReviewIdx !== idx) {
       setShownReviewIdx(idx)
-      setCodeHTML(createCodeHTML(modal!.params?.submission?.code, modal!.params?.reviews[idx]?.selection))
-      setEditingReviewSelection(true)
+      setCodeHTML(createCodeHTML(modal!.params?.submission?.code, modal!.params?.reviewsWithSelection[idx]?.selection))
     } else {
       setShownReviewIdx(-1)
       setCodeHTML(modal!.params.submission?.code)
-      setEditingReviewSelection(!editingReviewSelection)
     }
   }
   function handleClose() {
     closeModal!(EModal.VIEW_SUBMISSION_REVIEWS)
     setShownReviewIdx(-1)
-    setEditingReviewSelection(false)
-  }
-  async function handleEditReviewSelectionSubmit(payload: any, onSuccess: () => void, onError: () => void) {
   }
   const ref = useRef(null)
   useClickOutside(ref, (e) => handleClose(), modal!.isOpen)
@@ -76,9 +76,8 @@ export const SubmissionReviewsModal = inject((stores: Stores) => ({
             <Icon button onClick={handleClose}><FiX size={24}/></Icon>
           </Header>
           <Content>
-            <Code dangerouslySetInnerHTML={{__html: codeHTML }} />
             <ReviewsListUl>
-              { modal!.params?.reviews.map((review: IReviewWithSelection, i: number) =>
+              { modal!.params?.reviewsWithSelection.map((review: IReviewWithSelection, i: number) =>
               <ReviewItem
                 key={`r-${review.review_id}`}
                 active={i === shownReviewIdx}
@@ -86,10 +85,11 @@ export const SubmissionReviewsModal = inject((stores: Stores) => ({
                 onMouseOver={() => handleReviewHover(i)}
                 tabIndex={0}
               >
-                <Review review={review} />
+                <ReviewCarouselItem review={review} />
               </ReviewItem>
               )}
             </ReviewsListUl>
+            <Code dangerouslySetInnerHTML={{__html: codeHTML }} />
           </Content>
         </Body>
       }
@@ -106,13 +106,10 @@ const Body = styled.div`
   height: 100%;
   justify-content: space-between;
   max-height: 1000px;
-  max-width: 1200px;
+  max-width: 700px;
   padding: 20px;
   text-align: center;
   width: calc(100% - 20px - 2rem);
-  @media only screen and (max-width: ${({ theme }) => theme.breakpoints.DEFAULT_WIDTH}) {
-    max-width: 600px;
-  }
 `
 const Header = styled.div`
   align-items: center;
@@ -141,21 +138,15 @@ const Content = styled.div`
   & > *:first-child {
     margin-bottom: 1rem;
   }
-  @media only screen and (min-width: ${({ theme }) => theme.breakpoints.DEFAULT_WIDTH}) {
-    flex-direction: row;
-    & > *:first-child {
-      margin-right: 1rem;
-    }
-  }
 `
-const ReviewsListUl = styled.ol`
-  max-width: 600px;
-  overflow-y: scroll;
-  list-style: decimal;
+const ReviewsListUl = styled.ul`
+  display: flex;
+  height: 150px;
+  overflow: scroll;
   padding: 4px;
   width: 100%;
   & > * + * {
-    margin: 10px 0 0 0;
+    margin: 0 0 0 0.5rem;
   }
 `
 const ReviewItem = styled.li<{ active: boolean }>`
@@ -165,43 +156,36 @@ const ReviewItem = styled.li<{ active: boolean }>`
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  padding: 1rem;
+  min-width: 120px;
+  padding: 0.5rem;
   text-align: left;
   &:hover {
     background: ${({ theme }) => '#ff5d5d'};
   }
 `
-const ReviewMessage = styled.p`
-  background: #fff;
-  border: 1px solid #222;
-  border-radius: 4px;
-  margin: 0;
-  padding: 0.5rem;
-`
-const ReviewMetadata = styled.p`
-  background: #fff;
-  border: 1px solid #222;
-  border-radius: 4px;
-  margin: 0;
-  padding: 0.5rem;
-`
-const Buttons = styled.div`
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  & > *:first-child {
-    margin-right: 1rem;
-  }
-`
 const Code = styled.pre`
   background: #222;
   color: #fff;
-  padding: 10px;
-  border-radius: 0.25rem;
+  padding: 0.5rem;
+  border-radius: 4px;
   margin: 0;
-  max-width: 600px;
   overflow: scroll;
   text-align: left;
   width: 100%;
+`
+
+interface IReviewCarouselItem {
+  review: IReviewWithSelection
+}
+function ReviewCarouselItem(props: IReviewCarouselItem) {
+  const { review } = props
+  return (
+    <ReviewCarouselItemContainer>
+      {review.message}
+    </ReviewCarouselItemContainer>
+  )
+}
+const ReviewCarouselItemContainer = styled.div`
+  word-break: break-word;
+  overflow-y: hidden;
 `

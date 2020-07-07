@@ -16,7 +16,14 @@
    <field name="exercise_id" type="pint" indexed="true" stored="true" />
    <field name="student_id" type="pint" indexed="true" stored="true" />
    <field name="timestamp" type="pdate" indexed="true" stored="true"/>
+   <field name="language" type="string" indexed="true" stored="true" />
+   <field name="code_length" type="pint" indexed="true" stored="true" />
    <field name="code" type="text_general" indexed="true" stored="true"/>
+
+  <dynamicField name="*_statements" type="pint" indexed="true" stored="true"/>
+  <dynamicField name="*_expressions" type="pint" indexed="true" stored="true"/>
+  <dynamicField name="*_keywords" type="pint" indexed="true" stored="true"/>
+  <dynamicField name="*_metric" type="pfloat" indexed="true" stored="true"/>
 
    <!-- FROM THE DEFAULT SOLR managed-schema.xml -->
 

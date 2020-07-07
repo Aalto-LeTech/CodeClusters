@@ -2,12 +2,12 @@ import React from 'react'
 import { observer } from 'mobx-react'
 import styled from '../../theme/styled'
 
-import { IReview } from 'shared'
+import { IReview, IReviewWithSelection } from 'shared'
 
 interface IProps {
   className?: string
   active?: boolean
-  review: IReview
+  review: IReview | IReviewWithSelection
 }
 
 const ReviewEl = observer((props: IProps) => {

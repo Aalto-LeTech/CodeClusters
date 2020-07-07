@@ -55,7 +55,7 @@ const SubmissionsReviewsGridEl = inject((stores: Stores) => ({
   function openEditSubmissionReviewModal(params: any) {
     openModal!(EModal.EDIT_SUBMISSION_REVIEW, params)
   }
-  function openSubmissionReviewsModal(params: any) {
+  function openViewSubmissionReviewsModal(params: any) {
     openModal!(EModal.VIEW_SUBMISSION_REVIEWS, params)
   }
   function openAcceptEditReviewModal(review: IReview) {
@@ -71,9 +71,9 @@ const SubmissionsReviewsGridEl = inject((stores: Stores) => ({
     const reviewsWithSelection = foundReviews.map(r => (
       { ...r, selection: foundReviewSubmissions.find(rs => rs.review_id === r.review_id)?.selection }
     ))
-    openSubmissionReviewsModal!({
+    openViewSubmissionReviewsModal!({
       submission,
-      reviews: reviewsWithSelection
+      reviewsWithSelection: reviewsWithSelection
     })
   }
   function handleSubmissionCellClick(submission: ISubmission, colIdx: number, reviewSubmission?: IReviewSubmission) {

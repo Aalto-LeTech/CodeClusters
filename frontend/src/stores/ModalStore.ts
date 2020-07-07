@@ -57,7 +57,7 @@ export class ModalStore {
       isOpen: false,
       params: {
         submission: {},
-        reviews: [],
+        reviewsWithSelection: [],
       }
     },
     [EModal.CREATE_REVIEW_FLOW]: {

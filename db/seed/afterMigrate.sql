@@ -11,10 +11,10 @@ INSERT INTO app_user (name, email, password, role, student_id)
 INSERT INTO course (name) VALUES ('Ohjelmoinnin Perusteet');
 INSERT INTO course (name) VALUES ('mooc-2017-ohjelmointi');
 
-INSERT INTO exercise (course_id, name) VALUES (1, '1. Hello World');
-INSERT INTO exercise (course_id, name) VALUES (1, '2. Joulukuusi');
-INSERT INTO exercise (course_id, name) VALUES (1, '3. Matopeli');
-INSERT INTO exercise (course_id, name) VALUES (2, 'osa02-Osa02_16.MarsinLampotilanKeskiarvo');
+INSERT INTO exercise (course_id, name, program_language) VALUES (1, '1. Hello World', 'Java');
+INSERT INTO exercise (course_id, name, program_language) VALUES (1, '2. Joulukuusi', 'Java');
+INSERT INTO exercise (course_id, name, program_language) VALUES (1, '3. Matopeli', 'Java');
+INSERT INTO exercise (course_id, name, program_language) VALUES (2, 'osa02-Osa02_16.MarsinLampotilanKeskiarvo', 'Java');
 
 INSERT INTO course_students (course_id, student_id) VALUES (1, 1);
 INSERT INTO course_students (course_id, student_id) VALUES (1, 2);

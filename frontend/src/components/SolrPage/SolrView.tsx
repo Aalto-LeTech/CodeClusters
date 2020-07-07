@@ -1,23 +1,15 @@
-import React, { memo, useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
-import { inject, observer } from 'mobx-react'
 
-import { Button } from '../../elements/Button'
-
-import { SolrStore } from '../../stores/SolrStore'
+import { Reindex } from './Reindex'
+import { IndexMetrics } from './IndexMetrics'
 
 interface IProps {
   className?: string
-  solrStore?: SolrStore
 }
 
-const SolrViewEl = inject('solrStore')(observer((props: IProps) => {
-  const { className, solrStore } = props
-  const [loading, setLoading] = useState(false)
-  function handleReindex() {
-    setLoading(true)
-    solrStore!.reindexSubmissions().then(() => setLoading(false))
-  }
+function SolrViewEl(props: IProps) {
+  const { className } = props
   return (
     <Container className={className}>
       <Header>
@@ -30,12 +22,13 @@ const SolrViewEl = inject('solrStore')(observer((props: IProps) => {
           </InfoText>
         </Info>
       </Header>
-      <SolrControls>
-        <Button loading={loading} onClick={handleReindex}>Reindex</Button>
-      </SolrControls>
+      <MainInputs>
+        <Reindex />
+        <IndexMetrics />
+      </MainInputs>
     </Container>
   )
-}))
+}
 
 const Container = styled.div`
   align-items: center;
@@ -58,7 +51,8 @@ const Info = styled.div`
 const InfoText = styled.p`
   margin: 0;
 `
-const SolrControls = styled.div`
+const MainInputs = styled.div`
+  width: 100%;
   > * + * {
     margin: 1rem 0;
   }

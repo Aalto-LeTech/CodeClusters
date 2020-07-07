@@ -182,20 +182,9 @@ declare module 'shared' {
     title: string
     description: string
   }
-  export type IModelParams = INgramParams | IMetricsParams
-  export type IModelId = 'ngram' | 'metrics'
+  export type IModelParams = INgramParams
+  export type IModelId = 'ngram'
   export type IRunModelResponse = IRunNgramResponse
-  // Metrics model API
-  export interface IMetricsParams {
-    model_id: IModelId
-  }
-  export interface IRunMetricsParams extends IMetricsParams {
-    submissions: { id: string, code: string }[]
-  }
-  export interface IRunMetricsResponse {
-    token_counts: { [id: string]: { [keyword: string]: number } }
-    rare_token_counts: { [id: string]: { [keyword: string]: number } }
-  }
   // Ngram model API
   export const NgramModelId: 'ngram'
   export interface IDBSCANParams {
@@ -254,6 +243,13 @@ declare module 'shared' {
     // job_id: number
     // documents_used: number
     // status_url: string
+  }
+  // Index data to Solr / update fields
+  export interface IIndexMetricsParams {
+    course_id: number
+    exercise_id: number
+  }
+  export interface IIndexMetricsResponse {
   }
   // Search with Solr
   export interface ISearchCodeParams {

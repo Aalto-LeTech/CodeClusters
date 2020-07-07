@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../theme/styled'
-import { FiX } from 'react-icons/fi'
+import { FiX, FiMaximize2 } from 'react-icons/fi'
 
 import useClickOutside from '../hooks/useClickOutside'
 import useScrollLock from '../hooks/useScrollLock'
@@ -118,7 +118,7 @@ export const EditSubmissionReviewModal = inject((stores: Stores) => ({
             <SubTitle>Review</SubTitle>
             {review && <Review review={review} /> }
             <SubmissionHeader>
-              <SubTitle>Submission{}</SubTitle>
+              <SubTitle>Submission</SubTitle>
               <div><IsLinkedTag linked={hasCurrentReview}>{hasCurrentReview ? 'Linked' : 'Unlinked'}</IsLinkedTag></div>
             </SubmissionHeader>
             <p>
@@ -153,12 +153,12 @@ const Body = styled.div`
   height: 100%;
   justify-content: space-between;
   max-height: 1000px;
-  max-width: 1200px;
+  max-width: 700px;
   padding: 20px;
   width: calc(100% - 20px - 2rem);
-  @media only screen and (max-width: ${({ theme }) => theme.breakpoints.DEFAULT_WIDTH}) {
+  /* @media only screen and (max-width: ${({ theme }) => theme.breakpoints.DEFAULT_WIDTH}) {
     max-width: 600px;
-  }
+  } */
 `
 const Header = styled.div`
   align-items: center;
@@ -182,6 +182,7 @@ const TitleWrapper = styled.div`
 const Content = styled.div`
   margin-bottom: 1rem;
   overflow-y: scroll;
+  /* max-width: 700px; */
   width: 100%;
   & > ${CodeBlock} {
     height: 100%;

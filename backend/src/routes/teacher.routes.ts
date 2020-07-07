@@ -3,6 +3,7 @@ import { Router } from 'express'
 import { validateBody, authenticate, parseQueryParams } from '../middlewares'
 
 import * as courseCtrl from './course/course.ctrl'
+import * as indexCtrl from './index/index.ctrl'
 import * as modelCtrl from './model/model.ctrl'
 import * as reviewCtrl from './review/review.ctrl'
 import * as reviewSubmissionCtrl from './review_submission/review_submission.ctrl'
@@ -29,10 +30,11 @@ router.post('/model/ngram',
   authenticate,
   validateBody(modelCtrl.RUN_NGRAM_PARAMS),
   modelCtrl.runNgram)
-router.post('/model/metrics',
+
+router.post('/index/metrics',
   authenticate,
-  validateBody(modelCtrl.RUN_METRICS_PARAMS),
-  modelCtrl.runMetrics)
+  validateBody(indexCtrl.INDEX_METRICS_PARAMS),
+  indexCtrl.runAndIndexMetrics)
 
 router.get('/reviews',
   authenticate,

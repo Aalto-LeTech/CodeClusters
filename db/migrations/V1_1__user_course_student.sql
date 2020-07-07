@@ -24,7 +24,8 @@ CREATE TABLE course (
 CREATE TABLE exercise (
 	exercise_id SERIAL PRIMARY KEY,
 	course_id INTEGER NOT NULL REFERENCES course ON DELETE CASCADE,
-	name TEXT NOT NULL CHECK (char_length(name) < 256)
+	name TEXT NOT NULL CHECK (char_length(name) < 256),
+	program_language TEXT NOT NULL CHECK (char_length(name) < 256)
 );
 
 CREATE TABLE course_students (

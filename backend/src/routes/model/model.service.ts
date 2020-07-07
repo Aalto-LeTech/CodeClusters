@@ -1,7 +1,7 @@
 import { dbService } from '../../db/db.service'
 import { config, axiosService } from '../../common'
 
-import { IRunNgramParams, IRunNgramResponse, IModel, IRunMetricsParams, IRunMetricsResponse } from 'shared'
+import { IRunNgramParams, IRunNgramResponse, IModel } from 'shared'
 
 function url(path: string) {
   return `${config.MODEL_SERVER_URL}/${path}`
@@ -10,9 +10,6 @@ function url(path: string) {
 export const modelService = {
   runNgram: (params: IRunNgramParams) => {
     return axiosService.post<IRunNgramResponse>(url('ngram'), params)
-  },
-  runMetrics: (params: IRunMetricsParams) => {
-    return axiosService.post<IRunMetricsResponse>(url('metrics'), params)
   },
   getModels: () => {
     return dbService.queryMany<IModel>('SELECT * FROM model')

@@ -1,10 +1,8 @@
 import React, { useRef } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../../theme/styled'
-import { FiTrash, FiMaximize2 } from 'react-icons/fi'
 
 import { AddReviewForm } from './AddReviewForm'
-import { Icon } from '../../elements/Icon'
 import { CheckBox } from '../../elements/CheckBox'
 
 import { IReviewCreateFormParams } from 'shared'
@@ -47,9 +45,6 @@ const AsideSubmissionAddReviewFormEl = inject((stores: Stores) => ({
   function handleStopPropagation(e: React.MouseEvent<HTMLElement>) {
     e.stopPropagation()
   }
-  function handleClickMaximize() {
-
-  }
   function handleMultiSelectionToggle() {
     if (hasManySelections && isMultiSelection) {
       openModal!(EModal.DELETE_REVIEW_SELECTION, {
@@ -77,8 +72,7 @@ const AsideSubmissionAddReviewFormEl = inject((stores: Stores) => ({
     <Wrapper className={className} onClick={handleStopPropagation}>
       <Container>
         <Header>
-          <Title>Submit review</Title>
-          <Icon button onClick={handleClickMaximize}><FiMaximize2 size={18}/></Icon>
+          <Title>Add review to {currentSelectionCount} submissions</Title>
         </Header>
         <Body>
           <CheckBoxField>
@@ -104,6 +98,7 @@ const AsideSubmissionAddReviewFormEl = inject((stores: Stores) => ({
 
 const Title = styled.h4`
   margin: 0;
+  white-space: break-spaces;
 `
 const Wrapper = styled.div`
   position: relative;
