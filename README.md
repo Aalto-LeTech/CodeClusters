@@ -130,5 +130,20 @@ EOF
 15. Run the test data generator: `./init-prod.sh testdata`
 16. Create the Solr data: `./init-prod.sh data-import`
 17. Go to the modeling repo: `cd ../CodeClustersModeling`
-18. Build and launch the modeling server: `sudo docker-compose -f prod-docker-compose.yml up -d`
-19. The app should be running at https://codeclusters.cs.aalto.fi/
+18. Create the environment variables:
+
+```bash
+cat > .modeling.env <<EOF
+DB_HOST=172.17.0.1
+DB_PORT=5600
+DB_USER=code-clusters-app-user
+DB_PASSWORD=<32 char postgres password>
+DB_NAME=code_clusters_prod
+
+SOLR_URL=http://172.17.0.1:8983
+SOLR_CORE=submission-search
+EOF
+```
+
+19. Build and launch the modeling server: `sudo docker-compose -f prod-docker-compose.yml up -d`
+20. The app should be running at https://codeclusters.cs.aalto.fi/
