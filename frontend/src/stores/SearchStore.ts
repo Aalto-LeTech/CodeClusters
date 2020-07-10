@@ -4,7 +4,7 @@ import * as searchApi from '../api/search.api'
 import { persist } from './persist'
 
 import {
-  ISearchCodeParams, ISearchCodeResult, ISolrSearchCodeResponse, ISolrSubmissionWithDate
+  ISearchCodeParams, ISearchFilter, ISearchCodeResult, ISolrSearchCodeResponse, ISolrSubmissionWithDate
 } from 'shared'
 import { ToastStore } from './ToastStore'
 import { LocalSearchStore } from './LocalSearchStore'
@@ -37,6 +37,8 @@ export class SearchStore {
   @observable searchResults: ISearchCodeResult[] = []
   @observable selectedSearchResult = EMPTY_RESULT
   @observable searchParams: ISearchCodeParams = EMPTY_QUERY
+  @observable filters: ISearchFilter[] = []
+  @observable supplementaryData: any = {}
   // For updating SearchConsole using review flows
   @observable initialSearchParams: ISearchCodeParams = EMPTY_QUERY
   toastStore: ToastStore
@@ -124,5 +126,13 @@ export class SearchStore {
       return result.response.docs.map(r => r.id)
     }
     return []
+  }
+
+  @action getSearchSupplementaryData = async () => {
+    const result = await searchApi.getSearchSupplementaryData()
+    if (result) {
+      this.supplementaryData = result
+    }
+    return result
   }
 }

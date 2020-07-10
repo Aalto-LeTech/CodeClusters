@@ -2,6 +2,7 @@ import { ISearchCodeParams, ISolrSearchCodeResponse, ISolrSearchAllCodeResponse,
 
 import {
   authenticatedHeaders,
+  get,
   getWithQuery,
 } from './methods'
 
@@ -13,3 +14,6 @@ export const searchAll = (payload: ISearchCodeParams) =>
 
 export const searchIds = (payload: ISearchCodeParams) =>
   getWithQuery<ISolrSearchAllIdsResponse>('search_ids', payload, authenticatedHeaders())
+
+export const getSearchSupplementaryData = () =>
+  get<any>('search/supplementary', authenticatedHeaders())

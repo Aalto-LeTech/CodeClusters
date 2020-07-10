@@ -41,6 +41,7 @@ function NavLinks(props: { user?: IUser }) {
     return (
       <>
         <Link to="/" className="frontpage">CodeClusters</Link>
+        <Link to="/manual">Manual</Link>
       </>
     )
   }
@@ -58,6 +59,7 @@ function NavLinks(props: { user?: IUser }) {
       <Link to="/" className="frontpage">CodeClusters</Link>
       <Link to="/reviews">Reviews</Link>
       <Link to="/solr">Solr</Link>
+      <Link to="/manual">Manual</Link>
     </>
   )
 }

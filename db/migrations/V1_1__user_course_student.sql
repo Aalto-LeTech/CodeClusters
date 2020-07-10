@@ -1,4 +1,5 @@
 CREATE TYPE role AS ENUM ('ADMIN', 'TEACHER', 'STUDENT');
+CREATE TYPE programming_language AS ENUM ('JAVA');
 
 CREATE TABLE student (
 	student_id SERIAL PRIMARY KEY,
@@ -18,14 +19,15 @@ CREATE TABLE app_user (
 CREATE TABLE course (
 	course_id SERIAL PRIMARY KEY,
 	name TEXT NOT NULL CHECK (char_length(name) < 256),
-	organization TEXT NOT NULL DEFAULT 'Aalto University'
+	organization TEXT NOT NULL DEFAULT 'Aalto University',
+	default_programming_language programming_language NOT NULL
 );
 
 CREATE TABLE exercise (
 	exercise_id SERIAL PRIMARY KEY,
 	course_id INTEGER NOT NULL REFERENCES course ON DELETE CASCADE,
 	name TEXT NOT NULL CHECK (char_length(name) < 256),
-	program_language TEXT NOT NULL CHECK (char_length(name) < 256)
+	programming_language programming_language NOT NULL
 );
 
 CREATE TABLE course_students (

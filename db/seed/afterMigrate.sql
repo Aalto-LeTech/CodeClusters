@@ -8,13 +8,13 @@ INSERT INTO app_user (name, email, password, role, student_id)
 INSERT INTO app_user (name, email, password, role, student_id)
   VALUES ('Linus Torvals', 'linus@asdf.fi', 'asdfasdf', 'STUDENT', 2);
 
-INSERT INTO course (name) VALUES ('Ohjelmoinnin Perusteet');
-INSERT INTO course (name) VALUES ('mooc-2017-ohjelmointi');
+INSERT INTO course (name, default_programming_language) VALUES ('Ohjelmoinnin Perusteet', 'JAVA');
+INSERT INTO course (name, default_programming_language) VALUES ('mooc-2017-ohjelmointi', 'JAVA');
 
-INSERT INTO exercise (course_id, name, program_language) VALUES (1, '1. Hello World', 'Java');
-INSERT INTO exercise (course_id, name, program_language) VALUES (1, '2. Joulukuusi', 'Java');
-INSERT INTO exercise (course_id, name, program_language) VALUES (1, '3. Matopeli', 'Java');
-INSERT INTO exercise (course_id, name, program_language) VALUES (2, 'osa02-Osa02_16.MarsinLampotilanKeskiarvo', 'Java');
+INSERT INTO exercise (course_id, name, programming_language) VALUES (1, '1. Hello World', 'JAVA');
+INSERT INTO exercise (course_id, name, programming_language) VALUES (1, '2. Joulukuusi', 'JAVA');
+INSERT INTO exercise (course_id, name, programming_language) VALUES (1, '3. Matopeli', 'JAVA');
+INSERT INTO exercise (course_id, name, programming_language) VALUES (2, 'osa02-Osa02_16.MarsinLampotilanKeskiarvo', 'JAVA');
 
 INSERT INTO course_students (course_id, student_id) VALUES (1, 1);
 INSERT INTO course_students (course_id, student_id) VALUES (1, 2);
@@ -104,3 +104,9 @@ INSERT INTO model (model_id, title, description)
 VALUES ('keyword_metrics', 'Keyword metrics',
 'Returns the AST keywords for every submission, omits the non-descriptive tokens eg whitespace, brackets. For histograms, distribution plots.
 ');
+
+INSERT INTO available_programming_language_facets(programming_language, tokens, metrics)
+VALUES ('JAVA', array['symbolic_names', 'rare_symbolic_names', 'rules'],
+  array['JavaNCSS_file', 'JavaNCSS_class', 'JavaNCSS_method', 'CyclomaticComplexity', 'NPathComplexity',
+    'ClassDataAbstractionCoupling', 'ClassFanOutComplexity', 'BooleanExpressionComplexity']
+);

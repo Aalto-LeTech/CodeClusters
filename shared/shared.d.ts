@@ -110,17 +110,28 @@ declare module 'shared' {
     review_flow_id?: number
     steps: IReviewFlowStep[]
   }
+  // Programming language
+  export enum EProgrammingLanguage {
+    JAVA = 'JAVA'
+  }
+  export interface IProgrammingLanguageFacets {
+    programming_language: EProgrammingLanguage
+    tokens: string[]
+    metrics: string[]
+  }
   // Course
   export interface ICourse {
     course_id: number
     name: string
     organization: string
+    default_programming_language: EProgrammingLanguage
     student_ids: number[]
     exercises: IExercise[]
   }
   export interface IExercise {
     exercise_id: number
     course_id: number
+    programming_language: EProgrammingLanguage
     name: string
   }
   // Submission
@@ -263,6 +274,12 @@ declare module 'shared' {
     case_sensitive?: boolean
     regex?: boolean
     whole_words?: boolean
+  }
+  export interface ISearchFilter {
+    field: string
+    start?: number
+    end?: number
+    gap?: number
   }
   export interface ISolrResponseHeader {
     status: number

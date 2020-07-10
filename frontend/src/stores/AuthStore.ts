@@ -21,6 +21,10 @@ export class AuthStore {
     persist(() => this.jwt, (val: any) => this.jwt = val, 'auth.jwt')
   }
 
+  @computed get isAuthenticated() {
+    return this.user !== undefined && this.jwt.token.length !== 0 && this.jwt.expires > Date.now()
+  }
+
   @action reset() {
     this.user = undefined
     this.jwt = EMPTY_JWT
@@ -39,10 +43,5 @@ export class AuthStore {
 
   @action logout = () => {
     this.resetAllStores()
-  }
-
-  @computed
-  get isAuthenticated() {
-    return this.user !== undefined
   }
 }

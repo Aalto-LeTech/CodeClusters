@@ -4,10 +4,10 @@ import { inject } from 'mobx-react'
 import { RouteComponentProps } from 'react-router'
 
 import { Stores } from '../stores'
-import { AuthStore } from '../stores/AuthStore'
 
 interface IProps {
-  authStore?: AuthStore
+  isAuthenticated?: boolean
+  logout?: () => void
 }
 
 /**
@@ -18,13 +18,17 @@ interface IProps {
 export function AuthHOC <P extends IProps>(WrappedComponent: React.ComponentType<any>) {
   class AuthHOCClass extends React.Component<IProps & RouteComponentProps<any>, {}> {
     render() {
-      const { location } = this.props
-      return this.props.authStore!.isAuthenticated ?
+      const { location, isAuthenticated, logout } = this.props
+      if (!isAuthenticated) {
+        logout!()
+      }
+      return isAuthenticated ?
         <WrappedComponent {...this.props as P & IProps & RouteComponentProps<any>} /> :
         <Redirect to={{ pathname: '/login', state: { from: location } }} />
     }
   }
   return inject((stores: Stores) => ({
-    authStore: stores.authStore,
+    isAuthenticated: stores.authStore.isAuthenticated,
+    logout: stores.authStore.logout,
   }))(AuthHOCClass)
 }

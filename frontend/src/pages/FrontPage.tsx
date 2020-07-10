@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../theme/styled'
 
@@ -9,16 +9,19 @@ import { CreateReviewFlowModal } from '../modals/CreateReviewFlowModal'
 import { FloatingMenu } from '../components/FloatingMenu'
 
 import { Stores } from '../stores'
-import { AuthStore } from '../stores/AuthStore'
 
 interface IProps {
-  authStore?: AuthStore
+  getSearchSupplementaryData?: () => Promise<any>
 }
 
 export const FrontPage = inject((stores: Stores) => ({
-  authStore: stores.authStore,
+  getSearchSupplementaryData: stores.searchStore.getSearchSupplementaryData,
 }))
 (observer((props: IProps) => {
+  const { getSearchSupplementaryData } = props
+  useEffect(() => {
+    getSearchSupplementaryData!()
+  }, [])
   return (
     <Container>
       <Header>

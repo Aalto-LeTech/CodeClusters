@@ -1,0 +1,9 @@
+apps:
+  - script: ./dist/index.js
+    name: 'my-node-bootstrap'
+    exec_mode: cluster
+    instances: -1
+    log: /var/my-node-bootstrap/my-node-bootstrap.log
+    merge_logs: true
+    no_color: true
+    log_date_format: 'YYYY-MM-DDTHH:mm:ssZ'
