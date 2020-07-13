@@ -104,9 +104,3 @@ INSERT INTO model (model_id, title, description)
 VALUES ('keyword_metrics', 'Keyword metrics',
 'Returns the AST keywords for every submission, omits the non-descriptive tokens eg whitespace, brackets. For histograms, distribution plots.
 ');
-
-INSERT INTO available_programming_language_facets(programming_language, tokens, metrics)
-VALUES ('JAVA', array['symbolic_names', 'rare_symbolic_names', 'rules'],
-  array['JavaNCSS_file', 'JavaNCSS_class', 'JavaNCSS_method', 'CyclomaticComplexity', 'NPathComplexity',
-    'ClassDataAbstractionCoupling', 'ClassFanOutComplexity', 'BooleanExpressionComplexity']
-);

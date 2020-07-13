@@ -36,6 +36,7 @@ export class Stores {
     this.searchStore = new SearchStore({
       toastStore: this.toastStore,
       localSearchStore: this.localSearchStore,
+      courseStore: this.courseStore,
     })
     this.clustersStore = new ClustersStore({
       toastStore: this.toastStore,

@@ -270,16 +270,22 @@ declare module 'shared' {
     num_results?: number
     num_lines?: number
     result_start?: number
+    facets?: {
+      [facet: string]: ISearchFacetParams
+    }
     filters?: string[]
     case_sensitive?: boolean
     regex?: boolean
     whole_words?: boolean
   }
-  export interface ISearchFilter {
-    field: string
-    start?: number
-    end?: number
-    gap?: number
+  export type ISearchFacetParams = true | {
+    start: number
+    end: number
+    gap: number
+  }
+  export interface ISupplementaryData {
+    stats: { count: number, course_id: number, exercise_id: number }[]
+    facets: IProgrammingLanguageFacets[]
   }
   export interface ISolrResponseHeader {
     status: number
@@ -302,6 +308,11 @@ declare module 'shared' {
   export interface ISolrSearchCodeResponse {
     responseHeader: ISolrResponseHeader
     response: ISolrResponse<ISolrSubmission>
+    facet_counts?: {
+      facet_fields: {
+        [facet: string]: (string | number)[]
+      }
+    }
     highlighting: {
       [id: string]: {
         code: string[]

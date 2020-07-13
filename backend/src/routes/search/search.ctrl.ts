@@ -7,6 +7,12 @@ import { searchService } from './search.service'
 import { ISearchCodeParams } from 'shared'
 import { IAuthRequest } from '../../types/request'
 
+const FACET_PARAMS = Joi.object({
+  start: Joi.number().integer().required(),
+  end: Joi.number().integer().required(),
+  gab: Joi.number().integer().required(),
+})
+
 export const SEARCH_QUERY_PARAMS = Joi.object({
   q: Joi.string().min(1).max(256).required(),
   course_id: Joi.number().integer(),
@@ -15,6 +21,20 @@ export const SEARCH_QUERY_PARAMS = Joi.object({
   num_results: Joi.number().integer(),
   num_lines: Joi.number().integer(),
   results_start: Joi.number().integer(),
+  facets: Joi.object({
+    NCSS_method_metric: Joi.alternatives().try(Joi.boolean(), FACET_PARAMS),
+    NCSS_class_metric: Joi.alternatives().try(Joi.boolean(), FACET_PARAMS),
+    NCSS_file_metric: Joi.alternatives().try(Joi.boolean(), FACET_PARAMS),
+    CYC_metric: Joi.alternatives().try(Joi.boolean(), FACET_PARAMS),
+    NPath_metric: Joi.alternatives().try(Joi.boolean(), FACET_PARAMS),
+    CDAC_metric: Joi.alternatives().try(Joi.boolean(), FACET_PARAMS),
+    CFOC_metric: Joi.alternatives().try(Joi.boolean(), FACET_PARAMS),
+    bool_expression_metric: Joi.alternatives().try(Joi.boolean(), FACET_PARAMS),
+    LOC_metric: Joi.alternatives().try(Joi.boolean(), FACET_PARAMS),
+    symbolic_names_tokens: Joi.alternatives().try(Joi.boolean(), FACET_PARAMS),
+    rare_symbolic_names_tokens: Joi.alternatives().try(Joi.boolean(), FACET_PARAMS),
+    rules_tokens: Joi.alternatives().try(Joi.boolean(), FACET_PARAMS),
+  }),
   custom_filters: Joi.array().items(Joi.string()),
   case_sensitive: Joi.boolean(),
   regex: Joi.boolean(),
