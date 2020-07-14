@@ -7,6 +7,7 @@ import {
   ISearchCodeParams, ISearchFacetParams, ISearchCodeResult, ISupplementaryData, IProgrammingLanguageFacets, EProgrammingLanguage,
   ISolrSearchCodeResponse, ISolrSubmissionWithDate, ICourse, IExercise
 } from 'shared'
+import { FacetItem, FacetField } from '../types/search'
 import { ToastStore } from './ToastStore'
 import { LocalSearchStore } from './LocalSearchStore'
 import { CourseStore } from './CourseStore'
@@ -27,11 +28,14 @@ type SearchResult = {
   start?: number
   docs: ISolrSubmissionWithDate[]
   facetCounts: {
-    [facet: string]: {
-      value: string
-      count: number
-    }[]
+    [facet: string]: FacetField[]
   }
+}
+type FacetFieldFilters = {
+  [facet_field: string]: boolean
+  // [facet: string]: {
+  //   [value: string]: boolean
+  // }
 }
 
 export const EMPTY_QUERY: ISearchCodeParams = {
@@ -39,6 +43,7 @@ export const EMPTY_QUERY: ISearchCodeParams = {
   course_id: undefined,
   exercise_id: undefined,
   facets: {},
+  facet_filters: {},
   filters: [],
   case_sensitive: false,
   regex: false,
@@ -79,6 +84,7 @@ export class SearchStore {
   @observable facetParams: FacetParams = {
     JAVA: {}
   }
+  @observable selectedFacetFields: FacetFieldFilters = {}
   // For updating SearchConsole using review flows
   @observable initialSearchParams: ISearchCodeParams = EMPTY_QUERY
   toastStore: ToastStore
@@ -119,14 +125,14 @@ export class SearchStore {
     return this.facetParams[this.currentSearchFacets.programming_language]
   }
 
-  @computed get currentMetricsFacets() {
+  @computed get currentMetricsFacets() : FacetItem[] {
     return this.currentSearchFacets.metrics.map(m => ({
       key: FACETS_MAPPING[m],
       value: m,
     }))
   }
 
-  @computed get currentTokensFacets() {
+  @computed get currentTokensFacets() : FacetItem[] {
     return this.currentSearchFacets.tokens.map(m => ({
       key: FACETS_MAPPING[m],
       value: m,
@@ -156,10 +162,41 @@ export class SearchStore {
     const { programming_language } = this.currentSearchFacets
     if (this.facetParams[programming_language][facet]) {
       delete this.facetParams[programming_language][facet]
+      // Delete all facet fields of the same untoggled facet
+      Object.keys(this.selectedFacetFields).forEach(val => {
+        if (val.includes(facet)) {
+          delete this.selectedFacetFields[val]
+        }
+      })
     } else {
       this.facetParams[programming_language][facet] = true
     }
     // trigger new search with facets?
+  }
+
+  @action toggleFacetField = (item: FacetItem, field: FacetField, val: boolean) => {
+    this.selectedFacetFields[`${item.key}.${field.value}`] = val
+  }
+
+  createFiltersFromFacets(selectedFacetFields: FacetFieldFilters) {
+    const keys = Object.keys(selectedFacetFields)
+    // Generate an object with the checked facet fields as lists eg { LOC_metric: ["30", "29", "27"] }
+    return keys.reduce((acc: { [facet: string]: string[] }, facetField) => {
+      // Discard false values
+      if (!selectedFacetFields[facetField]) return acc
+      const values = facetField.split('.')
+      if (values.length !== 2) {
+        throw Error(`Either facet or its field has extra "." in it, unable to parse the values: ${facetField}`)
+      }
+      const facet = values[0]
+      const field = values[1]
+      if (acc[facet] === undefined) {
+        acc[facet] = [field]
+      } else {
+        acc[facet].push(field)
+      }
+      return acc
+    }, {})
   }
 
   parseSearchResponse(result: ISolrSearchCodeResponse) {
@@ -197,6 +234,7 @@ export class SearchStore {
   @action search = async (payload: ISearchCodeParams) => {
     this.localSearchStore.setActive(false)
     payload.facets = this.currentFacetParams
+    payload.facet_filters = this.createFiltersFromFacets(this.selectedFacetFields)
     const result = await searchApi.search(payload)
     runInAction(() => {
       this.searchParams = payload

@@ -1,20 +1,27 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../../theme/styled'
+import {
+  FiLayers, FiAlignLeft, FiChevronDown, FiChevronUp, FiTrash
+} from 'react-icons/fi'
 
 import { SearchFacetGroupList } from './SearchFacetGroupList'
+import { Icon } from '../../elements/Icon'
 
 import { IProgrammingLanguageFacets, ISearchFacetParams } from 'shared'
 import { Stores } from '../../stores'
+import { FacetItem, FacetField } from '../../types/search'
 
 interface IProps {
   className?: string
   currentSearchFacets?: IProgrammingLanguageFacets | undefined
-  currentMetricsFacets?: { key: string, value: string }[]
-  currentTokensFacets?: { key: string, value: string }[]
+  currentMetricsFacets?: FacetItem[]
+  currentTokensFacets?: FacetItem[]
   facetParams?: { [facet: string] : ISearchFacetParams }
-  facetCounts?: { [facet: string] : { value: string, count: number }[] }
+  facetCounts?: { [facet: string] : FacetField[] }
+  selectedFacetFields?: { [facet_field: string]: boolean }
   toggleSearchFacet?: (facet: string) => void
+  toggleFacetField?: (item: FacetItem, field: FacetField, val: boolean) => void
 }
 
 const SearchFiltersEl = inject((stores: Stores) => ({
@@ -23,43 +30,77 @@ const SearchFiltersEl = inject((stores: Stores) => ({
   currentTokensFacets: stores.searchStore.currentTokensFacets,
   facetParams: stores.searchStore.currentFacetParams,
   facetCounts: stores.searchStore.selectedSearchResult.facetCounts,
+  selectedFacetFields: stores.searchStore.selectedFacetFields,
   toggleSearchFacet: stores.searchStore.toggleSearchFacetParams,
+  toggleFacetField: stores.searchStore.toggleFacetField,
 }))
 (observer((props: IProps) => {
   const {
-    className, currentSearchFacets, currentMetricsFacets, currentTokensFacets, facetParams, facetCounts,
-    toggleSearchFacet
+    className, currentSearchFacets, currentMetricsFacets, currentTokensFacets, facetParams, facetCounts, selectedFacetFields,
+    toggleSearchFacet, toggleFacetField
   } = props
+  const [metricsMinimized, setMetricsMinimized] = useState(false)
+  const [tokensMinimized, setTokensMinimized] = useState(false)
 
-  function handleClickFacet(item: { key: string, value: string }) {
+  function handleClickFacet(item: FacetItem) {
     toggleSearchFacet!(item.key)
   }
-  function getFacetParams(item: { key: string, value: string }) {
+  function handleToggleFacetField(item: FacetItem, field: FacetField, val: boolean) {
+    toggleFacetField!(item, field, val)
+  }
+  function getFacetParams(item: FacetItem) {
     return facetParams ? facetParams[item.key] : undefined
   }
-  function getFacetCounts(item: { key: string, value: string }) {
+  function getFacetCounts(item: FacetItem) {
     return facetCounts && facetCounts[item.key] ? facetCounts[item.key] : []
   }
+  const getToggledFacetFields = useCallback((item: FacetItem) => {
+    const prefix = `${item.key}.`
+    return Object.keys(selectedFacetFields!)
+      .filter(val => val.includes(prefix))
+      .reduce((acc: { [field: string]: boolean }, facetField) => {
+        const field = facetField.substring(prefix.length)
+        acc[field] = selectedFacetFields![facetField] || false
+        return acc
+      }, {})
+  }, [selectedFacetFields])
+
   return (
     <Container className={className}>
       <h2>Available facets for: {currentSearchFacets?.programming_language}</h2>
       <Body>
         <Group>
-          <Title>Metrics</Title>
+          <FacetGroupHeader>
+            <Title>Metrics</Title>
+            <Icon button onClick={() => setMetricsMinimized(!metricsMinimized)}>
+              { metricsMinimized ? <FiChevronDown size={18}/> : <FiChevronUp size={18}/>}
+            </Icon>
+          </FacetGroupHeader>
           <SearchFacetGroupList
+            visible={!metricsMinimized}
             items={currentMetricsFacets || []}
             getFacetParams={getFacetParams}
             getFacetCounts={getFacetCounts}
+            getToggledFacetFields={getToggledFacetFields}
             onClickFacet={handleClickFacet}
+            onToggleFacetField={handleToggleFacetField}
           />
         </Group>
         <Group>
-          <Title>Tokens</Title>
+        <FacetGroupHeader>
+            <Title>Tokens</Title>
+            <Icon button onClick={() => setTokensMinimized(!tokensMinimized)}>
+              { tokensMinimized ? <FiChevronDown size={18}/> : <FiChevronUp size={18}/>}
+            </Icon>
+          </FacetGroupHeader>
           <SearchFacetGroupList
+            visible={!tokensMinimized}
             items={currentTokensFacets || []}
             getFacetParams={getFacetParams}
             getFacetCounts={getFacetCounts}
+            getToggledFacetFields={getToggledFacetFields}
             onClickFacet={handleClickFacet}
+            onToggleFacetField={handleToggleFacetField}
           />
         </Group>
       </Body>
@@ -76,7 +117,14 @@ const Body = styled.div`
   & > * {
   }
 `
+const FacetGroupHeader = styled.div`
+  align-items: center;
+  display: flex;
+  width: 100%;
+`
 const Group = styled.div``
-const Title = styled.h3``
+const Title = styled.h3`
+  margin-right: 1rem;
+`
 
 export const SearchFilters = styled(SearchFiltersEl)``

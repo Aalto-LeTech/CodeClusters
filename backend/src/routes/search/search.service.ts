@@ -29,6 +29,16 @@ function createFacets(obj: { [facet: string]: ISearchFacetParams }) {
   }, 'facet=true&facet.mincount=1')
 }
 
+function createFacetFilters(obj: { [facet: string]: string[] }) {
+  return Object.keys(obj).reduce((acc, cur) => {
+    const statement = obj[cur].reduce((acc, cur, i) => {
+      if (i === 0) return cur
+      return `${acc} OR ${cur}`
+    }, '')
+    return `${acc}&fq=${cur}:(${statement})`
+  }, '')
+}
+
 export const searchService = {
   getSearchSupplementaryData: async () => {
     const stats = await dbService.queryMany<any>(`
@@ -48,6 +58,7 @@ export const searchService = {
       num_results = 20,
       num_lines = 0,
       facets = {},
+      facet_filters = {},
       // case_sensitive,
       // regex,
       // whole_words,
@@ -58,12 +69,13 @@ export const searchService = {
     const filters = createFilters({ course_id, exercise_id })
     // Fields used in the Solr results (required for the highlighting)
     const fields = 'fl=id,+student_id,+course_id,+timestamp'
-    // Used facets
+    // Used facets, read Lucene's or Solr's documentation to understand their function
     const facetsString = createFacets(facets)
-    // const facets = 'facet=true&facet.field=LOC_metric'
+    // Selections of facets used as filters eg fq=LOC_metric:(30 OR 29 OR 28)
+    const facetFilters = createFacetFilters(facet_filters)
     // Highlighted fields
     const hlfields = `hl=on&hl.fl=code&hl.simple.pre=<mark>&hl.simple.post=</mark>&hl.fragsize=${num_lines}&hl.method=unified`
-    const query = `${general}${filters}&${facetsString}&${fields}&${hlfields}`
+    const query = `${general}${filters}${facetFilters}&${facetsString}&${fields}&${hlfields}`
     return axiosService.get<ISolrSearchCodeResponse>(url(`solr/submission-search/select?${query}`))
   },
   searchAllSubmissions: (params: ISearchCodeParams) : Promise<ISolrSearchAllCodeResponse | undefined> => {

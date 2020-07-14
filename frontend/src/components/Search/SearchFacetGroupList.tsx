@@ -5,47 +5,57 @@ import styled from '../../theme/styled'
 import { SearchFacetGroupItem } from './SearchFacetGroupItem'
  
 import { ISearchFacetParams } from 'shared'
+import { FacetItem, FacetField } from '../../types/search'
 
 interface IProps {
   className?: string
-  items: { key: string, value: string }[]
-  getFacetParams: (item: { key: string, value: string }) => ISearchFacetParams | undefined
-  getFacetCounts: (item: { key: string, value: string }) => { value: string, count: number }[]
-  onClickFacet: (item: { key: string, value: string }) => void
+  visible: boolean
+  items: FacetItem[]
+  getFacetParams: (item: FacetItem) => ISearchFacetParams | undefined
+  getFacetCounts: (item: FacetItem) => FacetField[]
+  getToggledFacetFields: (item: FacetItem) => { [field: string]: boolean }
+  onClickFacet: (item: FacetItem) => void
+  onToggleFacetField: (item: FacetItem, field: FacetField, val: boolean) => void
 }
 
 const SearchFacetGroupListEl = observer((props: IProps) => {
-  const { className, items, getFacetParams, getFacetCounts, onClickFacet } = props
+  const { className, visible, items, getFacetParams, getFacetCounts, onClickFacet, onToggleFacetField, getToggledFacetFields } = props
   return (
-    <Container className={className}>
-      <OptionList>
+    <Container className={className} visible={visible}>
+      <FacetList>
       { items.map((item, i) =>
-        <OptionListItem key={i}>
-          <SearchFacetGroupItem item={item} params={getFacetParams(item)} counts={getFacetCounts(item)} onClick={onClickFacet}/>
-        </OptionListItem>
+        <FacetListItem key={i}>
+          <SearchFacetGroupItem
+            item={item}
+            params={getFacetParams(item)}
+            counts={getFacetCounts(item)}
+            toggledFields={getToggledFacetFields(item)}
+            onClick={onClickFacet}
+            onToggleFacetField={onToggleFacetField}
+          />
+        </FacetListItem>
       )}
-      </OptionList>
+      </FacetList>
     </Container>
   )
 })
 
-const Container = styled.fieldset`
+const Container = styled.fieldset<{ visible: boolean }>`
   background: #fff;
+  display: ${({ visible }) => visible ? 'block' : 'none'};
+  visibility: ${({ visible }) => visible ? 'visible' : 'hidden'};
 `
-const OptionList = styled.ul`
+const FacetList = styled.ul`
   display: flex;
   flex-wrap: wrap;
   list-style: none;
   margin: 10px 0 0 0;
 `
-const OptionListItem = styled.li`
+const FacetListItem = styled.li`
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   padding: 4px 8px;
-  &:hover {
-    background: #ededed;
-  }
 `
 
 export const SearchFacetGroupList = styled(SearchFacetGroupListEl)``

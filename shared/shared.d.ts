@@ -273,6 +273,9 @@ declare module 'shared' {
     facets?: {
       [facet: string]: ISearchFacetParams
     }
+    facet_filters?: {
+      [facet: string]: string[]
+    }
     filters?: string[]
     case_sensitive?: boolean
     regex?: boolean
