@@ -20,7 +20,7 @@ interface IProps {
   currentSelectionCount?: number
   modal?: IModal
   closeModal?: (modal: EModal) => void
-  addReview?: (message: string, metadata?: string) => Promise<any>
+  addReview?: (data: IReviewCreateFormParams) => Promise<any>
   resetSelections?: () => void
 }
 
@@ -36,15 +36,8 @@ export const ReviewSubmissionsModal = inject((stores: Stores) => ({
   function handleClose() {
     closeModal!(EModal.REVIEW_SUBMISSIONS)
   }
-  function onAccept() {
-    modal!.params?.submit()
-    handleClose()
-  }
-  function onCancel() {
-    handleClose()
-  }
   async function handleReviewSubmit(payload: IReviewCreateFormParams, onSuccess: () => void, onError: () => void) {
-    const result = await addReview!(payload.message, payload.metadata)
+    const result = await addReview!(payload)
     if (result) {
       onSuccess()
       resetSelections!()

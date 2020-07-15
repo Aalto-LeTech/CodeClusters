@@ -86,7 +86,8 @@ const AddReviewFormEl = memo(forwardRef((props: IProps, ref: any) => {
   }
   const onSubmitForm = async (data: IReviewCreateFormParams, e?: React.BaseSyntheticEvent) => {
     setSubmitInProgress(true)
-    onSubmit!({ ...data, tags: fields.length === 0 ? [] : data.tags }, () => {
+    const tags = fields.length === 0 ? [] : data.tags
+    onSubmit!({ ...data, tags }, () => {
       setSubmitInProgress(false)
     }, () => {
       setSubmitInProgress(false)
@@ -102,10 +103,7 @@ const AddReviewFormEl = memo(forwardRef((props: IProps, ref: any) => {
           type="textarea"
           name="message"
           placeholder="Message shown to the students"
-          ref={register({
-            required: true,
-            minLength: 1
-          })}/>
+          ref={register}/>
         <Error>
           {errors.message && 'Message must be between 1 to 10240 characters.'}
         </Error>
