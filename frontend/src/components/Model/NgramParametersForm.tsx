@@ -37,8 +37,8 @@ const DIM_VISUALIZATION_OPTIONS = [
 // A schema is required to convert the numbers and booleans, as otherwise all values are strings
 const validationSchema = Joi.object({
   token_set: Joi.string().valid('modified', 'complete', 'keywords'),
-  min_ngrams: Joi.number().integer().min(1),
-  max_ngrams: Joi.number().integer().min(1),
+  min_ngrams: Joi.number().integer().min(1).max(20),
+  max_ngrams: Joi.number().integer().min(Joi.ref('min_ngrams')).max(20),
   random_seed: Joi.number().integer().min(-1),
   selected_clustering_algo: Joi.string().required(),
   selected_dim_visualization: Joi.string().required(),
@@ -250,10 +250,10 @@ const NgramParametersFormEl = observer(forwardRef((props: IProps, ref) => {
                 ref={register}/>
             </MinMaxGram>
             <Error>
-              {errors.min_ngrams && 'Min n-gram must be 1-9 and lower than the max n-gram'}
+              {errors.min_ngrams && 'Min n-gram must be 1-20'}
             </Error>
             <Error>
-              {errors.max_ngrams && 'Max n-gram must be between 1-9'}
+              {errors.max_ngrams && 'Max n-gram must be 1-20 and higher or equal to min n-gram'}
             </Error>
           </FormField>
           <FormField className="random_seed">

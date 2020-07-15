@@ -10,7 +10,7 @@ import { IAuthRequest } from '../../types/request'
 const FACET_PARAMS = Joi.object({
   start: Joi.number().integer().required(),
   end: Joi.number().integer().required(),
-  gab: Joi.number().integer().required(),
+  gap: Joi.number().integer().required(),
 })
 
 export const SEARCH_QUERY_PARAMS = Joi.object({

@@ -38,7 +38,7 @@ export const UMAP_SCHEMA = Joi.object({
 export const RUN_NGRAM_PARAMS = Joi.object({
   model_id: Joi.string().valid('ngram').required(),
   token_set: Joi.string().valid('modified', 'complete', 'keywords'),
-  ngrams: Joi.array().items(Joi.number().integer().min(1)).length(2),
+  ngrams: Joi.array().items(Joi.number().integer().min(1).max(20)).length(2),
   random_seed: Joi.number().integer().min(-1),
   clustering_params: Joi.alternatives().try(DBSCAN_SCHEMA, HDBSCAN_SCHEMA, OPTICS_SCHEMA, KMEANS_SCHEMA),
   dim_visualization_params: Joi.alternatives().try(TSNE_SCHEMA, UMAP_SCHEMA),

@@ -6,7 +6,7 @@ import { ISearchCodeParams } from 'shared'
 const FACET_PARAMS = Joi.object({
   start: Joi.number().integer().required(),
   end: Joi.number().integer().required(),
-  gab: Joi.number().integer().required(),
+  gap: Joi.number().integer().required(),
 })
 
 const searchParamsSchema = Joi.object({
