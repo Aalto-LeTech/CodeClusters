@@ -76,6 +76,7 @@ export class SearchStore {
   @observable searchResults: ISearchCodeResult[] = []
   @observable selectedSearchResult = EMPTY_RESULT
   @observable searchParams: ISearchCodeParams = EMPTY_QUERY
+  @observable searchInProgress: boolean = false
   @observable supplementaryData: ISupplementaryData = { stats: [], facets: [] }
   @observable currentSearchFacets: IProgrammingLanguageFacets = EMPTY_FACETS
   @observable facetParams: FacetParams = {
@@ -144,7 +145,7 @@ export class SearchStore {
       }, {})
   }
 
- getToggledFacetFields(facet: string, selectedFacetFields: { [field: string]: boolean }) {
+  getToggledFacetFields(facet: string, selectedFacetFields: { [field: string]: boolean }) {
     const prefix = `${facet}.`
     return Object.keys(selectedFacetFields)
       .filter(val => val.includes(prefix))
@@ -196,6 +197,12 @@ export class SearchStore {
       this.facetParams[programming_language][facet] = range
     } else {
       this.facetParams[programming_language][facet] = true
+      // Delete any existing checked range fields
+      Object.keys(this.selectedFacetFields).forEach(val => {
+        if (val.includes(facet)) {
+          delete this.selectedFacetFields[val]
+        }
+      })
     }
   }
 
@@ -320,17 +327,19 @@ export class SearchStore {
     this.localSearchStore.setActive(false)
     payload.facets = this.currentFacetParams
     payload.facet_filters = this.createFiltersFromFacets(this.selectedFacetFields)
-    const result = await searchApi.search(payload)
     runInAction(() => {
+      this.searchInProgress = true
       this.searchParams = payload
     })
-    if (result) {
-      runInAction(() => {
+    const result = await searchApi.search(payload)
+    runInAction(() => {
+      if (result) {
         const searchResult = this.parseSearchResponse(result)
         this.selectedSearchResult = searchResult
         this.searchResults.push({ ...searchResult, params: payload })
-      })
-    }
+      }
+      this.searchInProgress = false
+    })
     return result
   }
 

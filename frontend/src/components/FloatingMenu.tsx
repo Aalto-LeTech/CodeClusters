@@ -1,9 +1,10 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../theme/styled'
 import { FiCheck, FiPlusSquare, FiFolderPlus, FiTrash } from 'react-icons/fi'
 
 import { Icon } from '../elements/Icon'
+import { Spinner } from '../elements/Spinner'
 
 import { ISolrSubmissionWithDate, ISolrFullSubmissionWithDate } from 'shared'
 import { Stores } from '../stores'
@@ -16,6 +17,7 @@ interface IProps {
   searchResultsCount?: number
   allSubmissions?: SolrSubmission[]
   shownSubmissions?: ISolrFullSubmissionWithDate[]
+  searchInProgress?: boolean
   openModal?: (name: EModal, params?: any) => void
   toggleSelectShownSubmissions?: () => void
   selectAllSubmissions?: () => Promise<void>
@@ -26,6 +28,7 @@ export const FloatingMenu = inject((stores: Stores) => ({
   currentSelectionCount: stores.reviewStore.currentSelectionCount,
   searchResultsCount: stores.searchStore.searchResultsCount,
   shownSubmissionsCount: stores.searchStore.getShownSubmissions.length,
+  searchInProgress: stores.searchStore.searchInProgress,
   openModal: stores.modalStore.openModal,
   toggleSelectShownSubmissions: stores.reviewStore.toggleSelectShownSubmissions,
   selectAllSubmissions: stores.reviewStore.selectAllSubmissions,
@@ -33,8 +36,8 @@ export const FloatingMenu = inject((stores: Stores) => ({
 }))
 (observer((props: IProps) => {
   const {
-    className, currentSelectionCount, searchResultsCount, openModal,
-    toggleSelectShownSubmissions, selectAllSubmissions, resetSelections
+    className, currentSelectionCount, searchResultsCount, searchInProgress,
+    openModal, toggleSelectShownSubmissions, selectAllSubmissions, resetSelections
   } = props
   function handleReviewClick() {
     openModal!(EModal.REVIEW_SUBMISSIONS)
@@ -52,6 +55,7 @@ export const FloatingMenu = inject((stores: Stores) => ({
     <Wrapper className={className}>
       <Container>
         <Header>
+          { searchInProgress ? <Spinner /> : null }
           <Title>Selected: {currentSelectionCount}/{searchResultsCount}</Title>
         </Header>
         <Body>
@@ -76,7 +80,7 @@ export const FloatingMenu = inject((stores: Stores) => ({
 const Header = styled.div`
   align-items: center;
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   width: 100%;
 `
 const Title = styled.div`

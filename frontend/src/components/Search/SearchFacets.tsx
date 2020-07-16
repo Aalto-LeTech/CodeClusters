@@ -44,7 +44,7 @@ const SearchFacetsEl = inject((stores: Stores) => ({
         />
       </Group>
       <Group>
-      <FacetGroupHeader>
+        <FacetGroupHeader>
           <Title>Tokens</Title>
           <Icon button onClick={() => setTokensMinimized(!tokensMinimized)}>
             { tokensMinimized ? <FiChevronDown size={18}/> : <FiChevronUp size={18}/>}

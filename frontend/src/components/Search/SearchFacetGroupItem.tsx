@@ -97,16 +97,16 @@ const SearchFacetGroupItemEl = inject((stores: Stores, props: IProps) => ({
           <Divider />
           <CountsList>
           { (counts === undefined || counts.length === 0) ? resultsFetched ? <div>No results</div> : <div>Trigger search</div> : null }
-          { counts?.map((field, i) =>
-            <CountsListItem key={`${item.key}-field-${field}`}>
+          { (counts && counts.map((field, i) =>
+            <CountsListItem key={`${item.key}-field-${field.value}`}>
               <CheckBox
-                checked={toggledFields ? toggledFields[field.value] : false}
+                checked={!!(toggledFields && toggledFields[field.value])}
                 onChange={handleFacetFieldToggle(field)}
               />
               <CountName>{field.value}</CountName>
               <CountValue>{field.count}</CountValue>
             </CountsListItem>
-          )}
+          ))}
           </CountsList>
         </BodyWrapper>
       </Body>
