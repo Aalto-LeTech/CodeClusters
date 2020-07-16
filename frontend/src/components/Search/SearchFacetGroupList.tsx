@@ -4,41 +4,27 @@ import styled from '../../theme/styled'
 
 import { SearchFacetGroupItem } from './SearchFacetGroupItem'
  
-import { ISearchFacetParams, ISearchFacetRange } from 'shared'
-import { FacetItem, FacetField } from '../../types/search'
+import { FacetItem } from '../../types/search'
 
 interface IProps {
   className?: string
   visible: boolean
   useRange: boolean
   items: FacetItem[]
-  getFacetParams: (item: FacetItem) => ISearchFacetParams | undefined
-  getFacetCounts: (item: FacetItem) => FacetField[]
-  getToggledFacetFields: (item: FacetItem) => { [field: string]: boolean }
-  onClickFacet: (item: FacetItem) => void
-  onToggleFacetField: (item: FacetItem, field: FacetField, val: boolean) => void
-  onChangeFacetRange: (item: FacetItem, range?: ISearchFacetRange) => void
 }
 
 const SearchFacetGroupListEl = observer((props: IProps) => {
   const {
     className, visible, useRange, items,
-    getFacetParams, getFacetCounts, getToggledFacetFields, onClickFacet, onToggleFacetField, onChangeFacetRange
   } = props
   return (
     <Container className={className} visible={visible}>
       <FacetList>
-      { items.map((item, i) =>
-        <FacetListItem key={i}>
+      { items.map(item =>
+        <FacetListItem key={`fli-${item.key}`}>
           <SearchFacetGroupItem
             useRange={useRange}
             item={item}
-            params={getFacetParams(item)}
-            counts={getFacetCounts(item)}
-            toggledFields={getToggledFacetFields(item)}
-            onClick={onClickFacet}
-            onToggleFacetField={onToggleFacetField}
-            onChangeFacetRange={onChangeFacetRange}
           />
         </FacetListItem>
       )}

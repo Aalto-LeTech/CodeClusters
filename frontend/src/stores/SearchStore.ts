@@ -136,6 +136,25 @@ export class SearchStore {
     }))
   }
 
+  @computed get toggledFacetFields() {
+    return Object.keys(this.currentFacetParams)
+      .reduce((acc: { [facet: string]: { [field: string]: boolean } }, facet) => {
+        acc[facet] = this.getToggledFacetFields(facet, this.selectedFacetFields)
+        return acc
+      }, {})
+  }
+
+ getToggledFacetFields(facet: string, selectedFacetFields: { [field: string]: boolean }) {
+    const prefix = `${facet}.`
+    return Object.keys(selectedFacetFields)
+      .filter(val => val.includes(prefix))
+      .reduce((acc: { [field: string]: boolean }, facetField) => {
+        const field = facetField.substring(prefix.length)
+        acc[field] = selectedFacetFields[facetField] || false
+        return acc
+      }, {})
+  }
+
   @action reset() {
     this.searchResults = []
   }

@@ -5,7 +5,7 @@ import { SelectCourseExercise } from '../SelectCourseExercise'
 import { SearchFlowsModelTabsMenu } from '../SearchFlowsModelTabsMenu'
 import { SearchConsole } from './SearchConsole'
 import { SearchResultsList } from './SearchResultsList'
-import { SearchFilters } from './SearchFacets'
+import { SearchFacets } from './SearchFacets'
 
 interface IProps {
   className?: string
@@ -24,7 +24,7 @@ const SearchViewEl = memo((props: IProps) => {
       </Info>
       <SelectCourseExercise />
       <SearchFlowsModelTabsMenu />
-      <SearchFilters />
+      <SearchFacets />
       <Body>
         <SearchResultsList />
       </Body>
