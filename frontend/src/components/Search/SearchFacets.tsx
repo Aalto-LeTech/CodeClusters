@@ -8,7 +8,7 @@ import {
 import { SearchFacetGroupList } from './SearchFacetGroupList'
 import { Icon } from '../../elements/Icon'
 
-import { IProgrammingLanguageFacets, ISearchFacetParams } from 'shared'
+import { IProgrammingLanguageFacets, ISearchFacetParams, ISearchFacetRange } from 'shared'
 import { Stores } from '../../stores'
 import { FacetItem, FacetField } from '../../types/search'
 
@@ -21,6 +21,7 @@ interface IProps {
   facetCounts?: { [facet: string] : FacetField[] }
   selectedFacetFields?: { [facet_field: string]: boolean }
   toggleSearchFacet?: (facet: string) => void
+  setFacetParamsRange?: (facet: string, range?: ISearchFacetRange) => void
   toggleFacetField?: (item: FacetItem, field: FacetField, val: boolean) => void
 }
 
@@ -32,12 +33,13 @@ const SearchFiltersEl = inject((stores: Stores) => ({
   facetCounts: stores.searchStore.selectedSearchResult.facetCounts,
   selectedFacetFields: stores.searchStore.selectedFacetFields,
   toggleSearchFacet: stores.searchStore.toggleSearchFacetParams,
+  setFacetParamsRange: stores.searchStore.setFacetParamsRange,
   toggleFacetField: stores.searchStore.toggleFacetField,
 }))
 (observer((props: IProps) => {
   const {
     className, currentSearchFacets, currentMetricsFacets, currentTokensFacets, facetParams, facetCounts, selectedFacetFields,
-    toggleSearchFacet, toggleFacetField
+    toggleSearchFacet, setFacetParamsRange, toggleFacetField
   } = props
   const [metricsMinimized, setMetricsMinimized] = useState(false)
   const [tokensMinimized, setTokensMinimized] = useState(false)
@@ -47,6 +49,9 @@ const SearchFiltersEl = inject((stores: Stores) => ({
   }
   function handleToggleFacetField(item: FacetItem, field: FacetField, val: boolean) {
     toggleFacetField!(item, field, val)
+  }
+  function handleFacetRangeChange(item: FacetItem, range?: ISearchFacetRange) {
+    setFacetParamsRange!(item.key, range)
   }
   function getFacetParams(item: FacetItem) {
     return facetParams ? facetParams[item.key] : undefined
@@ -77,6 +82,7 @@ const SearchFiltersEl = inject((stores: Stores) => ({
             </Icon>
           </FacetGroupHeader>
           <SearchFacetGroupList
+            useRange={true}
             visible={!metricsMinimized}
             items={currentMetricsFacets || []}
             getFacetParams={getFacetParams}
@@ -84,6 +90,7 @@ const SearchFiltersEl = inject((stores: Stores) => ({
             getToggledFacetFields={getToggledFacetFields}
             onClickFacet={handleClickFacet}
             onToggleFacetField={handleToggleFacetField}
+            onChangeFacetRange={handleFacetRangeChange}
           />
         </Group>
         <Group>
@@ -94,6 +101,7 @@ const SearchFiltersEl = inject((stores: Stores) => ({
             </Icon>
           </FacetGroupHeader>
           <SearchFacetGroupList
+            useRange={false}
             visible={!tokensMinimized}
             items={currentTokensFacets || []}
             getFacetParams={getFacetParams}
@@ -101,6 +109,7 @@ const SearchFiltersEl = inject((stores: Stores) => ({
             getToggledFacetFields={getToggledFacetFields}
             onClickFacet={handleClickFacet}
             onToggleFacetField={handleToggleFacetField}
+            onChangeFacetRange={handleFacetRangeChange}
           />
         </Group>
       </Body>

@@ -20,20 +20,28 @@ function createFilters(obj: { [key: string]: string | number | undefined }) {
 }
 
 function createFacets(obj: { [facet: string]: ISearchFacetParams }) {
-  return Object.keys(obj).reduce((acc, cur) => {
-    const val = obj[cur]
+  return Object.keys(obj).reduce((acc, facet) => {
+    const val = obj[facet]
+    if (typeof val === 'object') {
+      const range = `f.${facet}.facet.range.start=${val.start}&f.${facet}.facet.range.end=${val.end}&f.${facet}.facet.range.gap=${val.gap}`
+      return `${acc}&facet.range=${facet}&${range}&facet.mincount=0`
+    }
     if (val) {
-      return `${acc}&facet.field=${cur}`
+      return `${acc}&facet.field=${facet}&facet.mincount=1`
     }
     return acc
-  }, 'facet=true&facet.mincount=1')
+  }, 'facet=true')
 }
 
 function createFacetFilters(obj: { [facet: string]: string[] }) {
   return Object.keys(obj).reduce((acc, cur) => {
     const statement = obj[cur].reduce((acc, cur, i) => {
-      if (i === 0) return cur
-      return `${acc} OR ${cur}`
+      let normalized = cur
+      if (cur.includes(' - ')) {
+        normalized = `[${cur.replace('-', 'TO')}]`
+      }
+      if (i === 0) return normalized
+      return `${acc} OR ${normalized}`
     }, '')
     return `${acc}&fq=${cur}:(${statement})`
   }, '')

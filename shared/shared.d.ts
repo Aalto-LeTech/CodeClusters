@@ -281,7 +281,8 @@ declare module 'shared' {
     regex?: boolean
     whole_words?: boolean
   }
-  export type ISearchFacetParams = true | {
+  export type ISearchFacetParams = true | ISearchFacetRange
+  export interface ISearchFacetRange {
     start: number
     end: number
     gap: number
@@ -314,6 +315,14 @@ declare module 'shared' {
     facet_counts?: {
       facet_fields: {
         [facet: string]: (string | number)[]
+      }
+      facet_ranges?: {
+        [facet: string]: {
+          counts: (string | number)[]
+          start: number
+          end: number
+          gap: number
+        }
       }
     }
     highlighting: {
