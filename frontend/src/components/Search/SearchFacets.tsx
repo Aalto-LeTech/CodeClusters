@@ -72,7 +72,6 @@ const SearchFiltersEl = inject((stores: Stores) => ({
 
   return (
     <Container className={className}>
-      <h2>Available facets for: {currentSearchFacets?.programming_language}</h2>
       <Body>
         <Group>
           <FacetGroupHeader>

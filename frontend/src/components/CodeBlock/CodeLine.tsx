@@ -38,8 +38,8 @@ export const CodeLine = memo((props: IProps) => {
 const ReviewMenuWrapper = styled.div`
   position: relative;
   & > ${AsideSubmissionAddReviewForm} {
-    left: -300px;
     position: absolute;
+    right: 0;
     top: 0;
     width: 288px;
   }
