@@ -96,7 +96,7 @@ const SearchFacetGroupItemEl = inject((stores: Stores, props: IProps) => ({
           </RangeForm>
           <Divider />
           <CountsList>
-          { (counts === undefined || counts.length === 0) ? resultsFetched ? <div>No results</div> : <div>Trigger search</div> : null }
+          { (counts === undefined || counts.length === 0) ? resultsFetched ? <div>No results</div> : <div>{'<run search>'}</div> : null }
           { (counts && counts.map((field, i) =>
             <CountsListItem key={`${item.key}-field-${field.value}`}>
               <CheckBox
@@ -182,6 +182,8 @@ const Divider = styled.hr`
   width: 100%;
 `
 const CountsList = styled.ul`
+  max-height: 300px;
+  overflow-y: scroll;
   & > li + li {
     margin-top: 0.4rem;
   }
