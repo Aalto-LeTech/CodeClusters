@@ -274,15 +274,17 @@ export class SearchStore {
       const range = facetRanges[facet]
       let counts = []
       for (let i = 0; i < range.counts.length; i += 2) {
-        let value = range.counts[i]
-        const count = range.counts[i + 1]
-        if (i === range.counts.length - 2) {
-          value = `${value}${RANGE_DELIMITER}${range.end}`
+        let value: number
+        let valueString = range.counts[i].toString()
+        if (valueString.includes('.')) {
+          value = parseFloat(valueString)
         } else {
-          value = `${value}${RANGE_DELIMITER}${range.counts[i + 2]}`
+          value = parseInt(valueString)
         }
+        const count = range.counts[i + 1]
+        valueString = `${value}${RANGE_DELIMITER}${value + range.gap}`
         counts.push({
-          value,
+          value: valueString,
           count,
         })
       }

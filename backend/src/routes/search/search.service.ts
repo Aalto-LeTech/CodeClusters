@@ -38,7 +38,7 @@ function createFacetFilters(obj: { [facet: string]: string[] }) {
     const statement = obj[cur].reduce((acc, cur, i) => {
       let normalized = cur
       if (cur.includes(' - ')) {
-        normalized = `[${cur.replace('-', 'TO')}]`
+        normalized = `[${cur.replace('-', 'TO')}}`
       }
       if (i === 0) return normalized
       return `${acc} OR ${normalized}`
