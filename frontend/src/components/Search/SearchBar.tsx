@@ -32,9 +32,9 @@ const SearchBarEl = memo(forwardRef((props: IProps, ref) => {
   return (
     <div className={className}>
       <SearchWrapper focused={wrapperFocused}>
-        <IconWrapper >
-          <SearchIcon size={18} />
-        </IconWrapper>
+        <IconButton >
+          <SearchIcon size={26} />
+        </IconButton>
         <StyledInput
           fullWidth
           type="search"
@@ -54,8 +54,7 @@ const SearchBarEl = memo(forwardRef((props: IProps, ref) => {
 
 const SearchWrapper = styled.div<{ focused: boolean }>`
   display: flex;
-  align-items: center;
-  border: 1px solid;
+  border: 1px solid #000;
   border-radius: 4px;
   justify-content: space-between;
   outline: ${({ focused }) => focused && 'auto 5px'};
@@ -70,10 +69,16 @@ const StyledInput = styled(Input)`
     padding: 1rem;
   }
 `
-const IconWrapper = styled.div`
-  display: flex; // Center the search icon
-  height: 18px;
-  padding: 0 0 0 1rem;
+const IconButton = styled.button`
+  align-items: center;
+  background: #96FF9A; //${({ theme}) => theme.color.green};
+  border: 0;
+  border-right: 1px solid #000;
+  border-bottom-left-radius: 4px;
+  border-top-left-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  padding: 0 1.5rem;
 `
 const SearchIcon = styled(FiSearch)`
   vertical-align: middle;

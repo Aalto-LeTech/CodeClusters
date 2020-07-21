@@ -121,7 +121,7 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
     }
     return payload
   }
-  const onSubmit = async (data: ISearchParams, e?: React.BaseSyntheticEvent) => {
+  const onSubmit = (data: ISearchParams, e?: React.BaseSyntheticEvent) => {
     onSearch!(normalizeFormData(data))
   }
   return (
