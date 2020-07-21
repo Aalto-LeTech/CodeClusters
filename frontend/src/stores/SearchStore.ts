@@ -1,4 +1,4 @@
-import { autorun, action, computed, runInAction, observable } from 'mobx'
+import { autorun, action, computed, extendObservable, runInAction, observable } from 'mobx'
 import * as searchApi from '../api/search.api'
 
 import { persist } from './persist'
@@ -18,11 +18,6 @@ interface IProps {
   courseStore: CourseStore
 }
 
-type FacetParams = {
-  [language: string]: {
-    [facet: string]: ISearchFacetParams
-  }
-}
 type SearchResult = {
   numFound?: number
   start?: number
@@ -31,8 +26,15 @@ type SearchResult = {
     [facet: string]: FacetField[]
   }
 }
-type FacetFieldFilters = {
-  [facet_field: string]: boolean
+type SearchFacetParams = {
+  [language: string]: {
+    [facet: string]: ISearchFacetParams
+  }
+}
+type ToggledFacetFields = {
+  [facet: string]: {
+    [facet_field: string]: boolean
+  }
 }
 
 export const EMPTY_QUERY: ISearchCodeParams = {
@@ -71,6 +73,7 @@ const FACETS_MAPPING = {
   'Rare symbolic names': 'rare_symbolic_names_tokens',
   Rules: 'rules_tokens'
 }
+const RANGE_DELIMITER = ' - '
 
 export class SearchStore {
   @observable searchResults: ISearchCodeResult[] = []
@@ -79,10 +82,10 @@ export class SearchStore {
   @observable searchInProgress: boolean = false
   @observable supplementaryData: ISupplementaryData = { stats: [], facets: [] }
   @observable currentSearchFacets: IProgrammingLanguageFacets = EMPTY_FACETS
-  @observable facetParams: FacetParams = {
+  @observable facetParams: SearchFacetParams = {
     JAVA: {}
   }
-  @observable selectedFacetFields: FacetFieldFilters = {}
+  @observable toggledFacetFields: ToggledFacetFields = {}
   // For updating SearchConsole using review flows
   @observable initialSearchParams: ISearchCodeParams = EMPTY_QUERY
   toastStore: ToastStore
@@ -137,25 +140,6 @@ export class SearchStore {
     }))
   }
 
-  @computed get toggledFacetFields() {
-    return Object.keys(this.currentFacetParams)
-      .reduce((acc: { [facet: string]: { [field: string]: boolean } }, facet) => {
-        acc[facet] = this.getToggledFacetFields(facet, this.selectedFacetFields)
-        return acc
-      }, {})
-  }
-
-  getToggledFacetFields(facet: string, selectedFacetFields: { [field: string]: boolean }) {
-    const prefix = `${facet}.`
-    return Object.keys(selectedFacetFields)
-      .filter(val => val.includes(prefix))
-      .reduce((acc: { [field: string]: boolean }, facetField) => {
-        const field = facetField.substring(prefix.length)
-        acc[field] = selectedFacetFields[facetField] || false
-        return acc
-      }, {})
-  }
-
   @action reset() {
     this.searchResults = []
   }
@@ -180,11 +164,7 @@ export class SearchStore {
     if (this.facetParams[programming_language][facet]) {
       delete this.facetParams[programming_language][facet]
       // Delete all facet fields of the same untoggled facet
-      Object.keys(this.selectedFacetFields).forEach(val => {
-        if (val.includes(facet)) {
-          delete this.selectedFacetFields[val]
-        }
-      })
+      this.toggledFacetFields[facet] = {}
     } else {
       this.facetParams[programming_language][facet] = true
     }
@@ -198,61 +178,69 @@ export class SearchStore {
     } else {
       this.facetParams[programming_language][facet] = true
       // Delete any existing checked range fields
-      Object.keys(this.selectedFacetFields).forEach(val => {
-        if (val.includes(facet)) {
-          delete this.selectedFacetFields[val]
-        }
-      })
+      this.toggledFacetFields[facet] = {}
     }
   }
 
+  /**
+   * Toggles a facet's facet field value to either true or false
+   * 
+   * The nasty logic here is for extending the observability of the object for nested values since mobx does not do that by default.
+   * @param item The key-value pair of a facet
+   * @param field The value-count pair of a facet field
+   * @param val The toggled value from the CheckBox
+   */
   @action toggleFacetField = (item: FacetItem, field: FacetField, val: boolean) => {
-    // Store facet field as eg LOC_metric.29 = true or { start: 10, end: 30, gap: 5 }
-    this.selectedFacetFields[`${item.key}.${field.value}`] = val
+    if (this.toggledFacetFields[item.key] === undefined) {
+      this.toggledFacetFields[item.key] = {}
+    }
+    if (this.toggledFacetFields[item.key][field.value] === undefined) {
+      extendObservable(this.toggledFacetFields[item.key], { [field.value]: val })
+    } else {
+      this.toggledFacetFields[item.key][field.value] = val
+    }
   }
 
   joinAdjacentFacetFilters(field: string, filters: string[]) {
     const previous = filters[filters.length - 1]
-    const delimiter = ' - '
-    const previousRangeEnd = previous.substr(previous.indexOf(delimiter) + delimiter.length)
-    const currentRangeStart = field.substr(0, field.indexOf(delimiter))
+    const previousRangeEnd = previous.substr(previous.indexOf(RANGE_DELIMITER) + RANGE_DELIMITER.length)
+    const currentRangeStart = field.substr(0, field.indexOf(RANGE_DELIMITER))
     if (previousRangeEnd === currentRangeStart) {
-      const previousRangeStart = previous.substr(0, previous.indexOf(delimiter))
-      const currentRangeEnd = field.substr(field.indexOf(delimiter) + delimiter.length)
-      const range = `${previousRangeStart}${delimiter}${currentRangeEnd}`
+      const previousRangeStart = previous.substr(0, previous.indexOf(RANGE_DELIMITER))
+      const currentRangeEnd = field.substr(field.indexOf(RANGE_DELIMITER) + RANGE_DELIMITER.length)
+      const range = `${previousRangeStart}${RANGE_DELIMITER}${currentRangeEnd}`
       return range
     }
     return undefined
   }
 
-  createFiltersFromFacets(selectedFacetFields: FacetFieldFilters) {
-    const keys = Object.keys(selectedFacetFields)
+  createFiltersFromFacets(toggledFacetFields: ToggledFacetFields) {
     // Generate an object with the checked facet fields as lists eg { LOC_metric: ["27", "29", "30"] }
     // Or if range: { LOC_metric: ["27-29", "31-35"] }
-    return keys.reduce((acc: { [facet: string]: string[] }, facetField) => {
-      // Discard false values
-      if (!selectedFacetFields[facetField]) return acc
-      const values = facetField.split('.')
-      if (values.length !== 2) {
-        throw Error(`Either facet or its field has extra "." in it, unable to parse the values: ${facetField}`)
-      }
-      const facet = values[0]
-      const field = values[1]
-      const isRange = field.includes(' - ')
-      if (acc[facet] === undefined) {
-        acc[facet] = [field]
-      } else if (isRange) {
-        const joined = this.joinAdjacentFacetFilters(field, acc[facet])
-        if (joined) {
-          acc[facet].splice(-1, 1, joined)
-        } else {
-          acc[facet].push(field)
+    const result = {}
+    Object.keys(toggledFacetFields).forEach(facet => {
+      Object.keys(toggledFacetFields[facet]).forEach(facetField => {
+        const checked = toggledFacetFields[facet][facetField]
+        const isRange = facetField.includes(RANGE_DELIMITER)
+        // First checked value for a facet -> no previous ranges to join
+        if (checked && result[facet] === undefined) {
+          result[facet] = [facetField]
+        } else if (checked && isRange) {
+          // Incase adjacent ranges are checked eg { CyclomaticComplexity: ["20-22", "22-24"] }
+          // join them to a single to make things easier for backend -> { CyclomaticComplexity: ["20-24"] }
+          const joined = this.joinAdjacentFacetFilters(facetField, result[facet])
+          if (joined) {
+            result[facet].splice(-1, 1, joined)
+          } else {
+            result[facet].push(facetField)
+          }
+        // Just regular single value eg "42"
+        } else if (checked) {
+          result[facet].push(facetField)
         }
-      } else {
-        acc[facet].push(field)
-      }
-      return acc
-    }, {})
+      })
+    })
+    return result
   }
 
   parseFacetFields(facetFields: { [facet: string]: (string | number)[] } = {}) {
@@ -289,9 +277,9 @@ export class SearchStore {
         let value = range.counts[i]
         const count = range.counts[i + 1]
         if (i === range.counts.length - 2) {
-          value = `${value} - ${range.end}`
+          value = `${value}${RANGE_DELIMITER}${range.end}`
         } else {
-          value = `${value} - ${range.counts[i + 2]}`
+          value = `${value}${RANGE_DELIMITER}${range.counts[i + 2]}`
         }
         counts.push({
           value,
@@ -326,7 +314,7 @@ export class SearchStore {
   @action search = async (payload: ISearchCodeParams) => {
     this.localSearchStore.setActive(false)
     payload.facets = this.currentFacetParams
-    payload.facet_filters = this.createFiltersFromFacets(this.selectedFacetFields)
+    payload.facet_filters = this.createFiltersFromFacets(this.toggledFacetFields)
     runInAction(() => {
       this.searchInProgress = true
       this.searchParams = payload
@@ -345,15 +333,13 @@ export class SearchStore {
 
   @action searchAll = async () => {
     const result = await searchApi.searchAll(this.searchParams)
-    if (result === undefined) return undefined
+    if (result === undefined) {
+      return undefined
+    }
     const docs = result.response.docs.map(r => ({
       ...r,
       date: new Date(r.timestamp),
     }))
-    // const searchResult = {
-    //   ...result.response,
-    //   docs
-    // }
     return docs
   }
 
