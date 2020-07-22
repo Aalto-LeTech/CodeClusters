@@ -18,7 +18,7 @@ export const Routes = () => (
       <WrappedRoute exact path="/login" component={LoginPage}/>
       <NoMainContainerRoute exact path="/reviews" component={AuthHOC(ReviewsPage)}/>
       <WrappedRoute exact path="/review/:userId" component={AuthHOC(ReviewViewPage)}/>
-      <WrappedRoute exact path="/manual" component={ManualPage}/>
+      <NoMainContainerRoute exact path="/manual" component={ManualPage}/>
       <WrappedRoute exact path="/solr" component={AuthHOC(SolrPage)}/>
       <Redirect to="/" />
     </Switch>

@@ -8,88 +8,120 @@ interface IProps {
 function ManualViewEl(props: IProps) {
   const { className } = props
   return (
-    <Container className={className}>
-      <Header>
-        <h1>Manual</h1>
-        <Info>
-          <InfoText>
-            This page describes the main functionalities of CodeClusters and how it can be used.
-          </InfoText>
+    <Wrapper className={className}>
+      <Container>
+        <Header>
+          <h1>Manual</h1>
           <p>
-            
+            This page contains a short manual about what is CodeClusters and how it can be used. CodeClusters was a thesis project
+            originally authored by Teemu Koivisto for Aalto University's LeTech research group during the year 2020.
           </p>
-        </Info>
-        <h2>Premise</h2>
-        <p>
-          In CodeClusters the goal is to enable teachers to explore and cluster student code with ease and allow sending of
-          reviews to students to give them suitable feedback. The submitted code should be ingested by CodeClusters and then
-          processed by storing them to Postgres and indexing them to Solr. Solr is a search library which allows more intricate
-          search operations than Postgres's own text-search. To Solr then are stored the code alongside any calculated metrics
-          and metadata. The frontpage's search box then allows the querying and filtering of this data.
-        </p>
-        <h2>Search</h2>
-        <p>
-          To go into further detail what the search is and why it works like it does. Search is intended for quick ad-hoc
-          exploration of the data with easy way of filtering. The way it was implemented allows the searching of the whole
-          data-set yet it's unclear what are the constraints for doing so. The performance will definitely deteriorate with
-          larger dataset.
-        </p>
-        <h2>Modeling</h2>
-        <p>
-          Search result can be automatically clustered by the available models as implemented in CodeClustersModeling repository.
-          While the clustering does not arguably yield always very actionable results, it can be a quick way to subset the data
-          into easily digestible buckets to which teacher can easily give review to. 
-        </p>
-        <h2>Reviewing</h2>
-        <p>
-          After either searching or modeling submissions, reviews can be added to the selected submissions. This can be done
-          be either clicking the submission or using the small review menu at the bottom right corner of the screen. After
-          the wanted submissions are selected, teacher can write a review with an optional metadata hidden from the students
-          and tags. After review is created it is not immediately sent to the students but it has the accepted from the /review
-          page. There you are able to see all the pending and sent reviews in a neat grid, and do some modifications to the reviews.
-        </p>
-        <h2>Review flows</h2>
-        <p>
-          Since CodeClusters is a prototype project in an attempt to automatize reviewing of large-scale student submissions in
-          MOOCs, it allows a primitive way of storing reviews with given search or model as review flows. Review flows execute
-          the described normal search query with given parameters, and then allows some modeling based on those search results.
-          After review flow is run, it pre-fills the review form fields with provided values.
-        </p>
-        <p></p>
-        <p>
-          CodeCluste
-        </p>
-      </Header>
-    </Container>
+        </Header>
+        <Divider />
+        <Article>
+          <h2>Premise</h2>
+          <p>
+            CodeClusters is a web application for exploring and clustering student code to empower teachers to understand
+            their students' programming patterns at a deeper level. This lofty goal is approached at multiple ways but are
+            mostly tied down to the Apache Solr search-engine and the scikit-learn models implemented at the modeling server.
+          </p>
+          <h2>How it works</h2>
+          <p>
+            CodeClusters consists of 6 main parts: Nginx reverse proxy, React web app, Node.js backend, Postgres database, Flask
+            modeling server and Solr search server. The student submissions are first stored in the Postgres, then indexed to the
+            Solr. Automation at this matter has not been finalized yet, but in theory the ingestion of new data to CodeClusters
+            should be seamless. Now the only data at hand is the example dataset of MarsinLampotilanKeskiarvo.
+          </p>
+          <p>
+            When indexed to Solr, a series of attributes can then be appended to their indexes. So far this means only metrics and the
+            counts of various tokens and they have to be added manually from /solr page. The indexed documents then can be searched and
+            faceted upon,
+            which is hopefully helpful in detecting anomalies in the student code. Then a suitable selection of reviews can be selected
+            and reviewed, which the students, in the future, would be able to view by logging in with their respective student accounts
+            to the system.
+          </p>
+          <h2>Search</h2>
+          <p>
+            To explain in further detail the intricacies of the different parts, search is the main part of CodeClusters. Intended
+            for quick ad-hoc querying it would serve as a primary method for dissecting student code for abnormal patterns. With a larger
+            dataset this approach becomes more and more infeasible, as it becomes impossible to group the code into their distinct
+            groupings. While capturing unorthodox use of keywords or highly nested loops is important aspect of student code reviewing,
+            the importance of automatically clustering the code by their similarity then becomes more and more useful.
+          </p>
+          <h2>Modeling</h2>
+          <p>
+            With an appropriately large dataset the automatization of clustering becomes quite handy. While the methods for doing so
+            are varied and debatable, since a lot depends on how the code is parsed into usable data structures, CodeClusters offers
+            some preliminary methods for experimenting with the clustering of code. As of now, the only available model is the n-grams
+            which
+            includes a lengthy description on its behavior. Running the model results in a couple of plots being shown with clickable
+            buckets to analyze the groupings. By the way model works also the data itself is loaded onto the CodeCluster's memory which
+            might cause a performance bottleneck with larger datasets. This data is then searchable by the user.
+          </p>
+          <h2>Reviewing</h2>
+          <p>
+            Another main part of CodeClusters is the reviewing of the submissions. A key aspect of the whole system would be to enable
+            teachers to write useful reviews that
+            would help students to understand many of the quality and stylistic nuances of writing good code. How it works now, is by
+            clicking individual search result items or by adding the whole page or all documents at once from the bottom right corner menu.
+            After selecting the submissions a review can be written with optional metadata and tags that would later on come handy as
+            labels for automating the review process itself. Once created, the review is marked as PENDING so not to immediately be visible
+            to the students. From the /reviews page these reviews can be then modified and visualized before finally accepting them, after
+            which they are sent to the students.
+          </p>
+          <h2>Review flows</h2>
+          <p>
+            An experimental way of automating the whole pipeline of searching and clustering code would be the creation of review flows.
+            A review flow is a data structure containing the user-defined steps for searching and/or modeling the code with a pre-filled
+            review text. This would in theory help teachers to reduce their time to review the code even more, and make sharing and
+            re-using the same well crafted review flows easy. While not fully finalized in their behavior, review flows can be helpful
+            for storing the most used and universally applicable reviews that would serve as a basis for perhaps even further
+            automatizations.
+          </p>
+        </Article>
+      </Container>
+    </Wrapper>
   )
 }
 
+const Wrapper = styled.main`
+  margin: 40px auto 0 auto;
+  max-width: 700px;
+  padding-bottom: 20px;
+  @media only screen and (max-width: 740px) {
+    margin: 40px 20px 0 20px;
+    padding-bottom: 20px;
+  }
+`
 const Container = styled.div`
   align-items: center;
+  background: white;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  > * + * {
-    margin: 2rem 0;
+  margin-bottom: 3rem;
+  padding: 1rem 3vw 0px 4vw;
+  @media screen and (min-width: 1200px) {
+    padding: 2rem 4rem 0 4rem;
   }
+`
+const Divider = styled.hr`
+  border: 0;
+  border-bottom: 1px solid #222;
+  margin: 1rem 0 0 0;
+  width: 100%;
 `
 const Header = styled.header`
   display: flex;
   flex-direction: column;
-`
-const Info = styled.div`
-  align-items: center;
-  display: flex;
-  justify-content: center;
-`
-const InfoText = styled.p`
-  margin: 0;
-`
-const MainInputs = styled.div`
   width: 100%;
-  > * + * {
+  & > h1 {
     margin: 1rem 0;
   }
+`
+const Article = styled.article`
+  margin-bottom: 2rem;
 `
 
 export const ManualView = styled(ManualViewEl)``
