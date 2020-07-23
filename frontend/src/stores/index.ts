@@ -8,6 +8,7 @@ import { ModelStore } from './ModelStore'
 import { ReviewStore } from './ReviewStore'
 import { ReviewFlowStore } from './ReviewFlowStore'
 import { SearchStore } from './SearchStore'
+import { SearchFacetsStore } from './SearchFacetsStore'
 import { SubmissionStore } from './SubmissionStore'
 import { ToastStore } from './ToastStore'
 
@@ -21,6 +22,7 @@ export class Stores {
   reviewStore: ReviewStore
   reviewFlowStore: ReviewFlowStore
   searchStore: SearchStore
+  searchFacetsStore: SearchFacetsStore
   indexStore: IndexStore
   submissionStore: SubmissionStore
   toastStore: ToastStore
@@ -33,10 +35,14 @@ export class Stores {
     this.localSearchStore = new LocalSearchStore(this.toastStore)
     this.indexStore = new IndexStore(this.toastStore)
     this.submissionStore = new SubmissionStore(this.toastStore)
+    this.searchFacetsStore = new SearchFacetsStore({
+      toastStore: this.toastStore,
+      courseStore: this.courseStore,
+    })
     this.searchStore = new SearchStore({
       toastStore: this.toastStore,
       localSearchStore: this.localSearchStore,
-      courseStore: this.courseStore,
+      searchFacetsStore: this.searchFacetsStore,
     })
     this.clustersStore = new ClustersStore({
       toastStore: this.toastStore,

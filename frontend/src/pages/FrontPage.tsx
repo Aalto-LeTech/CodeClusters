@@ -15,7 +15,7 @@ interface IProps {
 }
 
 export const FrontPage = inject((stores: Stores) => ({
-  getSearchSupplementaryData: stores.searchStore.getSearchSupplementaryData,
+  getSearchSupplementaryData: stores.searchFacetsStore.getSearchSupplementaryData,
 }))
 (observer((props: IProps) => {
   const { getSearchSupplementaryData } = props

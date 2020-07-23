@@ -27,12 +27,12 @@ const EMPTY_RANGE = {
 }
 
 const SearchFacetGroupItemEl = inject((stores: Stores, props: IProps) => ({
-  params: stores.searchStore.currentFacetParams[props.item.key],
+  params: stores.searchFacetsStore.currentFacetParams[props.item.key],
   counts: stores.searchStore.selectedSearchResult.facetCounts[props.item.key],
-  toggledFields: stores.searchStore.toggledFacetFields[props.item.key],
-  toggleSearchFacet: stores.searchStore.toggleSearchFacetParams,
-  setFacetParamsRange: stores.searchStore.setFacetParamsRange,
-  toggleFacetField: stores.searchStore.toggleFacetField,
+  toggledFields: stores.searchFacetsStore.toggledFacetFields[props.item.key],
+  toggleSearchFacet: stores.searchFacetsStore.toggleSearchFacetParams,
+  setFacetParamsRange: stores.searchFacetsStore.setFacetParamsRange,
+  toggleFacetField: stores.searchFacetsStore.toggleFacetField,
 }))
 (observer((props: IProps) => {
   const {

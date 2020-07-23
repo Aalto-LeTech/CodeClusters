@@ -77,15 +77,25 @@ export function createSearchQueryParams(obj: {[key: string]: any}) {
   return `?q=${q}&${encoded}`
 }
 
+// Discard values that the JSON parse failed to transform into an object (causes bugs later)
+function parseAndAddJSONKey(obj: Object, key: string) {
+  if (obj[key] && typeof obj[key] === 'string') {
+    const result = JSON.parse(obj[key])
+    if (typeof result === 'string') {
+      delete obj[key]
+    } else {
+      obj[key] = result
+    }
+  }
+}
+
 export function parseSearchQueryParams(url: string) {
   const parsed = queryString.parse(url, { arrayFormat: 'comma' })
   if (parsed.custom_filters && typeof parsed.custom_filters === 'string') {
     parsed.custom_filters = [parsed.custom_filters]
-  } else if (parsed.facets && typeof parsed.facets === 'string') {
-    parsed.facets = JSON.parse(parsed.facets)
-  } else if (parsed.facet_filters && typeof parsed.facet_filters === 'string') {
-    parsed.facet_filters = JSON.parse(parsed.facet_filters)
   }
+  parseAndAddJSONKey(parsed, 'facets')
+  parseAndAddJSONKey(parsed, 'facet_filters')
   const { error, value: values } = searchParamsSchema.validate(parsed, {
     abortEarly: false
   })

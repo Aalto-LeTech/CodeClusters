@@ -27,7 +27,7 @@ interface IProps {
 export const FloatingMenu = inject((stores: Stores) => ({
   currentSelectionCount: stores.reviewStore.currentSelectionCount,
   searchResultsCount: stores.searchStore.searchResultsCount,
-  shownSubmissionsCount: stores.searchStore.getShownSubmissions.length,
+  shownSubmissionsCount: stores.searchStore.shownSubmissions.length,
   searchInProgress: stores.searchStore.searchInProgress,
   openModal: stores.modalStore.openModal,
   toggleSelectShownSubmissions: stores.reviewStore.toggleSelectShownSubmissions,

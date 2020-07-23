@@ -18,8 +18,8 @@ interface IProps {
 }
 
 const SearchFacetsEl = inject((stores: Stores) => ({
-  currentMetricsFacets: stores.searchStore.currentMetricsFacets,
-  currentTokensFacets: stores.searchStore.currentTokensFacets,
+  currentMetricsFacets: stores.searchFacetsStore.currentMetricsFacets,
+  currentTokensFacets: stores.searchFacetsStore.currentTokensFacets,
 }))
 (observer((props: IProps) => {
   const {
