@@ -21,7 +21,7 @@ export const defaultTheme : ITheme = {
     primary: '#17b2ff', //'#1d9eff',
     primaryDark: '#005a87', // Using https://material.io/resources/color/#!/?view.left=0&view.right=1&primary.color=1d9eff
     primaryLight: '#6fcfff',
-    // lightGreen: '#96FF9A', or // #00dfff; // #a9d5ff // #00aaff // #7fd5ff
+    lightGreen: '#96FF9A', // #00dfff; // #a9d5ff // #00aaff // #7fd5ff
     green: '#00e676',
     blue: '#425EC2',
     red: '#ff5c77', // '#ff5d5d',

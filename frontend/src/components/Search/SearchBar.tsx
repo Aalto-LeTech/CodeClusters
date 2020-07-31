@@ -71,7 +71,7 @@ const StyledInput = styled(Input)`
 `
 const IconButton = styled.button`
   align-items: center;
-  background: #96FF9A; //${({ theme}) => theme.color.green};
+  background: ${({ theme}) => theme.color.lightGreen};
   border: 0;
   border-right: 1px solid #000;
   border-bottom-left-radius: 4px;

@@ -49,11 +49,11 @@ export class ClustersStore {
   @action reset() {
   }
 
-  @action setLatestNgramModel(model?: IRunNgramResponse) {
+  @action setLatestNgramModel = (model?: IRunNgramResponse) => {
     this.latestRunNgram = model
   }
 
-  @action setActiveCluster(cluster: string) {
+  @action setActiveCluster = (cluster: string) => {
     this.activeCluster = cluster
     if (this.latestRunNgram) {
       this.localSearchStore.searchByIds(this.latestRunNgram!.ngram.clusters[cluster])

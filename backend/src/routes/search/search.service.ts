@@ -38,6 +38,7 @@ function createFacetFilters(obj: { [facet: string]: string[] }) {
     const statement = obj[cur].reduce((acc, cur, i) => {
       let normalized = cur
       if (cur.includes(' - ')) {
+        // An interval that includes leftside value using [ and excludes the rightside with }
         normalized = `[${cur.replace('-', 'TO')}}`
       }
       if (i === 0) return normalized

@@ -5,6 +5,7 @@ export interface IThemeColor {
     light: string
     base: string
   }
+  lightGreen: string
   green: string
   orange: string
   blue: string
