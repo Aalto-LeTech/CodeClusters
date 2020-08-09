@@ -5,7 +5,7 @@ CREATE TABLE programming_language_facets (
 );
 
 INSERT INTO programming_language_facets(programming_language, tokens, metrics)
-VALUES ('JAVA', array['Symbolic names', 'Rare symbolic names', 'Rules'],
+VALUES ('JAVA', array['Symbolic names', 'Rare symbolic names'],
   array['LinesOfCode', 'JavaNCSS_file', 'JavaNCSS_class', 'JavaNCSS_method', 'CyclomaticComplexity', 'NPathComplexity',
     'ClassDataAbstractionCoupling', 'ClassFanOutComplexity', 'BooleanExpressionComplexity']
 );

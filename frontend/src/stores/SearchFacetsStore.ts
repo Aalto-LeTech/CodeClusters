@@ -46,9 +46,8 @@ const FACETS_MAPPING = {
   ClassDataAbstractionCoupling: 'CDAC_metric',
   ClassFanOutComplexity: 'CFOC_metric',
   BooleanExpressionComplexity: 'bool_expression_metric',
-  'Symbolic names': 'symbolic_names_tokens',
-  'Rare symbolic names': 'rare_symbolic_names_tokens',
-  Rules: 'rules_tokens'
+  'Symbolic names': 'keywords',
+  'Rare symbolic names': 'rare_keywords',
 }
 const RANGE_DELIMITER = ' - '
 
