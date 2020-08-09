@@ -40,7 +40,9 @@ const SearchConsoleEl = inject((stores: Stores) => ({
     const current = createSearchQueryParams(searchParams!)
     if (history.location.search !== current && !mounted) {
       const searchQuery = parseSearchQueryParams(history.location.search)
-      setInitialSearchParams!(searchQuery)
+      if (searchQuery) {
+        setInitialSearchParams!(searchQuery)
+      }
     } else {
       history.push(current)
     }

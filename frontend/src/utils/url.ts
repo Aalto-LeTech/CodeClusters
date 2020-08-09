@@ -99,6 +99,8 @@ export function parseSearchQueryParams(url: string) {
   const { error, value: values } = searchParamsSchema.validate(parsed, {
     abortEarly: false
   })
-  // console.log(error?.details)
-  return values as unknown as ISearchCodeParams
+  if (!error) {
+    return values as unknown as ISearchCodeParams
+  }
+  return undefined
 }

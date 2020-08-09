@@ -126,8 +126,11 @@ export class SearchStore {
   }
 
   @action searchAll = async () => {
-    const result = await searchApi.searchAll(this.searchParams)
-    if (result === undefined) {
+    let result
+    try {
+      result = await searchApi.searchAll(this.searchParams)
+      if (result === undefined) return undefined
+    } catch (err) {
       return undefined
     }
     const docs = result.response.docs.map(r => ({
