@@ -270,7 +270,7 @@ declare module 'shared' {
     exercise_id?: number
     num_results?: number
     num_lines?: number
-    result_start?: number
+    results_start?: number
     facets?: {
       [facet: string]: ISearchFacetParams
     }

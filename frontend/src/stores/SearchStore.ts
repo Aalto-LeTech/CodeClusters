@@ -1,4 +1,5 @@
-import { action, computed, runInAction, observable } from 'mobx'
+// import { action, computed, runInAction, observable } from 'mobx'
+import { autorun, action, computed, extendObservable, runInAction, observable } from 'mobx'
 import * as searchApi from '../api/search.api'
 
 import { persist } from './persist'
@@ -33,6 +34,9 @@ export const EMPTY_QUERY: ISearchCodeParams = {
   facets: {},
   facet_filters: {},
   filters: [],
+  num_results: undefined,
+  num_lines: undefined,
+  results_start: 0,
   case_sensitive: false,
   regex: false,
   whole_words: false
@@ -48,6 +52,7 @@ export class SearchStore {
   @observable searchResults: ISearchCodeResult[] = []
   @observable selectedSearchResult = EMPTY_RESULT
   @observable searchParams: ISearchCodeParams = EMPTY_QUERY
+  @observable selectedPage: number = 1
   @observable searchInProgress: boolean = false
   // For updating SearchConsole using review flows
   @observable initialSearchParams: ISearchCodeParams = EMPTY_QUERY
@@ -85,6 +90,15 @@ export class SearchStore {
     this.initialSearchParams = payload
   }
 
+  @action setSelectedPage = (page: number) => {
+    const numResults = this.searchParams.num_results || 20
+    // mobx won't trigger observers of searchParams when non-observable keys are changed (or something)
+    // -> set the whole object
+    this.searchParams = { ...this.searchParams, ...{ results_start: numResults * (page - 1) } }
+    this.selectedPage = page
+    this.search(this.searchParams)
+  }
+
   parseSearchResponse(result: ISolrSearchCodeResponse) {
     const docs = result.response.docs.map(r => ({
       ...r,
@@ -119,6 +133,8 @@ export class SearchStore {
         const searchResult = this.parseSearchResponse(result)
         this.selectedSearchResult = searchResult
         this.searchResults.push({ ...searchResult, params: payload })
+        const numResults = payload.num_results || 20
+        this.selectedPage = Math.ceil((payload.results_start || 0) / numResults) + 1
       }
       this.searchInProgress = false
     })

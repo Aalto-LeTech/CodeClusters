@@ -68,12 +68,12 @@ export const searchService = {
       num_lines = 0,
       facets = {},
       facet_filters = {},
+      results_start = 0,
       // case_sensitive,
       // regex,
       // whole_words,
-      // page
     } = params
-    const general = `q=code:${q}&rows=${num_results}`
+    const general = `q=code:${q}&rows=${num_results}&start=${results_start}`
     // Used search filters
     const filters = createFilters({ course_id, exercise_id })
     // Fields used in the Solr results (required for the highlighting)
@@ -97,7 +97,6 @@ export const searchService = {
       // case_sensitive,
       // regex,
       // whole_words,
-      // page
     } = params
     const general = `q=code:${q}&rows=${num_results}`
     const filters = createFilters({ course_id, exercise_id })

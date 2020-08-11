@@ -36,7 +36,7 @@ const SearchResultsListEl = inject((stores: Stores) => {
         <span>Showing {resultsCount} of {totalResultsCount} results</span>
         { localSearchActive && <LocalSearchBox>Local search active</LocalSearchBox>}
       </ListHeader>
-      <Pagination pages={10}/>
+      <Pagination/>
       <ResultList className={className}>
         { shownSubmissions!.map((result) =>
         <SearchResultsListItem key={result.id}>
@@ -44,7 +44,7 @@ const SearchResultsListEl = inject((stores: Stores) => {
         </SearchResultsListItem>  
         )}
       </ResultList>
-      <Pagination pages={10}/>
+      <Pagination/>
     </Container>
   )
 }))
@@ -53,6 +53,9 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  & > ${Pagination} {
+    margin: 1rem 0;
+  }
 `
 const ListHeader = styled.div`
   align-items: center;

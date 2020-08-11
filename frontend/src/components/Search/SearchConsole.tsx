@@ -53,8 +53,9 @@ const SearchConsoleEl = inject((stores: Stores) => ({
     deactivateLocalSearch!()
   }
   function handleSearch(payload: ISearchCodeParams) {
-    history.push(createSearchQueryParams(payload))
-    return search!(payload)
+    const data = searchParams!.results_start ? { ...payload, results_start: searchParams?.results_start } : payload
+    history.push(createSearchQueryParams(data))
+    return search!(data)
   }
   return (
     <Container className={className} visible={visible}>
