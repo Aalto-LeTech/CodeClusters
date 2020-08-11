@@ -1,12 +1,14 @@
-FROM nginx:1.17.10-alpine
+FROM openresty/openresty:1.17.8.2-2-alpine-fat
 
 ENV HTTP_PORT 80
 ENV HTTPS_PORT 443
 
+RUN opm get cdbattags/lua-resty-jwt
+
 RUN rm /etc/nginx/conf.d/default.conf
-COPY nginx.conf /etc/nginx/
+COPY nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
+COPY jwt-auth.lua /usr/local/openresty/lualib/resty/jwt-auth.lua
 
 EXPOSE ${HTTP_PORT} ${HTTPS_PORT}
-# Run the nginx without daemon to keep the process and the container bound together
-# This way when nginx fails the container fails 
-CMD ["nginx", "-g", "daemon off;"]
+
+CMD ["/usr/local/openresty/bin/openresty", "-g", "daemon off;"]

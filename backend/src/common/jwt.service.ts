@@ -9,7 +9,7 @@ import { IJwtPayload } from '../types/auth'
 
 const SECRET = config.JWT.SECRET
 
-const ALGORITHM = 'HS384'
+const ALGORITHM = 'HS512'
 const EXPIRATION_IN_MILLIS = 172800000 // 2 days
 
 export const jwtService = {
@@ -18,7 +18,7 @@ export const jwtService = {
       expires,
       user,
     }
-    return jwt.sign(payload, SECRET, { algorithm: ALGORITHM })
+    return jwt.sign(payload, SECRET, { algorithm: ALGORITHM, expiresIn: expires })
   },
   decryptSessionToken(jwtToken: string) {
     try {
