@@ -152,7 +152,7 @@ export class ReviewStore {
   @action selectAllSubmissions = async () => {
     let ids: string[] = []
     if (this.localSearchStore.active) {
-      ids = this.localSearchStore.submissions.map(s => s.id)
+      ids = this.localSearchStore.shownSubmissions.map(s => s.id)
     } else {
       ids = await this.searchStore.searchIds()
     }

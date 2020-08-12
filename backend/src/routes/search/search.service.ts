@@ -93,16 +93,22 @@ export const searchService = {
       course_id,
       exercise_id,
       num_results = 10000,
-      // filters,
+      facets = {},
+      facet_filters = {},
+      results_start = 0,
       // case_sensitive,
       // regex,
       // whole_words,
     } = params
-    const general = `q=code:${q}&rows=${num_results}`
+    const general = `q=code:${q}&rows=${num_results}&start=${results_start}`
     const filters = createFilters({ course_id, exercise_id })
     // Fields used in the Solr results (required for the highlighting)
     const fields = 'fl=code,id,+student_id,+course_id,+timestamp'
-    const query = `${general}${filters}&${fields}`
+    // Used facets, read Lucene's or Solr's documentation to understand their function
+    const facetsString = createFacets(facets)
+    // Selections of facets used as filters eg fq=LOC_metric:(30 OR 29 OR 28)
+    const facetFilters = createFacetFilters(facet_filters)
+    const query = `${general}${filters}${facetFilters}&${facetsString}&${fields}`
     return axiosService.get<ISolrSearchAllCodeResponse>(url(`solr/submission-search/select?${query}`))
   },
   searchAllSubmissionIds: (params: ISearchCodeParams) : Promise<ISolrSearchAllIdsResponse | undefined> => {
@@ -111,17 +117,23 @@ export const searchService = {
       course_id,
       exercise_id,
       num_results = 10000,
-      // filters,
+      facets = {},
+      facet_filters = {},
+      results_start = 0,
       // case_sensitive,
       // regex,
       // whole_words,
       // page
     } = params
-    const general = `q=code:${q}&rows=${num_results}`
+    const general = `q=code:${q}&rows=${num_results}&start=${results_start}`
     const filters = createFilters({ course_id, exercise_id })
     // Fields used in the Solr results (required for the highlighting)
-    const fields = 'fl=id,+student_id,+course_id,+timestamp'
-    const query = `${general}${filters}&${fields}`
+    const fields = 'fl=code,id,+student_id,+course_id,+timestamp'
+    // Used facets, read Lucene's or Solr's documentation to understand their function
+    const facetsString = createFacets(facets)
+    // Selections of facets used as filters eg fq=LOC_metric:(30 OR 29 OR 28)
+    const facetFilters = createFacetFilters(facet_filters)
+    const query = `${general}${filters}${facetFilters}&${facetsString}&${fields}`
     return axiosService.get<ISolrSearchAllIdsResponse>(url(`solr/submission-search/select?${query}`))
   }
 }

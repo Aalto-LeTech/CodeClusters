@@ -1,5 +1,4 @@
-// import { action, computed, runInAction, observable } from 'mobx'
-import { autorun, action, computed, extendObservable, runInAction, observable } from 'mobx'
+import { action, computed, runInAction, observable } from 'mobx'
 import * as searchApi from '../api/search.api'
 
 import { persist } from './persist'
@@ -143,8 +142,11 @@ export class SearchStore {
 
   @action searchAll = async () => {
     let result
+    const payload = { ...this.searchParams }
+    payload.facets = this.searchFacetsStore.currentFacetParams
+    payload.facet_filters = this.searchFacetsStore.createFiltersFromFacets()
     try {
-      result = await searchApi.searchAll(this.searchParams)
+      result = await searchApi.searchAll(payload)
       if (result === undefined) return undefined
     } catch (err) {
       return undefined
@@ -157,7 +159,10 @@ export class SearchStore {
   }
 
   @action searchIds = async () => {
-    const result = await searchApi.searchIds(this.searchParams)
+    const payload = { ...this.searchParams }
+    payload.facets = this.searchFacetsStore.currentFacetParams
+    payload.facet_filters = this.searchFacetsStore.createFiltersFromFacets()
+    const result = await searchApi.searchIds(payload)
     if (result) {
       return result.response.docs.map(r => r.id)
     }
