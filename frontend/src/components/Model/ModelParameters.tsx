@@ -28,7 +28,7 @@ interface IProps {
 
 const ModelParametersEl = observer(forwardRef((props: IProps, ref) => {
   const { className, id, selectedModel, initialModelData, onModelFormChange, onModelSubmit } = props
-  const [minimized, setMinimized] = useState(true)
+  const [minimized, setMinimized] = useState(false)
 
   function handleClickToggle() {
     setMinimized(!minimized)

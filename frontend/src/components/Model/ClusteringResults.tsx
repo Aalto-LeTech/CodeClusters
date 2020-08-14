@@ -28,8 +28,8 @@ interface IProps {
 
 const ClusteringResultsEl = inject((stores: Stores) => ({
   activeCluster: stores.clustersStore.activeCluster,
-  getNgramHistogramData: stores.clustersStore.getNgramHistogramData,
-  getNgramScatterData: stores.clustersStore.getNgramScatterData,
+  getNgramHistogramData: stores.clustersStore.ngramHistogramData,
+  getNgramScatterData: stores.clustersStore.ngramScatterData,
   latestRunNgram: stores.clustersStore.latestRunNgram,
   setActiveCluster: stores.clustersStore.setActiveCluster,
 }))

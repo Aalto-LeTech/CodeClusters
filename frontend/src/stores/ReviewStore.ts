@@ -119,7 +119,7 @@ export class ReviewStore {
 
   @action toggleSelectShownSubmissions = () => {
     let ids: string[] = []
-    if (this.localSearchStore.active) {
+    if (this.localSearchStore.searchActive) {
       ids = this.localSearchStore.shownSubmissions.map(s => s.id)
     } else {
       ids = this.searchStore.selectedSearchResult.docs.map(s => s.id)
@@ -151,7 +151,7 @@ export class ReviewStore {
 
   @action selectAllSubmissions = async () => {
     let ids: string[] = []
-    if (this.localSearchStore.active) {
+    if (this.localSearchStore.searchActive) {
       ids = this.localSearchStore.shownSubmissions.map(s => s.id)
     } else {
       ids = await this.searchStore.searchIds()

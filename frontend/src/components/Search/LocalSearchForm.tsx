@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { inject, observer } from 'mobx-react'
 import { useForm } from 'react-hook-form'
 
-import { SearchBar } from '../Search/SearchBar'
+import { SearchBar } from './SearchBar'
 import { CheckBox } from '../../elements/CheckBox'
 import { Input } from '../../elements/Input'
 
@@ -104,7 +104,6 @@ const LocalSearchFormEl = inject((stores: Stores) => ({
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 1rem;
 `
 const Form = styled.form`
   align-items: center;

@@ -15,7 +15,7 @@ interface IProps {
 
 export class ClustersStore {
   @observable latestRunNgram?: IRunNgramResponse = undefined
-  @observable activeCluster: string = ''
+  @observable activeCluster: string | null = null
   toastStore: ToastStore
   localSearchStore: LocalSearchStore
 
@@ -26,7 +26,7 @@ export class ClustersStore {
     persist(() => this.activeCluster, (val: any) => this.activeCluster = val, 'clusters.activeCluster')
   }
 
-  @computed get getNgramHistogramData() {
+  @computed get ngramHistogramData() {
     if (this.latestRunNgram) {
       const clusterKeys = Object.keys(this.latestRunNgram.ngram.clusters)
       const histData = clusterKeys.map((key, i) => ({
@@ -39,14 +39,26 @@ export class ClustersStore {
     return []
   }
 
-  @computed get getNgramScatterData() {
+  @computed get ngramScatterData() {
     if (this.latestRunNgram) {
       return this.latestRunNgram.ngram['2d']
     }
     return []
   }
 
+  @computed get currentClusters() {
+    if (this.latestRunNgram) {
+      return this.latestRunNgram!.ngram.clusters
+    }
+    return []
+  }
+
   @action reset() {
+  }
+
+  @action resetActiveCluster = () => {
+    this.activeCluster = null
+    this.localSearchStore.resetLocalSelectedSubmissions()
   }
 
   @action setLatestNgramModel = (model?: IRunNgramResponse) => {
@@ -56,6 +68,7 @@ export class ClustersStore {
   @action setActiveCluster = (cluster: string) => {
     this.activeCluster = cluster
     if (this.latestRunNgram) {
+      this.localSearchStore.setSelectedSubmissions(this.latestRunNgram!.ngram.clusters[cluster])
       this.localSearchStore.searchByIds(this.latestRunNgram!.ngram.clusters[cluster])
     }
   }

@@ -279,7 +279,7 @@ const NgramParametersFormEl = observer(forwardRef((props: IProps, ref) => {
             intent="success"
             disabled={submitInProgress}
             loading={submitInProgress}
-          >Submit</Button>
+          >Run n-gram</Button>
           <Button
             intent="transparent"
             onClick={onCancel}

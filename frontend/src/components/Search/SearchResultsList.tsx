@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../../theme/styled'
 
 import { ResultItem } from './ResultItem'
 import { Pagination } from './Pagination'
+import { LocalSearchControls } from './LocalSearchControls'
 
 import { SelectItem } from '../../elements/SelectItem'
 
@@ -17,27 +18,25 @@ interface IProps {
   shownSubmissions?: ISolrFullSubmissionWithDate[]
 }
 
-const SearchResultsListEl = inject((stores: Stores) => {
-  const localSearchActive = stores.localSearchStore.active
-  const ls = stores.localSearchStore
-  const s = stores.searchStore
-  return {
-    localSearchActive: stores.localSearchStore.active,
-    totalResultsCount: localSearchActive ? ls.foundSubmissionsIndexes.length : s.selectedSearchResult.numFound || 0,
-    shownSubmissions: localSearchActive ? ls.shownSubmissions : s.selectedSearchResult.docs
-  }
-})
+const SearchResultsListEl = inject((stores: Stores) => ({
+  localSearchActive: stores.localSearchStore.searchActive,
+  totalResultsCount: stores.searchStore.searchResultsCount,
+  shownSubmissions: stores.searchStore.shownSubmissions
+}))
 (observer((props: IProps) => {
   const { className, localSearchActive, totalResultsCount, shownSubmissions } = props
   const resultsCount = shownSubmissions!.length
   return (
     <Container className={className}>
+      <LocalSearchControls visible={localSearchActive!!}/>
       <ListHeader>
         <span>Showing {resultsCount} of {totalResultsCount} results</span>
-        { localSearchActive && <LocalSearchBox>Local search active</LocalSearchBox>}
+        <Pagination/>
+        { localSearchActive ?
+        <LocalSearchBox>Modeling mode active</LocalSearchBox> :
+        <div className="empty"></div>}
       </ListHeader>
-      <Pagination/>
-      <ResultList className={className}>
+      <ResultList>
         { shownSubmissions!.map((result) =>
         <SearchResultsListItem key={result.id}>
           <ResultItem result={result} />
@@ -64,6 +63,9 @@ const ListHeader = styled.div`
   margin: 1rem 0;
   & > span:first-child {
     padding: 0.5rem 0;
+  }
+  & > .empty {
+    width: 160px;
   }
 `
 const LocalSearchBox = styled.span`

@@ -4,7 +4,7 @@ import styled from '../../theme/styled'
 
 import { SelectModel } from './SelectModel'
 import { ClusteringResults } from './ClusteringResults'
-import { LocalSearchForm } from './LocalSearchForm'
+import { LocalSearchForm } from '../Search/LocalSearchForm'
 
 import {
   IModel, IModelId, IModelParams, INgramParams
@@ -65,7 +65,6 @@ const ModelTabViewEl = inject((stores: Stores) => ({
           onModelFormChange={handleModelFormDataChange}
           onModelSubmit={runModel}
         />
-        <LocalSearchForm />
         <ClusteringResults />
       </Body>
     </Container>

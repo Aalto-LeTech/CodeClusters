@@ -4,7 +4,8 @@ import * as searchApi from '../api/search.api'
 import { persist } from './persist'
 
 import {
-  ISearchCodeParams, ISearchCodeResult, ISolrSearchCodeResponse, ISolrSubmissionWithDate,
+  ISearchCodeParams, ISearchCodeResult, ISolrSearchCodeResponse,
+  ISolrSubmissionWithDate, ISolrFullSubmissionWithDate
 } from 'shared'
 import { FacetField } from '../types/search'
 import { ToastStore } from './ToastStore'
@@ -51,8 +52,8 @@ export class SearchStore {
   @observable searchResults: ISearchCodeResult[] = []
   @observable selectedSearchResult = EMPTY_RESULT
   @observable searchParams: ISearchCodeParams = EMPTY_QUERY
-  @observable selectedPage: number = 1
   @observable searchInProgress: boolean = false
+  @observable selectedPage: number = 1
   // For updating SearchConsole using review flows
   @observable initialSearchParams: ISearchCodeParams = EMPTY_QUERY
   toastStore: ToastStore
@@ -67,14 +68,14 @@ export class SearchStore {
   }
 
   @computed get searchResultsCount() {
-    if (this.localSearchStore.active) {
-      return this.localSearchStore.foundSubmissionsIndexes.length
+    if (this.localSearchStore.searchActive) {
+      return this.localSearchStore.searchedSubmissionIndexes.length
     }
     return this.selectedSearchResult.numFound || 0
   }
 
   @computed get shownSubmissions() {
-    if (this.localSearchStore.active) {
+    if (this.localSearchStore.searchActive) {
       return this.localSearchStore.shownSubmissions
     }
     return this.selectedSearchResult.docs
@@ -90,7 +91,7 @@ export class SearchStore {
   }
 
   @action setSelectedPage = (page: number) => {
-    if (this.localSearchStore.active) {
+    if (this.localSearchStore.searchActive) {
       this.selectedPage = page
     } else {
       const numResults = this.searchParams.num_results || 20
