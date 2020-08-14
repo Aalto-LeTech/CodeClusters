@@ -44,7 +44,7 @@ const ClusteringResultsEl = inject((stores: Stores) => ({
   return (
     <Container className={className}>
       <Title>Ngram clusters</Title>
-      <p>Silhouette score: {latestRunNgram!.ngram.silhouette_score.toPrecision(3)}</p>
+      <p>Silhouette score: {latestRunNgram!.ngram.silhouette_score?.toPrecision(3)}</p>
       <Plots>
         <ClustersHistogram
           data={getNgramHistogramData || []}

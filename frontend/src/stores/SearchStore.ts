@@ -90,12 +90,16 @@ export class SearchStore {
   }
 
   @action setSelectedPage = (page: number) => {
-    const numResults = this.searchParams.num_results || 20
-    // mobx won't trigger observers of searchParams when non-observable keys are changed (or something)
-    // -> set the whole object
-    this.searchParams = { ...this.searchParams, ...{ results_start: numResults * (page - 1) } }
-    this.selectedPage = page
-    this.search(this.searchParams)
+    if (this.localSearchStore.active) {
+      this.selectedPage = page
+    } else {
+      const numResults = this.searchParams.num_results || 20
+      // mobx won't trigger observers of searchParams when non-observable keys are changed (or something)
+      // -> set the whole object
+      this.searchParams = { ...this.searchParams, ...{ results_start: numResults * (page - 1) } }
+      this.selectedPage = page
+      this.search(this.searchParams)
+    }
   }
 
   parseSearchResponse(result: ISolrSearchCodeResponse) {

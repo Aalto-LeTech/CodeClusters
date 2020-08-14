@@ -250,7 +250,7 @@ declare module 'shared' {
     ngram: {
       clusters: { [id: string]: string[] }
       '2d': { id: string, x: number, y: number, cluster: number }[]
-      silhouette_score: number
+      silhouette_score: number | null
     }
     // job_id: number
     // documents_used: number

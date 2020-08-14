@@ -151,7 +151,7 @@ const AddReviewFormEl = memo(forwardRef((props: IProps, ref: any) => {
           intent="success"
           disabled={submitInProgress}
           loading={submitInProgress}
-        >Submit</Button>
+        >Add review</Button>
         <Button
           intent="transparent"
           onClick={onCancel}

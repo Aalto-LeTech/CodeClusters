@@ -58,9 +58,9 @@ export const ReviewSubmissionsModal = inject((stores: Stores) => ({
             <TitleWrapper><h2>Add review to {currentSelectionCount} submissions</h2></TitleWrapper>
             <Icon button onClick={handleClose}><FiX size={24}/></Icon>
           </Header>
-          <SubmissionsVisualization>
-            this should visualize the selected submissions as eg diff of submissions
-          </SubmissionsVisualization>
+          <Info>
+            This will create one new pending review that has to be accepted being visible to students.
+          </Info>
           <AddReviewForm
             id="review-submissions"
             onSubmit={handleReviewSubmit}
@@ -108,11 +108,12 @@ const TitleWrapper = styled.div`
     padding: 0;
   }
 `
-const SubmissionsVisualization = styled.div`
+const Info = styled.div`
   align-items: center;
   display: flex;
   justify-content: center;
   padding: 2rem 0;
+  text-align: left;
 `
 const Buttons = styled.div`
   align-items: center;

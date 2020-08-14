@@ -19,8 +19,8 @@ export const authenticatedHeaders = () => ({
  * Incase the request throws an error, handles the most common cases eg 401 with default error
  * messages and returns undefined if the error was handled. If the error wasn't handled eg a 400 error,
  * throws it for the store to handle.
- * @param path - The path after the API_URL
- * @param options - Axios options object
+ * @param path The path after the API_URL
+ * @param options Axios options object
  */
 const createRequest = <T>(path: string, options: any) : Promise<Maybe<T>> => {
   return axios(`${REACT_APP_API_URL}/${path}`, options)

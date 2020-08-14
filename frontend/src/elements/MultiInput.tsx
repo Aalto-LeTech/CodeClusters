@@ -48,6 +48,13 @@ function MultiInputEl(props: IProps) {
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     !disabled && onChange(event.target.value)
   }
+  function handleBlur() {
+    if (!disabled && value && value.length > 0) {
+      onAddItem(value)
+      onChange('')
+    }
+    if (onBlur) onBlur()
+  }
   return (
     <Container className={className} fullWidth={fullWidth}>
       { icon }
@@ -69,7 +76,7 @@ function MultiInputEl(props: IProps) {
         onChange={handleChange}
         onKeyPress={handleKeyPress}
         onFocus={onFocus}
-        onBlur={onBlur}
+        onBlur={handleBlur}
       />
     </Container>
   )
