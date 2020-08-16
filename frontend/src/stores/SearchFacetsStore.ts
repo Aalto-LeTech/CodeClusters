@@ -98,6 +98,19 @@ export class SearchFacetsStore {
     this.currentSearchFacets = EMPTY_FACETS
   }
 
+  @action resetFacets = (type: 'metrics' | 'tokens') => {
+    const { programming_language } = this.currentSearchFacets
+    Object.keys(this.facetParams[programming_language]).forEach(facet => {
+      if (type === 'metrics' && this.currentMetricsFacets.find((f) => f.key === facet)) {
+        delete this.facetParams[programming_language][facet]
+        this.toggledFacetFields[facet] = {}
+      } else if (type === 'tokens' && this.currentTokensFacets.find((f) => f.key === facet)) {
+        delete this.facetParams[programming_language][facet]
+        this.toggledFacetFields[facet] = {}
+      }
+    })
+  }
+
   @action setCurrentSearchFacets = (supplementaryData: ISupplementaryData, course?: ICourse, exercise?: IExercise) => {
     let found
     if (exercise) {

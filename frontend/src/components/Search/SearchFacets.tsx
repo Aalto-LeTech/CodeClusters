@@ -15,25 +15,34 @@ interface IProps {
   className?: string
   currentMetricsFacets?: FacetItem[]
   currentTokensFacets?: FacetItem[]
+  resetFacets?: (type: 'metrics' | 'tokens') => void
 }
 
 const SearchFacetsEl = inject((stores: Stores) => ({
   currentMetricsFacets: stores.searchFacetsStore.currentMetricsFacets,
   currentTokensFacets: stores.searchFacetsStore.currentTokensFacets,
+  resetFacets: stores.searchFacetsStore.resetFacets,
 }))
 (observer((props: IProps) => {
   const {
-    className, currentMetricsFacets, currentTokensFacets,
+    className, currentMetricsFacets, currentTokensFacets, resetFacets
   } = props
   const [metricsMinimized, setMetricsMinimized] = useState(false)
   const [tokensMinimized, setTokensMinimized] = useState(false)
-
+  function handleCloseMetrics() {
+    setMetricsMinimized(!metricsMinimized)
+    resetFacets!('metrics')
+  }
+  function handleCloseTokens() {
+    setTokensMinimized(!tokensMinimized)
+    resetFacets!('tokens')
+  }
   return (
     <Container className={className}>
       <Group>
         <FacetGroupHeader>
           <Title>Metrics</Title>
-          <Icon button onClick={() => setMetricsMinimized(!metricsMinimized)}>
+          <Icon button onClick={handleCloseMetrics}>
             { metricsMinimized ? <FiChevronDown size={18}/> : <FiChevronUp size={18}/>}
           </Icon>
         </FacetGroupHeader>
@@ -46,7 +55,7 @@ const SearchFacetsEl = inject((stores: Stores) => ({
       <Group>
         <FacetGroupHeader>
           <Title>Tokens</Title>
-          <Icon button onClick={() => setTokensMinimized(!tokensMinimized)}>
+          <Icon button onClick={handleCloseTokens}>
             { tokensMinimized ? <FiChevronDown size={18}/> : <FiChevronUp size={18}/>}
           </Icon>
         </FacetGroupHeader>

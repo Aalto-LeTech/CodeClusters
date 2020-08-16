@@ -52,7 +52,6 @@ const LocalSearchFormEl = inject((stores: Stores) => ({
   }
   return (
     <Container className={className}>
-      <Title>Local search</Title>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <TopRow>
           <FormField>
@@ -112,11 +111,6 @@ const Form = styled.form`
   & > * + * {
     margin-top: 1rem;
   }
-`
-const Title = styled.h2`
-  font-weight: bold;
-  font-size: 1.5rem;
-  margin: 1rem 0 1.5rem;
 `
 const FormField = styled.div`
   display: flex;

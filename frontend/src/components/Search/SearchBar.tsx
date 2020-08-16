@@ -71,7 +71,7 @@ const StyledInput = styled(Input)`
 `
 const IconButton = styled.button`
   align-items: center;
-  background: ${({ theme}) => theme.color.lightGreen};
+  background: ${({ theme }) => theme.color.lightGreen};
   border: 0;
   border-right: 1px solid #000;
   border-bottom-left-radius: 4px;
@@ -79,6 +79,10 @@ const IconButton = styled.button`
   cursor: pointer;
   display: flex;
   padding: 0 1.5rem;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  &:hover {
+    background: ${({ theme }) => theme.color.green};
+  }
 `
 const SearchIcon = styled(FiSearch)`
   vertical-align: middle;

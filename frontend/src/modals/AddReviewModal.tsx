@@ -59,7 +59,7 @@ export const ReviewSubmissionsModal = inject((stores: Stores) => ({
             <Icon button onClick={handleClose}><FiX size={24}/></Icon>
           </Header>
           <Info>
-            This will create one new pending review that has to be accepted being visible to students.
+            This will create one new pending review that has to be accepted before being visible to students.
           </Info>
           <AddReviewForm
             id="review-submissions"

@@ -74,6 +74,13 @@ export class SearchStore {
     return this.selectedSearchResult.numFound || 0
   }
 
+  @computed get searchResultsStart() {
+    if (this.localSearchStore.searchActive) {
+      return 0
+    }
+    return this.selectedSearchResult.start || 0
+  }
+
   @computed get shownSubmissions() {
     if (this.localSearchStore.searchActive) {
       return this.localSearchStore.shownSubmissions

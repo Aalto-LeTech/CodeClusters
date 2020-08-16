@@ -58,7 +58,8 @@ const SelectClusterEl = inject((stores: Stores) => ({
           { clusterKeys.map((c, i) =>
           <ClusterItem key={`${c}-${i}`}>
             <ClusterButton selected={activeCluster === c} onClick={() => handleClickCluster(c)}>
-              { c }
+              <span className="cluster">{c}</span>
+              [<span className="count">{currentClusters![c].length}</span>]
             </ClusterButton>
           </ClusterItem>
           )}
@@ -78,6 +79,7 @@ const Container = styled.div`
 const SearchHeader = styled.div`
   align-items: center;
   display: flex;
+  justify-content: center;
   margin: 0.5rem 0 1rem 0;
   & > *:first-child {
     margin: 0 2rem 0 0;
@@ -91,9 +93,9 @@ const ParamsHeaderButtons = styled.div`
   }
 `
 const Title = styled.h2`
-  font-weight: bold;
-  font-size: 1.5rem;
-  margin: 1rem 0 1.5rem;
+  font-size: 1.25rem;
+  margin: 0;
+  padding: 0;
 `
 const Body = styled.div`
   align-items: center;
@@ -111,6 +113,7 @@ const ClustersList = styled.ol`
 const ClusterItem = styled.li`
 `
 const ClusterButton = styled.button<{ selected: boolean }>`
+  align-items: center;
   background: ${({ theme, selected }) => selected ? theme.color.primary : '#fff'};
   border: 0;
   border-radius: 2px;
@@ -122,6 +125,13 @@ const ClusterButton = styled.button<{ selected: boolean }>`
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   &:hover {
     background: ${({ theme, selected }) => selected ? theme.color.primary : '#bbb'};
+  }
+  & > .cluster {
+    font-weight: bold;
+    margin-right: 0.5rem;
+  }
+  & > .count {
+    font-size: 0.8rem;
   }
 `
 

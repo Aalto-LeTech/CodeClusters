@@ -65,7 +65,7 @@ export const FloatingMenu = inject((stores: Stores) => ({
           <Icon button onClick={handleToggleShownClick} title="Toggle all shown" disabled={searchResultsCount === 0}>
             <FiPlusSquare size={18}/>
           </Icon>
-          <Icon button onClick={handleAddAllClick} title="Add all found" disabled={searchResultsCount === 0}>
+          <Icon button onClick={handleAddAllClick} title="Select all found" disabled={searchResultsCount === 0}>
             <FiFolderPlus size={18}/>
           </Icon>
           <Icon button onClick={handleTrashClick} title="Unselect all" disabled={currentSelectionCount === 0}>
