@@ -2,6 +2,10 @@
 
 CORE_NAME="submission-search"
 
+# Incase you wanted to query the Solr directly using the local reverse proxy for some reason, here's how:
+# curl 'http://localhost:9080/_s/?q=code:*' \
+#   -H 'Authorization: Bearer jwt_token_here'
+
 case "$1" in
   bash)
     CONTAINER_ID="$(docker ps | grep solr | awk '{print $1}')"
@@ -24,7 +28,7 @@ case "$1" in
     docker-compose stop solr
     ;;
   delete)
-    docker-compose stop solr && docker-compose rm solr && rm -r ./solr/data
+    docker-compose stop solr && docker-compose rm solr && rm -r ./solr/data/*
     ;;
   logs)
     docker-compose logs -f solr

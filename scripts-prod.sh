@@ -43,6 +43,17 @@ case "$1" in
   seed)
     sudo docker-compose -f prod-jobs.yml run --rm flyway_seed
     ;;
+  db-delete)
+    sudo docker-compose -f prod-docker-compose.yml stop postgres
+    sudo rm -r ./db/data
+    sudo docker-compose -f prod-docker-compose.yml up --force-recreate -d postgres
+    ;;
+  solr-recreate)
+    sudo docker-compose -f prod-docker-compose.yml stop solr
+    sudo rm -rf ./solr/data/*
+    sudo docker-compose -f prod-docker-compose.yml build solr
+    sudo docker-compose -f prod-docker-compose.yml up -d --force-recreate solr
+    ;;
   testdata)
     sudo docker-compose -f prod-jobs.yml run --rm test_data
     ;;
@@ -50,12 +61,24 @@ case "$1" in
     CURL=$(curl http://localhost:8983/solr/${CORE_NAME}/dataimport?command=full-import&entity=submission)
     ;;
   update)
+    SERVICE=$2
+
+    if [ -z "$SERVICE" ]; then
+      echo "Missing second argument SERVICE. It should be the Docker service to update eg frontend."
+      exit 0
+    fi
+
+    git pull
+    sudo docker-compose -f prod-docker-compose.yml build $SERVICE
+    sudo docker-compose -f prod-docker-compose.yml up -d $SERVICE
+    ;;
+  update-all)
     git pull
     sudo docker-compose -f prod-docker-compose.yml build
     sudo docker-compose -f prod-docker-compose.yml up -d
     sudo docker system prune
     ;;
   *)
-    echo $"Usage: $0 certbot|migrate|seed|testdata|data-import|update"
+    echo $"Usage: $0 certbot|migrate|seed|testdata|data-import|db-delete|update|update-all"
     exit 1
 esac

@@ -124,11 +124,11 @@ EOF
 ```
 
 11. Change the Solr db credentials and Docker IP (host.docker.internal to 172.17.0.1): `nano solr/data-config.xml`
-12. Start up the Docker Compose stack with Let's Encrypt (in codeclusters.cs.aalto.fi domain): `./init-prod.sh certbot`
-13. Run the migrations: `./init-prod.sh migrate`
-14. Run the seeding: `./init-prod.sh seed`
-15. Run the test data generator: `./init-prod.sh testdata`
-16. Create the Solr data: `./init-prod.sh data-import`
+12. Start up the Docker Compose stack with Let's Encrypt (in codeclusters.cs.aalto.fi domain): `./scripts-prod.sh certbot`
+13. Run the migrations: `./scripts-prod.sh migrate`
+14. Run the seeding: `./scripts-prod.sh seed`
+15. Run the test data generator: `./scripts-prod.sh testdata`
+16. Create the Solr data: `./scripts-prod.sh data-import`
 17. Go to the modeling repo: `cd ../CodeClustersModeling`
 18. Create the environment variables:
 
@@ -147,3 +147,15 @@ EOF
 
 19. Build and launch the modeling server: `sudo docker-compose -f prod-docker-compose.yml up -d`
 20. The app should be running at https://codeclusters.cs.aalto.fi/
+
+## How to update the stacks in production
+
+The scripts in `scripts-prod.sh` should contain the majority of scripts required to update a service in production. As of now, there isn't an automated CI to do this so you have it to do it by hand.
+
+In general, to update a service like backend or frontend, use eg `./scripts-prod.sh update backend`
+
+To run migrations to the Postgres, you can use the same `.scripts-prod.sh migrate` script. Incase you alter the schemas in some fashion that requires complete wipe out of the database, use `.scripts-prod.sh db-delete`
+
+To delete the Solr data, use `./solr.sh delete`. Then remember to reindex the data and to run metrics from the React app.
+
+There can and will be other errors that I might have fixed as one-off scripts but have forgotten what they were. Then Google is your friend. In general deleting the container alongside its volume and rebuilding it helps.
