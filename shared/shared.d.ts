@@ -312,7 +312,7 @@ declare module 'shared' {
   }
   export interface ISolrSearchCodeResponse {
     responseHeader: ISolrResponseHeader
-    response: ISolrResponse<ISolrSubmission>
+    response: ISolrResponse<ISolrMaybeFullSubmission>
     facet_counts?: {
       facet_fields: {
         [facet: string]: (string | number)[]
@@ -326,7 +326,7 @@ declare module 'shared' {
         }
       }
     }
-    highlighting: {
+    highlighting?: {
       [id: string]: {
         code: string[]
       }
@@ -351,6 +351,9 @@ declare module 'shared' {
   export interface ISolrSubmissionWithDate extends Omit<ISolrSubmission, 'timestamp'> {
     highlighted: string[]
     date: Date
+  }
+  export interface ISolrMaybeFullSubmission extends ISolrSubmission {
+    code?: string[]
   }
   export interface ISolrFullSubmission extends ISolrSubmission {
     code: string[]

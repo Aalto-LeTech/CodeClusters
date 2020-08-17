@@ -111,11 +111,14 @@ export class SearchStore {
   }
 
   parseSearchResponse(result: ISolrSearchCodeResponse) {
-    const docs = result.response.docs.map(r => ({
-      ...r,
-      date: new Date(r.timestamp),
-      highlighted: result.highlighting[r.id].code
-    }))
+    const docs = result.response.docs.map(r => {
+      const { code, ...rest } = r
+      return {
+        ...rest,
+        date: new Date(r.timestamp),
+        highlighted: result.highlighting !== undefined ? result.highlighting[r.id].code : code as string[]
+      }
+    })
     const facetFields = this.searchFacetsStore.parseFacetFields(result.facet_counts?.facet_fields)
     const facetRanges = this.searchFacetsStore.parseFacetRanges(result.facet_counts?.facet_ranges)
     const searchResult = {

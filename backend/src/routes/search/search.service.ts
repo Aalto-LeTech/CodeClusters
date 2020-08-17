@@ -1,3 +1,5 @@
+const qs = require('querystring')
+
 import { config, axiosService } from '../../common'
 import { dbService } from '../../db/db.service'
 
@@ -6,7 +8,7 @@ import {
   IProgrammingLanguageFacets, ISearchFacetParams
 } from 'shared'
 
-function url(path: string) {
+function solrUrl(path: string) {
   return `${config.SOLR_URL}/${path}`
 }
 
@@ -30,7 +32,7 @@ function createFacets(obj: { [facet: string]: ISearchFacetParams }) {
       return `${acc}&facet.field=${facet}&facet.mincount=1`
     }
     return acc
-  }, 'facet=true')
+  }, '&facet=true')
 }
 
 function createFacetFilters(obj: { [facet: string]: string[] }) {
@@ -73,19 +75,26 @@ export const searchService = {
       // regex,
       // whole_words,
     } = params
-    const general = `q=code:${q}&rows=${num_results}&start=${results_start}`
+    const isSearchAllQuery = q === '*'
+    // The query has to be URL encoded properly, otherwise Solr crashes. Weirdly enough this parameter is affected
+    const urlEncodedQ = qs.escape(q)
+    const general = `q=code:${urlEncodedQ}&rows=${num_results}&start=${results_start}`
     // Used search filters
     const filters = createFilters({ course_id, exercise_id })
-    // Fields used in the Solr results (required for the highlighting)
-    const fields = 'fl=id,+student_id,+course_id,+timestamp'
+    // Fields used in the Solr results (required for the highlighting), conditional code incase search all -query
+    const fields = `&fl=id,+student_id,+course_id,+timestamp${isSearchAllQuery ? ',+code' : ''}`
     // Used facets, read Lucene's or Solr's documentation to understand their function
     const facetsString = createFacets(facets)
     // Selections of facets used as filters eg fq=LOC_metric:(30 OR 29 OR 28)
     const facetFilters = createFacetFilters(facet_filters)
     // Highlighted fields
-    const hlfields = `hl=on&hl.fl=code&hl.simple.pre=<mark>&hl.simple.post=</mark>&hl.fragsize=${num_lines}&hl.method=unified`
-    const query = `${general}${filters}${facetFilters}&${facetsString}&${fields}&${hlfields}`
-    return axiosService.get<ISolrSearchCodeResponse>(url(`solr/submission-search/select?${query}`))
+    let hlfields = ''
+    // Incase the query is "search everything" query, don't use highlighting since it will just highlight everything
+    if (!isSearchAllQuery) {
+      hlfields = `&hl=on&hl.fl=code&hl.simple.pre=<mark>&hl.simple.post=</mark>&hl.fragsize=${num_lines}&hl.method=unified`
+    }
+    const query = `${general}${filters}${facetFilters}${facetsString}${fields}${hlfields}`
+    return axiosService.get<ISolrSearchCodeResponse>(solrUrl(`solr/submission-search/select?${query}`))
   },
   searchAllSubmissions: (params: ISearchCodeParams) : Promise<ISolrSearchAllCodeResponse | undefined> => {
     const {
@@ -100,16 +109,18 @@ export const searchService = {
       // regex,
       // whole_words,
     } = params
-    const general = `q=code:${q}&rows=${num_results}&start=${results_start}`
+    // The query has to be URL encoded properly, otherwise Solr crashes. Weirdly enough this parameter is affected
+    const urlEncodedQ = qs.escape(q)
+    const general = `q=code:${urlEncodedQ}&rows=${num_results}&start=${results_start}`
     const filters = createFilters({ course_id, exercise_id })
     // Fields used in the Solr results (required for the highlighting)
-    const fields = 'fl=code,id,+student_id,+course_id,+timestamp'
+    const fields = '&fl=code,id,+student_id,+course_id,+timestamp'
     // Used facets, read Lucene's or Solr's documentation to understand their function
     const facetsString = createFacets(facets)
     // Selections of facets used as filters eg fq=LOC_metric:(30 OR 29 OR 28)
     const facetFilters = createFacetFilters(facet_filters)
-    const query = `${general}${filters}${facetFilters}&${facetsString}&${fields}`
-    return axiosService.get<ISolrSearchAllCodeResponse>(url(`solr/submission-search/select?${query}`))
+    const query = `${general}${filters}${facetFilters}${facetsString}${fields}`
+    return axiosService.get<ISolrSearchAllCodeResponse>(solrUrl(`solr/submission-search/select?${query}`))
   },
   searchAllSubmissionIds: (params: ISearchCodeParams) : Promise<ISolrSearchAllIdsResponse | undefined> => {
     const {
@@ -125,15 +136,17 @@ export const searchService = {
       // whole_words,
       // page
     } = params
-    const general = `q=code:${q}&rows=${num_results}&start=${results_start}`
+    // The query has to be URL encoded properly, otherwise Solr crashes. Weirdly enough this parameter is affected
+    const urlEncodedQ = qs.escape(q)
+    const general = `q=code:${urlEncodedQ}&rows=${num_results}&start=${results_start}`
     const filters = createFilters({ course_id, exercise_id })
     // Fields used in the Solr results (required for the highlighting)
-    const fields = 'fl=code,id,+student_id,+course_id,+timestamp'
+    const fields = '&fl=code,id,+student_id,+course_id,+timestamp'
     // Used facets, read Lucene's or Solr's documentation to understand their function
     const facetsString = createFacets(facets)
     // Selections of facets used as filters eg fq=LOC_metric:(30 OR 29 OR 28)
     const facetFilters = createFacetFilters(facet_filters)
-    const query = `${general}${filters}${facetFilters}&${facetsString}&${fields}`
-    return axiosService.get<ISolrSearchAllIdsResponse>(url(`solr/submission-search/select?${query}`))
+    const query = `${general}${filters}${facetFilters}${facetsString}${fields}`
+    return axiosService.get<ISolrSearchAllIdsResponse>(solrUrl(`solr/submission-search/select?${query}`))
   }
 }

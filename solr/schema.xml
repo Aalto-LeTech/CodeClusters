@@ -69,11 +69,11 @@
 	  -->
     <fieldType name="text_general" class="solr.TextField" positionIncrementGap="100" multiValued="true">
       <analyzer type="index">
-        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <tokenizer class="solr.WhitespaceTokenizerFactory" rule="java" />
         <filter class="solr.LowerCaseFilterFactory"/>
       </analyzer>
       <analyzer type="query">
-        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <tokenizer class="solr.WhitespaceTokenizerFactory" rule="java" />
         <filter class="solr.LowerCaseFilterFactory"/>
       </analyzer>
     </fieldType>
