@@ -176,6 +176,8 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
                   <br></br>
                   ASSIGN_keywords=5
                   <br></br>
+                  BITAND_rare_keywords=[* TO *]
+                  <br></br>
                   NCSS_class_metric=15
                   <br></br>
                   MUL_keywords=(1 OR 3 OR 4)

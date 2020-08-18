@@ -17,6 +17,9 @@ So there are a few known bugs and a few unknown bugs in CodeClusters as of 18.8.
 
 * All the modeling n-gram forms combinations have not been tested, there is probably bugs there with results that have eg no clusters
 
+* the modeling server can't re-establish connection to the Postgres if it restarts
+* also I assume there are in general lots of bugs in the modeling server
+
 * Review flows are missing edit functionality and its form
 * Also facets should be included in the new review flow modal
 * Test flow button doesn't work (should basically just run the flow and see if it throws an error)
