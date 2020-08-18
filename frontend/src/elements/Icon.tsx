@@ -21,7 +21,7 @@ function IconEl(props: IProps) {
   if (button) {
     return (
       <Wrapper className={className} inline={inline}>
-        <Button onClick={onClick} disabled={disabled} title={title}>
+        <Button type="button" disabled={disabled} title={title} onClick={onClick}>
           {children}
         </Button>
       </Wrapper>

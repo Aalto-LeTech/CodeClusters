@@ -8,6 +8,7 @@ import { SearchBar } from './SearchBar'
 import { CheckBox } from '../../elements/CheckBox'
 import { Input } from '../../elements/Input'
 import { MultiInput } from '../../elements/MultiInput'
+import { Tooltip } from '../../elements/Tooltip'
 
 import { useDebouncedCallback } from '../../hooks/useDebounce'
 
@@ -179,7 +180,20 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
         </FormField>
       </MiddleRow>
       <SearchRow>
-        <label htmlFor={`${id}_search`}>Search</label>
+        <SearchLabelWrapper>
+          <label htmlFor={`${id}_search`}>Search</label>
+          <Tooltip title="Search instructions">
+            <SearchTooltip>
+              Search supports all the basic Lucene query functionalities, such as wildcards (?, *) and fuzzy searches (~).
+              When using special characters such as + or %, you often need to escape them eg \+.
+              <div>
+                <a href="https://lucene.apache.org/solr/guide/8_6/the-standard-query-parser.html" target="_blank" rel="nofollow">
+                  Solr 8.6 docs
+                </a>
+              </div>
+            </SearchTooltip>
+          </Tooltip>
+        </SearchLabelWrapper>
         <SearchBar name="q" id={`${id}_search`} ref={register} onSearch={handleSearch}/>
       </SearchRow>
       <BottomRow>
@@ -256,6 +270,20 @@ const MiddleRow = styled.div`
 `
 const SearchRow = styled.div`
   width: 100%;
+`
+const SearchLabelWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  & > label {
+    margin-right: 0.5rem;
+  }
+`
+const SearchTooltip = styled.p`
+  font-size: ${({ theme }) => theme.fontSize.small};
+  margin: 0;
+  & > div {
+    margin: 0.5rem 0 0 0;
+  }
 `
 const BottomRow = styled.div`
   align-items: center;
