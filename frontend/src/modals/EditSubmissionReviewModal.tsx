@@ -174,7 +174,6 @@ const TitleWrapper = styled.div`
   width: 100%;
   & > h2 {
     font-size: 20px;
-    font-weight: 500;
     margin: 0;
     padding: 0;
   }

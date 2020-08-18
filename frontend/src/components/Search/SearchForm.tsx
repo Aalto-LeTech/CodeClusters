@@ -320,7 +320,7 @@ const SearchTooltip = styled.div`
     margin: 0.5rem 0 0 0;
   }
   & > pre {
-    font-family: ${({ theme }) => theme.font.header};
+    font-weight: 600;
   }
 `
 const BottomRow = styled.div`

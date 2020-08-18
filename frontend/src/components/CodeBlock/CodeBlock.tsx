@@ -47,4 +47,5 @@ const Container = styled.pre`
   color: #fff;
   padding: 10px;
   border-radius: 0.25rem;
+  overflow: scroll;
 `

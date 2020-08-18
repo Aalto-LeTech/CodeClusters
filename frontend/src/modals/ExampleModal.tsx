@@ -57,7 +57,6 @@ const ModalContainer = styled.div`
   }
   & > h2 {
     font-size: 20px;
-    font-weight: 500;
     margin: 30px 0 30px 0;
     padding: 0;
   }

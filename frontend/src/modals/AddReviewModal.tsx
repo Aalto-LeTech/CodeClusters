@@ -103,7 +103,6 @@ const TitleWrapper = styled.div`
   width: 100%;
   & > h2 {
     font-size: 20px;
-    font-weight: 500;
     margin: 0;
     padding: 0;
   }
@@ -114,13 +113,4 @@ const Info = styled.div`
   justify-content: center;
   padding: 2rem 0;
   text-align: left;
-`
-const Buttons = styled.div`
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  & > *:first-child {
-    margin-right: 1rem;
-  }
 `

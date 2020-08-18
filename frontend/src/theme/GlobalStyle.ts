@@ -33,6 +33,11 @@ export const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
     font-family: ${({ theme }) => theme.font.text};
   }
+  pre {
+    font-family: ${({ theme }) => theme.font.header};
+    font-size: ${({ theme }) => theme.fontSize.small};
+    font-weight: 300;
+  }
   ul, ol {
     list-style: none;
     margin: 0;
