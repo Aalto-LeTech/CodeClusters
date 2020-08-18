@@ -48,6 +48,9 @@ const Wrapper = styled.div``
 const Code = styled.div<{ active: boolean, selected: boolean }>`
   background: ${({ active, selected, theme }) => active ? '#bb4949' : selected ? '#666' : '#222'};
   cursor: pointer;
+  font-family: ${({ theme }) => theme.font.header};
+  font-size: ${({ theme }) => theme.fontSize.small};
+  font-weight: 300;
   &:hover {
     background: #bb4949;
   }

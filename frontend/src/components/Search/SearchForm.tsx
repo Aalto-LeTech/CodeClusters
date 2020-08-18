@@ -159,20 +159,29 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
             <label htmlFor={`${id}_custom_filters`}>Custom filters</label>
             <Tooltip title="Custom filters">
               <SearchTooltip>
-                If you know the exact Solr index terms and want to leverage some specific filters not allowed by the
-                CodeClusters search form as such, you can use custom filters to leverage Lucene filter query (fq) syntax.
-                For example you can filter by keywords eg 
-                <br></br>
-                <br></br>
-                ASSIGN_keywords=[2 TO 4]
-                <br></br>
-                <br></br>
-                or
-                <br></br>
-                <br></br>
-                student_id=2
+                <p>
+                  If you know the exact Solr index terms and want to use some specific filters not allowed by the
+                  CodeClusters search form as such, you can use custom filters to leverage Lucene filter query (fq) syntax.
+                </p>
+                <p>
+                  {'Use key=value syntax with value being special range eg {2 TO *] ([ = inclusive, { = exclusive) or absolute value eg 15'}
+                </p>
+                <p>
+                  Examples:
+                </p>
+                <pre>
+                  ASSIGN_keywords=[4 TO 6]
+                  <br></br>
+                  {'ASSIGN_keywords={4 TO 6}'}
+                  <br></br>
+                  ASSIGN_keywords=5
+                  <br></br>
+                  NCSS_class_metric=15
+                  <br></br>
+                  MUL_keywords=(1 OR 3 OR 4)
+                </pre>
                 <div>
-                  <a href="https://lucene.apache.org/solr/guide/8_6/common-query-parameters.html#fq-filter-query-parameter" target="_blank" rel="noopener">
+                  <a href="https://lucene.apache.org/solr/guide/8_6/the-standard-query-parser.html" target="_blank" rel="noopener">
                     Solr 8.6 docs
                   </a>
                 </div>
@@ -259,7 +268,7 @@ const Form = styled.form`
   flex-direction: column;
   width: 100%;
   & > * + * {
-    margin-top: 1rem;
+    margin-top: 0.5rem;
   }
 `
 const FormField = styled.div`
@@ -289,6 +298,9 @@ const MiddleRow = styled.div`
   width: 100%;
   & > ${FormField} {
     width: 100%;
+    & > ${MultiInput} {
+      margin-top: 0;
+    }
   }
 `
 const SearchRow = styled.div`
@@ -301,11 +313,14 @@ const LabelWrapper = styled.div`
     margin-right: 0.5rem;
   }
 `
-const SearchTooltip = styled.p`
+const SearchTooltip = styled.div`
   font-size: ${({ theme }) => theme.fontSize.small};
   margin: 0;
   & > div {
     margin: 0.5rem 0 0 0;
+  }
+  & > pre {
+    font-family: ${({ theme }) => theme.font.header};
   }
 `
 const BottomRow = styled.div`

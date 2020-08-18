@@ -13,7 +13,7 @@ import { AnyRequest } from '../types/request'
  * @param item Eg custom_filters=IF_keywords=[2]
  */
 function parseArrayItem(item: string | Query) {
-  if (typeof item === 'string') {
+  if (typeof item === 'string' && item.includes('=')) {
     const key = item.substr(0, item.indexOf('='))
     const value = item.substr(item.indexOf('=') + 1)
     return { [key]: value }
