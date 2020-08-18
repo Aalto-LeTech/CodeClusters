@@ -87,6 +87,7 @@ const Link = styled(NavLink)`
   }
   &.frontpage {
     font-family: ${({ theme }) => theme.font.header};
+    font-weight: 600;
   }
 `
 const MainLinks = styled.div`

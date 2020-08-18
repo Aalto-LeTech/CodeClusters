@@ -5,8 +5,7 @@ import styled from '../../theme/styled'
 import { ResultItem } from './ResultItem'
 import { Pagination } from './Pagination'
 import { LocalSearchControls } from './LocalSearchControls'
-
-import { SelectItem } from '../../elements/SelectItem'
+import { VirtualizedSearchResultsList } from './VirtualizedSearchResultsList'
 
 import { Stores } from '../../stores'
 import { ISolrFullSubmissionWithDate } from 'shared'
@@ -49,6 +48,7 @@ const SearchResultsListEl = inject((stores: Stores) => ({
           Modeling mode {localSearchActive ? 'active' : 'inactive'}
         </LocalSearchBox>
       </ListHeader>
+      {/* <VirtualizedSearchResultsList submissions={shownSubmissions || []} searched={[]}/> */}
       <ResultList>
         { shownSubmissions!.map((result) =>
         <SearchResultsListItem key={result.id}>
