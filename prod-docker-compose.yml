@@ -61,7 +61,7 @@ services:
       - 8983:8983
     volumes:
       - ./solr/data:/var/solr
-    command: ["solr-precreate", "submission-search", "/opt/solr-8.4.1/config"]
+    command: ["solr-precreate", "submission-search", "/opt/solr-8.6.1/config"]
 
 networks:
   default:
