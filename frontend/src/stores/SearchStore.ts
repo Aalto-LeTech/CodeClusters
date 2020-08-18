@@ -33,7 +33,7 @@ export const EMPTY_QUERY: ISearchCodeParams = {
   exercise_id: undefined,
   facets: {},
   facet_filters: {},
-  filters: [],
+  custom_filters: [],
   num_results: undefined,
   num_lines: undefined,
   results_start: 0,

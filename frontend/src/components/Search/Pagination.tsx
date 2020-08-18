@@ -76,8 +76,8 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   &.hidden {
-    /* display: none;
-    visibility: hidden; */
+    display: none;
+    visibility: hidden;
   }
 `
 const PageList = styled.ol`

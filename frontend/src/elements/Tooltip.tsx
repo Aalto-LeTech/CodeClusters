@@ -27,7 +27,7 @@ function TooltipEl(props: IProps) {
         <TooltipContainer>
           <TooltipHeader>
             <TooltipTitle>{title}</TooltipTitle>
-            <Icon button onClick={closeTooltip}><FiX size={size}/></Icon>
+            <Icon button onClick={closeTooltip}><FiX size={16}/></Icon>
           </TooltipHeader>
           {children}
         </TooltipContainer>

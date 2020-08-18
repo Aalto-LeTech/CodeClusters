@@ -47,7 +47,7 @@ export const SEARCH_QUERY_PARAMS = Joi.object({
     keywords: Joi.array().items(Joi.string().min(1).max(256)),
     rare_keywords: Joi.array().items(Joi.string().min(1).max(256)),
   }),
-  custom_filters: Joi.array().items(Joi.string()),
+  custom_filters: Joi.array().items(Joi.object()),
   case_sensitive: Joi.boolean(),
   regex: Joi.boolean(),
   whole_words: Joi.boolean(),

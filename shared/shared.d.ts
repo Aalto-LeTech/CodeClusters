@@ -277,7 +277,9 @@ declare module 'shared' {
     facet_filters?: {
       [facet: string]: string[]
     }
-    filters?: string[]
+    custom_filters?: {
+      [key: string]: string | number | []
+    }[]
     case_sensitive?: boolean
     regex?: boolean
     whole_words?: boolean

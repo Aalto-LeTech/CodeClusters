@@ -12,6 +12,21 @@ function solrUrl(path: string) {
   return `${config.SOLR_URL}/${path}`
 }
 
+function arrayToObject(arr: { [key: string]: string | number | [] }[]) {
+  return arr.reduce((acc, cur) => {
+    const keys = Object.keys(cur)
+    keys.forEach((k) => {
+      acc[k] = cur[k]
+    })
+    return acc
+  }, {})
+}
+
+/**
+ * Creates a filter string that follows the Solr filter query syntax
+ * https://lucene.apache.org/solr/guide/8_6/common-query-parameters.html
+ * @param obj Object to parse
+ */
 function createFilters(obj: { [key: string]: string | number | undefined }) {
   return Object.keys(obj).reduce((acc, cur) => {
     if (cur !== undefined && obj[cur] !== undefined) {
@@ -71,18 +86,21 @@ export const searchService = {
       facets = {},
       facet_filters = {},
       results_start = 0,
+      custom_filters = [],
       // case_sensitive,
       // regex,
       // whole_words,
     } = params
-    const isSearchAllQuery = q === '*'
+    const usesHighlighting = q !== '*'
     // The query has to be URL encoded properly, otherwise Solr crashes. Weirdly enough this parameter is affected
     const urlEncodedQ = qs.escape(q)
     const general = `q=code:${urlEncodedQ}&rows=${num_results}&start=${results_start}`
     // Used search filters
-    const filters = createFilters({ course_id, exercise_id })
+    const filters = createFilters({ course_id, exercise_id, ...arrayToObject(custom_filters) })
+    console.log(custom_filters)
+    console.log(filters)
     // Fields used in the Solr results (required for the highlighting), conditional code incase search all -query
-    const fields = `&fl=id,+student_id,+course_id,+timestamp${isSearchAllQuery ? ',+code' : ''}`
+    const fields = `&fl=id,+student_id,+course_id,+timestamp${usesHighlighting ? '' : ',+code'}`
     // Used facets, read Lucene's or Solr's documentation to understand their function
     const facetsString = createFacets(facets)
     // Selections of facets used as filters eg fq=LOC_metric:(30 OR 29 OR 28)
@@ -90,7 +108,7 @@ export const searchService = {
     // Highlighted fields
     let hlfields = ''
     // Incase the query is "search everything" query, don't use highlighting since it will just highlight everything
-    if (!isSearchAllQuery) {
+    if (usesHighlighting) {
       hlfields = `&hl=on&hl.fl=code&hl.simple.pre=<mark>&hl.simple.post=</mark>&hl.fragsize=${num_lines}&hl.method=unified`
     }
     const query = `${general}${filters}${facetFilters}${facetsString}${fields}${hlfields}`

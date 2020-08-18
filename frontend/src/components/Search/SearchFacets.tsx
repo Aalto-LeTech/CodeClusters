@@ -7,6 +7,7 @@ import {
 
 import { SearchFacetGroupList } from './SearchFacetGroupList'
 import { Icon } from '../../elements/Icon'
+import { Tooltip } from '../../elements/Tooltip'
 
 import { Stores } from '../../stores'
 import { FacetItem } from '../../types/search'
@@ -41,7 +42,27 @@ const SearchFacetsEl = inject((stores: Stores) => ({
     <Container className={className}>
       <Group>
         <FacetGroupHeader>
-          <Title>Metrics</Title>
+          <TitleWrapper>
+            <Title>Metrics</Title>
+            <Tooltip title="Metrics facets" size={20}>
+              <SearchTooltip>
+                Facets are a special Lucene API to easily categorize search results.
+                In this case they are used to quickly filter and select submissions based on their metric values.
+                Current Java metrics are generated using Checkstyle metrics.
+                <br></br>
+                <br></br>
+                Whenever you change the facet values, you must rerun the search. Closing a facet will delete its values.
+                Running the query without specifying a range will yield the values as counts of single values (which is why all
+                metrics are integers). For a range you can specify its start, end and the gap, interval used to bucket the values
+                with.
+                <div>
+                  <a href="https://lucene.apache.org/solr/guide/8_6/faceting.html" target="_blank" rel="noopener">
+                    Solr 8.6 docs
+                  </a>
+                </div>
+              </SearchTooltip>
+            </Tooltip>
+          </TitleWrapper>
           <Icon button onClick={handleCloseMetrics}>
             { metricsMinimized ? <FiChevronDown size={18}/> : <FiChevronUp size={18}/>}
           </Icon>
@@ -81,7 +102,19 @@ const FacetGroupHeader = styled.div`
 `
 const Group = styled.div``
 const Title = styled.h3`
+  margin-right: 0.5rem;
+`
+const TitleWrapper = styled.div`
+  align-items: center;
+  display: flex;
   margin-right: 1rem;
+`
+const SearchTooltip = styled.p`
+  font-size: ${({ theme }) => theme.fontSize.small};
+  margin: 0;
+  & > div {
+    margin: 0.5rem 0 0 0;
+  }
 `
 
 export const SearchFacets = styled(SearchFacetsEl)``

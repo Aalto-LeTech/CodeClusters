@@ -155,7 +155,30 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
       </TopRow>
       <MiddleRow>
         <FormField>
-          <label htmlFor={`${id}_custom_filters`}>Custom filters</label>
+          <LabelWrapper>
+            <label htmlFor={`${id}_custom_filters`}>Custom filters</label>
+            <Tooltip title="Custom filters">
+              <SearchTooltip>
+                If you know the exact Solr index terms and want to leverage some specific filters not allowed by the
+                CodeClusters search form as such, you can use custom filters to leverage Lucene filter query (fq) syntax.
+                For example you can filter by keywords eg 
+                <br></br>
+                <br></br>
+                ASSIGN_keywords=[2 TO 4]
+                <br></br>
+                <br></br>
+                or
+                <br></br>
+                <br></br>
+                student_id=2
+                <div>
+                  <a href="https://lucene.apache.org/solr/guide/8_6/common-query-parameters.html#fq-filter-query-parameter" target="_blank" rel="noopener">
+                    Solr 8.6 docs
+                  </a>
+                </div>
+              </SearchTooltip>
+            </Tooltip>
+          </LabelWrapper>
           <MultiInput
             fullWidth
             type="text"
@@ -180,20 +203,20 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
         </FormField>
       </MiddleRow>
       <SearchRow>
-        <SearchLabelWrapper>
+        <LabelWrapper>
           <label htmlFor={`${id}_search`}>Search</label>
-          <Tooltip title="Search instructions">
+          <Tooltip title="Code search">
             <SearchTooltip>
               Search supports all the basic Lucene query functionalities, such as wildcards (?, *) and fuzzy searches (~).
               When using special characters such as + or %, you often need to escape them eg \+.
               <div>
-                <a href="https://lucene.apache.org/solr/guide/8_6/the-standard-query-parser.html" target="_blank" rel="nofollow">
+                <a href="https://lucene.apache.org/solr/guide/8_6/the-standard-query-parser.html" target="_blank" rel="noopener">
                   Solr 8.6 docs
                 </a>
               </div>
             </SearchTooltip>
           </Tooltip>
-        </SearchLabelWrapper>
+        </LabelWrapper>
         <SearchBar name="q" id={`${id}_search`} ref={register} onSearch={handleSearch}/>
       </SearchRow>
       <BottomRow>
@@ -271,7 +294,7 @@ const MiddleRow = styled.div`
 const SearchRow = styled.div`
   width: 100%;
 `
-const SearchLabelWrapper = styled.div`
+const LabelWrapper = styled.div`
   align-items: center;
   display: flex;
   & > label {

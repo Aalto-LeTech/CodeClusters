@@ -21,8 +21,8 @@ function ManualViewEl(props: IProps) {
           <h2>Premise</h2>
           <p>
             CodeClusters is a web application for exploring and clustering student code to help teachers to understand
-            their students' programming patterns at a deeper level. This lofty goal is approached by serving a search engine
-            in the form of Apache Solr and modeling using scikit-learn models implemented at the modeling server. Using them,
+            their students' programming patterns at a deeper level. This lofty goal is approached by providing a search engine
+            in the form of Apache Solr and models using scikit-learn implemented at the modeling server. Using them,
             teachers could then quickly review the submissions and be able to send the feedback to the students.
           </p>
           <h2>How it works</h2>
@@ -35,8 +35,8 @@ function ManualViewEl(props: IProps) {
           <p>
             After the submissions have been indexed to Solr, additional attributes can be added to their indexes.
             So far this only means metrics and the counts of various tokens that can be run manually from the /solr page.
-            Aftewards those attributes can be used as facets that is a feature of Apache Lucene, which is helpful at quickly
-            subsetting the documents into suitable buckets. This hopefully would be useful in detecting anomalies and interesting
+            Afterwards, those attributes can be used as facets (Apache Lucene feature), which is helpful at quickly
+            subsetting the documents into suitable buckets. This hopefully would allow to detect anomalies and interesting
             correlations between different features.
           </p>
           <p>
@@ -49,7 +49,10 @@ function ManualViewEl(props: IProps) {
           <p>
             To explain in further detail the intricacies of the different parts, search is the main part of CodeClusters. Intended
             for quick ad-hoc querying, it serves as a primary method for dissecting student code for abnormal patterns. With a larger
-            dataset this approach becomes more and more infeasible, as it becomes harder to find meaningful ways to cluster the code.
+            dataset this approach becomes more and more infeasible, as it becomes harder to find meaningful ways to search the code
+            using user-inputted search queries.
+            <br></br>
+            <br></br>
             While capturing unorthodox use of keywords or highly nested loops is important aspect of student code reviewing,
             the importance of automatically clustering the code by their similarity becomes then more and more useful.
           </p>
@@ -57,19 +60,28 @@ function ManualViewEl(props: IProps) {
           <p>
             With an appropriately large dataset the automatization of clustering becomes quite handy. While the methods for doing so
             are varied and debatable, since a lot depends on how the code is parsed and what data structures are used, CodeClusters offers
-            some preliminary methods for experimenting with the clustering of code. As of now, the only available model is the n-grams which
-            includes a lengthy description on its behavior. Running the model results in a couple of plots with clickable
-            buckets to analyze the groupings. By the way model works also the data itself is loaded onto the CodeCluster's memory which
+            some preliminary methods for experimenting with the clustering of code.
+            <br></br>
+            <br></br>
+            As of now, the only available model is the n-grams which
+            includes a lengthy description on its behavior. Running the model results in a couple of plots with each cluster
+            being selectable. By the way model works also the data itself is loaded onto the CodeCluster's memory which
             might cause a performance bottleneck with larger datasets. This data is then searchable by the user.
           </p>
           <h2>Reviewing</h2>
           <p>
             Another main part of CodeClusters is the reviewing of the submissions. A key aspect of the whole system would be to enable
             teachers to write useful reviews that
-            helped students to understand many of the quality and stylistic nuances of writing good code. How it works now, is by
+            helps students to understand many of the quality and stylistic nuances of writing good code.
+            <br></br>
+            <br></br>
+            How it works now, is by
             clicking individual search result items or by using the bottom right corner menu to select the whole page or all documents at once.
             After selecting the submissions a review can be written with optional metadata and tags that would later on come handy as
-            labels for automating the review process itself. Once created, the review is marked as PENDING so not to immediately be visible
+            labels for automating the review process itself.
+            <br></br>
+            <br></br>
+            Once created, the review is marked as PENDING so not to immediately be visible
             to the students. From the /reviews page these reviews can be then modified and visualized before finally accepting them, after
             which they are sent to the students.
           </p>
@@ -78,7 +90,10 @@ function ManualViewEl(props: IProps) {
             An experimental way of automating the whole pipeline of searching and clustering code would be the creation of review flows.
             A review flow is a data structure containing the user-defined steps for searching and/or modeling the code with a pre-filled
             review text. This would in theory help teachers to reduce their time to review the code even more, and make sharing and
-            re-using the same well crafted review flows easy. While not fully finalized in their behavior, review flows can be helpful
+            re-using the same well crafted review flows easy.
+            <br></br>
+            <br></br>
+            While not fully finalized in their behavior, review flows can be helpful
             for storing the most used and universally applicable reviews that would serve as a basis for perhaps even further
             automatizations.
           </p>
