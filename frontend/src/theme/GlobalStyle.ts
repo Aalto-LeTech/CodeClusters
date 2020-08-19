@@ -37,6 +37,11 @@ export const GlobalStyle = createGlobalStyle`
     font-family: ${({ theme }) => theme.font.header};
     font-size: ${({ theme }) => theme.fontSize.small};
     font-weight: 300;
+    & > * {
+      font-family: ${({ theme }) => theme.font.header};
+      font-size: ${({ theme }) => theme.fontSize.small};
+      font-weight: 300;
+    }
   }
   ul, ol {
     list-style: none;

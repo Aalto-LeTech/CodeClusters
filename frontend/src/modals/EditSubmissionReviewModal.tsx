@@ -42,30 +42,22 @@ export const EditSubmissionReviewModal = inject((stores: Stores) => ({
   const [loading, setLoading] = useState(false)
   const [hasCurrentReview, setHasCurrentReview] = useState(false)
   const [review, setReview] = useState<IReview | undefined>(undefined)
-  const [codeLines, setCodeLines] = useState<string[]>([])
+  const [rawCode, setRawCode] = useState('')
   const [selection, setSelection] = useState<[number, number, number]>([0, 0, 0])
 
   useEffect(() => {
     const selection = modal!.params?.reviewSubmission?.selection || [0, 0, 0]
     if (modal!.params?.submission) {
-      setCodeLines(modal!.params.submission?.code.split("\n"))
+      setRawCode(modal!.params.submission?.code)
     }
     setReview(modal!.params?.review)
     setHasCurrentReview(modal!.params.reviewSubmission !== undefined)
     setSelection(selection)
   }, [modal!.params])
 
-  function handleCodeLineClick(idx: number) {
-    const selection = codeLines.reduce((acc, cur, i) => {
-      if (i < idx) {
-        acc[1] += cur.length + 1 // TODO remove +1 ?
-      } else if (i === idx) {
-        acc[2] = acc[1] + 1 + cur.length
-      }
-      return acc
-    }, [idx, 0, 0] as [number, number, number])
+  function handleCodeSelect(start: number, end: number) {
     setHasCurrentReview(true)
-    setSelection(selection)
+    setSelection([0, start, end])
   }
   function handleClose() {
     closeModal!(EModal.EDIT_SUBMISSION_REVIEW)
@@ -125,10 +117,10 @@ export const EditSubmissionReviewModal = inject((stores: Stores) => ({
               You may also edit the selection associated to this submission. By default the selection is the whole document. It's shown alongside the review to the student.
             </p>
             <CodeBlock
-              codeLines={codeLines}
-              activeSelection={selection}
-              showMenu={false}
-              onSelectCodeLine={handleCodeLineClick}
+              code={rawCode}
+              selectionStart={selection ? selection[1] : -1}
+              selectionEnd={selection ? selection[2] : -1}
+              onSelectCode={handleCodeSelect}
             />
           </Content>
           <Buttons>
@@ -183,14 +175,14 @@ const Content = styled.div`
   overflow-y: scroll;
   /* max-width: 700px; */
   width: 100%;
-  & > ${CodeBlock} {
+`
+  /* & > ${CodeBlock} {
     height: 100%;
     min-width: 100%;
     overflow-x: scroll;
     overflow-y: hidden;
     width: max-content;
-  }
-`
+  } */
 const SubTitle = styled.h4``
 const SubmissionHeader = styled.div`
   align-items: center;
