@@ -14,8 +14,8 @@ interface IProps {
   className?: string
   result: SolrSubmission
   selectedReviewId?: string
-  selection?: [number, number, number]
-  toggleSelection?(id: string, selection?: [number, number, number]) : void
+  selection?: [number, number]
+  toggleSelection?(id: string, selection?: [number, number]) : void
 }
 
 function isFullSubmission(result: SolrSubmission): result is ISolrFullSubmissionWithDate {
@@ -52,7 +52,7 @@ const ResultItemEl = inject((stores: Stores, props: IProps) => ({
     toggleSelection!(result.id)
   }
   const handleCodeSelect = (start: number, end: number) => {
-    toggleSelection!(result.id, [0, start, end])
+    toggleSelection!(result.id, [start, end])
   }
   return (
     <Container className={className} active={isResultSelected}>
@@ -78,8 +78,8 @@ const ResultItemEl = inject((stores: Stores, props: IProps) => ({
       </CodeHeader>
       <CodeBlock
         code={rawCode}
-        selectionStart={selection ? selection[1] : -1}
-        selectionEnd={selection ? selection[2] : -1}
+        selectionStart={selection ? selection[0] : -1}
+        selectionEnd={selection ? selection[1] : -1}
         onSelectCode={handleCodeSelect}
       />
     </Container>

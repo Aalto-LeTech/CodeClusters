@@ -10,7 +10,7 @@ import { ValidationError } from '../../common'
 
 export const REVIEW_SELECTION_SCHEMA = Joi.object({
   submission_id: Joi.string().length(36).required(),
-  selection: Joi.array().items(Joi.number().integer()).length(3).required(),
+  selection: Joi.array().items(Joi.number().integer()).length(2).required(),
 })
 export const REVIEW_CREATE_SCHEMA = Joi.object({
   message: Joi.string().min(1).max(102400).required(),

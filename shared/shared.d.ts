@@ -12,7 +12,7 @@ declare module 'shared' {
     message: string
     metadata: string
     timestamp: string
-    selection: [number, number, number]
+    selection: [number, number]
   }
   export interface IReviewedSubmission {
     reviews: IReviewBody[]
@@ -31,16 +31,16 @@ declare module 'shared' {
     SENT = 'SENT'
   }
   export interface IReviewWithSelection extends IReview {
-    selection: [number, number, number]
+    selection: [number, number]
   }
   export interface IReviewSelection {
     submission_id: string
-    selection: [number, number, number]
+    selection: [number, number]
   }
   export interface IReviewSubmission {
     review_id: number
     submission_id: string
-    selection: [number, number, number]
+    selection: [number, number]
   }
   // Review API
   export interface IReviewListQueryParams {
@@ -61,7 +61,7 @@ declare module 'shared' {
   }
   // Review submission API
   export interface IReviewSubmissionPutParams {
-    selection: [number, number, number]
+    selection: [number, number]
   }
   // Review flow
   export interface IReviewFlowStep {

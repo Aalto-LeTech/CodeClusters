@@ -43,10 +43,10 @@ export const EditSubmissionReviewModal = inject((stores: Stores) => ({
   const [hasCurrentReview, setHasCurrentReview] = useState(false)
   const [review, setReview] = useState<IReview | undefined>(undefined)
   const [rawCode, setRawCode] = useState('')
-  const [selection, setSelection] = useState<[number, number, number]>([0, 0, 0])
+  const [selection, setSelection] = useState<[number, number]>([0, 0])
 
   useEffect(() => {
-    const selection = modal!.params?.reviewSubmission?.selection || [0, 0, 0]
+    const selection = modal!.params?.reviewSubmission?.selection || [0, 0]
     if (modal!.params?.submission) {
       setRawCode(modal!.params.submission?.code)
     }
@@ -57,7 +57,7 @@ export const EditSubmissionReviewModal = inject((stores: Stores) => ({
 
   function handleCodeSelect(start: number, end: number) {
     setHasCurrentReview(true)
-    setSelection([0, start, end])
+    setSelection([start, end])
   }
   function handleClose() {
     closeModal!(EModal.EDIT_SUBMISSION_REVIEW)
@@ -118,8 +118,8 @@ export const EditSubmissionReviewModal = inject((stores: Stores) => ({
             </p>
             <CodeBlock
               code={rawCode}
-              selectionStart={selection ? selection[1] : -1}
-              selectionEnd={selection ? selection[2] : -1}
+              selectionStart={selection ? selection[0] : -1}
+              selectionEnd={selection ? selection[1] : -1}
               onSelectCode={handleCodeSelect}
             />
           </Content>

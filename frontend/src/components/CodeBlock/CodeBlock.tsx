@@ -23,29 +23,46 @@ function createHTML(code: string) {
   const LINEBREAK = '\n'
   const MARK = '<mark>'
   const MARK_END = '</mark>'
-  let i = 0;
-  let iters = 0;
-  let t = ''
+  let i = 0
+  let iters = 0
+  let text = ''
+  let openDivBlock = null
+  let openDivBlockStart = 0
   while (i !== code.length) {
     const nextLinebreak = code.substring(i).indexOf(LINEBREAK)
     const nextMark = code.substring(i).indexOf(MARK)
     const nextMarkEnd = code.substring(i).indexOf(MARK_END)
     // debugger
     if ((nextMark === -1 && nextMarkEnd === -1) || nextLinebreak < nextMark) {
-      const div = document.createElement('div')
-      t = code.substring(i, i + nextLinebreak + LINEBREAK.length)
-      div.appendChild(document.createTextNode(t))
-      div.setAttribute('data-line-start', i.toString())
-      div.setAttribute('data-line-end', (i + nextLinebreak + LINEBREAK.length).toString())
-      pre.appendChild(div)
+      text = code.substring(i, i + nextLinebreak + LINEBREAK.length)
+      if (openDivBlock !== null) {
+        const textLength = text.length + (openDivBlock.textContent || '').length
+        openDivBlock.setAttribute('data-line-end', (openDivBlockStart + textLength).toString())
+        openDivBlock.appendChild(document.createTextNode(text))
+        pre.appendChild(openDivBlock)
+        openDivBlock = null
+      } else {
+        const div = document.createElement('div')
+        div.appendChild(document.createTextNode(text))
+        div.setAttribute('data-line-start', i.toString())
+        div.setAttribute('data-line-end', (i + nextLinebreak + LINEBREAK.length).toString())
+        div.classList.add('data-line')
+        pre.appendChild(div)
+      }
       i = i + nextLinebreak + LINEBREAK.length
     } else {
-      t = code.substring(i, i + nextMark)
-      pre.appendChild(document.createTextNode(t))
+      if (openDivBlock === null) {
+        openDivBlock = document.createElement('div')
+        openDivBlock.setAttribute('data-line-start', i.toString())
+        openDivBlock.classList.add('data-line')
+        openDivBlockStart = i
+      }
+      text = code.substring(i, i + nextMark)
+      openDivBlock.appendChild(document.createTextNode(text))
       const mark = document.createElement('mark')
-      t = code.substring(i + nextMark + MARK.length, i + nextMarkEnd)
-      mark.appendChild(document.createTextNode(t))
-      pre.appendChild(mark)
+      text = code.substring(i + nextMark + MARK.length, i + nextMarkEnd)
+      mark.appendChild(document.createTextNode(text))
+      openDivBlock.appendChild(mark)
       i = i + nextMarkEnd + MARK_END.length
     }
     iters += 1
@@ -76,11 +93,22 @@ export const CodeBlock = memo((props: IProps) => {
   }, [code])
 
   const handler = useCallback((event: MouseEvent | TouchEvent) => {
-    const div = containerRef.current
-    if (div && event.target && event.target instanceof HTMLElement && div.contains(event.target)) {
-      // Will crash and burn if the values are not integers which they should always be
-      const start = parseInt(event.target.getAttribute('data-line-start')!)
-      const end = parseInt(event.target.getAttribute('data-line-end')!)
+    const parentEl = containerRef.current
+    const el = event.target
+    if (parentEl && el && el instanceof HTMLElement && parentEl.contains(el)) {
+      let lineDiv
+      if (el.classList.contains('data-line')) {
+        lineDiv = el
+      } else if (el.nodeName === 'MARK') {
+        lineDiv = el.parentElement!
+      } else {
+        return // Either pre or the container div
+      }
+      const start = parseInt(lineDiv.getAttribute('data-line-start')!)
+      const end = parseInt(lineDiv.getAttribute('data-line-end')!)
+      if (!Number.isInteger(start) || !Number.isInteger(end)) {
+        throw Error(`Non integers provided for data-line-start and end: ${start} ${end}`)
+      }
       onSelectCode!(start, end)
     }
   }, [])
@@ -110,9 +138,10 @@ const Container = styled.div<{ selectionStart: number, selectionEnd: number }>`
     padding: 10px;
     border-radius: 4px;
     overflow: scroll;
-    & > div {
+    & > .data-line {
       counter-increment: line-number;
       cursor: pointer;
+      min-width: fit-content;
       &[data-line-start="${({ selectionStart }) => selectionStart }"][data-line-end="${({ selectionEnd }) => selectionEnd }"] {
         background: #bb4949;
       }

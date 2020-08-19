@@ -87,7 +87,7 @@ export const reviewService = {
     type Returned = {
       review_id: number
       submission_id: string
-      selection: [number, number, number]
+      selection: [number, number]
     }
     return dbService.queryMany<Returned>(`
       INSERT INTO review_submissions (review_id, submission_id, selection)

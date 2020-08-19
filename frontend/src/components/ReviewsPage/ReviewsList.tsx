@@ -8,8 +8,8 @@ interface IProps {
   submission: IReviewedSubmission
 }
 
-function createCodeHTML(code: string, selection: [number, number, number]) {
-  return `${code.substring(0, selection[1])}<mark>${code.substring(selection[1], selection[2])}</mark>${code.substring(selection[2])}`
+function createCodeHTML(code: string, selection: [number, number]) {
+  return `${code.substring(0, selection[0])}<mark>${code.substring(selection[0], selection[1])}</mark>${code.substring(selection[1])}`
 }
 
 function ReviewsListEl(props: IProps) {

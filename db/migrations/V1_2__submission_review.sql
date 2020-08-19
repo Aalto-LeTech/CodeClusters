@@ -21,6 +21,6 @@ CREATE TABLE review (
 CREATE TABLE review_submissions (
 	review_id INTEGER NOT NULL REFERENCES review ON DELETE CASCADE,
 	submission_id uuid NOT NULL REFERENCES submission ON DELETE CASCADE,
-	selection INTEGER[3] DEFAULT NULL,
+	selection INTEGER[2] DEFAULT NULL,
 	PRIMARY KEY(review_id, submission_id)
 );

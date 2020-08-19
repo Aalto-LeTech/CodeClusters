@@ -39,11 +39,11 @@ INSERT INTO review (message, metadata, tags, status)
 VALUES ('Tarkista tulostus!', 'Höh', array['personal'], 'SENT');
 
 INSERT INTO review_submissions (review_id, submission_id, selection)
-VALUES (1, (SELECT submission_id FROM submission WHERE student_id = 1), array[1, 32, 72]);
+VALUES (1, (SELECT submission_id FROM submission WHERE student_id = 1), array[32, 72]);
 INSERT INTO review_submissions (review_id, submission_id, selection)
-VALUES (2, (SELECT submission_id FROM submission WHERE student_id = 1), array[2, 72, 136]);
+VALUES (2, (SELECT submission_id FROM submission WHERE student_id = 1), array[72, 136]);
 INSERT INTO review_submissions (review_id, submission_id, selection)
-VALUES (2, (SELECT submission_id FROM submission WHERE student_id = 2), array[2, 71, 135]);
+VALUES (2, (SELECT submission_id FROM submission WHERE student_id = 2), array[71, 135]);
 
 INSERT INTO review_flow (course_id, exercise_id, user_id, title, description, tags)
 VALUES (2, 4, 1, 'Too lengthy code',
@@ -99,8 +99,4 @@ Parameters:
 - random_seed <int>: Used random seed. -1 or empty for no seed.
 - clustering_algo_params <Object>: The parameters for the clustering algorithm. 
 - dim_visualization_params <Object>: The dimensional reduction for 2d visualization parameters.
-');
-INSERT INTO model (model_id, title, description)
-VALUES ('keyword_metrics', 'Keyword metrics',
-'Returns the AST keywords for every submission, omits the non-descriptive tokens eg whitespace, brackets. For histograms, distribution plots.
 ');

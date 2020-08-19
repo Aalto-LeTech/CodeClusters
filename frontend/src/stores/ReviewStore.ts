@@ -57,8 +57,8 @@ export class ReviewStore {
     return Object.keys(this.selectedSubmissions).length > 1
   }
 
-  equalSelection(s1: [number, number, number], s2: [number, number, number]) {
-    return s1[0] === s2[0] && s1[1] === s2[1] && s1[2] === s2[2]
+  equalSelection(s1: [number, number], s2: [number, number]) {
+    return s1[0] === s2[0] && s1[1] === s2[1]
   }
 
   @action reset() {
@@ -83,7 +83,7 @@ export class ReviewStore {
     this.isMultiSelection = !this.isMultiSelection
   }
 
-  @action toggleSelection = (submission_id: string, selection: [number, number, number] = [0, 0, 0]) => {
+  @action toggleSelection = (submission_id: string, selection: [number, number] = [0, 0]) => {
     const oldSelection = this.selectedSubmissions[submission_id]?.selection
     const notExistsOrSelectionChanged = oldSelection === undefined || !this.equalSelection(oldSelection, selection)
     if (notExistsOrSelectionChanged && this.isMultiSelection) {
@@ -123,7 +123,7 @@ export class ReviewStore {
         ...acc,
         [id]: {
           submission_id: id,
-          selection: [0, 0, 0]
+          selection: [0, 0]
         }
       }), { ...this.selectedSubmissions })
     } else {
@@ -152,7 +152,7 @@ export class ReviewStore {
       ...acc,
       [id]: {
         submission_id: id,
-        selection: [0, 0, 0]
+        selection: [0, 0]
       }
     }), { ...this.selectedSubmissions })
     runInAction(() => {

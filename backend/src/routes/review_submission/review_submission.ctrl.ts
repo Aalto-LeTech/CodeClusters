@@ -8,7 +8,7 @@ import { IAuthRequest } from '../../types/request'
 import { IReviewSubmissionPutParams } from 'shared'
 
 export const REVIEW_SUBMISSION_PUT_SCHEMA = Joi.object({
-  selection: Joi.array().items(Joi.number().integer()).length(3).required(),
+  selection: Joi.array().items(Joi.number().integer()).length(2).required(),
 })
 
 type IReviewSubmissionRouteParams = {

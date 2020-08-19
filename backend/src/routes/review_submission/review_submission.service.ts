@@ -1,7 +1,7 @@
 import { dbService } from '../../db/db.service'
 
 export const reviewSubmissionService = {
-  upsertReviewSubmission: (reviewId: string, submissionId: string, selection: [number, number, number]) => {
+  upsertReviewSubmission: (reviewId: string, submissionId: string, selection: [number, number]) => {
     return dbService.queryOne<any>(`
       INSERT INTO review_submissions (selection, review_id, submission_id)
       VALUES ($1, $2, $3)
