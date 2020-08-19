@@ -158,7 +158,7 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
           <LabelWrapper>
             <label htmlFor={`${id}_custom_filters`}>Custom filters</label>
             <Tooltip title="Custom filters">
-              <SearchTooltip>
+              <TooltipText>
                 <p>
                   If you know the exact Solr index terms and want to use some specific filters not allowed by the
                   CodeClusters search form as such, you can use custom filters to leverage Lucene filter query (fq) syntax.
@@ -187,7 +187,7 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
                     Solr 8.6 docs
                   </a>
                 </div>
-              </SearchTooltip>
+              </TooltipText>
             </Tooltip>
           </LabelWrapper>
           <MultiInput
@@ -217,7 +217,7 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
         <LabelWrapper>
           <label htmlFor={`${id}_search`}>Search</label>
           <Tooltip title="Code search">
-            <SearchTooltip>
+            <TooltipText>
               Search supports all the basic Lucene query functionalities, such as wildcards (?, *) and fuzzy searches (~).
               When using special characters such as + or %, you often need to escape them eg \+.
               <div>
@@ -225,7 +225,7 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
                   Solr 8.6 docs
                 </a>
               </div>
-            </SearchTooltip>
+            </TooltipText>
           </Tooltip>
         </LabelWrapper>
         <SearchBar name="q" id={`${id}_search`} ref={register} onSearch={handleSearch}/>
@@ -315,7 +315,7 @@ const LabelWrapper = styled.div`
     margin-right: 0.5rem;
   }
 `
-const SearchTooltip = styled.div`
+const TooltipText = styled.div`
   font-size: ${({ theme }) => theme.fontSize.small};
   margin: 0;
   & > div {

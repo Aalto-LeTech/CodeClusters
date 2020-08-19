@@ -10,12 +10,12 @@ interface IProps {
 }
 
 /**
- * This masterpiece generates a "pre" HTML element with the Solr highlighting as "mark" -elements
+ * This masterpiece generates a "pre" HTML element with code lines as divs, and the Solr highlighting as "mark" -elements
  * 
  * It's actually pretty cool and magnitudes faster than the previous implementation.
  * It also adds the selection range to the div-element directly so that there is no need computing
- * it again, which is also pretty neat. Probably should have tests for it but I'm like 99% sure it
- * works, even in all edge cases.
+ * it again, which is also pretty neat. Probably should have tests for it but I'm like 99% sure I've fixed
+ * most of the bugs.
  * @param code 
  */
 function createHTML(code: string) {
@@ -32,9 +32,14 @@ function createHTML(code: string) {
     const nextLinebreak = code.substring(i).indexOf(LINEBREAK)
     const nextMark = code.substring(i).indexOf(MARK)
     const nextMarkEnd = code.substring(i).indexOf(MARK_END)
-    // debugger
+    // if (i > 600) debugger
     if ((nextMark === -1 && nextMarkEnd === -1) || nextLinebreak < nextMark) {
-      text = code.substring(i, i + nextLinebreak + LINEBREAK.length)
+      let lineEnd = i + nextLinebreak + LINEBREAK.length
+      // Special case if the code doesn't end with line break
+      if (nextLinebreak === -1) {
+        lineEnd = code.length
+      }
+      text = code.substring(i, lineEnd)
       if (openDivBlock !== null) {
         const textLength = text.length + (openDivBlock.textContent || '').length
         openDivBlock.setAttribute('data-line-end', (openDivBlockStart + textLength).toString())
@@ -45,11 +50,11 @@ function createHTML(code: string) {
         const div = document.createElement('div')
         div.appendChild(document.createTextNode(text))
         div.setAttribute('data-line-start', i.toString())
-        div.setAttribute('data-line-end', (i + nextLinebreak + LINEBREAK.length).toString())
+        div.setAttribute('data-line-end', (lineEnd).toString())
         div.classList.add('data-line')
         pre.appendChild(div)
       }
-      i = i + nextLinebreak + LINEBREAK.length
+      i = lineEnd
     } else {
       if (openDivBlock === null) {
         openDivBlock = document.createElement('div')
@@ -66,7 +71,9 @@ function createHTML(code: string) {
       i = i + nextMarkEnd + MARK_END.length
     }
     iters += 1
-    if (iters === 10000) break
+    if (iters === 10000) {
+      throw Error('Possible infinite loop in CodeBlock, 10000 iterations run: ' + pre.textContent)
+    }
   }
   return pre
 }
@@ -132,12 +139,17 @@ export const CodeBlock = memo((props: IProps) => {
 })
 
 const Container = styled.div<{ selectionStart: number, selectionEnd: number }>`
+  min-width: 100%;
+  overflow: scroll;
+  width: 100%;
   & > pre {
     background: #222;
     color: #fff;
     padding: 10px;
     border-radius: 4px;
     overflow: scroll;
+    min-width: max-content;
+    width: 100%;
     & > .data-line {
       counter-increment: line-number;
       cursor: pointer;

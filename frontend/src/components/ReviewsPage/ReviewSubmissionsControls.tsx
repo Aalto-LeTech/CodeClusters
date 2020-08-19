@@ -43,7 +43,7 @@ const ReviewSubmissionsControlsEl = inject((stores: Stores) => ({
 
 const Container = styled.div`
   display: flex;
-  > * + * {
+  & > * + * {
     margin-left: 1rem;
   }
 `

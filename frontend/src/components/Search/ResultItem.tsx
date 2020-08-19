@@ -35,6 +35,7 @@ const ResultItemEl = inject((stores: Stores, props: IProps) => ({
   const [rawCode, setRawCode] = useState('')
   const [matches, setMatches] = useState(0)
   const isResultSelected = selection !== undefined
+  const isNotBlankSelection = selection && (selection![0] !== 0 && selection![1] !== 0)
 
   useEffect(() => {
     if (isFullSubmission(result)) {
@@ -49,7 +50,14 @@ const ResultItemEl = inject((stores: Stores, props: IProps) => ({
   }, [result])
 
   function handleToggleSelection() {
-    toggleSelection!(result.id)
+    if (isResultSelected) {
+      toggleSelection!(result.id)
+    } else {
+      toggleSelection!(result.id, [0, 0])
+    }
+  }
+  function handleResetSelection() {
+    toggleSelection!(result.id, [0, 0])
   }
   const handleCodeSelect = (start: number, end: number) => {
     toggleSelection!(result.id, [start, end])
@@ -63,6 +71,10 @@ const ResultItemEl = inject((stores: Stores, props: IProps) => ({
         </HeaderLeft>
         <HeaderRight>
           <Buttons>
+            { isNotBlankSelection &&
+            <Button intent="transparent" onClick={handleResetSelection}>
+              Reset
+            </Button>}
             <Button
               intent={isResultSelected ? 'primary' : 'success'}
               onClick={handleToggleSelection}

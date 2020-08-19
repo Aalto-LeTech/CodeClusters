@@ -8,9 +8,6 @@ So there are a few known bugs and a few unknown bugs in CodeClusters as of 18.8.
 * Token facets don't work due to fact you can't wildcard query facets. So either you have to have individual facets for each keyword eg MUL_keywords or some other fix
 
 * Search case sensitivity, regex, whole words don't work
-* Search can be terribly slow due to the poor implementation of CodeBlock & CodeBlock. There is a virtualization component that has some problems with rendering correct heights which is why it's not used. Otherwise it would be super fast
-
-* Selecting code lines for review doesn't set and save the selection correctly. Something to do with whitespaces or something
 
 * Pagination's page is not set correctly when new results are fetched where there are fewer results than current page
 * Also when switching to local search the page should be updated to eg first page (and pages counted correctly using the Results per page -value)

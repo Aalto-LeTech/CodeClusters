@@ -45,22 +45,24 @@ const SearchFacetsEl = inject((stores: Stores) => ({
           <TitleWrapper>
             <Title>Metrics</Title>
             <Tooltip title="Metrics facets" size={20}>
-              <SearchTooltip>
-                Facets are a special Lucene API to easily categorize search results.
-                In this case they are used to quickly filter and select submissions based on their metric values.
-                Current Java metrics are generated using Checkstyle metrics.
-                <br></br>
-                <br></br>
-                Whenever you change the facet values, you must rerun the search. Closing a facet will delete its values.
-                Running the query without specifying a range will yield the values as counts of single values (which is why all
-                metrics are integers). For a range you can specify its start, end and the gap, interval used to bucket the values
-                with.
+              <TooltipText>
+                <p>
+                  Facets are a special Lucene API to easily categorize search results.
+                  In this case they are used to quickly filter and select submissions based on their metric values.
+                  Current Java metrics are generated using Checkstyle metrics.
+                </p>
+                <p>
+                  Whenever you change the facet values, you must rerun the search. Closing a facet will delete its values.
+                  Running the query without specifying a range will yield the values as counts of single values (which is why all
+                  metrics are integers). For a range you can specify its start, end and the gap, interval used to bucket the values
+                  with.
+                </p>
                 <div>
                   <a href="https://lucene.apache.org/solr/guide/8_6/faceting.html" target="_blank" rel="noopener">
                     Solr 8.6 docs
                   </a>
                 </div>
-              </SearchTooltip>
+              </TooltipText>
             </Tooltip>
           </TitleWrapper>
           <Icon button onClick={handleCloseMetrics}>
@@ -109,7 +111,7 @@ const TitleWrapper = styled.div`
   display: flex;
   margin-right: 1rem;
 `
-const SearchTooltip = styled.p`
+const TooltipText = styled.div`
   font-size: ${({ theme }) => theme.fontSize.small};
   margin: 0;
   & > div {

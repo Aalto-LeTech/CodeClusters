@@ -156,7 +156,6 @@ const Header = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 2rem;
   width: 100%;
 `
 const TitleWrapper = styled.div`
@@ -175,20 +174,17 @@ const Content = styled.div`
   overflow-y: scroll;
   /* max-width: 700px; */
   width: 100%;
+  & > * {
+    margin: 1rem 0;
+  }
 `
-  /* & > ${CodeBlock} {
-    height: 100%;
-    min-width: 100%;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    width: max-content;
-  } */
 const SubTitle = styled.h4``
 const SubmissionHeader = styled.div`
   align-items: center;
   display: flex;
+  margin-top: 2rem;
   & > ${SubTitle} {
-    margin-right: 1rem;
+    margin: 0 1rem 0 0;
   }
 `
 const IsLinkedTag = styled.span<{ linked: boolean }>`

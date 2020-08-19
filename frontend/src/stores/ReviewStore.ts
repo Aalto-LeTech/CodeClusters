@@ -83,16 +83,16 @@ export class ReviewStore {
     this.isMultiSelection = !this.isMultiSelection
   }
 
-  @action toggleSelection = (submission_id: string, selection: [number, number] = [0, 0]) => {
+  @action toggleSelection = (submission_id: string, selection?: [number, number]) => {
     const oldSelection = this.selectedSubmissions[submission_id]?.selection
-    const notExistsOrSelectionChanged = oldSelection === undefined || !this.equalSelection(oldSelection, selection)
-    if (notExistsOrSelectionChanged && this.isMultiSelection) {
+    const notExistsOrSelectionChanged = oldSelection === undefined || (selection && !this.equalSelection(oldSelection, selection))
+    if (notExistsOrSelectionChanged && this.isMultiSelection && selection) {
       this.selectedSubmissions[submission_id] = {
         submission_id,
         selection,
       }
       this.selectedId = submission_id
-    } else if (notExistsOrSelectionChanged) {
+    } else if (notExistsOrSelectionChanged && selection) {
       this.selectedSubmissions = {
         [submission_id]: {
           submission_id,

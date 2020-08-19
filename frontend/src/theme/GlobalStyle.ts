@@ -37,6 +37,7 @@ export const GlobalStyle = createGlobalStyle`
     font-family: ${({ theme }) => theme.font.header};
     font-size: ${({ theme }) => theme.fontSize.small};
     font-weight: 300;
+    margin: 0;
     * {
       font-family: ${({ theme }) => theme.font.header};
       font-size: ${({ theme }) => theme.fontSize.small};

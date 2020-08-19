@@ -20,7 +20,7 @@ export class LocalSearchStore {
   @observable submissions: ISolrFullSubmissionWithDate[] = []
   @observable selectedSubmissionIndexes: number[] = []
   @observable searchedSubmissionIndexes: number[] = []
-  @observable searchActive: boolean = true
+  @observable searchActive: boolean = false
   toastStore: ToastStore
 
   constructor(props: ToastStore) {

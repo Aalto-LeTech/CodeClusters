@@ -51,8 +51,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  > * + * {
-    margin: 2rem 0;
+  & > * {
+    margin: 0 0 2rem 0;
   }
 `
 const Header = styled.header`
@@ -63,8 +63,8 @@ const Header = styled.header`
 `
 const MainInputs = styled.div`
   width: 100%;
-  > * + * {
-    margin: 1rem 0;
+  & > * + * {
+    margin: 1rem 0 0 0;
   }
 `
 const TableWrapper = styled.div`

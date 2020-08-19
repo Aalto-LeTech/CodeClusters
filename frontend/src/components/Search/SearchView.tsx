@@ -49,7 +49,7 @@ const InfoText = styled.p`
 const Body = styled.div`
   display: flex;
   & > ${SearchResultsList} {
-    margin: 0 2rem;
+    padding: 0 2rem;
   }
 `
 
