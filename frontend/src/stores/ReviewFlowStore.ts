@@ -166,22 +166,26 @@ export class ReviewFlowStore {
   @action runReviewFlow = async (params: IReviewFlowRunParams) => {
     let searchResult
     let modelingResult
+    const hasModelingStep = params.steps[1] && params.steps[1].action === 'Model'
     if (params.steps[0] && params.steps[0].action === 'Search') {
       const searchParams = params.steps[0].data as unknown as ISearchCodeParams
       this.searchStore.setInitialSearchParams(searchParams)
       searchResult = await this.searchStore.search(searchParams)
     }
-    if (searchResult && params.steps[1] && params.steps[1].action === 'Model') {
+    if (searchResult && hasModelingStep) {
       const modelingParams = params.steps[1].data as unknown as IModelParams
       modelingResult = await this.modelStore.runModel(modelingParams)
     }
-    if (searchResult && modelingResult) {
+    if (searchResult && (!hasModelingStep || modelingResult)) {
       this.toastStore.createToast('Review flow run', 'success')
       return true
+    } else if (searchResult === undefined) {
+      this.toastStore.createToast('Review flow search step failed', 'danger')
+    } else if (modelingResult === undefined) {
+      this.toastStore.createToast('Review flow model step failed', 'danger')
     }
     return undefined
   }
-
 
   @action addReviewFlow = async (params: IReviewFlowCreateParams) => {
     const payload = params

@@ -1,4 +1,4 @@
-import { Pool } from 'pg'
+import { Pool, PoolClient } from 'pg'
 
 import { config } from '../common/config'
 
@@ -22,4 +22,18 @@ export const dbService = {
     const { rows } = await pool.query(query, params)
     return rows as T[]
   },
+  async executeAsTransaction<T>(transactionFn: (client: PoolClient) => Promise<any>) {
+    const client = await pool.connect()
+    try {
+      await client.query('BEGIN')
+      const results = await transactionFn(client)
+      await client.query('COMMIT')
+      return results as T
+    } catch (e) {
+      await client.query('ROLLBACK')
+      throw e
+    } finally {
+      client.release()
+    }
+  }
 }

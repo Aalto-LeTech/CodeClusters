@@ -65,8 +65,8 @@ export const getUserReviews = async (req: IAuthRequest<{}, {}, { user_id: string
 
 export const createReview = async (req: IAuthRequest<IReviewCreateParams>, res: Response, next: NextFunction) => {
   try {
-    const review = await reviewService.createReview(req.body)
-    res.json(review)
+    const result = await reviewService.createReview(req.body)
+    res.json(result[0])
   } catch (err) {
     next(err)
   }

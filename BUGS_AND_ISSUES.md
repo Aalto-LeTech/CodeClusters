@@ -14,8 +14,7 @@ So there are a few known bugs and a few unknown bugs in CodeClusters as of 18.8.
 
 * All the modeling n-gram forms combinations have not been tested, there is probably bugs there with results that have eg no clusters
 
-* the modeling server can't re-establish connection to the Postgres if it restarts
-* also I assume there are in general lots of bugs in the modeling server
+* I assume there are lots of bugs in the modeling server, should have tests and proper error messages for various error states instead of general 500
 
 * Review flows are missing edit functionality and its form
 * Also facets should be included in the new review flow modal
@@ -23,10 +22,14 @@ So there are a few known bugs and a few unknown bugs in CodeClusters as of 18.8.
 * Also review flow and review both have tags in new review flow params. Should probably just have one
 * Also tags should be probably database entity to allow easy selection and preventing typos
 
+* loading spinners might get stuck if some rapid mounting & clicking is done, probably should cancel the request when unmounted or have timeout to reset the loading values
+
 * /reviews page has a lot of bugs, missing things and god ugly styles
 
 * the UI might get awkward if you have bigger screen than my Mac's 1440x828 and different screen than Retina
 
+* no tests that check if database transactions fail they'll rollback correctly
+ 
 * add checkbox for disabling auto search since it can get quite annoying developing locally as search can get slow due to the piss poor CodeBlock component
 
 # Nice to have future features

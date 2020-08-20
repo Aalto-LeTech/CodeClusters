@@ -57,17 +57,17 @@ INSERT INTO review_flow (course_id, exercise_id, user_id, title, description, ta
 VALUES (null, null, 2, 'Hurr durr', 'Morty, you are an idiot.', array['performance']);
 
 INSERT INTO review_flow_step (review_flow_id, index, action, data)
-VALUES (1, 1, 'Search', '{"q": "*", "code_length": ">250"}');
+VALUES (1, 1, 'Search', '{"q": "*", "custom_filters": ["LOC_metric={35 TO *]"] }');
 INSERT INTO review_flow_step (review_flow_id, index, action, data)
-VALUES (1, 2, 'Review', '{"message": "Your solution shouldn''t be much longer than the model solution (150)."}');
+VALUES (1, 2, 'Review', '{"message": "Your solution shouldn''t be much longer than the model solution (15)."}');
 
 INSERT INTO review_flow_step (review_flow_id, index, action, data)
-VALUES (2, 1, 'Search', '{"q": "*", "cyclomatic": ">20"}');
+VALUES (2, 1, 'Search', '{"q": "*", "custom_filters": ["CYC_metric={10 TO *]"] }');
 INSERT INTO review_flow_step (review_flow_id, index, action, data)
-VALUES (2, 2, 'Review', '{"message": "Your submission has the cyclomatic complexity of over 20. Please see the material to see how it can be reduced to reasonable level 1-19."}');
+VALUES (2, 2, 'Review', '{"message": "Your submission has the cyclomatic complexity of over 10. Please see the material to see how it can be reduced to reasonable level 1-9."}');
 
 INSERT INTO review_flow_step (review_flow_id, index, action, data)
-VALUES (3, 1, 'Search', '{"q": "*", "student_ids": [1]}');
+VALUES (3, 1, 'Search', '{"q": "*", "custom_filters": ["student_id=1"], "course_id": 2, "exercise_id": 4 }');
 INSERT INTO review_flow_step (review_flow_id, index, action, data)
 VALUES (3, 2, 'Model',
 '{"model_id":"ngram","token_set":"modified","ngrams":[5,5],"random_seed":-1,
@@ -91,7 +91,7 @@ From these tokens n-grams are generated. With a lower n, more of the lower-level
 
 After the features have been produced for each document, they are transformed into a TF-IDF matrix. The similarity between the document vectors is calculated by cosine similarity. The resulting distance matrix is then passed to the clustering algorithm of choice, although it might not make much difference which one is chosen if the features are poor. There won''t be any meaningful clusters to be found either way.
 
-For the dimensionality visualization either t-SNE or UMAP can be used. For t-SNE dimensionality reduction can be done with SVD, although with small datasets the results will look a lot alike. The SVD n-components have to be the size of the dataset or the size of the features at maximum. The UMAP should in theory stretch the points between the clusters a bit more, yet with small datasets the difference will not be very noticeable. Due to low size also the scale of the projection might vary highly, thus a random seed can be used to ensure the same result each time for the same features.
+For the dimensionality visualization either t-SNE or UMAP can be used. For t-SNE dimensionality is done with truncated SVD, although with small datasets the results will look a lot alike. The SVD n-components have to be the size of the dataset or the size of the features at maximum. The UMAP should in theory stretch the points between the clusters a bit more, yet with small datasets the difference will not be very noticeable. Due to low size also the scale of the projection might vary highly, thus a random seed can be used to ensure the same result each time for the same features.
 
 Parameters:
 - token_set <string>: Used token set, either "modified", "complete" or "keywords". Default "modified".

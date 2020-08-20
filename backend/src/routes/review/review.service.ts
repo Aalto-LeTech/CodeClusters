@@ -1,4 +1,5 @@
 import { dbService } from '../../db/db.service'
+import { DBError } from '../../common/error'
 
 import {
   IReview, IReviewSubmission, IUserReview, IReviewCreateParams, IAcceptReviewsParams, IReviewListQueryParams
@@ -68,31 +69,39 @@ export const reviewService = {
       GROUP BY(submission.submission_id, submission.code)
     `, [studentId])
   },
-  createReview: async (params: IReviewCreateParams) : Promise<any> => {
-    const savedReview = await dbService.queryOne<IReview | undefined>(`
-      INSERT INTO review (message, metadata, tags)
-      VALUES($1, $2, $3) RETURNING review_id, message, metadata, status, tags, timestamp
-    `, [params.message, params.metadata || '', params.tags || []])
+  createReview: async (params: IReviewCreateParams) => {
+    return dbService.executeAsTransaction<[IReview, any[]]>(async (client) => {
+      const reviewInsert = await client.query(`
+        INSERT INTO review (message, metadata, tags)
+        VALUES($1, $2, $3) RETURNING review_id, message, metadata, status, tags, timestamp
+      `, [params.message, params.metadata || '', params.tags || []])
+      let savedReview
+      if (reviewInsert.rows && reviewInsert.rows[0]) {
+        savedReview = reviewInsert.rows[0] as IReview
+      } else {
+        throw new DBError(`When inserting review, returned zero rows: ${reviewInsert.rows}`)
+      }
 
-    function createValues(params: IReviewCreateParams, reviewId: number) {
-      return params.selections.reduce((acc, cur, i) => {
-        const start = i === 0 ? '' : `${acc[0]},`
-        const str = `${start} ($${acc[1]}, $${acc[1] + 1}, $${acc[1] + 2})`
-        const val = [...acc[2], reviewId, cur.submission_id, cur.selection]
-        return [str, acc[1] + 3, val]
-      }, ['', 1, [] as any])
-    }
-    const values = createValues(params, savedReview!.review_id)
+      function createValues(params: IReviewCreateParams, reviewId: number) {
+        return params.selections.reduce((acc, cur, i) => {
+          const start = i === 0 ? '' : `${acc[0]},`
+          const str = `${start} ($${acc[1]}, $${acc[1] + 1}, $${acc[1] + 2})`
+          const val = [...acc[2], reviewId, cur.submission_id, cur.selection]
+          return [str, acc[1] + 3, val]
+        }, ['', 1, [] as any])
+      }
+      const values = createValues(params, savedReview!.review_id)
 
-    type Returned = {
-      review_id: number
-      submission_id: string
-      selection: [number, number]
-    }
-    return dbService.queryMany<Returned>(`
-      INSERT INTO review_submissions (review_id, submission_id, selection)
-      VALUES ${values[0]} RETURNING review_id, submission_id, selection
-    `, values[2])
+      const reviewSubmissionsInsert = await client.query(`
+        INSERT INTO review_submissions (review_id, submission_id, selection)
+        VALUES ${values[0]} RETURNING review_id, submission_id, selection
+      `, values[2])
+
+      if (!reviewSubmissionsInsert.rows || reviewSubmissionsInsert.rows.length === 0) {
+        throw new DBError(`When inserting review_submissions, returned zero rows: ${reviewSubmissionsInsert.rows}`)
+      }
+      return [savedReview, reviewSubmissionsInsert.rows]
+    })
   },
   acceptPendingReviews: (params: IAcceptReviewsParams) => {
     const updatedValues = params.reviewIds.map((_, i) => ` ($${i + 1})`).join(',')

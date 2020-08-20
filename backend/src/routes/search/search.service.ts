@@ -97,8 +97,6 @@ export const searchService = {
     const general = `q=code:${urlEncodedQ}&rows=${num_results}&start=${results_start}`
     // Used search filters
     const filters = createFilters({ course_id, exercise_id, ...arrayToObject(custom_filters) })
-    console.log(custom_filters)
-    console.log(filters)
     // Fields used in the Solr results (required for the highlighting), conditional code incase search all -query
     const fields = `&fl=id,+student_id,+course_id,+timestamp${usesHighlighting ? '' : ',+code'}`
     // Used facets, read Lucene's or Solr's documentation to understand their function
@@ -123,6 +121,7 @@ export const searchService = {
       facets = {},
       facet_filters = {},
       results_start = 0,
+      custom_filters = [],
       // case_sensitive,
       // regex,
       // whole_words,
@@ -130,7 +129,8 @@ export const searchService = {
     // The query has to be URL encoded properly, otherwise Solr crashes. Weirdly enough this parameter is affected
     const urlEncodedQ = qs.escape(q)
     const general = `q=code:${urlEncodedQ}&rows=${num_results}&start=${results_start}`
-    const filters = createFilters({ course_id, exercise_id })
+    // Used search filters
+    const filters = createFilters({ course_id, exercise_id, ...arrayToObject(custom_filters) })
     // Fields used in the Solr results (required for the highlighting)
     const fields = '&fl=code,id,+student_id,+course_id,+timestamp'
     // Used facets, read Lucene's or Solr's documentation to understand their function
@@ -149,6 +149,7 @@ export const searchService = {
       facets = {},
       facet_filters = {},
       results_start = 0,
+      custom_filters = [],
       // case_sensitive,
       // regex,
       // whole_words,
@@ -157,7 +158,8 @@ export const searchService = {
     // The query has to be URL encoded properly, otherwise Solr crashes. Weirdly enough this parameter is affected
     const urlEncodedQ = qs.escape(q)
     const general = `q=code:${urlEncodedQ}&rows=${num_results}&start=${results_start}`
-    const filters = createFilters({ course_id, exercise_id })
+    // Used search filters
+    const filters = createFilters({ course_id, exercise_id, ...arrayToObject(custom_filters) })
     // Fields used in the Solr results (required for the highlighting)
     const fields = '&fl=code,id,+student_id,+course_id,+timestamp'
     // Used facets, read Lucene's or Solr's documentation to understand their function

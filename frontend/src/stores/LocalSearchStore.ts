@@ -55,6 +55,8 @@ export class LocalSearchStore {
 
   @action setSubmissions = (submissions: ISolrFullSubmissionWithDate[]) => {
     this.submissions = submissions
+    this.selectedSubmissionIndexes = submissions.map((_, i) => i)
+    this.searchedSubmissionIndexes = submissions.map((_, i) => i)
   }
 
   @action setSelectedSubmissions = (submissionIds: string[]) => {

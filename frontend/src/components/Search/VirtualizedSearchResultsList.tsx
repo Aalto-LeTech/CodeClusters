@@ -32,11 +32,15 @@ const cache = new CellMeasurerCache({
   fixedWidth: true
 })
 
-// This component would otherwise be perfect and fix the annoying issue with sluggish rendering of CodeBlock
-// BUT calculating the height doesn't work as of now (18.8.2020), you can notice when scrolling down a long list
-// somewhere in the middle it gets stuck in a loop where you have to scroll super fast to get to the bottom of the list
+// So after refactoring the CodeBlock component to be quite performant, this virtualized list version of the
+// SearchResultsList isn't as necessary as before. However, with large enough lists it would be better to use it
+// but before that can happen a teeny-weeny bug has to be fixed in it.
+// As of 20.8.2020 the calculation of the dynamic heights of the rows doesn't work, and you can notice that by
+// scrolling down a long list and somewhere in the middle it gets stuck in a loop where you have to scroll super
+// fast to get to the bottom of the list.
 // Somewhere in some tutorial somebody used this.listRef.resetHeights() or something to recalculate the heights
-// when the data is changed but I have not tried it myself
+// when the data is changed but I have not tried it myself.
+// https://blog.theodo.com/2018/09/use-react-virtualized/
 const SubmissionRow = observer(forwardRef((props: ISubmissionRowProps, ref: any) => {
   const { index, style, submission, measureHeight } = props
   const [fullCode, setCode] = useState('')
