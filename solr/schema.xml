@@ -22,7 +22,7 @@
 
   <dynamicField name="*_keywords" type="pint" indexed="true" stored="true"/>
   <dynamicField name="*_rare_keywords" type="pint" indexed="true" stored="true"/>
-  <dynamicField name="*_metric" type="pfloat" indexed="true" stored="true"/>
+  <dynamicField name="*_metric" type="pint" indexed="true" stored="true"/>
 
    <!-- FROM THE DEFAULT SOLR managed-schema.xml -->
 
