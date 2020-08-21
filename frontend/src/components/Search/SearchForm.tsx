@@ -218,8 +218,10 @@ const SearchFormEl = observer(forwardRef((props: IProps, ref) => {
           <label htmlFor={`${id}_search`}>Search</label>
           <Tooltip title="Code search">
             <TooltipText>
-              Search supports all the basic Lucene query functionalities, such as wildcards (?, *) and fuzzy searches (~).
-              When using special characters such as + or %, you often need to escape them eg \+.
+              <p>
+                Search supports all the basic Lucene query functionalities, such as wildcards (?, *) and fuzzy searches (~).
+                When using special characters such as + or %, you often need to escape them eg \+.
+              </p>
               <div>
                 <a href="https://lucene.apache.org/solr/guide/8_6/the-standard-query-parser.html" target="_blank" rel="noopener">
                   Solr 8.6 docs

@@ -6,7 +6,6 @@ So there are a few known bugs and a few unknown bugs in CodeClusters as of 21.8.
 * Facets are not parsed from query params, should open the facets and set the params
 * Also empty facets are pushed into query params for no reason
 * Token facets don't work due to fact you can't wildcard query facets. So either you have to have individual facets for each keyword eg MUL_keywords or some other fix
-* When switching between normal facets and range facets, if some checkboxes are selected they are not properly reset in between -> the old facets will be added to the query
 
 * Search case sensitivity, regex, whole words don't work
 
@@ -48,3 +47,11 @@ So there are a few known bugs and a few unknown bugs in CodeClusters as of 21.8.
 * Other similarity measures than cosine similarity
 * Performance testing with bigger datasets eg 10,000 or 100,000 submissions
 * Tests. lol
+
+#102732 nav
+
+#3cbbf8 bright blue
+
+#d8f1ff mellow blue
+
+#e1f1ff

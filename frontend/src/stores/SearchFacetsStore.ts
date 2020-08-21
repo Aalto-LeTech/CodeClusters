@@ -136,6 +136,8 @@ export class SearchFacetsStore {
     const { programming_language } = this.currentSearchFacets
     if (range) {
       this.facetParams[programming_language][facet] = range
+      // Delete any existing checked normal fields
+      this.toggledFacetFields[facet] = {}
     } else {
       this.facetParams[programming_language][facet] = true
       // Delete any existing checked range fields

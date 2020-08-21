@@ -198,6 +198,7 @@ const BucketName = styled.div`
   font-family: ${({ theme }) => theme.font.header};
   font-weight: 600;
   font-size: ${({ theme }) => theme.fontSize.small};
+  margin: 0 4px;
 `
 const BucketValue = styled.div``
 

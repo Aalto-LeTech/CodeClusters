@@ -10,8 +10,8 @@ export const breakpoints = {
 
 export const defaultTheme : ITheme = {
   color: {
-    bg: '#009aea26',
-    bgLight: '#eff9ff',
+    bg: '#e1f1ff',
+    bgLight: '#f1f9ff',
     gray: {
       lightest: 'rgba(0, 0, 0, 0.08)',
       lighter: '#eee',
