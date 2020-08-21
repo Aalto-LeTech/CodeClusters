@@ -1,11 +1,12 @@
 # Bugs / issues
 
-So there are a few known bugs and a few unknown bugs in CodeClusters as of 18.8.2020. Also there are missing functionalities for placeholder buttons and such.
+So there are a few known bugs and a few unknown bugs in CodeClusters as of 21.8.2020. Also there are missing functionalities for placeholder buttons and such.
 
 * URL query params might get lost when page is refreshed, especially with custom_filters. Something wrong with parsing them.
 * Facets are not parsed from query params, should open the facets and set the params
 * Also empty facets are pushed into query params for no reason
 * Token facets don't work due to fact you can't wildcard query facets. So either you have to have individual facets for each keyword eg MUL_keywords or some other fix
+* When switching between normal facets and range facets, if some checkboxes are selected they are not properly reset in between -> the old facets will be added to the query
 
 * Search case sensitivity, regex, whole words don't work
 
@@ -24,7 +25,7 @@ So there are a few known bugs and a few unknown bugs in CodeClusters as of 18.8.
 
 * loading spinners might get stuck if some rapid mounting & clicking is done, probably should cancel the request when unmounted or have timeout to reset the loading values
 
-* /reviews page has a lot of bugs, missing things and god ugly styles
+* /reviews has probably bugs, missing things and styling issues
 
 * the UI might get awkward if you have bigger screen than my Mac's 1440x828 and different screen than Retina
 
@@ -39,6 +40,7 @@ So there are a few known bugs and a few unknown bugs in CodeClusters as of 18.8.
 * Also should have controls to compare submissions between clusters better eg split view with two SearchResult lists
 * LMS integration
 * Add code syntax highlighting with eg prism.js
+* Finish the use of virtualized list for SearchResultsList to boost performance (each time list is updated, all CodeBlock elements are recreated which can take from a second to a lot of seconds)
 * More metrics eg ABC metric or Halstead stuff
 * More models eg neural networks or tree-edit distance
 * More data structures eg control flow graphs or word embeddings for code

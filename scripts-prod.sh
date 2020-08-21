@@ -43,6 +43,9 @@ case "$1" in
   seed)
     sudo docker-compose -f prod-jobs.yml run --rm flyway_seed
     ;;
+  testdata)
+    sudo docker-compose -f prod-jobs.yml run --rm test_data
+    ;;
   db-delete)
     sudo docker-compose -f prod-docker-compose.yml stop postgres
     sudo rm -r ./db/data
@@ -53,9 +56,6 @@ case "$1" in
     sudo rm -rf ./solr/data/*
     sudo docker-compose -f prod-docker-compose.yml build solr
     sudo docker-compose -f prod-docker-compose.yml up -d --force-recreate solr
-    ;;
-  testdata)
-    sudo docker-compose -f prod-jobs.yml run --rm test_data
     ;;
   data-import)
     CURL=$(curl http://localhost:8983/solr/${CORE_NAME}/dataimport?command=full-import&entity=submission)
@@ -79,6 +79,6 @@ case "$1" in
     sudo docker system prune
     ;;
   *)
-    echo $"Usage: $0 certbot|migrate|seed|testdata|data-import|db-delete|update|update-all"
+    echo $"Usage: $0 certbot|migrate|seed|testdata|db-delete|solr-recreate|data-import|update|update-all"
     exit 1
 esac

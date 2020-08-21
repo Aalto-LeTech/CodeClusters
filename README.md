@@ -1,6 +1,6 @@
 # [Code Clusters](https://github.com/Aalto-LeTech/CodeClusters)
 
-Work in progress.
+Application to easily search and cluster code in programming courses.
 
 [Model repository](https://github.com/Aalto-LeTech/CodeClustersModeling)
 
@@ -49,18 +49,10 @@ It should reside in http://localhost:8500. If you want to change it, remember to
 
 ## Solr
 
-The instructions for this are still a little bit hazy. In theory what you should do:
-
 1. Start the solr server: `docker-compose up -d solr`
-2. Add the lines from `solrconfig-add.xml` to the `solrconfig.xml` in `/solr/data/data/gettingstarted/conf`
-3. Replace file `managed-schema`'s content with the contents of `schema.xml`
-4. Copy `data-config.xml` to the same folder
-5. Restart the solr: `docker-compose restart solr`
-6. Run `./solr.sh data-import`
-7. Visit the the GUI at http://localhost:8983 and see that there are no errors clicking the `Logging` link
-8. Select the "gettingstarted" core from the `Core Selector` dropdown
-9. Go to the `Query` page and click `Execute Query` without adding any parameters
-10. This should return 112 records. If not, Google is your best friend
+2. Go to http://localhost:8800/solr and click "Reindex" and then "Run and index metrics"
+
+You can go to the admin panel http://localhost:8983/solr/#/ to execute queries directly or to debug Solr
 
 # How to launch manually in production
 

@@ -34,6 +34,6 @@ case "$1" in
     docker-compose logs -f solr
     ;;
   *)
-    echo $"Usage: $0 bash|data-import|reset|start|stop|delete|logs"
+    echo $"Usage: $0 bash|data-import|reset|restart|start|stop|delete|logs"
     exit 1
 esac
