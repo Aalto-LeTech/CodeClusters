@@ -19,6 +19,7 @@ const validationSchema = Joi.object({
 interface IProps {
   className?: string
   id: string
+  submitButtonText?: string
   ref?: React.RefObject<HTMLFormElement>
   initialData?: Partial<IReview>
   onUpdate?: (data: IReviewCreateFormParams) => void
@@ -29,7 +30,7 @@ interface IProps {
 const resolver = joiResolver(validationSchema)
 
 const AddReviewFormEl = memo(forwardRef((props: IProps, ref: any) => {
-  const { className, id, initialData, onCancel, onSubmit } = props
+  const { className, id, submitButtonText = 'Add review', initialData, onCancel, onSubmit } = props
   const { register, control, errors, reset, handleSubmit } = useForm<IReviewCreateFormParams>({
     validationResolver: resolver,
     defaultValues: {
@@ -151,7 +152,7 @@ const AddReviewFormEl = memo(forwardRef((props: IProps, ref: any) => {
           intent="success"
           disabled={submitInProgress}
           loading={submitInProgress}
-        >Add review</Button>
+        >{submitButtonText}</Button>
         <Button
           intent="transparent"
           onClick={onCancel}

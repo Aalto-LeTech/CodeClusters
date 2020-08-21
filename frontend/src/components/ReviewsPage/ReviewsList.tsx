@@ -43,7 +43,7 @@ const ReviewsListUl = styled.ul`
 `
 const ReviewItem = styled.li<{ active: boolean}>`
   background: ${({ active, theme }) => active ? 'red' : '#ededed'};
-  border-radius: 0.25rem;
+  border-radius: 4px;
   display: flex;
   flex-direction: column;
   margin: 0 0 10px 0;
@@ -58,19 +58,19 @@ const ReviewItem = styled.li<{ active: boolean}>`
     background: #222;
     color: #fff;
     padding: 10px;
-    border-radius: 0.25rem;
+    border-radius: 4px;
   }
   .message {
     background: rgba(255, 0, 0, 0.4);
     padding: 1rem;
-    border-radius: 0.25rem;
+    border-radius: 4px;
   }
 `
 const Code = styled.pre`
   background: #222;
   color: #fff;
   padding: 10px;
-  border-radius: 0.25rem;
+  border-radius: 4px;
 `
 
 export const ReviewsList = styled(ReviewsListEl)``

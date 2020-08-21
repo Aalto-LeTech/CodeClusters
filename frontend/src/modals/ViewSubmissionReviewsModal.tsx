@@ -10,6 +10,7 @@ import { Modal } from '../elements/Modal'
 import { Review } from '../components/Review/Review'
 import { Button } from '../elements/Button'
 import { Icon } from '../elements/Icon'
+import { CodeBlock } from '../components/CodeBlock'
 
 import { ISubmission, IReviewWithSelection } from 'shared'
 import { Stores } from '../stores'
@@ -27,9 +28,7 @@ interface IProps {
   closeModal?: (modal: EModal) => void
 }
 
-function createCodeHTML(code: string, selection: [number, number]) {
-  return `${code.substring(0, selection[0])}<mark>${code.substring(selection[0], selection[1])}</mark>${code.substring(selection[1])}`
-}
+const EMPTY_SELECTION = [-1, -1] as [number, number]
 
 export const SubmissionReviewsModal = inject((stores: Stores) => ({
   modal: stores.modalStore.modals[EModal.VIEW_SUBMISSION_REVIEWS],
@@ -38,25 +37,29 @@ export const SubmissionReviewsModal = inject((stores: Stores) => ({
 (observer((props: IProps) => {
   const { className, modal, closeModal } = props
   const [shownReviewIdx, setShownReviewIdx] = useState(-1)
-  const [codeHTML, setCodeHTML] = useState(modal!.params.submission?.code)
+  const [rawCode, setRawCode] = useState('')
+  const [selection, setSelection] = useState(EMPTY_SELECTION)
 
   useEffect(() => {
-    setCodeHTML(modal!.params.submission?.code)
+    const s = modal!.params.submission
+    if (s && s.code) {
+      setRawCode(s.code)
+    }
   }, [modal!.params])
 
   function handleReviewHover(idx: number) {
     if (shownReviewIdx !== idx) {
       setShownReviewIdx(idx)
-      setCodeHTML(createCodeHTML(modal!.params?.submission?.code, modal!.params?.reviewsWithSelection[idx]?.selection))
+      setSelection(modal!.params?.reviewsWithSelection[idx]?.selection)
     }
   }
   function handleReviewClick(idx: number) {
     if (shownReviewIdx !== idx) {
       setShownReviewIdx(idx)
-      setCodeHTML(createCodeHTML(modal!.params?.submission?.code, modal!.params?.reviewsWithSelection[idx]?.selection))
+      setSelection(modal!.params?.reviewsWithSelection[idx]?.selection)
     } else {
       setShownReviewIdx(-1)
-      setCodeHTML(modal!.params.submission?.code)
+      setSelection(EMPTY_SELECTION)
     }
   }
   function handleClose() {
@@ -89,7 +92,12 @@ export const SubmissionReviewsModal = inject((stores: Stores) => ({
               </ReviewItem>
               )}
             </ReviewsListUl>
-            <Code dangerouslySetInnerHTML={{__html: codeHTML }} />
+            <CodeBlock
+              code={rawCode}
+              selectionStart={selection[0]}
+              selectionEnd={selection[1]}
+              onSelectCode={() => undefined}
+            />
           </Content>
         </Body>
       }
@@ -150,27 +158,16 @@ const ReviewsListUl = styled.ul`
 `
 const ReviewItem = styled.li<{ active: boolean }>`
   background: ${({ active, theme }) => active ? '#ff5d5d' : theme.color.white};
-  border-radius: 0.25rem;
-  box-shadow: 0 0 2px 2px rgba(0,0,0,0.18);
+  border-radius: 4px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  min-width: 120px;
+  min-width: 10rem;
   padding: 0.5rem;
   text-align: left;
   &:hover {
     background: ${({ theme }) => '#ff5d5d'};
   }
-`
-const Code = styled.pre`
-  background: #222;
-  color: #fff;
-  padding: 0.5rem;
-  border-radius: 4px;
-  margin: 0;
-  overflow: scroll;
-  text-align: left;
-  width: 100%;
 `
 
 interface IReviewCarouselItem {
@@ -180,11 +177,19 @@ function ReviewCarouselItem(props: IReviewCarouselItem) {
   const { review } = props
   return (
     <ReviewCarouselItemContainer>
-      {review.message}
+      <ReviewMessage>{review.message}</ReviewMessage>
     </ReviewCarouselItemContainer>
   )
 }
 const ReviewCarouselItemContainer = styled.div`
   word-break: break-word;
   overflow-y: hidden;
+`
+const ReviewMessage = styled.p`
+  background: #fff;
+  border: 1px solid #222;
+  border-radius: 4px;
+  height: 100%;
+  margin: 0;
+  padding: 0.5rem;
 `

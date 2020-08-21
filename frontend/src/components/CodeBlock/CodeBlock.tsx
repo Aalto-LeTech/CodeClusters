@@ -141,6 +141,7 @@ export const CodeBlock = memo((props: IProps) => {
 const Container = styled.div<{ selectionStart: number, selectionEnd: number }>`
   min-width: 100%;
   overflow: scroll;
+  text-align: left;
   width: 100%;
   & > pre {
     background: #222;

@@ -68,6 +68,7 @@ export const AcceptEditReviewModal = inject((stores: Stores) => ({
             <AddReviewForm
               ref={reviewFormRef}
               id="accept-edit-review"
+              submitButtonText="Update review"
               onSubmit={handleSubmit}
               onCancel={() => undefined}
             />
