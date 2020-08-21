@@ -148,17 +148,17 @@ export class SearchFacetsStore {
    * 
    * The nasty logic here is for extending the observability of the object for nested values since mobx does not do that by default.
    * @param item The key-value pair of a facet
-   * @param field The value-count pair of a facet field
+   * @param field The bucket with name, data and count
    * @param val The toggled value from the CheckBox
    */
   @action toggleFacetField = (item: FacetItem, field: FacetField, val: boolean) => {
     if (this.toggledFacetFields[item.key] === undefined) {
       this.toggledFacetFields[item.key] = {}
     }
-    if (this.toggledFacetFields[item.key][field.value] === undefined) {
-      extendObservable(this.toggledFacetFields[item.key], { [field.value]: val })
+    if (this.toggledFacetFields[item.key][field.bucket] === undefined) {
+      extendObservable(this.toggledFacetFields[item.key], { [field.bucket]: val })
     } else {
-      this.toggledFacetFields[item.key][field.value] = val
+      this.toggledFacetFields[item.key][field.bucket] = val
     }
   }
 
@@ -177,7 +177,7 @@ export class SearchFacetsStore {
 
   createFiltersFromFacets() {
     // Generate an object with the checked facet fields as lists eg { LOC_metric: ["27", "29", "30"] }
-    // Or if range: { LOC_metric: ["27-29", "31-35"] }
+    // Or if range: { LOC_metric: ["27 - 29", "31 - 35"] }
     const result = {}
     Object.keys(this.toggledFacetFields).forEach(facet => {
       Object.keys(this.toggledFacetFields[facet]).forEach(facetField => {
@@ -187,8 +187,8 @@ export class SearchFacetsStore {
         if (checked && result[facet] === undefined) {
           result[facet] = [facetField]
         } else if (checked && isRange) {
-          // Incase adjacent ranges are checked eg { CyclomaticComplexity: ["20-22", "22-24"] }
-          // join them to a single to make things easier for backend -> { CyclomaticComplexity: ["20-24"] }
+          // Incase adjacent ranges are checked eg { CyclomaticComplexity: ["20 - 22", "22 - 24"] }
+          // join them to a single to make things easier for backend -> { CyclomaticComplexity: ["20 - 24"] }
           const joined = this.joinAdjacentFacetFilters(facetField, result[facet])
           if (joined) {
             result[facet].splice(-1, 1, joined)
@@ -212,7 +212,8 @@ export class SearchFacetsStore {
       let counts = []
       for (let i = 0; i < arr.length; i += 2) {
         counts.push({
-          value: arr[i],
+          bucket: arr[i],
+          data: arr[i],
           count: arr[i + 1],
         })
       }
@@ -236,16 +237,18 @@ export class SearchFacetsStore {
       let counts = []
       for (let i = 0; i < range.counts.length; i += 2) {
         let value: number
-        let valueString = range.counts[i].toString()
-        if (valueString.includes('.')) {
-          value = parseFloat(valueString)
+        let bucket = range.counts[i].toString()
+        if (bucket.includes('.')) {
+          value = parseFloat(bucket)
         } else {
-          value = parseInt(valueString)
+          value = parseInt(bucket)
         }
+        bucket = `${value}${RANGE_DELIMITER}${value + range.gap}`
+        const data = [value, value + range.gap] as [number, number]
         const count = range.counts[i + 1]
-        valueString = `${value}${RANGE_DELIMITER}${value + range.gap}`
         counts.push({
-          value: valueString,
+          bucket,
+          data,
           count,
         })
       }

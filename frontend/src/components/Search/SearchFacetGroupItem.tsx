@@ -13,7 +13,7 @@ interface IProps {
   useRange: boolean
   item: FacetItem
   params?: ISearchFacetParams
-  counts?: FacetField[]
+  buckets?: FacetField[]
   toggledFields?: { [field: string]: boolean }
   toggleSearchFacet?: (facet: string) => void
   setFacetParamsRange?: (facet: string, range?: ISearchFacetRange) => void
@@ -28,7 +28,7 @@ const EMPTY_RANGE = {
 
 const SearchFacetGroupItemEl = inject((stores: Stores, props: IProps) => ({
   params: stores.searchFacetsStore.currentFacetParams[props.item.key],
-  counts: stores.searchStore.selectedSearchResult.facetCounts[props.item.key],
+  buckets: stores.searchStore.selectedSearchResult.facetCounts[props.item.key],
   toggledFields: stores.searchFacetsStore.toggledFacetFields[props.item.key],
   toggleSearchFacet: stores.searchFacetsStore.toggleSearchFacetParams,
   setFacetParamsRange: stores.searchFacetsStore.setFacetParamsRange,
@@ -36,7 +36,7 @@ const SearchFacetGroupItemEl = inject((stores: Stores, props: IProps) => ({
 }))
 (observer((props: IProps) => {
   const {
-    className, useRange, item, params, counts, toggledFields,
+    className, useRange, item, params, buckets, toggledFields,
     toggleSearchFacet, setFacetParamsRange, toggleFacetField,
   } = props
   const active = params !== undefined
@@ -48,7 +48,7 @@ const SearchFacetGroupItemEl = inject((stores: Stores, props: IProps) => ({
 
   useEffect(() => {
     setResultsFetched(true)
-  }, [counts])
+  }, [buckets])
 
   function handleToggleUseRange(val: boolean) {
     if (val) {
@@ -95,19 +95,21 @@ const SearchFacetGroupItemEl = inject((stores: Stores, props: IProps) => ({
             </RangeField>
           </RangeForm>
           <Divider />
-          <CountsList>
-          { (counts === undefined || counts.length === 0) ? resultsFetched ? <div>No results</div> : <div>{'<run search>'}</div> : null }
-          { (counts && counts.map((field, i) =>
-            <CountsListItem key={`${item.key}-field-${field.value}`}>
+          <BucketsList>
+          { (buckets === undefined || buckets.length === 0) ? resultsFetched ? <div>No results</div> : <div>{'<run search>'}</div> : null }
+          { (buckets && buckets.map((field, i) =>
+            <BucketsListItem key={`${item.key}-field-${field.bucket}`}>
               <CheckBox
-                checked={!!(toggledFields && toggledFields[field.value])}
+                checked={!!(toggledFields && toggledFields[field.bucket])}
                 onChange={handleFacetFieldToggle(field)}
               />
-              <CountName>{field.value}</CountName>
-              <CountValue>{field.count}</CountValue>
-            </CountsListItem>
+              <BucketName>
+                { typeof field.data === 'string' ? field.data : `${field.data[0]} - <${field.data[1]}` }
+              </BucketName>
+              <BucketValue>{field.count}</BucketValue>
+            </BucketsListItem>
           ))}
-          </CountsList>
+          </BucketsList>
         </BodyWrapper>
       </Body>
     </Container>
@@ -181,18 +183,22 @@ const Divider = styled.hr`
   margin: 1rem 0;
   width: 100%;
 `
-const CountsList = styled.ul`
+const BucketsList = styled.ul`
   max-height: 300px;
   overflow-y: scroll;
   & > li + li {
     margin-top: 0.4rem;
   }
 `
-const CountsListItem = styled.li`
+const BucketsListItem = styled.li`
   display: flex;
   justify-content: space-between;
 `
-const CountName = styled.div``
-const CountValue = styled.div``
+const BucketName = styled.div`
+  font-family: ${({ theme }) => theme.font.header};
+  font-weight: 600;
+  font-size: ${({ theme }) => theme.fontSize.small};
+`
+const BucketValue = styled.div``
 
 export const SearchFacetGroupItem = styled(SearchFacetGroupItemEl)``
