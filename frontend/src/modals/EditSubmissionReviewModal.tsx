@@ -56,21 +56,17 @@ export const EditSubmissionReviewModal = inject((stores: Stores) => ({
   }, [modal!.params])
 
   function handleCodeSelect(start: number, end: number) {
-    setHasCurrentReview(true)
     setSelection([start, end])
   }
   function handleClose() {
     closeModal!(EModal.EDIT_SUBMISSION_REVIEW)
   }
   async function onUpdate() {
-    let result
-    if (hasCurrentReview) {
-      result = await upsertReviewSubmission!({
-        review_id: modal!.params.review.review_id,
-        submission_id: modal!.params.submission.submission_id,
-        selection,
-      })
-    }
+    const result = await upsertReviewSubmission!({
+      review_id: modal!.params.review.review_id,
+      submission_id: modal!.params.submission.submission_id,
+      selection,
+    })
     if (result) {
       handleClose()
     }
@@ -88,8 +84,13 @@ export const EditSubmissionReviewModal = inject((stores: Stores) => ({
         selection,
       })
     }
-    setHasCurrentReview(!hasCurrentReview)
-    setLoading(false)
+    if (result) {
+      setHasCurrentReview(!hasCurrentReview)
+      setLoading(false)
+      handleClose()
+    } else {
+      setLoading(false)
+    }
   }
   function onCancel() {
     handleClose()
@@ -127,7 +128,13 @@ export const EditSubmissionReviewModal = inject((stores: Stores) => ({
             <Button intent={hasCurrentReview ? 'danger' : 'success'} loading={loading} onClick={onToggleAssociation}>
               {hasCurrentReview ? 'Unlink' : 'Link'}
             </Button>
-            <Button intent="success" onClick={onUpdate}>Update</Button>
+            <Button
+              intent="success"
+              disabled={selection[0] === 0 && selection[1] == 0} 
+              onClick={onUpdate}
+            >
+              Set selection
+            </Button>
             <Button intent="transparent" onClick={onCancel}>Cancel</Button>
           </Buttons>
         </Body>
