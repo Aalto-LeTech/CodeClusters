@@ -27,7 +27,8 @@ const ReindexEl = inject((stores: Stores) => ({
         <h2>Reindex</h2>
         <Info>
           <InfoText>
-            Here you can reindex the data contained by Solr when necessary (instead of having to ssh into the server).
+            Reindex drops all the current submission-search documents from the index and reindexes them
+            from the Postgres database using dataimport.
             <br />
           </InfoText>
         </Info>
@@ -44,9 +45,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  > * + * {
-    margin: 2rem 0;
-  }
 `
 const Header = styled.header`
   display: flex;
@@ -61,9 +59,7 @@ const InfoText = styled.p`
   margin: 0;
 `
 const SolrControls = styled.div`
-  > * + * {
-    margin: 1rem 0;
-  }
+  margin: 2rem 0 1rem 0;
 `
 
 export const Reindex = styled(ReindexEl)``

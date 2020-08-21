@@ -36,7 +36,9 @@ const IndexMetricsEl = inject((stores: Stores) => ({
         <h2>Run and index metrics</h2>
         <Info>
           <InfoText>
-            Here you can run metrics on a given course and exercise to use them in search.
+            Using the API of the modeling server, you can calculate the metrics on the specified course and exercise
+            and parse their AST-based keywords and index them to Solr. These can be then used in search as facets or
+            filters.
             <br />
           </InfoText>
         </Info>
@@ -53,8 +55,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  > * + * {
-    margin: 2rem 0;
+  & > * + * {
+    margin: 1rem 0;
   }
 `
 const Header = styled.header`
@@ -67,10 +69,6 @@ const Info = styled.div`
 const InfoText = styled.p`
   margin: 0;
 `
-const SolrControls = styled.div`
-  > * + * {
-    margin: 1rem 0;
-  }
-`
+const SolrControls = styled.div``
 
 export const IndexMetrics = styled(IndexMetricsEl)``

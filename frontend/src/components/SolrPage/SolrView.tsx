@@ -16,9 +16,10 @@ function SolrViewEl(props: IProps) {
         <h1>Solr</h1>
         <Info>
           <InfoText>
-            Apache Solr is the search library used by CodeClusters for the code search.
+            The search of CodeClusters is powered by Apache Solr.
             <br />
-            Here you can reindex the data contained by Solr when necessary (instead of having to ssh into the server).
+            <br></br>
+            Here you can reset and index the data to the Solr as necessary instead of having to do it manually by ssh'ing into the server.
           </InfoText>
         </Info>
       </Header>
@@ -35,13 +36,16 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  > * + * {
-    margin: 2rem 0;
+  & > * + * {
+    margin: 1rem 0;
   }
 `
 const Header = styled.header`
   display: flex;
   flex-direction: column;
+  & > h1 {
+    margin-top: 0;
+  }
 `
 const Info = styled.div`
   align-items: center;
@@ -53,7 +57,7 @@ const InfoText = styled.p`
 `
 const MainInputs = styled.div`
   width: 100%;
-  > * + * {
+  & > * + * {
     margin: 1rem 0;
   }
 `
