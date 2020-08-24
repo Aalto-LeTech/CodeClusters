@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { inject, observer } from 'mobx-react'
 import styled from '../../theme/styled'
+import { FiSearch } from 'react-icons/fi'
 
 import { CheckBox } from '../../elements/CheckBox'
 
@@ -96,7 +97,7 @@ const SearchFacetGroupItemEl = inject((stores: Stores, props: IProps) => ({
           </RangeForm>
           <Divider />
           <BucketsList>
-          { (buckets === undefined || buckets.length === 0) ? resultsFetched ? <div>No results</div> : <div>{'<run search>'}</div> : null }
+            <FacetEmptyResults buckets={buckets} resultsFetched={resultsFetched}/>
           { (buckets && buckets.map((field, i) =>
             <BucketsListItem key={`${item.key}-field-${field.bucket}`}>
               <CheckBox
@@ -115,6 +116,32 @@ const SearchFacetGroupItemEl = inject((stores: Stores, props: IProps) => ({
     </Container>
   )
 }))
+
+function FacetEmptyResults(props: { buckets?: FacetField[], resultsFetched: boolean }) {
+  const { buckets, resultsFetched } = props
+  const noResults = (buckets === undefined || buckets.length === 0) && resultsFetched
+  function handleClick() {
+    const element = document.querySelector<HTMLButtonElement>('#main_search_search_button')
+    if (element) {
+      element.focus()
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }
+  if (noResults) {
+    return <div>No results</div>
+  }
+  if (!resultsFetched) {
+    return (
+      <div>
+        <RunSearchButton type="button" onClick={handleClick}>
+          <SearchIcon size={16} />
+          Run search
+        </RunSearchButton>
+      </div>
+    )
+  }
+  return null
+}
 
 const Container = styled.div``
 const FacetName = styled.div<{ minimized: boolean }>`
@@ -182,6 +209,24 @@ const Divider = styled.hr`
   border-bottom: 1px solid #222;
   margin: 1rem 0;
   width: 100%;
+`
+const RunSearchButton = styled.button`
+  background: ${({ theme }) => theme.color.lightGreen};
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+  color: ${({ theme }) => theme.color.textDark};
+  display: flex;
+  padding: 8px;
+  text-decoration: none;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  &:hover {
+    background: ${({ theme }) => theme.color.green};
+  }
+`
+const SearchIcon = styled(FiSearch)`
+  margin-right: 8px;
+  vertical-align: middle;
 `
 const BucketsList = styled.ul`
   max-height: 300px;

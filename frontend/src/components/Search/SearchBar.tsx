@@ -32,7 +32,7 @@ const SearchBarEl = memo(forwardRef((props: IProps, ref) => {
   return (
     <div className={className}>
       <SearchWrapper focused={wrapperFocused}>
-        <IconButton >
+        <IconButton id={`${id}_button`}>
           <SearchIcon size={26} />
         </IconButton>
         <StyledInput
