@@ -117,31 +117,40 @@ const SearchFacetGroupItemEl = inject((stores: Stores, props: IProps) => ({
   )
 }))
 
-function FacetEmptyResults(props: { buckets?: FacetField[], resultsFetched: boolean }) {
-  const { buckets, resultsFetched } = props
+interface IFacetEmptyResultsProps {
+  className?: string
+  buckets?: FacetField[]
+  resultsFetched: boolean
+}
+const FacetEmptyResults = (props: IFacetEmptyResultsProps) => {
+  const { className, buckets, resultsFetched } = props
   const noResults = (buckets === undefined || buckets.length === 0) && resultsFetched
-  function handleClick() {
-    const element = document.querySelector<HTMLButtonElement>('#main_search_search_button')
-    if (element) {
-      element.focus()
-      element.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    }
-  }
   if (noResults) {
     return <div>No results</div>
   }
   if (!resultsFetched) {
     return (
-      <div>
-        <RunSearchButton type="button" onClick={handleClick}>
+      <div className={className}>
+        <RunSearchButton>
           <SearchIcon size={16} />
-          Run search
+          {'<run search>'}
         </RunSearchButton>
       </div>
     )
   }
   return null
 }
+
+const RunSearchButton = styled.div`
+  align-items: center;
+  background: ${({ theme }) => theme.color.lightGreen};
+  border: 0;
+  border-radius: 4px;
+  color: ${({ theme }) => theme.color.textDark};
+  display: inline-flex;
+  padding: 8px;
+  text-decoration: none;
+`
 
 const Container = styled.div``
 const FacetName = styled.div<{ minimized: boolean }>`
@@ -209,20 +218,6 @@ const Divider = styled.hr`
   border-bottom: 1px solid #222;
   margin: 1rem 0;
   width: 100%;
-`
-const RunSearchButton = styled.button`
-  background: ${({ theme }) => theme.color.lightGreen};
-  border: 0;
-  border-radius: 4px;
-  cursor: pointer;
-  color: ${({ theme }) => theme.color.textDark};
-  display: flex;
-  padding: 8px;
-  text-decoration: none;
-  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  &:hover {
-    background: ${({ theme }) => theme.color.green};
-  }
 `
 const SearchIcon = styled(FiSearch)`
   margin-right: 8px;
