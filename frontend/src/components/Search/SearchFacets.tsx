@@ -47,15 +47,18 @@ const SearchFacetsEl = inject((stores: Stores) => ({
             <Tooltip title="Metrics facets" size={20}>
               <TooltipText>
                 <p>
-                  Facets are a special Lucene API to easily categorize search results.
-                  In this case they are used to quickly filter and select submissions based on their metric values.
+                  Facets are a feature of Lucene to easily group and filter search results.
+                  For any indexed value, such as metrics in this case, you can categorize them based on
+                  the counts or ranges of the values. The resulting buckets can be then selected by checking
+                  their checkbox. The middle column is the value of the bucket and the right column
+                  the count.
                   Current Java metrics are generated using Checkstyle metrics.
                 </p>
                 <p>
                   Whenever you change the facet values, you must rerun the search. Closing a facet will delete its values.
-                  Running the query without specifying a range will yield the values as counts of single values (which is why all
-                  metrics are integers). For a range you can specify its start, end and the gap, interval used to bucket the values
-                  with.
+                  If you don't specify a range, the results are the counts of individual values (which is why all
+                  metrics are integers). Using a range you can specify its start, end and the gap which is the interval
+                  the results are bucketed into.
                 </p>
                 <div>
                   <a href="https://lucene.apache.org/solr/guide/8_6/faceting.html" target="_blank" rel="noopener">

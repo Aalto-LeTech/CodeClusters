@@ -16,7 +16,7 @@ interface IProps {
   totalResultsCount?: number
   searchResultsStart?: number
   shownSubmissions?: ISolrFullSubmissionWithDate[]
-  setLocalSearchActive?: (b: boolean) => void
+  toggleLocalSearch?: (b: boolean) => void
 }
 
 const SearchResultsListEl = inject((stores: Stores) => ({
@@ -24,19 +24,19 @@ const SearchResultsListEl = inject((stores: Stores) => ({
   totalResultsCount: stores.searchStore.searchResultsCount,
   searchResultsStart: stores.searchStore.searchResultsStart,
   shownSubmissions: stores.searchStore.shownSubmissions,
-  setLocalSearchActive: stores.localSearchStore.setActive,
+  toggleLocalSearch: stores.localSearchStore.toggleActive,
 }))
 (observer((props: IProps) => {
   const {
     className, localSearchActive, totalResultsCount, searchResultsStart = 0, shownSubmissions,
-    setLocalSearchActive
+    toggleLocalSearch
   } = props
   const resultsCount = shownSubmissions!.length
   const resultsStart = resultsCount === 0 ? 0 : searchResultsStart + 1
 
   function handleToggleLocalSearch() {
     // lol
-    setLocalSearchActive!(!!!localSearchActive)
+    toggleLocalSearch!(!!!localSearchActive)
   }
   return (
     <Container className={className}>

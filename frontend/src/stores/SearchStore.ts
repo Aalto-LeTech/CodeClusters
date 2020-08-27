@@ -76,7 +76,7 @@ export class SearchStore {
 
   @computed get searchResultsStart() {
     if (this.localSearchStore.searchActive) {
-      return 0
+      return this.localSearchStore.searchParams.results_start!
     }
     return this.selectedSearchResult.start || 0
   }
@@ -86,6 +86,13 @@ export class SearchStore {
       return this.localSearchStore.shownSubmissions
     }
     return this.selectedSearchResult.docs
+  }
+
+  @computed get numberOfShownResults() {
+    if (this.localSearchStore.searchActive) {
+      return this.localSearchStore.searchParams.num_results || 200
+    }
+    return this.searchParams.num_results || 20
   }
 
   @action reset() {
@@ -100,6 +107,7 @@ export class SearchStore {
   @action setSelectedPage = (page: number) => {
     if (this.localSearchStore.searchActive) {
       this.selectedPage = page
+      this.localSearchStore.setSelectedPage(page)
     } else {
       const numResults = this.searchParams.num_results || 20
       // mobx won't trigger observers of searchParams when non-observable keys are changed (or something)
@@ -148,7 +156,10 @@ export class SearchStore {
         this.selectedSearchResult = searchResult
         this.searchResults.push({ ...searchResult, params: payload })
         const numResults = payload.num_results || 20
-        this.selectedPage = Math.ceil((payload.results_start || 0) / numResults) + 1
+        const availablePages = Math.ceil(Math.max(result.response.numFound, 1) / numResults)
+        if (availablePages < this.selectedPage) {
+          this.setSelectedPage(1)
+        }
       }
       this.searchInProgress = false
     })

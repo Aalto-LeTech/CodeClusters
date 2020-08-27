@@ -9,8 +9,7 @@ So there are a few known bugs and a few unknown bugs in CodeClusters as of 21.8.
 
 * Search case sensitivity, regex, whole words don't work
 
-* Pagination's page is not set correctly when new results are fetched where there are fewer results than current page
-* Also when switching to local search the page should be updated to eg first page (and pages counted correctly using the Results per page -value)
+* When switching to local search when the current selectedPage is higher than available local pages, doesn't default the page to 1 (although shows results correctly)
 
 * All the modeling n-gram forms combinations have not been tested, there is probably bugs there with results that have eg no clusters
 

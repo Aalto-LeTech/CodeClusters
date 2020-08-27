@@ -14,6 +14,7 @@ interface IProps extends RouteComponentProps {
   visible: boolean
   courseId?: number
   exerciseId?: number
+  selectedPage?: number
   searchParams?: ISearchCodeParams
   initialSearchParams?: ISearchCodeParams
   setInitialSearchParams?: (payload: ISearchCodeParams) => void
@@ -24,6 +25,7 @@ interface IProps extends RouteComponentProps {
 const SearchConsoleEl = inject((stores: Stores) => ({
   courseId: stores.courseStore.courseId,
   exerciseId: stores.courseStore.exerciseId,
+  selectedPage: stores.searchStore.selectedPage,
   searchParams: stores.searchStore.searchParams,
   initialSearchParams: stores.searchStore.initialSearchParams,
   setInitialSearchParams: stores.searchStore.setInitialSearchParams,
@@ -33,7 +35,7 @@ const SearchConsoleEl = inject((stores: Stores) => ({
 (observer(withRouter((props: IProps) => {
   const {
     className, history, setInitialSearchParams, search, deactivateLocalSearch, initialSearchParams,
-    searchParams, courseId, exerciseId, visible
+    searchParams, courseId, exerciseId, selectedPage = 1, visible
   } = props
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
@@ -52,10 +54,10 @@ const SearchConsoleEl = inject((stores: Stores) => ({
   function handleChange() {
     deactivateLocalSearch!()
   }
-  function handleSearch(payload: ISearchCodeParams) {
+  async function handleSearch(payload: ISearchCodeParams) {
     const data = searchParams!.results_start ? { ...payload, results_start: searchParams?.results_start } : payload
     history.push(createSearchQueryParams(data))
-    return search!(data)
+    await search!(data)
   }
   return (
     <Container className={className} visible={visible}>

@@ -72,6 +72,7 @@ export class ModelStore {
     }
     this.localSearchStore.setSubmissions(submissions)
     this.localSearchStore.setActive(true)
+    this.localSearchStore.setSelectedPage(1)
     const result = await modelApi.runModel(data.model_id, payload)
     runInAction(() => {
       if (result) {

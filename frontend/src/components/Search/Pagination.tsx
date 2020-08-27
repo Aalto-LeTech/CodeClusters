@@ -12,19 +12,19 @@ interface IProps {
   className?: string
   selectedPage?: number
   searchResultsCount?: number
-  numResults?: number | undefined
+  numberOfShownResults?: number
   setSelectedPage?: (page: number) => void
 }
 
 const PaginationEl = inject((stores: Stores) => ({
   selectedPage: stores.searchStore.selectedPage,
   searchResultsCount: stores.searchStore.searchResultsCount,
-  numResults: stores.searchStore.searchParams.num_results,
+  numberOfShownResults: stores.searchStore.numberOfShownResults,
   setSelectedPage: stores.searchStore.setSelectedPage,
 }))
 (observer((props: IProps) => {
-  const { className, selectedPage = 1, searchResultsCount = 0, numResults = 20, setSelectedPage } = props
-  const maxPages = Math.ceil((searchResultsCount + 1) / numResults)
+  const { className, selectedPage = 1, searchResultsCount = 0, numberOfShownResults = 20, setSelectedPage } = props
+  const maxPages = Math.ceil((searchResultsCount + 1) / numberOfShownResults)
   const leftPages = selectedPage - 5 > 1 ? selectedPage - 4 : 1
   const leftDots = selectedPage - 5 > 1
   const rightPages = selectedPage + 5 < maxPages ? selectedPage + 4 : maxPages

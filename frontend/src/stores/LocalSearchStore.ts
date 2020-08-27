@@ -10,6 +10,7 @@ import { ToastStore } from './ToastStore'
 const EMPTY_LOCAL_QUERY: ISearchCodeParams = {
   q: '',
   num_results: 200,
+  results_start: 0,
   case_sensitive: false,
 }
 
@@ -32,7 +33,9 @@ export class LocalSearchStore {
   }
 
   @computed get shownSubmissions() {
-    return this.searchedSubmissionIndexes.slice(0, this.searchParams.num_results)
+    const start = this.searchParams.results_start || 0
+    const end = start + (this.searchParams.num_results || 200)
+    return this.searchedSubmissionIndexes.slice(start, end)
       .map(idx => this.submissions[idx])
   }
 
@@ -53,6 +56,16 @@ export class LocalSearchStore {
     this.searchActive = b
   }
 
+  @action toggleActive = (b: boolean) => {
+    console.log(this.searchParams)
+    if (b) {
+      this.searchActive = true
+      this.search(this.searchParams)
+    } else {
+      this.searchActive = false
+    }
+  }
+
   @action setSubmissions = (submissions: ISolrFullSubmissionWithDate[]) => {
     this.submissions = submissions
     this.selectedSubmissionIndexes = submissions.map((_, i) => i)
@@ -70,13 +83,25 @@ export class LocalSearchStore {
     })
   }
 
+  @action setSelectedPage = (page: number) => {
+    const numResults = this.searchParams.num_results || 200
+    // mobx won't trigger observers of searchParams when non-observable keys are changed (or something)
+    // -> set the whole object
+    this.searchParams = { ...this.searchParams, ...{ results_start: numResults * (page - 1) } }
+  }
+
+  submissionContains(s: ISolrFullSubmissionWithDate, q: string) {
+    const code = this.searchParams.case_sensitive ? s.code[0] : s.code[0].toLowerCase()
+    const qq = this.searchParams.case_sensitive ? q : q.toLowerCase()
+    return code.includes(qq)
+  }
+
   @action search = (payload: ISearchCodeParams) => {
     runInAction(() => {
       this.searchActive = true
       this.searchParams = payload
-      const q = !payload.case_sensitive ? payload.q.toLowerCase() : payload.q
       this.searchedSubmissionIndexes = this.submissions.map((s, i) => {
-        if (this.selectedSubmissionIndexes.includes(i) && s.code[0].includes(q)) return i
+        if (this.selectedSubmissionIndexes.includes(i) && this.submissionContains(s, payload.q)) return i
         return -1
       }).filter(n => n !== -1)
     })
