@@ -117,7 +117,6 @@ export const searchService = {
       q,
       course_id,
       exercise_id,
-      num_results = 10000,
       facets = {},
       facet_filters = {},
       results_start = 0,
@@ -126,9 +125,11 @@ export const searchService = {
       // regex,
       // whole_words,
     } = params
+    // Hard-coded max amount of used submissions.. Probably should be a parameter in the model form
+    const numResults = 10000
     // The query has to be URL encoded properly, otherwise Solr crashes. Weirdly enough this parameter is affected
     const urlEncodedQ = qs.escape(q)
-    const general = `q=code:${urlEncodedQ}&rows=${num_results}&start=${results_start}`
+    const general = `q=code:${urlEncodedQ}&rows=${numResults}&start=${results_start}`
     // Used search filters
     const filters = createFilters({ course_id, exercise_id, ...arrayToObject(custom_filters) })
     // Fields used in the Solr results (required for the highlighting)

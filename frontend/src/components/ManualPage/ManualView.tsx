@@ -22,8 +22,10 @@ function ManualViewEl(props: IProps) {
           <p>
             CodeClusters is a web application for exploring and clustering student code to help teachers to understand
             their students' programming patterns at a deeper level. This lofty goal is approached by providing a search engine
-            in the form of Apache Solr and models using scikit-learn implemented at the modeling server. Using them,
-            teachers could then quickly review the submissions and be able to send the feedback to the students.
+            in the form of Apache Solr and models using scikit-learn implemented at the modeling server. This would allow
+            teachers to search code for anomalies and cluster it by its similarities, and then send appropriate feedback
+            either individually or to many students at once. The aim would be to reduce the amount of manual work when
+            having to sift through a large number of submissions at once.
           </p>
           <h2>How it works</h2>
           <p>
