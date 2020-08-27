@@ -10,33 +10,33 @@ import { Stores } from '../../stores'
 
 interface IProps {
   className?: string
-  selectedPage?: number
+  currentPage?: number
   searchResultsCount?: number
   numberOfShownResults?: number
   setSelectedPage?: (page: number) => void
 }
 
 const PaginationEl = inject((stores: Stores) => ({
-  selectedPage: stores.searchStore.selectedPage,
+  currentPage: stores.searchStore.currentPage,
   searchResultsCount: stores.searchStore.searchResultsCount,
   numberOfShownResults: stores.searchStore.numberOfShownResults,
   setSelectedPage: stores.searchStore.setSelectedPage,
 }))
 (observer((props: IProps) => {
-  const { className, selectedPage = 1, searchResultsCount = 0, numberOfShownResults = 20, setSelectedPage } = props
+  const { className, currentPage = 1, searchResultsCount = 0, numberOfShownResults = 20, setSelectedPage } = props
   const maxPages = Math.ceil((searchResultsCount + 1) / numberOfShownResults)
-  const leftPages = selectedPage - 5 > 1 ? selectedPage - 4 : 1
-  const leftDots = selectedPage - 5 > 1
-  const rightPages = selectedPage + 5 < maxPages ? selectedPage + 4 : maxPages
-  const rightDots = selectedPage + 5 < maxPages
+  const leftPages = currentPage - 5 > 1 ? currentPage - 4 : 1
+  const leftDots = currentPage - 5 > 1
+  const rightPages = currentPage + 5 < maxPages ? currentPage + 4 : maxPages
+  const rightDots = currentPage + 5 < maxPages
   const pages = rightPages - leftPages + 1
   const isHidden = searchResultsCount === 0 || maxPages === 1
 
   function handleClickIcon(direction: 'left' | 'right') {
-    if (direction === 'left' && selectedPage !== 1) {
-      setSelectedPage!(selectedPage - 1)
-    } else if (direction === 'right' && selectedPage !== maxPages) {
-      setSelectedPage!(selectedPage + 1)
+    if (direction === 'left' && currentPage !== 1) {
+      setSelectedPage!(currentPage - 1)
+    } else if (direction === 'right' && currentPage !== maxPages) {
+      setSelectedPage!(currentPage + 1)
     }
   }
   function handleClickPage(page: number) {
@@ -54,7 +54,7 @@ const PaginationEl = inject((stores: Stores) => ({
         { leftDots && <Icon><FiMoreHorizontal size={20}/></Icon>}
         { Array(pages).fill(0).map((_, i) =>
         <PageItem key={i}>
-          <PageButton selected={(leftPages + i) === selectedPage} onClick={() => handleClickPage(leftPages + i)}>
+          <PageButton selected={(leftPages + i) === currentPage} onClick={() => handleClickPage(leftPages + i)}>
             { leftPages + i}
           </PageButton>
         </PageItem>

@@ -9,7 +9,7 @@ import { ToastStore } from './ToastStore'
 
 const EMPTY_LOCAL_QUERY: ISearchCodeParams = {
   q: '',
-  num_results: 200,
+  num_results: 50,
   results_start: 0,
   case_sensitive: false,
 }
@@ -22,6 +22,7 @@ export class LocalSearchStore {
   @observable selectedSubmissionIndexes: number[] = []
   @observable searchedSubmissionIndexes: number[] = []
   @observable searchActive: boolean = false
+  @observable selectedPage: number = 1
   toastStore: ToastStore
 
   constructor(props: ToastStore) {
@@ -30,13 +31,21 @@ export class LocalSearchStore {
       // Parse dates since JSON.parse wont do it automatically
       this.submissions = val.map((s: any) => ({ ...s, date: new Date(s.date) }))
     }, 'localSearch.submissions')
+    this.selectedSubmissionIndexes = this.submissions.map((_, i) => i)
+    this.searchedSubmissionIndexes = this.submissions.map((_, i) => i)
   }
 
   @computed get shownSubmissions() {
-    const start = this.searchParams.results_start || 0
-    const end = start + (this.searchParams.num_results || 200)
-    return this.searchedSubmissionIndexes.slice(start, end)
+    return this.searchedSubmissionIndexes.slice(this.resultsStart, this.resultsStart + this.numResults)
       .map(idx => this.submissions[idx])
+  }
+
+  @computed get numResults() {
+    return this.searchParams.num_results || 50
+  }
+
+  @computed get resultsStart() {
+    return this.searchParams.results_start || 0
   }
 
   @action reset() {
@@ -54,16 +63,6 @@ export class LocalSearchStore {
 
   @action setActive = (b: boolean) => {
     this.searchActive = b
-  }
-
-  @action toggleActive = (b: boolean) => {
-    console.log(this.searchParams)
-    if (b) {
-      this.searchActive = true
-      this.search(this.searchParams)
-    } else {
-      this.searchActive = false
-    }
   }
 
   @action setSubmissions = (submissions: ISolrFullSubmissionWithDate[]) => {
@@ -84,10 +83,10 @@ export class LocalSearchStore {
   }
 
   @action setSelectedPage = (page: number) => {
-    const numResults = this.searchParams.num_results || 200
+    this.selectedPage = page
     // mobx won't trigger observers of searchParams when non-observable keys are changed (or something)
     // -> set the whole object
-    this.searchParams = { ...this.searchParams, ...{ results_start: numResults * (page - 1) } }
+    this.searchParams = { ...this.searchParams, ...{ results_start: this.numResults * (page - 1) } }
   }
 
   submissionContains(s: ISolrFullSubmissionWithDate, q: string) {

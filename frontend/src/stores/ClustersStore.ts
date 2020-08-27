@@ -23,7 +23,6 @@ export class ClustersStore {
     this.toastStore = props.toastStore
     this.localSearchStore = props.localSearchStore
     persist(() => this.latestRunNgram, (val: any) => this.latestRunNgram = val, 'clusters.latestRunNgram')
-    persist(() => this.activeCluster, (val: any) => this.activeCluster = val, 'clusters.activeCluster')
   }
 
   @computed get ngramHistogramData() {
@@ -70,6 +69,7 @@ export class ClustersStore {
     if (this.latestRunNgram) {
       this.localSearchStore.setSelectedSubmissions(this.latestRunNgram!.ngram.clusters[cluster])
       this.localSearchStore.searchByIds(this.latestRunNgram!.ngram.clusters[cluster])
+      this.localSearchStore.setSelectedPage(1)
     }
   }
 }

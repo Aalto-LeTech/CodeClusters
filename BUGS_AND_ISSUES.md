@@ -4,6 +4,7 @@ So there are a few known bugs and a few unknown bugs in CodeClusters as of 21.8.
 
 * URL query params might get lost when page is refreshed, especially with custom_filters. Something wrong with parsing them.
 * Facets are not parsed from query params, should open the facets and set the params
+* Well also results_start is not parsed correctly from query params
 * Also empty facets are pushed into query params for no reason
 * Token facets don't work due to fact you can't wildcard query facets. So either you have to have individual facets for each keyword eg MUL_keywords or some other fix
 

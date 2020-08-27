@@ -61,7 +61,7 @@ const LocalSearchFormEl = inject((stores: Stores) => ({
               type="number"
               id="local_num_results"
               name="num_results"
-              placeholder="200"
+              placeholder="50"
               ref={register}
               onChange={handleChange}
             ></Input>
@@ -70,6 +70,7 @@ const LocalSearchFormEl = inject((stores: Stores) => ({
             <label htmlFor="local_num_lines">Lines per result</label>
             <Input
               fullWidth
+              disabled
               type="number"
               id="local_num_lines"
               name="num_lines"

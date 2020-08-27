@@ -76,7 +76,7 @@ export class SearchStore {
 
   @computed get searchResultsStart() {
     if (this.localSearchStore.searchActive) {
-      return this.localSearchStore.searchParams.results_start!
+      return this.localSearchStore.resultsStart
     }
     return this.selectedSearchResult.start || 0
   }
@@ -90,9 +90,16 @@ export class SearchStore {
 
   @computed get numberOfShownResults() {
     if (this.localSearchStore.searchActive) {
-      return this.localSearchStore.searchParams.num_results || 200
+      return this.localSearchStore.numResults
     }
     return this.searchParams.num_results || 20
+  }
+
+  @computed get currentPage() {
+    if (this.localSearchStore.searchActive) {
+      return this.localSearchStore.selectedPage
+    }
+    return this.selectedPage
   }
 
   @action reset() {
@@ -106,7 +113,6 @@ export class SearchStore {
 
   @action setSelectedPage = (page: number) => {
     if (this.localSearchStore.searchActive) {
-      this.selectedPage = page
       this.localSearchStore.setSelectedPage(page)
     } else {
       const numResults = this.searchParams.num_results || 20
