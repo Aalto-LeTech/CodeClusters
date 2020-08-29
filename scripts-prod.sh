@@ -79,6 +79,6 @@ case "$1" in
     sudo docker system prune
     ;;
   *)
-    echo $"Usage: $0 certbot|migrate|seed|testdata|db-delete|solr-recreate|data-import|update|update-all"
+    echo $"Usage: $0 certbot|migrate|seed|testdata|db-delete|solr-recreate|data-import|update <stack>|update-all"
     exit 1
 esac

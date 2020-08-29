@@ -47,12 +47,5 @@ So there are a few known bugs and a few unknown bugs in CodeClusters as of 21.8.
 * Some enhancements to vanilla TF-IDF
 * Other similarity measures than cosine similarity
 * Performance testing with bigger datasets eg 10,000 or 100,000 submissions
+* Never use SolrCloud. It's terrible and not required to run Solr in a cluster
 * Tests. lol
-
-#102732 nav
-
-#3cbbf8 bright blue
-
-#d8f1ff mellow blue
-
-#e1f1ff

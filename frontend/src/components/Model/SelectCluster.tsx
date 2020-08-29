@@ -106,6 +106,7 @@ const ClustersList = styled.ol`
   align-items: center;
   display: flex;
   margin: 0 8px;
+  overflow-x: scroll;
   & > * + * {
     margin-left: 8px;
   }

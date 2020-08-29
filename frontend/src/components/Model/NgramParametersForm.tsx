@@ -211,9 +211,13 @@ const NgramParametersFormEl = observer(forwardRef((props: IProps, ref) => {
   }
   const onFormSubmit = async (data: INgramFormParams, e?: React.BaseSyntheticEvent) => {
     setSubmitInProgress(true)
-    onSubmit!(normalizeFormData(data)).then(result => {
+    onSubmit!(normalizeFormData(data)).finally(() => {
       setSubmitInProgress(false)
     })
+  }
+  function handleCancel() {
+    setSubmitInProgress(false)
+    onCancel()
   }
   return (
     <FormContext {...methods} >
@@ -282,7 +286,7 @@ const NgramParametersFormEl = observer(forwardRef((props: IProps, ref) => {
           >Run n-gram</Button>
           <Button
             intent="transparent"
-            onClick={onCancel}
+            onClick={handleCancel}
           >Cancel</Button>
         </Buttons>}
       </Form>
