@@ -39,6 +39,7 @@ export interface ITheme {
     text: string
   }
   fontSize: {
+    xsmall: string
     small: string
     large: string
     medium: string

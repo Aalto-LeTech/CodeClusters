@@ -39,12 +39,12 @@ export const GlobalStyle = createGlobalStyle`
   }
   pre {
     font-family: ${({ theme }) => theme.font.header};
-    font-size: ${({ theme }) => theme.fontSize.small};
+    font-size: ${({ theme }) => theme.fontSize.xsmall};
     font-weight: 300;
     margin: 0;
     * {
       font-family: ${({ theme }) => theme.font.header};
-      font-size: ${({ theme }) => theme.fontSize.small};
+      font-size: ${({ theme }) => theme.fontSize.xsmall};
       font-weight: 300;
     }
   }
