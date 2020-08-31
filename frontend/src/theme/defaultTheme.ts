@@ -33,7 +33,7 @@ export const defaultTheme : ITheme = {
     yellow: 'yellow',
   },
   fontSize: {
-    small: '14px',
+    small: '15px',
     medium: '16px',
     large: '24px',
     xlarge: '40px',

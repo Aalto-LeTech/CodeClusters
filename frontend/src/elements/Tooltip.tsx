@@ -55,6 +55,9 @@ const TooltipContainer = styled.div`
   transition: 0.2s all;
   width: 300px;
   z-index: 100;
+  * {
+    line-height: 1.2;
+  }
 `
 const TooltipHeader = styled.div`
   align-items: center;

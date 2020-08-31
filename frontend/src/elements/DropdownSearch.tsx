@@ -120,7 +120,7 @@ const MenuButton = styled.button`
   display: flex;
   font-size: ${({ theme }) => theme.fontSize.medium};
   justify-content: center;
-  padding: 0.5rem 0.75rem 0.5rem 0.75rem;
+  padding: 10px 0.85rem;
   position: relative;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   &:hover {

@@ -57,6 +57,7 @@ export const Button = styled(ButtonEl)<IProps>`
   display: flex;
   font-size: ${({ theme }) => theme.fontSize.medium};
   justify-content: center;
+  line-height: 1.1;
   min-height: calc(2rem + 5px); // Scaled to the size of m-sized Spinner inside Button
   min-width: 100px;
   padding: 0.5rem 1.5rem;

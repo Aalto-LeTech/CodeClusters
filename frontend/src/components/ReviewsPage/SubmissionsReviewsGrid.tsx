@@ -121,7 +121,7 @@ interface ISubmissionRowProps {
 function SubmissionRow(props: ISubmissionRowProps) {
   const { submission, submissionReviews = [], onSubmissionThClick, onCellClick } = props
   return (
-    <tr>
+    <SubmissionTr>
       <SubmissionTh tabIndex={0} onClick={() => onSubmissionThClick(submission)}>
         {submission.submission_id.substring(0, 5)}
       </SubmissionTh>
@@ -133,7 +133,7 @@ function SubmissionRow(props: ISubmissionRowProps) {
           onCellClick={() => onCellClick(submission, j, sr)}
         />
       )}
-    </tr>
+    </SubmissionTr>
   )
 }
 
@@ -161,6 +161,9 @@ function SubmissionColumn(props: ISubmissionColumnProps) {
 }
 
 const ReviewsTable = styled.table`
+  * {
+    line-height: 1.3;
+  }
   td {
     border: 1px solid #222;
     cursor: pointer;
@@ -176,6 +179,11 @@ const THead = styled.thead``
 const Th = styled.th`
   font-size: 0.8rem;
   padding: 0 0.25rem;
+`
+const SubmissionTr = styled.tr`
+  > * {
+    font-size: ${({ theme }) => theme.fontSize.small};
+  }
 `
 const SubmissionTh = styled.th`
   border-radius: 2px;

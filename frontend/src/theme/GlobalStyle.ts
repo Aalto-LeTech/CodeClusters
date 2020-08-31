@@ -12,6 +12,7 @@ export const GlobalStyle = createGlobalStyle`
   h1,h2,h3,h4,h5 {
     font-family: ${({ theme }) => theme.font.header};
     font-weight: 600;
+    line-height: 1.1;
   }
   h1 {
     font-size: 2.25rem;
@@ -32,6 +33,9 @@ export const GlobalStyle = createGlobalStyle`
   * {
     box-sizing: border-box;
     font-family: ${({ theme }) => theme.font.text};
+  }
+  div, p {
+    line-height: 1.4;
   }
   pre {
     font-family: ${({ theme }) => theme.font.header};
