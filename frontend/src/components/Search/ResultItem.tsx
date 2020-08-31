@@ -116,6 +116,7 @@ const CodeHeader = styled.div`
 `
 const HeaderLeft = styled.div``
 const HeaderRight = styled.div`
+  align-items: center;
   display: flex;
 `
 const FlexCol = styled.div`
@@ -124,6 +125,7 @@ const FlexCol = styled.div`
 `
 const Buttons = styled.div`
   display: flex;
+  height: fit-content;
   margin-right: 1rem;
   & > * + * {
     margin-left: 0.5rem;

@@ -66,7 +66,7 @@ const Container = styled.div`
   flex-direction: column;
   width: 100%;
   & > ${Pagination} {
-    margin: 1rem 0;
+    margin: 0 0 1rem 0;
   }
 `
 const ListHeader = styled.div`
@@ -95,6 +95,8 @@ const LocalSearchBox = styled.button<{ active?: boolean }>`
   }
 `
 const ResultList = styled.ul`
+  margin-bottom: 1rem;
+  min-height: 200px;
 `
 const SearchResultsListItem = styled.li`
 `

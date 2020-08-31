@@ -124,11 +124,10 @@ interface IFacetEmptyResultsProps {
 }
 const FacetEmptyResults = (props: IFacetEmptyResultsProps) => {
   const { className, buckets, resultsFetched } = props
-  const noResults = (buckets === undefined || buckets.length === 0) && resultsFetched
-  if (noResults) {
+  if ((buckets === undefined || buckets.length === 0) && resultsFetched) {
     return <div>No results</div>
   }
-  if (!resultsFetched) {
+  if ((buckets === undefined || buckets.length === 0) && !resultsFetched) {
     return (
       <div className={className}>
         <RunSearchButton>
