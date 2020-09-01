@@ -96,6 +96,7 @@ export class ReviewFlowStore {
 
   @action reset() {
     this.reviewFlows = []
+    this.selectedFlow = undefined
   }
 
   @action setSelectedFlow(title: string) {

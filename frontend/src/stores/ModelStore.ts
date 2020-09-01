@@ -46,6 +46,9 @@ export class ModelStore {
  }
 
   @action reset() {
+    this.models = []
+    this.ranModels = []
+    this.selectedModel = undefined
   }
 
   @action setSelectedModel = (model?: IModel) => {

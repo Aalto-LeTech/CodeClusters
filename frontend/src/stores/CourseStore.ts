@@ -29,6 +29,8 @@ export class CourseStore {
 
   @action reset() {
     this.courses = []
+    this.selectedCourse = undefined
+    this.selectedExercise = undefined
   }
 
   @action setSelectedCourse(name?: string) {

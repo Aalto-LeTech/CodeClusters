@@ -53,6 +53,7 @@ export class ClustersStore {
   }
 
   @action reset() {
+    this.latestRunNgram = undefined
   }
 
   @action resetActiveCluster = () => {
