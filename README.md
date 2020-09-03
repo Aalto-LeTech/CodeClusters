@@ -4,6 +4,8 @@ Application to easily search and cluster code in programming courses.
 
 [Model repository](https://github.com/Aalto-LeTech/CodeClustersModeling)
 
+[Introduction video](https://www.youtube.com/watch?v=cffAIIIQNYw)
+
 # How to install
 
 Requires: Docker, DockerCompose, Node.js (preferably installed with nvm), yarn installed globally

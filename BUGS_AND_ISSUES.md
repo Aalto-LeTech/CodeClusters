@@ -1,6 +1,8 @@
 # Bugs / issues
 
-So there are a few known bugs and a few unknown bugs in CodeClusters as of 21.8.2020. Also there are missing functionalities for placeholder buttons and such. The user interface was inspired by https://grep.app/ which explains some of the UI choices.
+So there are a few known bugs and unknown bugs in CodeClusters as of 3.9.2020. Also there are missing functionalities for placeholder buttons and such. The user interface was inspired by https://grep.app/ which explains some of the UI choices.
+
+There is `@welldone-software/why-did-you-render` used in the index.tsx that I have commented out to not to have people wondering why their app is so sluggish locally. It is helpful for finding and fixing React rendering issues.
 
 * URL query params might get lost when page is refreshed, especially with custom_filters. Something wrong with parsing them.
 * Facets are not parsed from query params, should open the facets and set the params
@@ -18,6 +20,7 @@ So there are a few known bugs and a few unknown bugs in CodeClusters as of 21.8.
 * I assume there are lots of bugs in the modeling server, should have tests and proper error messages for various error states instead of general 500
 
 * Review flows are missing edit functionality and its form
+* The review flow parameters are somehow affected by the current search parameters (adds eg empty facet params)
 * Also facets should be included in the new review flow modal
 * Test flow button doesn't work (should basically just run the flow and see if it throws an error)
 * Also review flow and review both have tags in new review flow params. Should probably just have one

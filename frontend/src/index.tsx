@@ -13,12 +13,12 @@ import { App } from './App'
 import { Routes } from './routes'
 import { Toaster } from './components/Toaster'
 
-if (process.env.NODE_ENV === 'development') {
-  const whyDidYouRender = require('@welldone-software/why-did-you-render')
-  whyDidYouRender(React, {
-    trackAllPureComponents: true,
-  })
-}
+// if (process.env.NODE_ENV === 'development') {
+//   const whyDidYouRender = require('@welldone-software/why-did-you-render')
+//   whyDidYouRender(React, {
+//     trackAllPureComponents: true,
+//   })
+// }
 
 confMobx()
 
