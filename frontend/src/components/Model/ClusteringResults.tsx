@@ -35,6 +35,9 @@ const ClusteringResultsEl = inject((stores: Stores) => ({
 }))
 (observer((props: IProps) => {
   const { className, activeCluster, getNgramHistogramData, getNgramScatterData, latestRunNgram, setActiveCluster } = props
+  const silhouette_score = latestRunNgram ? latestRunNgram.ngram.silhouette_score : undefined
+  const score = silhouette_score ? silhouette_score.toPrecision(3) : 'none'
+
   function handleClickBar(item: any) {
     setActiveCluster!(item.cluster)
   }
@@ -44,7 +47,7 @@ const ClusteringResultsEl = inject((stores: Stores) => ({
   return (
     <Container className={className}>
       <Title>Ngram clusters</Title>
-      <p>Silhouette score: {latestRunNgram!.ngram.silhouette_score?.toPrecision(3)}</p>
+      <p>Silhouette score: {score}</p>
       <Plots>
         <ClustersHistogram
           data={getNgramHistogramData || []}
