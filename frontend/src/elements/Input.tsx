@@ -60,7 +60,7 @@ const InputEl = forwardRef((props: IProps, ref?: React.Ref<any>) => {
           id={id}
           name={name}
           step={step}
-          autocomplete={autocomplete}
+          autoComplete={autocomplete}
           iconPadding={iconPadding}
           placeholder={placeholder}
           title={title}
