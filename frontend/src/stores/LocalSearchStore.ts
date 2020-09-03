@@ -40,6 +40,10 @@ export class LocalSearchStore {
       .map(idx => this.submissions[idx])
   }
 
+  @computed get selectedSubmissions() {
+    return this.searchedSubmissionIndexes.map(idx => this.submissions[idx])
+  }
+
   @computed get numResults() {
     return this.searchParams.num_results || 50
   }

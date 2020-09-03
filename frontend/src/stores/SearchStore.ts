@@ -104,6 +104,8 @@ export class SearchStore {
 
   @action reset() {
     this.searchResults = []
+    this.selectedSearchResult = EMPTY_RESULT
+    this.searchParams = EMPTY_QUERY
   }
 
   @action setInitialSearchParams = (payload: ISearchCodeParams) => {
@@ -175,6 +177,8 @@ export class SearchStore {
   @action searchAll = async () => {
     let result
     const payload = { ...this.searchParams }
+    // Disregard what page is selected
+    payload.results_start = 0
     payload.facets = this.searchFacetsStore.currentFacetParams
     payload.facet_filters = this.searchFacetsStore.createFiltersFromFacets()
     try {
@@ -192,6 +196,8 @@ export class SearchStore {
 
   @action searchIds = async () => {
     const payload = { ...this.searchParams }
+    // Disregard what page is selected
+    payload.results_start = 0
     payload.facets = this.searchFacetsStore.currentFacetParams
     payload.facet_filters = this.searchFacetsStore.createFiltersFromFacets()
     const result = await searchApi.searchIds(payload)
