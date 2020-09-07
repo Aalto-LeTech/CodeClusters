@@ -16,10 +16,11 @@ export const GlobalStyle = createGlobalStyle`
   }
   h1 {
     font-size: 2.25rem;
-    margin: 2rem 0;
+    margin: 3rem 0;
   }
   h2 {
     font-size: 1.75rem;
+    margin: 3rem 0 2rem 0;
   }
   h3 {
     font-size: 1.5rem;

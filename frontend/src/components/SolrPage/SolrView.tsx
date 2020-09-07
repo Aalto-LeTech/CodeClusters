@@ -44,7 +44,7 @@ const Header = styled.header`
   display: flex;
   flex-direction: column;
   & > h1 {
-    margin-top: 0;
+    margin-top: 1rem;
   }
 `
 const Info = styled.div`

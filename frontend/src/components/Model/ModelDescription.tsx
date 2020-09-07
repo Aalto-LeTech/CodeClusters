@@ -60,6 +60,7 @@ const Header = styled.div`
 const Title = styled.div`
   font-weight: bold;
   font-size: 1.5rem;
+  line-height: 1.1;
   margin: 0 1rem;
 `
 const Body = styled.div<{ minimized: boolean}>`

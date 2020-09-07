@@ -137,12 +137,15 @@ const Header = styled.header`
   display: flex;
   flex-direction: column;
   width: 100%;
-  & > h1 {
-    margin: 1rem 0;
+  h1 {
+    margin: 2rem 0 1rem 0;
   }
 `
 const Article = styled.article`
   margin-bottom: 2rem;
+  & > h2:first-child {
+    margin-top: 2rem;
+  }
 `
 
 export const ManualView = styled(ManualViewEl)``

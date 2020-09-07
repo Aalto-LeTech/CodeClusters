@@ -105,7 +105,7 @@ const SearchFacetGroupItemEl = inject((stores: Stores, props: IProps) => ({
                 onChange={handleFacetFieldToggle(field)}
               />
               <BucketName>
-                { typeof field.data === 'string' ? field.data : `${field.data[0]} - <${field.data[1]}` }
+                { typeof field.data === 'string' ? field.data : `${field.data[0]} - ${field.data[1] - 1}` }
               </BucketName>
               <BucketValue>{field.count}</BucketValue>
             </BucketsListItem>
