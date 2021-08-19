@@ -26,7 +26,7 @@ export const parseQueryParams = (schema: ObjectSchema) => (req: AnyRequest, res:
   let parsed
   // Parse JSON objects from query params (used with facets eg facets={"NCSS_method_metric":true})
   // Since there wasn't really any other reasonable way (other than changing to POST requests which would have made the use of
-  // copy-pastable search URLs impossible)
+  // copy-pasteable search URLs impossible)
   try {
     parsed = Object.keys(query).reduce((acc, cur) => {
       const val = query[cur]

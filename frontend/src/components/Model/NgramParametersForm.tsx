@@ -220,7 +220,7 @@ const NgramParametersFormEl = observer(forwardRef((props: IProps, ref) => {
     onCancel()
   }
   return (
-    <FormContext {...methods} >
+    <FormContext {...methods}>
       <Form className={className} id={`${id}_ngram_parameters`} visible={visible} onSubmit={handleSubmit(onFormSubmit)}>
         <TopRow>
           <FormField>

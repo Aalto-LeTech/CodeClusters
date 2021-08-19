@@ -1,4 +1,6 @@
-# The builder image
+#####################
+# The builder image #
+#####################
 FROM node:14.3.0-alpine as builder
 
 # Set NODE_ENV to build so that all devDependencies are fetched and tslint won't fail
@@ -24,7 +26,9 @@ COPY ./backend/src ./src
 ENV NODE_ENV production
 RUN yarn ts
 
-# The Node server image
+############################
+# The server Node.js image #
+############################
 FROM node:14.3.0-alpine
 
 ENV PORT 8600

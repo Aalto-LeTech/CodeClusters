@@ -32,7 +32,7 @@ export class IndexStore {
     try {
       result = await indexApi.indexMetrics(params)
       if (result) {
-        this.toastStore.createToast('Metrics run and indexed', 'success')
+        this.toastStore.createToast('Metrics ran and indexed', 'success')
       }
       return result
     } catch (err) {
