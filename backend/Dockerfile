@@ -1,7 +1,7 @@
 #####################
 # The builder image #
 #####################
-FROM node:14.3.0-alpine as builder
+FROM node:16.10.0-alpine3.11 as builder
 
 # Set NODE_ENV to build so that all devDependencies are fetched and tslint won't fail
 ENV NODE_ENV build
@@ -29,7 +29,7 @@ RUN yarn ts
 ############################
 # The server Node.js image #
 ############################
-FROM node:14.3.0-alpine
+FROM node:16.10.0-alpine3.11
 
 ENV PORT 8600
 ENV INSTALL_PATH /opt/codeclusters-backend

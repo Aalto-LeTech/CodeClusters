@@ -1,4 +1,4 @@
-FROM openresty/openresty:1.17.8.2-2-alpine-fat
+FROM openresty/openresty:1.19.9.1-14-alpine-fat
 
 ENV HTTP_PORT 80
 ENV HTTPS_PORT 443

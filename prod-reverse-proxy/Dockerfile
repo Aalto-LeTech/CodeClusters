@@ -1,4 +1,4 @@
-FROM nginx:1.17.10-alpine
+FROM nginx:1.23.1-alpine
 
 ENV HTTP_PORT 80
 ENV HTTPS_PORT 443

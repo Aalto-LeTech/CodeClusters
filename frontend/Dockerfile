@@ -1,5 +1,5 @@
 # The builder image
-FROM node:14.3.0-alpine as builder
+FROM node:16.10.0-alpine3.11 as builder
 
 # Set NODE_ENV to build so that all devDependencies are fetched and tslint won't fail
 ENV NODE_ENV build
@@ -27,13 +27,13 @@ ENV NODE_ENV production
 RUN yarn build
 
 # The production image
-FROM nginx:1.17.10-alpine
+FROM nginx:1.23.1-alpine
 
 ENV HTTP_PORT 80
 
 COPY --from=builder /usr/codeclusters-frontend/build /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
-COPY --from=builder /usr/codeclusters-frontend/nginx/nginx.conf /etc/nginx
+COPY --from=builder /usr/codeclusters-frontend/nginx/nginx.conf /etc/nginx/
 
 EXPOSE ${HTTP_PORT}
 # Run the nginx without daemon to keep the process and the container bound together

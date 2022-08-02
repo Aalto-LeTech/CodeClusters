@@ -20,8 +20,8 @@ const corsOptions: cors.CorsOptions = {
 }
 
 app.use(cors(corsOptions))
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
+app.use(express.urlencoded({ extended: true, limit: '20mb' }))
+app.use(express.json({ limit: '20mb' }))
 
 // By adding this route before morgan prevents it being logged which in production setting
 // is annoying and pollutes the logs with gazillion "GET /health" lines

@@ -43,7 +43,7 @@ services:
       NODE_ENV: production
       PORT: 8600
   postgres:
-    image: postgres:11.6-alpine
+    image: postgres:13.4-alpine
     container_name: postgres
     restart: unless-stopped
     ports:
