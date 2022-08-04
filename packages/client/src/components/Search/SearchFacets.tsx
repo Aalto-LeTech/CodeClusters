@@ -9,7 +9,7 @@ import { SearchFacetGroupList } from './SearchFacetGroupList'
 import { Icon } from '../../elements/Icon'
 import { Tooltip } from '../../elements/Tooltip'
 
-import { Stores } from '../../stores'
+import { Stores } from '../../stores/Stores'
 import { FacetItem } from '../../types/search'
 
 interface IProps {

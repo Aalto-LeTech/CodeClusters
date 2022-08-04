@@ -3,7 +3,7 @@ import { render } from 'react-dom'
 import { Provider } from 'mobx-react'
 import { ThemeProvider } from 'styled-components'
 
-import { Stores } from './stores'
+import { stores } from './stores'
 import { confMobx } from './stores/mobxConf'
 
 import { defaultTheme } from './theme/defaultTheme'
@@ -21,8 +21,6 @@ import { Toaster } from './components/Toaster'
 // }
 
 confMobx()
-
-export const stores = new Stores()
 
 render(
   <Provider {...stores}>

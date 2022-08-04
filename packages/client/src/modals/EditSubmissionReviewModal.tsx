@@ -12,7 +12,7 @@ import { Button } from '../elements/Button'
 import { Icon } from '../elements/Icon'
 import { CodeBlock } from '../components/CodeBlock'
 
-import { Stores } from '../stores'
+import { Stores } from '../stores/Stores'
 import { IModal, EModal } from '../stores/ModalStore'
 import { IReview, IReviewSubmission, ISubmission } from '@codeclusters/types'
 

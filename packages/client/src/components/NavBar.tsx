@@ -1,25 +1,29 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { inject, observer } from 'mobx-react'
 import styled from '../theme/styled'
 
-import { AuthStore } from '../stores/AuthStore'
+import { stores } from 'stores'
 
-import { RouteComponentProps } from 'react-router'
 import { IUser } from '@codeclusters/types'
 
-interface IProps extends RouteComponentProps<{}> {
+interface IProps {
   className?: string
-  authStore?: AuthStore,
 }
 
-export const NavBar = inject('authStore')(observer((props: IProps) => {
+export const NavBar = (props: IProps) => {
+  const { className } = props
+  const navigate = useNavigate()
+  const {
+    authStore,
+  } = stores
+
   function handleLogout(e : React.MouseEvent<any>) {
     authStore!.logout()
-    history.push('/')
+    navigate('/')
   }
-  const { className, authStore, history } = props
-  const { user, isAuthenticated } = authStore!
+  const { user, isAuthenticated } = authStore
   return (
     <Container className={className}>
       <Nav>
@@ -33,7 +37,7 @@ export const NavBar = inject('authStore')(observer((props: IProps) => {
       </Nav>
     </Container>
   )
-}))
+}
 
 function NavLinks(props: { user?: IUser }) {
   const { user } = props

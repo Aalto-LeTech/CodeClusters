@@ -9,7 +9,7 @@ import { Icon } from '../../elements/Icon'
 import { ReviewTh } from './ReviewTh'
 
 import { IReview, IReviewSubmission, ISubmission } from '@codeclusters/types'
-import { Stores } from '../../stores'
+import { Stores } from '../../stores/Stores'
 import { EModal } from '../../stores/ModalStore'
 
 interface IProps {

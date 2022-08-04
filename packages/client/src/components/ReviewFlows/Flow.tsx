@@ -5,7 +5,7 @@ import styled from '../../theme/styled'
 import { FlowSteps } from './FlowSteps'
 import { Button } from '../../elements/Button'
 
-import { Stores } from '../../stores'
+import { Stores } from '../../stores/Stores'
 import { IReviewFlow, IReviewFlowRunParams } from '@codeclusters/types'
 
 interface IProps {

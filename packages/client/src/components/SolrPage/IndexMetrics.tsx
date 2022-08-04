@@ -6,7 +6,7 @@ import { SelectCourseExercise } from '../SelectCourseExercise'
 import { Button } from '../../elements/Button'
 
 import { IIndexMetricsParams } from '@codeclusters/types'
-import { Stores } from '../../stores'
+import { Stores } from '../../stores/Stores'
 
 interface IProps {
   className?: string

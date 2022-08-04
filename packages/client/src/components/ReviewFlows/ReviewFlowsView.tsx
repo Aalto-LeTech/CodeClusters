@@ -7,7 +7,7 @@ import { TabsMenu } from '../../elements/TabsMenu'
 import { DropdownSearch } from '../../elements/DropdownSearch'
 import { Button } from '../../elements/Button'
 
-import { Stores } from '../../stores'
+import { Stores } from '../../stores/Stores'
 import { EModal } from '../../stores/ModalStore'
 import { ReviewFlowStore, ReviewFlowFilterType, ITabOption } from '../../stores/ReviewFlowStore'
 import { IReviewFlow } from '@codeclusters/types'

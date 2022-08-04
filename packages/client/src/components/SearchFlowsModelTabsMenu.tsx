@@ -5,8 +5,6 @@ import { SearchConsole } from './Search/SearchConsole'
 import { ReviewFlows } from './ReviewFlows/ReviewFlowsView'
 import { ModelTabView } from './Model/ModelTabView'
 
-import { Stores } from '../stores'
-
 interface IProps {
   className?: string
 }

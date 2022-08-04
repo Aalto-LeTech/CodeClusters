@@ -1,72 +1,67 @@
 import React, { useEffect, useState } from 'react'
-import { inject } from 'mobx-react'
+import {
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import styled from '../theme/styled'
 import { MdEmail, MdLock } from 'react-icons/md'
 
 import { Button } from '../elements/Button'
 import { Input } from '../elements/Input'
 
-import { Stores } from '../stores'
-import { AuthStore } from '../stores/AuthStore'
+import { stores } from 'stores'
 import { ILoginCredentials } from '../types/user'
-import { RouteComponentProps } from 'react-router'
 
-interface IProps extends RouteComponentProps<{}> {
-  authStore?: AuthStore,
-}
-interface IState {
-  defaultValues: ILoginCredentials
-}
+export function LoginPage() {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const {
+    authStore: { isAuthenticated, login },
+  } = stores
+  const [defaultValues, setDefaultValues] = useState({
+    email: '',
+    password: '',
+  })
 
-@inject((stores: Stores) => ({
-  authStore: stores.authStore,
-}))
-export class LoginPage extends React.Component<IProps, IState> {
-  state = {
-    defaultValues: {
-      email: '',
-      password: '',
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(location.pathname)
     }
-  }
-  componentDidMount() {
-    if (this.props.authStore!.isAuthenticated) {
-      this.props.history.push(this.props.location.pathname)
-    }
-  }
-  handleLoginSubmit = async (values: ILoginCredentials) => {
-    const success = await this.props.authStore!.logInUser(values)
+  }, [isAuthenticated])
+
+  async function handleSubmit(data: any) {
+    const success = await login!(data)
     if (success) {
-      this.props.history.push('')
+      navigate('/')
     }
   }
-  handleSetDefaultValues = (name: string) => () => {
-    const newValues = {
+  const handleSetDefaultValues = (name: string) => () => {
+    setDefaultValues({
       email: `${name}@asdf.fi`,
       password: 'asdfasdf'
-    }
-    this.setState((oldState) => ({ ...oldState, defaultValues: newValues }))
+    })
   }
-  render() {
-    const { defaultValues } = this.state
-    return (
-      <section>
-        <ShortcutButtonsContainer>
-          <Button onClick={this.handleSetDefaultValues('admin')}>Admin login</Button>
-          <Button onClick={this.handleSetDefaultValues('tikku')}>Teacher login</Button>
-          <Button onClick={this.handleSetDefaultValues('morty')}>Student 1 login</Button>
-          <Button onClick={this.handleSetDefaultValues('linus')}>Student 2 login</Button>
-        </ShortcutButtonsContainer>
-        <LoginFormEl defaultValues={defaultValues} onSubmit={this.handleLoginSubmit}/>
-      </section>
-    )
-  }
+  return (
+    <div>
+      <h1>Login</h1>
+      <ShortcutButtonsContainer>
+        <Button onClick={handleSetDefaultValues('admin')}>Admin login</Button>
+        <Button onClick={handleSetDefaultValues('tikku')}>Teacher login</Button>
+        <Button onClick={handleSetDefaultValues('morty')}>Student 1 login</Button>
+        <Button onClick={handleSetDefaultValues('linus')}>Student 2 login</Button>
+      </ShortcutButtonsContainer>
+      <div>
+        <LoginForm defaultValues={defaultValues} onSubmit={handleSubmit} />
+      </div>
+    </div>
+  )
 }
 
 interface IFormProps {
   defaultValues: ILoginCredentials
   onSubmit: (formValues: ILoginCredentials) => void
 }
-function LoginFormEl(props: IFormProps) {
+function LoginForm(props: IFormProps) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     const values = {
@@ -83,7 +78,7 @@ function LoginFormEl(props: IFormProps) {
     setPassword(defaultValues.password)
   }, [defaultValues])
   return (
-    <LoginForm onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit}>
       <LoginField>
         <label htmlFor="email">Email</label>
         <Input
@@ -113,7 +108,7 @@ function LoginFormEl(props: IFormProps) {
           onChange={val => setPassword(val)}/>
       </LoginField>
       <Button type="submit">Submit</Button>
-    </LoginForm>
+    </Form>
   )
 }
 
@@ -123,7 +118,7 @@ const ShortcutButtonsContainer = styled.div`
     margin-right: 1rem;
   }
 `
-const LoginForm = styled.form`
+const Form = styled.form`
   align-items: center;
   display: flex;
   flex-direction: column;

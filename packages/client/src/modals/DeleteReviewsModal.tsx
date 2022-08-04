@@ -10,7 +10,7 @@ import { Modal } from '../elements/Modal'
 import { Button } from '../elements/Button'
 import { Icon } from '../elements/Icon'
 
-import { Stores } from '../stores'
+import { Stores } from '../stores/Stores'
 import { IModal, EModal } from '../stores/ModalStore'
 
 interface IProps {

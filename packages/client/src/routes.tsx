@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { BrowserRouter, Redirect, Switch } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes as RouterRoutes } from 'react-router-dom'
 
-import { WrappedRoute, NoMainContainerRoute } from './components/WrappedRoute'
-import { AuthHOC } from './components/AuthHOC'
+import { DefaultLayout, NoContainerLayout } from './components/Layout'
+import { withRedirectUnAuth } from './components/withRedirectUnAuth'
 
 import { FrontPage } from './pages/FrontPage'
 import { LoginPage } from './pages/LoginPage'
@@ -11,16 +11,20 @@ import { ReviewsPage } from './pages/ReviewsPage'
 import { ReviewViewPage } from './pages/ReviewViewPage'
 import { SolrPage } from './pages/SolrPage'
 
+const Reviews = withRedirectUnAuth(ReviewsPage)
+const ReviewView = withRedirectUnAuth(ReviewViewPage)
+const Solr = withRedirectUnAuth(SolrPage)
+
 export const Routes = () => (
   <BrowserRouter>
-    <Switch>
-      <NoMainContainerRoute exact path="/" component={FrontPage}/>
-      <WrappedRoute exact path="/login" component={LoginPage}/>
-      <NoMainContainerRoute exact path="/reviews" component={AuthHOC(ReviewsPage)}/>
-      <WrappedRoute exact path="/review/:userId" component={AuthHOC(ReviewViewPage)}/>
-      <NoMainContainerRoute exact path="/manual" component={ManualPage}/>
-      <WrappedRoute exact path="/solr" component={AuthHOC(SolrPage)}/>
-      <Redirect to="/" />
-    </Switch>
+    <RouterRoutes>
+      <Route path="/" element={<NoContainerLayout><FrontPage /></NoContainerLayout>}/>
+      <Route path="/login" element={<DefaultLayout><LoginPage /></DefaultLayout>}/>
+      <Route path="/reviews" element={<NoContainerLayout>{<Reviews />}</NoContainerLayout>}/>
+      <Route path="/review/:userId" element={<DefaultLayout>{<ReviewView />}</DefaultLayout>}/>
+      <Route path="/manual" element={<NoContainerLayout>{<ManualPage />}</NoContainerLayout>}/>
+      <Route path="/solr" element={<DefaultLayout>{<Solr />}</DefaultLayout>}/>
+      <Route path="*" element={<Navigate replace to="/" />} />
+    </RouterRoutes>
   </BrowserRouter>
 )

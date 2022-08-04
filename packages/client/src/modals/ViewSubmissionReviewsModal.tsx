@@ -13,7 +13,7 @@ import { Icon } from '../elements/Icon'
 import { CodeBlock } from '../components/CodeBlock'
 
 import { ISubmission, IReviewWithSelection } from '@codeclusters/types'
-import { Stores } from '../stores'
+import { Stores } from '../stores/Stores'
 import { IModal, EModal } from '../stores/ModalStore'
 
 interface IProps {

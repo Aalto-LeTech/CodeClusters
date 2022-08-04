@@ -7,7 +7,7 @@ import { Pagination } from './Pagination'
 import { LocalSearchControls } from './LocalSearchControls'
 import { VirtualizedSearchResultsList } from './VirtualizedSearchResultsList'
 
-import { Stores } from '../../stores'
+import { Stores } from '../../stores/Stores'
 import { ISolrFullSubmissionWithDate } from '@codeclusters/types'
 
 interface IProps {

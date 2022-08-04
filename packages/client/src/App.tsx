@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { inject } from 'mobx-react'
 
-import { Stores } from './stores'
+import { Stores } from './stores/Stores'
 
 interface IProps {
   className?: string

@@ -6,7 +6,7 @@ import { FiSearch } from 'react-icons/fi'
 import { CheckBox } from '../../elements/CheckBox'
 
 import { ISearchFacetParams, ISearchFacetRange } from '@codeclusters/types'
-import { Stores } from '../../stores'
+import { Stores } from '../../stores/Stores'
 import { FacetItem, FacetField } from '../../types/search'
 
 interface IProps {

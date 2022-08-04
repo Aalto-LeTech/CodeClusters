@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { inject, observer } from 'mobx-react'
-import { withRouter, RouteComponentProps } from 'react-router'
+import {
+  useLocation,
+  useNavigate,
+  useParams
+} from "react-router-dom";
 import { createSearchQueryParams, parseSearchQueryParams } from '../../utils/url'
 
 import { SearchForm } from './SearchForm'
 
-import { Stores } from '../../stores'
+import { Stores } from '../../stores/Stores'
 import { ISearchCodeParams, ISolrSearchCodeResponse } from '@codeclusters/types'
 
-interface IProps extends RouteComponentProps {
+interface IProps {
   className?: string
   visible: boolean
   courseId?: number
@@ -32,21 +36,24 @@ const SearchConsoleEl = inject((stores: Stores) => ({
   search: stores.searchStore.search,
   deactivateLocalSearch: () => stores.localSearchStore.setActive(false),
 }))
-(observer(withRouter((props: IProps) => {
+(observer((props: IProps) => {
   const {
-    className, history, setInitialSearchParams, search, deactivateLocalSearch, initialSearchParams,
+    className, setInitialSearchParams, search, deactivateLocalSearch, initialSearchParams,
     searchParams, courseId, exerciseId, selectedPage = 1, visible
   } = props
+  const location = useLocation()
+  const navigate = useNavigate()
+  const params = useParams()
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
     const current = createSearchQueryParams(searchParams!)
-    if (history.location.search !== current && !mounted) {
-      const searchQuery = parseSearchQueryParams(history.location.search)
+    if (location.search !== current && !mounted) {
+      const searchQuery = parseSearchQueryParams(location.search)
       if (searchQuery) {
         setInitialSearchParams!(searchQuery)
       }
     } else {
-      history.push(current)
+      navigate(current)
     }
     setMounted(true)
   }, [searchParams])
@@ -56,7 +63,7 @@ const SearchConsoleEl = inject((stores: Stores) => ({
   }
   async function handleSearch(payload: ISearchCodeParams) {
     const data = searchParams!.results_start ? { ...payload, results_start: searchParams?.results_start } : payload
-    history.push(createSearchQueryParams(data))
+    navigate(createSearchQueryParams(data))
     await search!(data)
   }
   return (
@@ -71,7 +78,7 @@ const SearchConsoleEl = inject((stores: Stores) => ({
       />
     </Container>
   )
-})))
+}))
 
 const Container = styled.section<{ visible: boolean }>`
   display: ${({ visible }) => visible ? 'block' : 'none'};

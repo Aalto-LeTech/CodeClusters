@@ -5,7 +5,7 @@ import styled from '../../theme/styled'
 import { CodeBlock } from '../CodeBlock'
 import { Button } from '../../elements/Button'
 
-import { Stores } from '../../stores'
+import { Stores } from '../../stores/Stores'
 import { ISolrSubmissionWithDate, ISolrFullSubmissionWithDate } from '@codeclusters/types'
 
 type SolrSubmission = ISolrSubmissionWithDate | ISolrFullSubmissionWithDate

@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom'
 import { inject } from 'mobx-react'
 import { RouteComponentProps } from 'react-router'
 
-import { Stores } from '../stores'
+import { Stores } from '../stores/Stores'
 
 interface IProps {
   isAuthenticated?: boolean

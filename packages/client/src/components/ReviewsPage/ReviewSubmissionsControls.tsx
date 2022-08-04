@@ -5,7 +5,7 @@ import styled from '../../theme/styled'
 import { Button } from '../../elements/Button'
 
 import { IReview } from '@codeclusters/types'
-import { Stores } from '../../stores'
+import { Stores } from '../../stores/Stores'
 import { EModal } from '../../stores/ModalStore'
 
 interface IProps {

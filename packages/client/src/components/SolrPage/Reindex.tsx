@@ -4,7 +4,7 @@ import { inject, observer } from 'mobx-react'
 
 import { Button } from '../../elements/Button'
 
-import { Stores } from '../../stores'
+import { Stores } from '../../stores/Stores'
 
 interface IProps {
   className?: string

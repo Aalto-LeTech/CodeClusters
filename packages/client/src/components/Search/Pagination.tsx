@@ -6,7 +6,7 @@ import { FiChevronLeft, FiChevronRight, FiMoreHorizontal } from 'react-icons/fi'
 
 import { Icon } from '../../elements/Icon'
 
-import { Stores } from '../../stores'
+import { Stores } from '../../stores/Stores'
 
 interface IProps {
   className?: string

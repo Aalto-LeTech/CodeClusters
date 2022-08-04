@@ -4,7 +4,7 @@ import styled from '../../theme/styled'
 
 import { Button } from '../../elements/Button'
 
-import { Stores } from '../../stores'
+import { Stores } from '../../stores/Stores'
 import { EReviewStatus } from '@codeclusters/types'
 
 interface IProps {

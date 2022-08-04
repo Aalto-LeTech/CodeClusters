@@ -7,7 +7,7 @@ import { Icon } from '../elements/Icon'
 import { Spinner } from '../elements/Spinner'
 
 import { ISolrSubmissionWithDate, ISolrFullSubmissionWithDate } from '@codeclusters/types'
-import { Stores } from '../stores'
+import { Stores } from '../stores/Stores'
 import { EModal } from '../stores/ModalStore'
 
 type SolrSubmission = ISolrSubmissionWithDate | ISolrFullSubmissionWithDate

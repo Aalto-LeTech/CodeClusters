@@ -10,7 +10,7 @@ import {
   IModel, IModelId, IModelParams, INgramParams
 } from '@codeclusters/types'
 import { ModelFormParams } from '../../types/forms'
-import { Stores } from '../../stores'
+import { Stores } from '../../stores/Stores'
 
 interface IProps {
   className?: string

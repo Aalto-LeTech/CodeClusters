@@ -5,12 +5,12 @@ import { FaGithub } from 'react-icons/fa'
 
 import { SearchView } from '../components/Search'
 import { DeleteReviewSelectionModal } from '../modals/DeleteReviewSelectionModal'
-import { ReviewSubmissionsModal } from '../modals/AddReviewModal'
+import { AddReviewModal } from '../modals/AddReviewModal'
 import { CreateReviewFlowModal } from '../modals/CreateReviewFlowModal'
 import { FloatingMenu } from '../components/FloatingMenu'
 import { Icon } from '../elements/Icon'
 
-import { Stores } from '../stores'
+import { Stores } from '../stores/Stores'
 
 interface IProps {
   getSearchSupplementaryData?: () => Promise<any>
@@ -34,7 +34,7 @@ export const FrontPage = inject((stores: Stores) => ({
       </Header>
       <SearchView/>
       <DeleteReviewSelectionModal />
-      <ReviewSubmissionsModal />
+      <AddReviewModal />
       <CreateReviewFlowModal />
       <FloatingMenu />
     </Container>

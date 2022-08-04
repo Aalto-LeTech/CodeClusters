@@ -6,7 +6,7 @@ import { ClustersHistogram } from '../Plots/ClustersHistogram'
 import { ClustersScatterPlot } from '../Plots/ClustersScatterPlot'
 
 import { IRunNgramResponse } from '@codeclusters/types'
-import { Stores } from '../../stores'
+import { Stores } from '../../stores/Stores'
 
 interface IProps {
   className?: string

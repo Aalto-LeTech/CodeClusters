@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios'
 
-import { stores } from '../index'
+import { stores } from 'stores'
 
 const { NODE_ENV, REACT_APP_API_URL } = process.env
 export const defaultHeaders = {

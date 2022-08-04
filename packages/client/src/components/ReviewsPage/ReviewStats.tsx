@@ -4,7 +4,7 @@ import styled from '../../theme/styled'
 import { FiCheck, FiEdit2, FiTrash, FiAlignLeft } from 'react-icons/fi'
 
 import { IReview, IReviewSubmission, ISubmission } from '@codeclusters/types'
-import { Stores } from '../../stores'
+import { Stores } from '../../stores/Stores'
 
 interface IProps {
   className?: string

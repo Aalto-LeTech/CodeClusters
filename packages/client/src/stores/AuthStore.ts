@@ -31,7 +31,7 @@ export class AuthStore {
     this.jwt = EMPTY_JWT
   }
 
-  @action logInUser = async (credentials: ILoginCredentials) => {
+  @action login = async (credentials: ILoginCredentials) => {
     const result = await userApi.login(credentials)
     runInAction(() => {
       if (result) {

@@ -12,7 +12,7 @@ import { Button } from '../elements/Button'
 import { Icon } from '../elements/Icon'
 
 import { IReviewCreateFormParams } from '@codeclusters/types'
-import { Stores } from '../stores'
+import { Stores } from '../stores/Stores'
 import { IModal, EModal } from '../stores/ModalStore'
 
 interface IProps {
@@ -24,7 +24,7 @@ interface IProps {
   resetSelections?: () => void
 }
 
-export const ReviewSubmissionsModal = inject((stores: Stores) => ({
+export const AddReviewModal = inject((stores: Stores) => ({
   currentSelectionCount: stores.reviewStore.currentSelectionCount,
   modal: stores.modalStore.modals[EModal.REVIEW_SUBMISSIONS],
   closeModal: stores.modalStore.closeModal,

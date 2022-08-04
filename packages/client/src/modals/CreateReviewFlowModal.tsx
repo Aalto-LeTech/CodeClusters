@@ -20,7 +20,7 @@ import {
   INgramParams, IReviewCreateFormParams
 } from '@codeclusters/types'
 import { IFormRefMethods, INgramFormParams, ModelFormParams } from '../types/forms'
-import { Stores } from '../stores'
+import { Stores } from '../stores/Stores'
 import { IModal, EModal } from '../stores/ModalStore'
 
 interface IProps {

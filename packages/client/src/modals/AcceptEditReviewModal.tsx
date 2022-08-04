@@ -13,7 +13,7 @@ import { Icon } from '../elements/Icon'
 
 import { IReview, IReviewCreateFormParams } from '@codeclusters/types'
 import { IFormRefMethods } from '../types/forms'
-import { Stores } from '../stores'
+import { Stores } from '../stores/Stores'
 import { IModal, EModal } from '../stores/ModalStore'
 
 interface IProps {

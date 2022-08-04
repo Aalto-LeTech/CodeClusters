@@ -4,7 +4,7 @@ import styled from '../../theme/styled'
 
 import { CheckBox } from '../../elements/CheckBox'
 
-import { Stores } from '../../stores'
+import { Stores } from '../../stores/Stores'
 import { IGetReviewsParams } from '../../types/forms'
 
 interface IProps {

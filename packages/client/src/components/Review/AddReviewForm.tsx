@@ -75,8 +75,8 @@ const AddReviewFormEl = memo(forwardRef((props: IProps, ref: any) => {
   }
   function resetValues(data: IReviewCreateFormParams) {
     const values = Object.keys(data).reduce((acc: any, k: string) => {
-      const val = data[k]
-      if (k === 'tags') {
+      const val = data[k as keyof IReviewCreateFormParams]
+      if (k === 'tags' && Array.isArray(val)) {
         acc[k] = val.map((f: string) => ({ name: f }))
       } else {
         acc[k] = val

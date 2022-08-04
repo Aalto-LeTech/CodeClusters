@@ -9,7 +9,7 @@ import { Input } from '../../elements/Input'
 
 import { useDebouncedCallback } from '../../hooks/useDebounce'
 
-import { Stores } from '../../stores'
+import { Stores } from '../../stores/Stores'
 import { ISearchCodeParams } from '@codeclusters/types'
 
 interface IProps {
