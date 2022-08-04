@@ -68,7 +68,7 @@ Requires a virtual machine eg Ubuntu 18.04 with root privileges. Expects git, Do
 6. Cd to the app folder: `cd /opt/codeclusters-app/`
 7. Clone the repositories: `git clone https://github.com/Aalto-LeTech/CodeClusters && git clone https://github.com/Aalto-LeTech/CodeClustersModeling`
 8. Cd to the main app folder: `cd CodeClusters`
-9. Create Solr Docker volume folder with correct permissions: `mkdir -p ./solr/data && sudo chown -R 8983:8983 ./solr/data`
+9. Create Solr Docker volume folder with correct permissions: `mkdir -p ./vol/solr && sudo chown -R 8983:8983 ./vol/solr`
 10. Create the environment variables:
 
 ```bash
@@ -90,7 +90,7 @@ JWT_SECRET=<128 char [a-z|A-Z|0-9]>
 
 # Docker machine's internal IP for Ubuntu
 DB_HOST=172.17.0.1
-DB_PORT=5600
+DB_PORT=5442
 DB_USER=code-clusters-app-user
 DB_PASSWORD=<32 char postgres password>
 DB_NAME=code_clusters_prod
@@ -129,7 +129,7 @@ EOF
 ```bash
 cat > .modeling.env <<EOF
 DB_HOST=172.17.0.1
-DB_PORT=5600
+DB_PORT=5442
 DB_USER=code-clusters-app-user
 DB_PASSWORD=<32 char postgres password>
 DB_NAME=code_clusters_prod

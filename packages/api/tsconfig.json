@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "$common": ["src/common"],
+      "$common/*": ["src/common/*"],
+      "$mail": ["src/mail"],
+      "$mail/*": ["src/mail/*"],
+      "$middlewares": ["src/middlewares"],
+      "$routes": ["src/routes"],
+      "$routes/*": ["src/routes/*"],
+      "$typings": ["src/typings"],
+      "$typings/*": ["src/typings/*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}
