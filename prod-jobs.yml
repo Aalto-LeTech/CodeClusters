@@ -11,7 +11,7 @@ services:
   flyway_migration:
     image: flyway/flyway:6.1.3-alpine
     container_name: flyway_migration
-    entrypoint: ["sh", "-c", "/flyway/wait-for-it.sh postgres:5432 -- /flyway/flyway migrate"]
+    entrypoint: ['sh', '-c', '/flyway/wait-for-it.sh postgres:5432 -- /flyway/flyway migrate']
     volumes:
       - ./db/migrations:/flyway/sql
       - ./db/scripts/wait-for-it.sh:/flyway/wait-for-it.sh
@@ -20,7 +20,7 @@ services:
   flyway_seed:
     image: flyway/flyway:6.1.3-alpine
     container_name: flyway_seed
-    entrypoint: ["sh", "-c", "/flyway/wait-for-it.sh postgres:5432 -- /flyway/flyway migrate"]
+    entrypoint: ['sh', '-c', '/flyway/wait-for-it.sh postgres:5432 -- /flyway/flyway migrate']
     volumes:
       - ./db/seed/afterMigrate.sql:/flyway/sql/afterMigrate.sql
       - ./db/scripts/wait-for-it.sh:/flyway/wait-for-it.sh

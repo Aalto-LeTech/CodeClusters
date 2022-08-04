@@ -19,26 +19,30 @@ const LocalSearchControlsEl = observer((props: IProps) => {
   return (
     <Container className={className} visible={visible}>
       <Header>
-        <TitleWrapper><h2>Explore modeling results</h2></TitleWrapper>
-        <Icon button onClick={onClose}><FiX size={24}/></Icon>
+        <TitleWrapper>
+          <h2>Explore modeling results</h2>
+        </TitleWrapper>
+        <Icon button onClick={onClose}>
+          <FiX size={24} />
+        </Icon>
       </Header>
       <LocalSearchForm />
-      <SelectCluster/>
+      <SelectCluster />
     </Container>
   )
 })
 
-const Container = styled.section<{ visible: boolean}>`
+const Container = styled.section<{ visible: boolean }>`
   align-items: center;
   background: #fff;
   border-radius: 4px;
-  box-shadow: 0 0 2px 2px rgba(0,0,0,0.18);
-  display: ${({ visible }) => visible ? 'flex' : 'none'};
+  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.18);
+  display: ${({ visible }) => (visible ? 'flex' : 'none')};
   flex-direction: column;
   margin: 2rem auto 0 auto;
   max-width: 700px;
   padding: 1rem 1rem 2rem;
-  visibility: ${({ visible }) => visible ? 'initial' : 'hidden'};
+  visibility: ${({ visible }) => (visible ? 'initial' : 'hidden')};
 `
 const Header = styled.div`
   align-items: center;

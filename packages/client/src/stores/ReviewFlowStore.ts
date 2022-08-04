@@ -2,8 +2,15 @@ import { action, autorun, computed, runInAction, makeObservable, observable } fr
 import * as reviewFlowApi from '../api/review_flow.api'
 
 import {
-  IReviewFlow, IReviewFlowRunParams, IReviewFlowStep, IReviewFlowCreateParams,
-  ISearchCodeParams, IModelParams, IModel, INgramParams, NgramModelId
+  IReviewFlow,
+  IReviewFlowRunParams,
+  IReviewFlowStep,
+  IReviewFlowCreateParams,
+  ISearchCodeParams,
+  IModelParams,
+  IModel,
+  INgramParams,
+  NgramModelId,
 } from '@codeclusters/types'
 import { ToastStore } from './ToastStore'
 import { AuthStore } from './AuthStore'
@@ -27,22 +34,22 @@ const FILTER_OPTIONS = [
   },
   {
     key: 'course',
-    value: 'This course'
+    value: 'This course',
   },
   {
     key: 'all',
-    value: 'All flows'
+    value: 'All flows',
   },
   {
     key: 'user',
-    value: 'Your flows'
-  }
+    value: 'Your flows',
+  },
 ]
 const EMPTY_FILTERED_FLOWS = {
   exercise: [],
   course: [],
   all: [],
-  user: []
+  user: [],
 } as { [key: string]: IReviewFlow[] }
 
 interface IProps {
@@ -59,15 +66,19 @@ export class ReviewFlowStore {
   @observable selectedFlow?: IReviewFlow = undefined
   @observable filteredBy: ReviewFlowFilterType = 'all'
   @observable filteredFlows: { [key: string]: IReviewFlow[] } = { ...EMPTY_FILTERED_FLOWS }
-  @observable tabFilterOptions: ITabOption[] = FILTER_OPTIONS.map(o => ({ ...o, disabled: false, itemCount: 0 }))
+  @observable tabFilterOptions: ITabOption[] = FILTER_OPTIONS.map((o) => ({
+    ...o,
+    disabled: false,
+    itemCount: 0,
+  }))
   @observable newReviewFlowSearchParams: ISearchCodeParams = EMPTY_QUERY
   @observable newReviewFlowSelectedModel?: IModel = undefined
-  @observable newReviewFlowInitialModelData: { 
+  @observable newReviewFlowInitialModelData: {
     [NgramModelId]: INgramParams
   } = {
     [NgramModelId]: {
       model_id: NgramModelId,
-    }
+    },
   }
   toastStore: ToastStore
   authStore: AuthStore
@@ -88,7 +99,7 @@ export class ReviewFlowStore {
   }
 
   @computed get getCurrentFilterOption() {
-    return this.tabFilterOptions.find(o => o.key === this.filteredBy)!
+    return this.tabFilterOptions.find((o) => o.key === this.filteredBy)!
   }
 
   @computed get getCurrentFlows() {
@@ -101,7 +112,7 @@ export class ReviewFlowStore {
   }
 
   @action setSelectedFlow(title: string) {
-    this.selectedFlow = this.reviewFlows.find(r => r.title === title)
+    this.selectedFlow = this.reviewFlows.find((r) => r.title === title)
   }
 
   @action setFilteredBy(key: ReviewFlowFilterType) {
@@ -109,31 +120,38 @@ export class ReviewFlowStore {
   }
 
   @action setFilterOptions() {
-    this.tabFilterOptions = FILTER_OPTIONS.map(o => ({
+    this.tabFilterOptions = FILTER_OPTIONS.map((o) => ({
       ...o,
       disabled: this.filteredFlows[o.key].length === 0,
-      itemCount: this.filteredFlows[o.key].length
+      itemCount: this.filteredFlows[o.key].length,
     }))
   }
 
-  @action setFilteredFlows(flows: IReviewFlow[], courseId?: number, exerciseId?: number, userId?: number) {
-    this.filteredFlows = flows.reduce((acc, flow) => {
-      if (courseId !== undefined && flow.course_id === courseId) {
-        acc['course'].push(flow)
-      }
-      if (exerciseId !== undefined && flow.exercise_id === exerciseId) {
-        acc['exercise'].push(flow)
-      }
-      if (userId !== undefined && flow.user_id === userId) {
-        acc['user'].push(flow)
-      }
-      acc['all'].push(flow)
-      return acc
-    }, {
+  @action setFilteredFlows(
+    flows: IReviewFlow[],
+    courseId?: number,
+    exerciseId?: number,
+    userId?: number
+  ) {
+    this.filteredFlows = flows.reduce(
+      (acc, flow) => {
+        if (courseId !== undefined && flow.course_id === courseId) {
+          acc['course'].push(flow)
+        }
+        if (exerciseId !== undefined && flow.exercise_id === exerciseId) {
+          acc['exercise'].push(flow)
+        }
+        if (userId !== undefined && flow.user_id === userId) {
+          acc['user'].push(flow)
+        }
+        acc['all'].push(flow)
+        return acc
+      },
+      {
         exercise: [],
         course: [],
         all: [],
-        user: []
+        user: [],
       } as { [key: string]: IReviewFlow[] }
     )
   }

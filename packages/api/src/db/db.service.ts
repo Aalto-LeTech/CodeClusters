@@ -36,5 +36,5 @@ export const dbService = {
     } finally {
       client.release()
     }
-  }
+  },
 }

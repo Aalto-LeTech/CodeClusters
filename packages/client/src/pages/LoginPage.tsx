@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { useLocation, useNavigate } from 'react-router-dom'
 import styled from '../theme/styled'
 import { MdEmail, MdLock } from 'react-icons/md'
 
@@ -38,7 +35,7 @@ export function LoginPage() {
   const handleSetDefaultValues = (name: string) => () => {
     setDefaultValues({
       email: `${name}@asdf.fi`,
-      password: 'asdfasdf'
+      password: 'asdfasdf',
     })
   }
   return (
@@ -66,7 +63,7 @@ function LoginForm(props: IFormProps) {
     e.preventDefault()
     const values = {
       email,
-      password
+      password,
     } as ILoginCredentials
     onSubmit(values)
   }
@@ -87,11 +84,12 @@ function LoginForm(props: IFormProps) {
           name="current-email"
           autocomplete="on"
           placeholder={'Email'}
-          icon={<MdEmail size={24}/>}
+          icon={<MdEmail size={24} />}
           iconPadding="38px"
           fullWidth
           value={email}
-          onChange={val => setEmail(val)}/>
+          onChange={(val) => setEmail(val)}
+        />
       </LoginField>
       <LoginField>
         <label htmlFor="password">Password</label>
@@ -101,11 +99,12 @@ function LoginForm(props: IFormProps) {
           name="current-password"
           autocomplete="on"
           placeholder="********"
-          icon={<MdLock size={24}/>}
+          icon={<MdLock size={24} />}
           iconPadding="38px"
           fullWidth
           value={password}
-          onChange={val => setPassword(val)}/>
+          onChange={(val) => setPassword(val)}
+        />
       </LoginField>
       <Button type="submit">Submit</Button>
     </Form>

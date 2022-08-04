@@ -26,11 +26,13 @@ const ModelDescriptionEl = observer((props: IProps) => {
     <Container className={className}>
       <Header>
         <Button onClick={handleClickToggle} intent="success" disabled={selectedModel === undefined}>
-          <Icon><MdKeyboardArrowRight size={24}/></Icon>
+          <Icon>
+            <MdKeyboardArrowRight size={24} />
+          </Icon>
           <Title>{`${minimized ? 'Show' : 'Hide'} model description`}</Title>
         </Button>
         <Icon button onClick={handleClickToggle} disabled={selectedModel === undefined}>
-          { minimized ? <FiChevronDown size={18}/> : <FiChevronUp size={18}/>}
+          {minimized ? <FiChevronDown size={18} /> : <FiChevronUp size={18} />}
         </Icon>
       </Header>
       <Body minimized={minimized}>
@@ -63,13 +65,13 @@ const Title = styled.div`
   line-height: 1.1;
   margin: 0 1rem;
 `
-const Body = styled.div<{ minimized: boolean}>`
-  display: ${({ minimized }) => minimized ? 'none' : 'flex'};
+const Body = styled.div<{ minimized: boolean }>`
+  display: ${({ minimized }) => (minimized ? 'none' : 'flex')};
   flex-direction: column;
   justify-content: space-around;
   margin-top: 0.75rem;
   max-width: 700px;
-  visibility: ${({ minimized }) => minimized ? 'hidden' : 'initial'};
+  visibility: ${({ minimized }) => (minimized ? 'hidden' : 'initial')};
   width: 100%;
 `
 const Description = styled.p`

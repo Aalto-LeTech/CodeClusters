@@ -16,33 +16,38 @@ interface IProps {
 const DIM_VISUALIZATION_OPTIONS = [
   { key: 'TSNE', value: 'TSNE' },
   { key: 'UMAP', value: 'UMAP' },
-] as { key: DimVisualizationType, value: string }[]
+] as { key: DimVisualizationType; value: string }[]
 
 const DIM_VISUALIZATION_INFO = [
   {
     key: 'TSNE',
     text: 'The staple method for visualizing high-dimensional data in lower dimension.',
-    link: 'https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html'
+    link: 'https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html',
   },
   {
     key: 'UMAP',
     text: 'Similar to TSNE, but stretches out the points a little more and the results should not vary as much.',
-    link: 'https://umap-learn.readthedocs.io/en/latest/'
+    link: 'https://umap-learn.readthedocs.io/en/latest/',
   },
 ]
 
 const SelectDimVisualizationEl = (props: IProps) => {
   const { className, id } = props
   const { register, watch, getValues, setValue } = useFormContext<INgramFormParams>()
-  const [dimVisualization, setDimVisualization] = useState<DimVisualizationType>(getValues('selected_dim_visualization'))
-  const clusteringInfo = useMemo(() => DIM_VISUALIZATION_INFO.find(c => c.key === dimVisualization), [dimVisualization])
+  const [dimVisualization, setDimVisualization] = useState<DimVisualizationType>(
+    getValues('selected_dim_visualization')
+  )
+  const clusteringInfo = useMemo(
+    () => DIM_VISUALIZATION_INFO.find((c) => c.key === dimVisualization),
+    [dimVisualization]
+  )
   const dimVisualizationChanged = watch('selected_dim_visualization')
 
   useEffect(() => {
     setDimVisualization(getValues('selected_dim_visualization'))
   }, [dimVisualizationChanged])
 
-  function handleDimVisualizationChange(opt: { key: DimVisualizationType, value: string }) {
+  function handleDimVisualizationChange(opt: { key: DimVisualizationType; value: string }) {
     setValue('selected_dim_visualization', opt.key)
   }
   return (
@@ -56,20 +61,14 @@ const SelectDimVisualizationEl = (props: IProps) => {
             options={DIM_VISUALIZATION_OPTIONS}
             onSelect={handleDimVisualizationChange}
           />
-          <input
-            type="hidden"
-            name="selected_dim_visualization"
-            ref={register}
-          />
-          <DimVisualizationDescription>
-            {clusteringInfo?.text}
-          </DimVisualizationDescription>
+          <input type="hidden" name="selected_dim_visualization" ref={register} />
+          <DimVisualizationDescription>{clusteringInfo?.text}</DimVisualizationDescription>
           <DimVisualizationLink href={clusteringInfo?.link} target="_blank" rel="noopener">
             Documentation
           </DimVisualizationLink>
         </FormField>
-        <TSNEFields id={id} visible={dimVisualization === 'TSNE'}/>
-        <UMAPFields id={id} visible={dimVisualization === 'UMAP'}/>
+        <TSNEFields id={id} visible={dimVisualization === 'TSNE'} />
+        <UMAPFields id={id} visible={dimVisualization === 'UMAP'} />
       </Body>
     </Container>
   )
@@ -94,9 +93,7 @@ function TSNEFields({ id, visible }: IDimVisualizationFieldsProps) {
           fullWidth
           ref={register}
         />
-        <Error>
-          {errors?.TSNE?.perplexity && 'Perplexity should be higher than 0'}
-        </Error>
+        <Error>{errors?.TSNE?.perplexity && 'Perplexity should be higher than 0'}</Error>
       </FormField>
       <FormField>
         <label htmlFor={`${id}_TSNE.svd_n_components`}>SVD n-components</label>
@@ -107,10 +104,9 @@ function TSNEFields({ id, visible }: IDimVisualizationFieldsProps) {
           placeholder="Empty for all dimensions"
           title="Empty for all dimensions"
           fullWidth
-          ref={register}/>
-        <Error>
-          {errors?.TSNE?.svd_n_components && 'Empty or >0, at least 30 is recommended'}
-        </Error>
+          ref={register}
+        />
+        <Error>{errors?.TSNE?.svd_n_components && 'Empty or >0, at least 30 is recommended'}</Error>
       </FormField>
     </DimVisualizationFields>
   )
@@ -130,9 +126,7 @@ function UMAPFields({ id, visible }: IDimVisualizationFieldsProps) {
           fullWidth
           ref={register}
         />
-        <Error>
-          {errors?.UMAP?.n_neighbors && 'N neighbors must be greater than 1'}
-        </Error>
+        <Error>{errors?.UMAP?.n_neighbors && 'N neighbors must be greater than 1'}</Error>
       </FormField>
       <FormField>
         <label htmlFor={`${id}_UMAP.min_dist`}>Min distance</label>
@@ -145,9 +139,7 @@ function UMAPFields({ id, visible }: IDimVisualizationFieldsProps) {
           fullWidth
           ref={register}
         />
-        <Error>
-          {errors?.UMAP?.min_dist && 'Min distance should be >=0.0'}
-        </Error>
+        <Error>{errors?.UMAP?.min_dist && 'Min distance should be >=0.0'}</Error>
       </FormField>
     </DimVisualizationFields>
   )
@@ -157,8 +149,7 @@ const DimVisualizationDropdown = styled(GenericDropdown<DimVisualizationType, st
   width: 100%;
 `
 
-const Container = styled.fieldset`
-`
+const Container = styled.fieldset``
 const Body = styled.div`
   display: flex;
   width: 100%;
@@ -168,9 +159,9 @@ const DimVisualizationDescription = styled.p`
 `
 const DimVisualizationLink = styled.a``
 const DimVisualizationFields = styled.div<{ visible: boolean }>`
-  display: ${({ visible }) => visible ? 'block' : 'none'};
+  display: ${({ visible }) => (visible ? 'block' : 'none')};
   margin-left: 1rem;
-  visibility: ${({ visible }) => visible ? 'visible' : 'hidden'};
+  visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
   & > *:not(:first-child) {
     margin-top: 0.5rem;
   }

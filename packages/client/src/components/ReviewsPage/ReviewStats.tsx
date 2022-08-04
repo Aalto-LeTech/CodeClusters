@@ -17,20 +17,21 @@ const ReviewStatsEl = inject((stores: Stores) => ({
   reviews: stores.reviewStore.reviews,
   reviewSubmissions: stores.reviewStore.reviewSubmissions,
   submissions: stores.submissionStore.submissions,
-}))
-(observer((props: IProps) => {
-  const {
-    className, reviews, reviewSubmissions, submissions
-  } = props
+}))(
+  observer((props: IProps) => {
+    const { className, reviews, reviewSubmissions, submissions } = props
 
-  return (
-    <Container className={className}>
-      <SubmissionCount>Submissions: {submissions!.length}</SubmissionCount>
-      <ReviewCount>Reviews: {reviews!.length}</ReviewCount>
-      <ReviewedSubmissionsCount>Reviewed Submissions: {reviewSubmissions!.length}</ReviewedSubmissionsCount>
-    </Container>
-  )
-}))
+    return (
+      <Container className={className}>
+        <SubmissionCount>Submissions: {submissions!.length}</SubmissionCount>
+        <ReviewCount>Reviews: {reviews!.length}</ReviewCount>
+        <ReviewedSubmissionsCount>
+          Reviewed Submissions: {reviewSubmissions!.length}
+        </ReviewedSubmissionsCount>
+      </Container>
+    )
+  })
+)
 
 const Container = styled.div``
 const SubmissionCount = styled.div``

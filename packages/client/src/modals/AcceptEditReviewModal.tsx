@@ -27,61 +27,67 @@ export const AcceptEditReviewModal = inject((stores: Stores) => ({
   modal: stores.modalStore.modals[EModal.ACCEPT_EDIT_REVIEW],
   updateReview: stores.reviewStore.updateReview,
   closeModal: stores.modalStore.closeModal,
-}))
-(observer((props: IProps) => {
-  const { className, modal, updateReview, closeModal } = props
-  const [editing, setEditing] = useState(false)
+}))(
+  observer((props: IProps) => {
+    const { className, modal, updateReview, closeModal } = props
+    const [editing, setEditing] = useState(false)
 
-  useEffect(() => {
-    // setReview(modal!.params.review)
-    reviewFormRef?.current?.reset(modal!.params.review)
-  }, [modal!.params])
+    useEffect(() => {
+      // setReview(modal!.params.review)
+      reviewFormRef?.current?.reset(modal!.params.review)
+    }, [modal!.params])
 
-  function handleClose() {
-    closeModal!(EModal.ACCEPT_EDIT_REVIEW)
-    setEditing(false)
-  }
-  async function handleSubmit(data: any, onSuccess: () => void, onError: () => void) {
-    const payload = { ...modal!.params?.review, ...data }
-    const result = await updateReview!(payload.review_id, payload)
-    if (result) {
-      reviewFormRef?.current?.reset(payload)
-      onSuccess()
-    } else {
-      onError()
+    function handleClose() {
+      closeModal!(EModal.ACCEPT_EDIT_REVIEW)
+      setEditing(false)
     }
-  }
-  const ref = useRef(null)
-  const reviewFormRef = useRef<IFormRefMethods<IReviewCreateFormParams>>(null)
-  useClickOutside(ref, (e) => handleClose(), modal!.isOpen)
-  useScrollLock(modal!.isOpen)
-  return (
-    <Modal className={className}
-      isOpen={modal!.isOpen}
-      body={
-        <Body ref={ref}>
-          <Header>
-            <TitleWrapper><h2>Accept or edit review</h2></TitleWrapper>
-            <Icon button onClick={handleClose}><FiX size={24}/></Icon>
-          </Header>
-          <Content>
-            <AddReviewForm
-              ref={reviewFormRef}
-              id="accept-edit-review"
-              submitButtonText="Update review"
-              onSubmit={handleSubmit}
-              onCancel={() => undefined}
-            />
-            <Buttons>
-              <Button intent="success">Accept</Button>
-              <Button intent="danger">Delete</Button>
-            </Buttons>
-          </Content>
-        </Body>
+    async function handleSubmit(data: any, onSuccess: () => void, onError: () => void) {
+      const payload = { ...modal!.params?.review, ...data }
+      const result = await updateReview!(payload.review_id, payload)
+      if (result) {
+        reviewFormRef?.current?.reset(payload)
+        onSuccess()
+      } else {
+        onError()
       }
-    ></Modal>
-  )
-}))
+    }
+    const ref = useRef(null)
+    const reviewFormRef = useRef<IFormRefMethods<IReviewCreateFormParams>>(null)
+    useClickOutside(ref, (e) => handleClose(), modal!.isOpen)
+    useScrollLock(modal!.isOpen)
+    return (
+      <Modal
+        className={className}
+        isOpen={modal!.isOpen}
+        body={
+          <Body ref={ref}>
+            <Header>
+              <TitleWrapper>
+                <h2>Accept or edit review</h2>
+              </TitleWrapper>
+              <Icon button onClick={handleClose}>
+                <FiX size={24} />
+              </Icon>
+            </Header>
+            <Content>
+              <AddReviewForm
+                ref={reviewFormRef}
+                id="accept-edit-review"
+                submitButtonText="Update review"
+                onSubmit={handleSubmit}
+                onCancel={() => undefined}
+              />
+              <Buttons>
+                <Button intent="success">Accept</Button>
+                <Button intent="danger">Delete</Button>
+              </Buttons>
+            </Content>
+          </Body>
+        }
+      ></Modal>
+    )
+  })
+)
 
 const Body = styled.div`
   align-items: center;

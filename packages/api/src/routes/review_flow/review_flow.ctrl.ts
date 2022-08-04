@@ -19,13 +19,16 @@ export const REVIEW_FLOW_CREATE_SCHEMA = Joi.object({
   title: Joi.string().min(1).max(255).required(),
   description: Joi.string().min(1).max(102400).required(),
   tags: Joi.array().items(Joi.string()).required(),
-  steps: Joi.array().items(REVIEW_FLOW_STEP_SCHEMA).required()
+  steps: Joi.array().items(REVIEW_FLOW_STEP_SCHEMA).required(),
 })
 
-export const REVIEW_FLOW_LIST_QUERY_PARAMS = Joi.object({
-})
+export const REVIEW_FLOW_LIST_QUERY_PARAMS = Joi.object({})
 
-export const getReviewFlows = async (req: IAuthRequest<{}, {}, IReviewListQueryParams>, res: Response, next: NextFunction) => {
+export const getReviewFlows = async (
+  req: IAuthRequest<{}, {}, IReviewListQueryParams>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const reviewFlows = await reviewFlowService.getReviewFlows(res.locals.user_id)
     res.json({ reviewFlows })
@@ -34,7 +37,11 @@ export const getReviewFlows = async (req: IAuthRequest<{}, {}, IReviewListQueryP
   }
 }
 
-export const createReviewFlow = async (req: IAuthRequest<IReviewFlowCreateParams>, res: Response, next: NextFunction) => {
+export const createReviewFlow = async (
+  req: IAuthRequest<IReviewFlowCreateParams>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const reviewFlow = await reviewFlowService.createReviewFlow(req.body)
     res.json(reviewFlow)

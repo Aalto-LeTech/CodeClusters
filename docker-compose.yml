@@ -33,7 +33,7 @@ services:
     restart: always
   flyway_migration:
     image: flyway/flyway:9.0.4-alpine
-    entrypoint: ["sh", "-c", "/flyway/wait-for-it.sh postgres:5432 -- /flyway/flyway migrate"]
+    entrypoint: ['sh', '-c', '/flyway/wait-for-it.sh postgres:5432 -- /flyway/flyway migrate']
     volumes:
       - ./packages/db/flyway/migrations:/flyway/sql
       - ./packages/db/flyway/afterMigrate.sql:/flyway/sql/afterMigrate.sql # Should I do this automatically or as another docker job?
@@ -61,7 +61,7 @@ services:
       - 8983:8983
     volumes:
       - ./vol/solr:/var/solr
-    command: ["solr-precreate", "submission-search", "/opt/solr-8.6.1/config"]
+    command: ['solr-precreate', 'submission-search', '/opt/solr-8.6.1/config']
 
 networks:
   default:

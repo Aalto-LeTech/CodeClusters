@@ -40,15 +40,26 @@ export const RUN_NGRAM_PARAMS = Joi.object({
   token_set: Joi.string().valid('modified', 'complete', 'keywords'),
   ngrams: Joi.array().items(Joi.number().integer().min(1).max(20)).length(2),
   random_seed: Joi.number().integer().min(-1),
-  clustering_params: Joi.alternatives().try(DBSCAN_SCHEMA, HDBSCAN_SCHEMA, OPTICS_SCHEMA, KMEANS_SCHEMA),
+  clustering_params: Joi.alternatives().try(
+    DBSCAN_SCHEMA,
+    HDBSCAN_SCHEMA,
+    OPTICS_SCHEMA,
+    KMEANS_SCHEMA
+  ),
   dim_visualization_params: Joi.alternatives().try(TSNE_SCHEMA, UMAP_SCHEMA),
-  submissions: Joi.array().items(Joi.object({
-    id: Joi.string().length(36).required(),
-    code: Joi.string().required(),
-  })),
+  submissions: Joi.array().items(
+    Joi.object({
+      id: Joi.string().length(36).required(),
+      code: Joi.string().required(),
+    })
+  ),
 })
 
-export const runNgram = async (req: IAuthRequest<IRunNgramParams>, res: Response, next: NextFunction) => {
+export const runNgram = async (
+  req: IAuthRequest<IRunNgramParams>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const response = await modelService.runNgram(req.body)
     res.json(response)

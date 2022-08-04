@@ -13,44 +13,44 @@ interface IProps {
   onSearch: (val: string) => void
 }
 
-const SearchBarEl = memo(forwardRef((props: IProps, ref) => {
-  const {
-    className, name, id, onSearch
-  } = props
-  const [wrapperFocused, setWrapperFocused] = useState(false)
-  const debouncedSearch = useDebouncedCallback(onSearch, 500)
+const SearchBarEl = memo(
+  forwardRef((props: IProps, ref) => {
+    const { className, name, id, onSearch } = props
+    const [wrapperFocused, setWrapperFocused] = useState(false)
+    const debouncedSearch = useDebouncedCallback(onSearch, 500)
 
-  function handleChange(newVal: string) {
-    debouncedSearch(newVal)
-  }
-  function handleFocus() {
-    setWrapperFocused(true)
-  }
-  function handleBlur() {
-    setWrapperFocused(false)
-  }
-  return (
-    <div className={className}>
-      <SearchWrapper focused={wrapperFocused}>
-        <IconButton id={`${id}_button`}>
-          <SearchIcon size={26} />
-        </IconButton>
-        <StyledInput
-          fullWidth
-          type="search"
-          placeholder={"Search"}
-          autocomplete="off"
-          name={name}
-          id={id}
-          ref={ref}
-          onChange={handleChange}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        />
-      </SearchWrapper>
-    </div>
-  )
-}))
+    function handleChange(newVal: string) {
+      debouncedSearch(newVal)
+    }
+    function handleFocus() {
+      setWrapperFocused(true)
+    }
+    function handleBlur() {
+      setWrapperFocused(false)
+    }
+    return (
+      <div className={className}>
+        <SearchWrapper focused={wrapperFocused}>
+          <IconButton id={`${id}_button`}>
+            <SearchIcon size={26} />
+          </IconButton>
+          <StyledInput
+            fullWidth
+            type="search"
+            placeholder={'Search'}
+            autocomplete="off"
+            name={name}
+            id={id}
+            ref={ref}
+            onChange={handleChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+          />
+        </SearchWrapper>
+      </div>
+    )
+  })
+)
 
 const SearchWrapper = styled.div<{ focused: boolean }>`
   display: flex;

@@ -17,42 +17,40 @@ interface IProps {
 const FlowEl = inject((stores: Stores) => ({
   selectedFlow: stores.reviewFlowStore.selectedFlow,
   runReviewFlow: stores.reviewFlowStore.runReviewFlow,
-}))
-(observer((props: IProps) => {
-  const { className, selectedFlow, runReviewFlow } = props
-  const [loading, setLoading] = useState(false)
+}))(
+  observer((props: IProps) => {
+    const { className, selectedFlow, runReviewFlow } = props
+    const [loading, setLoading] = useState(false)
 
-  function handleClickRunReviewFlow() {
-    setLoading(true)
-    runReviewFlow!({
-      steps: selectedFlow?.steps || []
-    })
-    .then((result) => {
-      setLoading(false)
-    })
-  }
-  if (selectedFlow === undefined) {
+    function handleClickRunReviewFlow() {
+      setLoading(true)
+      runReviewFlow!({
+        steps: selectedFlow?.steps || [],
+      }).then((result) => {
+        setLoading(false)
+      })
+    }
+    if (selectedFlow === undefined) {
+      return <Container className={className}>No review flows</Container>
+    }
     return (
       <Container className={className}>
-        No review flows
+        <Header>
+          <FlowTitle>{selectedFlow.title}</FlowTitle>
+          <Description>{selectedFlow.description}</Description>
+          <Note>This review has been ran before with these parameters!</Note>
+        </Header>
+        <FlowSteps steps={selectedFlow.steps} />
+        <Controls>
+          <Button intent="success" loading={loading} onClick={handleClickRunReviewFlow}>
+            Run and review
+          </Button>
+          <Button intent="success">Edit</Button>
+        </Controls>
       </Container>
     )
-  }
-  return (
-    <Container className={className}>
-      <Header>
-        <FlowTitle>{selectedFlow.title}</FlowTitle>
-        <Description>{selectedFlow.description}</Description>
-        <Note>This review has been ran before with these parameters!</Note>
-      </Header>
-      <FlowSteps steps={selectedFlow.steps}/>
-      <Controls>
-        <Button intent="success" loading={loading} onClick={handleClickRunReviewFlow}>Run and review</Button>
-        <Button intent="success">Edit</Button>
-      </Controls>
-    </Container>
-  )
-}))
+  })
+)
 
 const Container = styled.div`
   display: flex;

@@ -19,11 +19,11 @@ import { IReview, IReviewSubmission, ISubmission } from '@codeclusters/types'
 interface IProps {
   className?: string
   modal?: {
-    isOpen: false,
+    isOpen: false
     params: {
-      submission: ISubmission,
-      review: IReview,
-      reviewSubmission?: IReviewSubmission,
+      submission: ISubmission
+      review: IReview
+      reviewSubmission?: IReviewSubmission
     }
   }
   closeModal?: (modal: EModal) => void
@@ -36,112 +36,132 @@ export const EditSubmissionReviewModal = inject((stores: Stores) => ({
   closeModal: stores.modalStore.closeModal,
   upsertReviewSubmission: stores.reviewStore.upsertReviewSubmission,
   deleteReviewSubmission: stores.reviewStore.deleteReviewSubmission,
-}))
-(observer((props: IProps) => {
-  const { className, modal, closeModal, upsertReviewSubmission, deleteReviewSubmission } = props
-  const [loading, setLoading] = useState(false)
-  const [hasCurrentReview, setHasCurrentReview] = useState(false)
-  const [review, setReview] = useState<IReview | undefined>(undefined)
-  const [rawCode, setRawCode] = useState('')
-  const [selection, setSelection] = useState<[number, number]>([0, 0])
+}))(
+  observer((props: IProps) => {
+    const { className, modal, closeModal, upsertReviewSubmission, deleteReviewSubmission } = props
+    const [loading, setLoading] = useState(false)
+    const [hasCurrentReview, setHasCurrentReview] = useState(false)
+    const [review, setReview] = useState<IReview | undefined>(undefined)
+    const [rawCode, setRawCode] = useState('')
+    const [selection, setSelection] = useState<[number, number]>([0, 0])
 
-  useEffect(() => {
-    const selection = modal!.params?.reviewSubmission?.selection || [0, 0]
-    if (modal!.params?.submission) {
-      setRawCode(modal!.params.submission?.code)
-    }
-    setReview(modal!.params?.review)
-    setHasCurrentReview(modal!.params.reviewSubmission !== undefined)
-    setSelection(selection)
-  }, [modal!.params])
+    useEffect(() => {
+      const selection = modal!.params?.reviewSubmission?.selection || [0, 0]
+      if (modal!.params?.submission) {
+        setRawCode(modal!.params.submission?.code)
+      }
+      setReview(modal!.params?.review)
+      setHasCurrentReview(modal!.params.reviewSubmission !== undefined)
+      setSelection(selection)
+    }, [modal!.params])
 
-  function handleCodeSelect(start: number, end: number) {
-    setSelection([start, end])
-  }
-  function handleClose() {
-    closeModal!(EModal.EDIT_SUBMISSION_REVIEW)
-  }
-  async function onUpdate() {
-    const result = await upsertReviewSubmission!({
-      review_id: modal!.params.review.review_id,
-      submission_id: modal!.params.submission.submission_id,
-      selection,
-    })
-    if (result) {
-      handleClose()
+    function handleCodeSelect(start: number, end: number) {
+      setSelection([start, end])
     }
-  }
-  async function onToggleAssociation() {
-    let result
-    if (hasCurrentReview) {
-      setLoading(true)
-      result = await deleteReviewSubmission!(modal!.params.review.review_id, modal!.params.submission.submission_id)
-    } else {
-      setLoading(true)
-      result = await upsertReviewSubmission!({
+    function handleClose() {
+      closeModal!(EModal.EDIT_SUBMISSION_REVIEW)
+    }
+    async function onUpdate() {
+      const result = await upsertReviewSubmission!({
         review_id: modal!.params.review.review_id,
         submission_id: modal!.params.submission.submission_id,
         selection,
       })
-    }
-    if (result) {
-      setHasCurrentReview(!hasCurrentReview)
-      setLoading(false)
-      handleClose()
-    } else {
-      setLoading(false)
-    }
-  }
-  function onCancel() {
-    handleClose()
-  }
-  const ref = useRef(null)
-  useClickOutside(ref, (e) => handleClose(), modal!.isOpen)
-  useScrollLock(modal!.isOpen)
-  return (
-    <Modal className={className}
-      isOpen={modal!.isOpen}
-      body={
-        <Body ref={ref}>
-          <Header>
-            <TitleWrapper><h2>Link submission to review</h2></TitleWrapper>
-            <Icon button onClick={handleClose}><FiX size={24}/></Icon>
-          </Header>
-          <Content>
-            <SubTitle>Review</SubTitle>
-            {review && <Review review={review} /> }
-            <SubmissionHeader>
-              <SubTitle>Submission</SubTitle>
-              <div><IsLinkedTag linked={hasCurrentReview}>{hasCurrentReview ? 'Linked' : 'Unlinked'}</IsLinkedTag></div>
-            </SubmissionHeader>
-            <p>
-              You may also edit the selection associated to this submission. By default the selection is the whole document. It's shown alongside the review to the student.
-            </p>
-            <CodeBlock
-              code={rawCode}
-              selectionStart={selection ? selection[0] : -1}
-              selectionEnd={selection ? selection[1] : -1}
-              onSelectCode={handleCodeSelect}
-            />
-          </Content>
-          <Buttons>
-            <Button intent={hasCurrentReview ? 'danger' : 'success'} loading={loading} onClick={onToggleAssociation}>
-              {hasCurrentReview ? 'Unlink' : 'Link'}
-            </Button>
-            <Button
-              intent="success"
-              disabled={selection[0] === 0 && selection[1] == 0} 
-              onClick={onUpdate}
-            >
-              Set selection
-            </Button>
-            <Button intent="transparent" onClick={onCancel}>Cancel</Button>
-          </Buttons>
-        </Body>
+      if (result) {
+        handleClose()
       }
-    ></Modal>
-  )
-}))
+    }
+    async function onToggleAssociation() {
+      let result
+      if (hasCurrentReview) {
+        setLoading(true)
+        result = await deleteReviewSubmission!(
+          modal!.params.review.review_id,
+          modal!.params.submission.submission_id
+        )
+      } else {
+        setLoading(true)
+        result = await upsertReviewSubmission!({
+          review_id: modal!.params.review.review_id,
+          submission_id: modal!.params.submission.submission_id,
+          selection,
+        })
+      }
+      if (result) {
+        setHasCurrentReview(!hasCurrentReview)
+        setLoading(false)
+        handleClose()
+      } else {
+        setLoading(false)
+      }
+    }
+    function onCancel() {
+      handleClose()
+    }
+    const ref = useRef(null)
+    useClickOutside(ref, (e) => handleClose(), modal!.isOpen)
+    useScrollLock(modal!.isOpen)
+    return (
+      <Modal
+        className={className}
+        isOpen={modal!.isOpen}
+        body={
+          <Body ref={ref}>
+            <Header>
+              <TitleWrapper>
+                <h2>Link submission to review</h2>
+              </TitleWrapper>
+              <Icon button onClick={handleClose}>
+                <FiX size={24} />
+              </Icon>
+            </Header>
+            <Content>
+              <SubTitle>Review</SubTitle>
+              {review && <Review review={review} />}
+              <SubmissionHeader>
+                <SubTitle>Submission</SubTitle>
+                <div>
+                  <IsLinkedTag linked={hasCurrentReview}>
+                    {hasCurrentReview ? 'Linked' : 'Unlinked'}
+                  </IsLinkedTag>
+                </div>
+              </SubmissionHeader>
+              <p>
+                You may also edit the selection associated to this submission. By default the
+                selection is the whole document. It's shown alongside the review to the student.
+              </p>
+              <CodeBlock
+                code={rawCode}
+                selectionStart={selection ? selection[0] : -1}
+                selectionEnd={selection ? selection[1] : -1}
+                onSelectCode={handleCodeSelect}
+              />
+            </Content>
+            <Buttons>
+              <Button
+                intent={hasCurrentReview ? 'danger' : 'success'}
+                loading={loading}
+                onClick={onToggleAssociation}
+              >
+                {hasCurrentReview ? 'Unlink' : 'Link'}
+              </Button>
+              <Button
+                intent="success"
+                disabled={selection[0] === 0 && selection[1] == 0}
+                onClick={onUpdate}
+              >
+                Set selection
+              </Button>
+              <Button intent="transparent" onClick={onCancel}>
+                Cancel
+              </Button>
+            </Buttons>
+          </Body>
+        }
+      ></Modal>
+    )
+  })
+)
 
 const Body = styled.div`
   align-items: center;
@@ -198,7 +218,7 @@ const IsLinkedTag = styled.span<{ linked: boolean }>`
   color: #fff;
   font-size: 1rem;
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
-  background: ${({ linked, theme }) => linked ? theme.color.green : theme.color.red};
+  background: ${({ linked, theme }) => (linked ? theme.color.green : theme.color.red)};
   border-radius: 4px;
   padding: 4px 8px;
 `

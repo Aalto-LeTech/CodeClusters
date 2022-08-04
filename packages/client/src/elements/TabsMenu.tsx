@@ -29,19 +29,20 @@ const TabsMenuEl = memo((props: IProps) => {
   return (
     <Container className={className}>
       <TabList>
-        { options.map(o =>
-        <TabListItem key={o.key} selected={selected.key === o.key} disabled={o.disabled}>
-          <TabButton disabled={o.disabled} onClick={() => onSelect(o)}>{o.value}</TabButton>
-          { renderItemCount(o) }
-        </TabListItem>
-        )}
+        {options.map((o) => (
+          <TabListItem key={o.key} selected={selected.key === o.key} disabled={o.disabled}>
+            <TabButton disabled={o.disabled} onClick={() => onSelect(o)}>
+              {o.value}
+            </TabButton>
+            {renderItemCount(o)}
+          </TabListItem>
+        ))}
       </TabList>
     </Container>
   )
 })
 
-const Container = styled.div`
-`
+const Container = styled.div``
 const TabList = styled.ul`
   border-bottom: 1px solid ${({ theme }) => theme.color.gray.lighter};
   display: flex;
@@ -49,11 +50,11 @@ const TabList = styled.ul`
   margin: 0 15px;
   padding: 0;
 `
-const TabListItem = styled.li<{ disabled?: boolean, selected: boolean }>`
-  border-bottom: 2px solid ${({ selected, theme }) => selected ? theme.color.blue : 'transparent'};
-  color: ${({ selected, theme }) => selected ? theme.color.textDark : theme.color.textLight};
+const TabListItem = styled.li<{ disabled?: boolean; selected: boolean }>`
+  border-bottom: 2px solid ${({ selected, theme }) => (selected ? theme.color.blue : 'transparent')};
+  color: ${({ selected, theme }) => (selected ? theme.color.textDark : theme.color.textLight)};
   display: flex;
-  font-weight: ${({ selected }) => selected ? 'bold' : 400};
+  font-weight: ${({ selected }) => (selected ? 'bold' : 400)};
   margin-right: 15px;
   padding: 10px 0 5px 0;
   &:hover {
@@ -65,7 +66,7 @@ const TabListItem = styled.li<{ disabled?: boolean, selected: boolean }>`
 const TabButton = styled.button<{ disabled?: boolean }>`
   background: transparent;
   border: 0;
-  cursor: ${({ disabled }) => disabled ? 'cursor' : 'pointer'};
+  cursor: ${({ disabled }) => (disabled ? 'cursor' : 'pointer')};
   font-size: 14px;
   padding: 0;
   text-transform: uppercase;
@@ -89,7 +90,6 @@ const ItemsCountWrapper = styled.span`
   height: 30px;
   width: 30px;
 `
-const ItemsCount = styled.small`
-`
+const ItemsCount = styled.small``
 
 export const TabsMenu = styled(TabsMenuEl)``

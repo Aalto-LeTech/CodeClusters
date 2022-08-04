@@ -5,14 +5,15 @@ import { ValidationError } from '../common'
 
 import { AnyRequest } from '../types/request'
 
-export const validateBody = (schema: ObjectSchema) => async (req: AnyRequest, res: Response, next: NextFunction) => {
-  const { body } = req
+export const validateBody =
+  (schema: ObjectSchema) => async (req: AnyRequest, res: Response, next: NextFunction) => {
+    const { body } = req
 
-  const result = schema.strict().validate(body)
+    const result = schema.strict().validate(body)
 
-  if (result.error) {
-    next(new ValidationError(result.error.message))
-  } else {
-    await next()
+    if (result.error) {
+      next(new ValidationError(result.error.message))
+    } else {
+      await next()
+    }
   }
-}

@@ -13,17 +13,17 @@ const FlowStepsEl = observer((props: IProps) => {
   const { className, steps } = props
   return (
     <>
-    <Title>Flow steps</Title>
-    <FlowStepsList className={className}>
-      {steps.map((s =>
-      <FlowStepItem key={s.index}>
-        <Action>{s.action}</Action>
-        <Parameters>
-          <pre>{JSON.stringify(s.data, null, 2)}</pre>
-        </Parameters>
-      </FlowStepItem>
-      ))}
-    </FlowStepsList>
+      <Title>Flow steps</Title>
+      <FlowStepsList className={className}>
+        {steps.map((s) => (
+          <FlowStepItem key={s.index}>
+            <Action>{s.action}</Action>
+            <Parameters>
+              <pre>{JSON.stringify(s.data, null, 2)}</pre>
+            </Parameters>
+          </FlowStepItem>
+        ))}
+      </FlowStepsList>
     </>
   )
 })
@@ -38,7 +38,7 @@ const FlowStepsList = styled.ol`
 const FlowStepItem = styled.li`
   background: ${({ theme }) => theme.color.bgLight};
   border-radius: 4px;
-  box-shadow: 0 0 2px 2px rgba(0,0,0,0.18);
+  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.18);
   display: flex;
   flex-direction: column;
   padding: 1rem;

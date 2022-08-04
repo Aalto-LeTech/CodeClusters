@@ -8,22 +8,16 @@ interface IProps {
 }
 
 Spinner.defaultProps = {
-  size: 'm'
+  size: 'm',
 }
 
 export function Spinner(props: IProps) {
   const { className, size, color } = props
-  return (
-    <StyledSpinner
-      className={className}
-      size={size}
-      color={color}
-    />
-  )
+  return <StyledSpinner className={className} size={size} color={color} />
 }
 
 function getSize(size: 's' | 'm' | 'l') {
-  switch(size) {
+  switch (size) {
     case 's':
       return {
         borderWidth: '2px',

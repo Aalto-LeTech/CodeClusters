@@ -1,2 +1,1 @@
-export interface IReviewListQueryParams {
-}
+export interface IReviewListQueryParams {}

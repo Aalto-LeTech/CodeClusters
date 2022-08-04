@@ -5,12 +5,12 @@ import { stores } from 'stores'
 const { NODE_ENV, REACT_APP_API_URL } = process.env
 export const defaultHeaders = {
   Accept: 'application/json',
-  'Content-Type': 'application/json'
+  'Content-Type': 'application/json',
 }
 export const authenticatedHeaders = () => ({
   Accept: 'application/json',
   'Content-Type': 'application/json',
-  Authorization: `Bearer ${stores.authStore.jwt.token}`
+  Authorization: `Bearer ${stores.authStore.jwt.token}`,
 })
 
 /**
@@ -22,9 +22,9 @@ export const authenticatedHeaders = () => ({
  * @param path The path after the API_URL
  * @param options Axios options object
  */
-const createRequest = <T>(path: string, options: any) : Promise<Maybe<T>> => {
+const createRequest = <T>(path: string, options: any): Promise<Maybe<T>> => {
   return axios(`${REACT_APP_API_URL}/${path}`, options)
-    .then(res => res.data)
+    .then((res) => res.data)
     .catch((err: AxiosError) => {
       if (err.response) {
         if (NODE_ENV === 'development') {
@@ -34,12 +34,18 @@ const createRequest = <T>(path: string, options: any) : Promise<Maybe<T>> => {
         switch (err.response.status) {
           case 401:
             if (options.headers && options.headers.Authorization) {
-              stores.toastStore!.createToast('401 Your session has expired, please re-login.', 'danger')
+              stores.toastStore!.createToast(
+                '401 Your session has expired, please re-login.',
+                'danger'
+              )
               return undefined
             }
             break
           case 403:
-            stores.toastStore!.createToast('403 You do not have privileges for that action', 'danger')
+            stores.toastStore!.createToast(
+              '403 You do not have privileges for that action',
+              'danger'
+            )
             return undefined
           case 404:
             stores.toastStore!.createToast('404 Route not found', 'danger')
@@ -47,7 +53,10 @@ const createRequest = <T>(path: string, options: any) : Promise<Maybe<T>> => {
           case 502:
           case 503:
           case 504:
-            stores.toastStore!.createToast(`${err.response.status} The backend is unreachable`, 'danger')
+            stores.toastStore!.createToast(
+              `${err.response.status} The backend is unreachable`,
+              'danger'
+            )
             return undefined
           case 500:
             stores.toastStore!.createToast('500 The backend had a bug, whops', 'danger')

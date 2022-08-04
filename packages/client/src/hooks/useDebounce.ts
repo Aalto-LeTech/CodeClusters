@@ -9,25 +9,13 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
   delay: number = 0,
   options?: DebounceSettings
 ): T & Cancelable {
-  return useCallback(debounce(callback, delay, options), [
-    callback,
-    delay,
-    options,
-  ])
+  return useCallback(debounce(callback, delay, options), [callback, delay, options])
 }
 
-export function useDebounce<T>(
-  value: T,
-  delay: number = 0,
-  options?: DebounceSettings
-): T {
+export function useDebounce<T>(value: T, delay: number = 0, options?: DebounceSettings): T {
   const previousValue = useRef(value)
   const [current, setCurrent] = useState(value)
-  const debouncedCallback = useDebouncedCallback(
-    (value: T) => setCurrent(value),
-    delay,
-    options
-  )
+  const debouncedCallback = useDebouncedCallback((value: T) => setCurrent(value), delay, options)
   useEffect(() => {
     // does trigger the debounce timer initially
     if (value !== previousValue.current) {

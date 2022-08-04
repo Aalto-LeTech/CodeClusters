@@ -1,7 +1,5 @@
 import * as React from 'react'
-import {
-  BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-} from 'recharts'
+import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 import styled from '../../theme/styled'
 
 interface IItem {
@@ -28,7 +26,10 @@ function ClustersHistogramEl(props: IProps) {
       height={300}
       data={data}
       margin={{
-        top: 5, right: 30, left: 20, bottom: 5,
+        top: 5,
+        right: 30,
+        left: 20,
+        bottom: 5,
       }}
     >
       <CartesianGrid strokeDasharray="3 3" />
@@ -37,9 +38,13 @@ function ClustersHistogramEl(props: IProps) {
       <Tooltip />
       <Legend />
       <Bar dataKey="count" fill="#8884d8" onClick={handleClickBar}>
-      { data.map((entry, index) => (
-        <Cell cursor="pointer" fill={entry.cluster === activeCluster ? '#82ca9d' : '#8884d8'} key={`cell-${index}`} />
-      ))}
+        {data.map((entry, index) => (
+          <Cell
+            cursor="pointer"
+            fill={entry.cluster === activeCluster ? '#82ca9d' : '#8884d8'}
+            key={`cell-${index}`}
+          />
+        ))}
       </Bar>
     </BarChart>
   )

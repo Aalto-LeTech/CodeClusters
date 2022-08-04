@@ -3,16 +3,14 @@ import styled from '../theme/styled'
 
 import { ManualView } from '../components/ManualPage/ManualView'
 
-interface IProps {
-}
+interface IProps {}
 
 export const ManualPage = (props: IProps) => {
   return (
     <Container>
-      <ManualView/>
+      <ManualView />
     </Container>
   )
 }
 
-const Container = styled.div`
-`
+const Container = styled.div``

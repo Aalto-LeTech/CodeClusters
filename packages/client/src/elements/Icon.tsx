@@ -13,7 +13,7 @@ interface IProps {
 
 IconEl.defaultProps = {
   inline: true,
-  button: false
+  button: false,
 }
 
 function IconEl(props: IProps) {
@@ -29,7 +29,7 @@ function IconEl(props: IProps) {
   }
   return (
     <Wrapper className={className} inline={inline} title={title}>
-      { children }
+      {children}
     </Wrapper>
   )
 }
@@ -39,14 +39,14 @@ interface IInnerProps {
 }
 const Wrapper = styled.span<IInnerProps>`
   align-items: center;
-  display: ${({ inline }) => inline ? 'inline-flex' : 'flex'};
+  display: ${({ inline }) => (inline ? 'inline-flex' : 'flex')};
   justify-content: center;
 `
 const Button = styled.button`
   background: transparent;
   border: 0;
   border-radius: 50%;
-  cursor: ${({ disabled }) => disabled ? 'cursor' : 'pointer'};
+  cursor: ${({ disabled }) => (disabled ? 'cursor' : 'pointer')};
   display: flex;
   padding: 8px;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;

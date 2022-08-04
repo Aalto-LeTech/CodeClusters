@@ -11,12 +11,12 @@ interface IProps {
 
 /**
  * This masterpiece generates a "pre" HTML element with code lines as divs, and the Solr highlighting as "mark" -elements
- * 
+ *
  * It's actually pretty cool and magnitudes faster than the previous implementation.
  * It also adds the selection range to the div-element directly so that there is no need computing
  * it again, which is also pretty neat. Probably should have tests for it but I'm like 99% sure I've fixed
  * most of the bugs.
- * @param code 
+ * @param code
  */
 function createHTML(code: string) {
   const pre = document.createElement('pre')
@@ -50,7 +50,7 @@ function createHTML(code: string) {
         const div = document.createElement('div')
         div.appendChild(document.createTextNode(text))
         div.setAttribute('data-line-start', i.toString())
-        div.setAttribute('data-line-end', (lineEnd).toString())
+        div.setAttribute('data-line-end', lineEnd.toString())
         div.classList.add('data-line')
         pre.appendChild(div)
       }
@@ -79,9 +79,7 @@ function createHTML(code: string) {
 }
 
 export const CodeBlock = memo((props: IProps) => {
-  const {
-    className, code, selectionStart, selectionEnd, onSelectCode
-  } = props
+  const { className, code, selectionStart, selectionEnd, onSelectCode } = props
   const containerRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     addHandlers()
@@ -138,7 +136,7 @@ export const CodeBlock = memo((props: IProps) => {
   )
 })
 
-const Container = styled.div<{ selectionStart: number, selectionEnd: number }>`
+const Container = styled.div<{ selectionStart: number; selectionEnd: number }>`
   min-width: 100%;
   overflow: scroll;
   text-align: left;
@@ -155,7 +153,9 @@ const Container = styled.div<{ selectionStart: number, selectionEnd: number }>`
       counter-increment: line-number;
       cursor: pointer;
       min-width: fit-content;
-      &[data-line-start="${({ selectionStart }) => selectionStart }"][data-line-end="${({ selectionEnd }) => selectionEnd }"] {
+      &[data-line-start='${({ selectionStart }) => selectionStart}'][data-line-end='${({
+          selectionEnd,
+        }) => selectionEnd}'] {
         background: #bb4949;
       }
       &:hover {

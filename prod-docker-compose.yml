@@ -13,7 +13,7 @@ services:
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
       - ./data/reverse-proxy-logs:/var/log/nginx
-    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
   certbot:
     image: certbot/certbot:v1.5.0
     container_name: certbot
@@ -61,7 +61,7 @@ services:
       - 8983:8983
     volumes:
       - ./vol/solr:/var/solr
-    command: ["solr-precreate", "submission-search", "/opt/solr-8.6.1/config"]
+    command: ['solr-precreate', 'submission-search', '/opt/solr-8.6.1/config']
 
 networks:
   default:

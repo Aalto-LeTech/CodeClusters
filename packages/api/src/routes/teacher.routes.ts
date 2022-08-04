@@ -15,102 +15,117 @@ import * as userCtrl from './user/user.ctrl'
 
 const router: Router = Router()
 
-router.post('/login',
-  validateBody(userCtrl.USER_CREDENTIALS_SCHEMA),
-  userCtrl.loginUser)
+router.post('/login', validateBody(userCtrl.USER_CREDENTIALS_SCHEMA), userCtrl.loginUser)
 
-router.get('/courses',
-  authenticate,
-  courseCtrl.getCourses)
+router.get('/courses', authenticate, courseCtrl.getCourses)
 
-router.get('/models',
-  authenticate,
-  modelCtrl.getModels)
-router.post('/model/ngram',
+router.get('/models', authenticate, modelCtrl.getModels)
+router.post(
+  '/model/ngram',
   authenticate,
   validateBody(modelCtrl.RUN_NGRAM_PARAMS),
-  modelCtrl.runNgram)
+  modelCtrl.runNgram
+)
 
-router.post('/index/metrics',
+router.post(
+  '/index/metrics',
   authenticate,
   validateBody(indexCtrl.INDEX_METRICS_PARAMS),
-  indexCtrl.runAndIndexMetrics)
+  indexCtrl.runAndIndexMetrics
+)
 
-router.get('/reviews',
+router.get(
+  '/reviews',
   authenticate,
   parseQueryParams(reviewCtrl.REVIEW_LIST_QUERY_PARAMS),
-  reviewCtrl.getReviews)
-router.post('/reviews/pending',
+  reviewCtrl.getReviews
+)
+router.post(
+  '/reviews/pending',
   authenticate,
   validateBody(reviewCtrl.REVIEW_PENDING_ACCEPT_PARAMS),
-  reviewCtrl.acceptPendingReviews)
-router.get('/reviews/user/:user_id(\\d+)',
+  reviewCtrl.acceptPendingReviews
+)
+router.get(
+  '/reviews/user/:user_id(\\d+)',
   authenticate,
   parseQueryParams(reviewCtrl.REVIEW_USER_LIST_QUERY_PARAMS),
-  reviewCtrl.getUserReviews)
-router.post('/review',
+  reviewCtrl.getUserReviews
+)
+router.post(
+  '/review',
   authenticate,
   validateBody(reviewCtrl.REVIEW_CREATE_SCHEMA),
-  reviewCtrl.createReview)
-router.put('/review/:review_id(\\d+)',
+  reviewCtrl.createReview
+)
+router.put(
+  '/review/:review_id(\\d+)',
   authenticate,
   validateBody(reviewCtrl.REVIEW_SCHEMA),
-  reviewCtrl.updateReview)
-router.delete('/review/:review_id(\\d+)',
-  authenticate,
-  reviewCtrl.deleteReview)
+  reviewCtrl.updateReview
+)
+router.delete('/review/:review_id(\\d+)', authenticate, reviewCtrl.deleteReview)
 
-router.put('/review_submission/:review_id(\\d+)/:submission_id',
+router.put(
+  '/review_submission/:review_id(\\d+)/:submission_id',
   authenticate,
-  reviewSubmissionCtrl.upsertReviewSubmission)
-router.delete('/review_submission/:review_id(\\d+)/:submission_id',
+  reviewSubmissionCtrl.upsertReviewSubmission
+)
+router.delete(
+  '/review_submission/:review_id(\\d+)/:submission_id',
   authenticate,
-  reviewSubmissionCtrl.deleteReviewSubmission)
+  reviewSubmissionCtrl.deleteReviewSubmission
+)
 
-router.get('/reviewflows',
+router.get(
+  '/reviewflows',
   authenticate,
   parseQueryParams(reviewFlowCtrl.REVIEW_FLOW_LIST_QUERY_PARAMS),
-  reviewFlowCtrl.getReviewFlows)
-router.post('/reviewflow',
+  reviewFlowCtrl.getReviewFlows
+)
+router.post(
+  '/reviewflow',
   authenticate,
   validateBody(reviewFlowCtrl.REVIEW_FLOW_CREATE_SCHEMA),
-  reviewFlowCtrl.createReviewFlow)
+  reviewFlowCtrl.createReviewFlow
+)
 
-router.get('/search',
+router.get(
+  '/search',
   authenticate,
   parseQueryParams(searchCtrl.SEARCH_QUERY_PARAMS),
-  searchCtrl.searchSubmissions)
-router.get('/search_all',
+  searchCtrl.searchSubmissions
+)
+router.get(
+  '/search_all',
   authenticate,
   parseQueryParams(searchCtrl.SEARCH_QUERY_PARAMS),
-  searchCtrl.searchAllSubmissions)
-router.get('/search_ids',
+  searchCtrl.searchAllSubmissions
+)
+router.get(
+  '/search_ids',
   authenticate,
   parseQueryParams(searchCtrl.SEARCH_QUERY_PARAMS),
-  searchCtrl.searchAllSubmissionIds)
-router.get('/search/supplementary',
-  authenticate,
-  searchCtrl.getSearchSupplementaryData)
+  searchCtrl.searchAllSubmissionIds
+)
+router.get('/search/supplementary', authenticate, searchCtrl.getSearchSupplementaryData)
 
-router.get('/solr/reindex',
-  authenticate,
-  solrCtrl.reindexSubmissions)
+router.get('/solr/reindex', authenticate, solrCtrl.reindexSubmissions)
 
-router.get('/submissions',
+router.get(
+  '/submissions',
   authenticate,
   parseQueryParams(submissionCtrl.SUBMISSION_LIST_QUERY_PARAMS),
-  submissionCtrl.getSubmissions)
-router.post('/submission',
+  submissionCtrl.getSubmissions
+)
+router.post(
+  '/submission',
   authenticate,
   validateBody(submissionCtrl.SUBMISSION_CREATE_SCHEMA),
-  submissionCtrl.createSubmission)
+  submissionCtrl.createSubmission
+)
 
-router.get('/users',
-  authenticate,
-  userCtrl.getUsers)
-router.post('/user',
-  authenticate,
-  validateBody(userCtrl.USER_CREATE_SCHEMA),
-  userCtrl.createUser)
+router.get('/users', authenticate, userCtrl.getUsers)
+router.post('/user', authenticate, validateBody(userCtrl.USER_CREATE_SCHEMA), userCtrl.createUser)
 
 export default router

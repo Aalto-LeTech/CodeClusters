@@ -13,8 +13,7 @@ interface IProps {
 export const App = inject((stores: Stores) => ({
   isAuthenticated: stores.authStore.isAuthenticated,
   logout: stores.authStore.logout,
-}))
-((props: IProps) => {
+}))((props: IProps) => {
   const { children, isAuthenticated, logout } = props
   useEffect(() => {
     if (!isAuthenticated) {

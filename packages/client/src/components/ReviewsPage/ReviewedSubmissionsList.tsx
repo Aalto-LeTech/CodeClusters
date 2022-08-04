@@ -13,25 +13,23 @@ interface IProps {
 
 ReviewedSubmissionsListEl.defaultProps = {
   isStudent: false,
-  reviewedSubmissions: []
+  reviewedSubmissions: [],
 }
 
 function ReviewedSubmissionsListEl(props: IProps) {
   const { className, isStudent, reviewedSubmissions } = props
   return (
     <ReviewedSubmissionsListUl className={className}>
-      { reviewedSubmissions.map((submission: IReviewedSubmission, i: number) =>
-      <ReviewedSubmissionsListItem key={`s-${i}`}>
-        <ReviewsList submission={submission}/>
-      </ReviewedSubmissionsListItem>
-      )}
+      {reviewedSubmissions.map((submission: IReviewedSubmission, i: number) => (
+        <ReviewedSubmissionsListItem key={`s-${i}`}>
+          <ReviewsList submission={submission} />
+        </ReviewedSubmissionsListItem>
+      ))}
     </ReviewedSubmissionsListUl>
   )
 }
 
-const ReviewedSubmissionsListUl = styled.ul`
-`
-const ReviewedSubmissionsListItem = styled.li`
-`
+const ReviewedSubmissionsListUl = styled.ul``
+const ReviewedSubmissionsListItem = styled.li``
 
 export const ReviewedSubmissionsList = styled(ReviewedSubmissionsListEl)``

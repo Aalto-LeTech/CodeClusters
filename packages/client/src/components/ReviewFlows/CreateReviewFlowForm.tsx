@@ -23,16 +23,15 @@ const resolver = joiResolver(validationSchema)
 
 const CreateReviewFlowFormEl = forwardRef((props: IProps, ref: any) => {
   const { className } = props
-  const {
-    register, errors, control, reset, setError, clearError, handleSubmit,
-  } = useForm<IReviewFlowCreateFormParams>({
-    validationResolver: resolver,
-    defaultValues: {
-      title: '',
-      description: '',
-      tags: [],
-    }
-  })
+  const { register, errors, control, reset, setError, clearError, handleSubmit } =
+    useForm<IReviewFlowCreateFormParams>({
+      validationResolver: resolver,
+      defaultValues: {
+        title: '',
+        description: '',
+        tags: [],
+      },
+    })
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'tags',
@@ -40,23 +39,28 @@ const CreateReviewFlowFormEl = forwardRef((props: IProps, ref: any) => {
   const [tagText, setTagText] = useState('')
 
   // See NgramParametersForm.tsx for explanation
-  useImperativeHandle(ref, () => ({
-    executeSubmit: () => new Promise((resolve, reject) => {
-      const timeout = setTimeout(() => reject('CreateReviewFlowForm'), 500)
-      handleSubmit((data: IReviewFlowCreateFormParams, e?: React.BaseSyntheticEvent) => {
-        clearTimeout(timeout)
-        resolve(data)
-      })()
+  useImperativeHandle(
+    ref,
+    () => ({
+      executeSubmit: () =>
+        new Promise((resolve, reject) => {
+          const timeout = setTimeout(() => reject('CreateReviewFlowForm'), 500)
+          handleSubmit((data: IReviewFlowCreateFormParams, e?: React.BaseSyntheticEvent) => {
+            clearTimeout(timeout)
+            resolve(data)
+          })()
+        }),
+      reset,
     }),
-    reset,
-  }), [])
+    []
+  )
 
   function addTag(item: string) {
     clearError('tags')
     append({ id: item, name: item })
   }
   function removeTag(item: string) {
-    remove(fields.findIndex(t => t.name === item))
+    remove(fields.findIndex((t) => t.name === item))
     if (fields.length <= 1) {
       setError('tags', 'min_length', 'not enough')
     }
@@ -71,10 +75,9 @@ const CreateReviewFlowFormEl = forwardRef((props: IProps, ref: any) => {
           id="new_review_flow_title"
           name="title"
           placeholder="Title of the review flow"
-          ref={register}/>
-        <Error>
-          {errors.title && 'Title must be at least 1 character long.'}
-        </Error>
+          ref={register}
+        />
+        <Error>{errors.title && 'Title must be at least 1 character long.'}</Error>
       </FormField>
       <FormField>
         <label htmlFor="new_review_flow_description">Description</label>
@@ -84,10 +87,9 @@ const CreateReviewFlowFormEl = forwardRef((props: IProps, ref: any) => {
           id="new_review_flow_description"
           name="description"
           placeholder="Description of what the flow does and why it's useful"
-          ref={register}/>
-        <Error>
-          {errors.description && 'Description must be at least 1 character long.'}
-        </Error>
+          ref={register}
+        />
+        <Error>{errors.description && 'Description must be at least 1 character long.'}</Error>
       </FormField>
       <FormField>
         <label htmlFor="new_reviewflow_tags">Tags</label>
@@ -96,23 +98,21 @@ const CreateReviewFlowFormEl = forwardRef((props: IProps, ref: any) => {
           id="new_reviewflow_tags"
           placeholder="Press enter to input"
           value={tagText}
-          items={fields.map(f => f.name)}
+          items={fields.map((f) => f.name)}
           onChange={(val: string) => setTagText(val)}
           onAddItem={addTag}
           onRemoveItem={removeTag}
         />
-        { fields.map((f, i) =>
-        <input
-          key={`f_${f.id}_${i}`}
-          type="hidden"
-          name={`tags[${i}]`}
-          defaultValue={f.name}
-          ref={register()}
-        />
-        )}
-        <Error>
-          { errors.tags && 'You must have at least 1 tag.'}
-        </Error>
+        {fields.map((f, i) => (
+          <input
+            key={`f_${f.id}_${i}`}
+            type="hidden"
+            name={`tags[${i}]`}
+            defaultValue={f.name}
+            ref={register()}
+          />
+        ))}
+        <Error>{errors.tags && 'You must have at least 1 tag.'}</Error>
       </FormField>
     </Form>
   )

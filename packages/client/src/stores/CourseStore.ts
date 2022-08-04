@@ -15,9 +15,21 @@ export class CourseStore {
   constructor(props: ToastStore) {
     makeObservable(this)
     this.toastStore = props
-    persist(() => this.courses, (val: any) => this.courses = val, 'course.courses')
-    persist(() => this.selectedCourse, (val: any) => this.selectedCourse = val, 'course.selectedCourse')
-    persist(() => this.selectedExercise, (val: any) => this.selectedExercise = val, 'course.selectedExercise')
+    persist(
+      () => this.courses,
+      (val: any) => (this.courses = val),
+      'course.courses'
+    )
+    persist(
+      () => this.selectedCourse,
+      (val: any) => (this.selectedCourse = val),
+      'course.selectedCourse'
+    )
+    persist(
+      () => this.selectedExercise,
+      (val: any) => (this.selectedExercise = val),
+      'course.selectedExercise'
+    )
   }
 
   @computed get courseId() {
@@ -36,13 +48,13 @@ export class CourseStore {
 
   @action setSelectedCourse(name?: string) {
     if (name === undefined || this.selectedCourse?.name !== name) {
-      this.selectedCourse = this.courses.find(c => c.name === name)
+      this.selectedCourse = this.courses.find((c) => c.name === name)
       this.selectedExercise = undefined
     }
   }
 
   @action setSelectedExercise(name?: string) {
-    this.selectedExercise = this.selectedCourse?.exercises.find(e => e.name === name)
+    this.selectedExercise = this.selectedCourse?.exercises.find((e) => e.name === name)
   }
 
   @action getCourses = async () => {

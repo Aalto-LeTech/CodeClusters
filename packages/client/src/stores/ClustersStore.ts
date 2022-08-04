@@ -2,9 +2,7 @@ import { action, computed, makeObservable, observable } from 'mobx'
 
 import { persist } from './persist'
 
-import {
-  IRunNgramResponse
-} from '@codeclusters/types'
+import { IRunNgramResponse } from '@codeclusters/types'
 import { ToastStore } from './ToastStore'
 import { LocalSearchStore } from './LocalSearchStore'
 
@@ -23,7 +21,11 @@ export class ClustersStore {
     makeObservable(this)
     this.toastStore = props.toastStore
     this.localSearchStore = props.localSearchStore
-    persist(() => this.latestRunNgram, (val: any) => this.latestRunNgram = val, 'clusters.latestRunNgram')
+    persist(
+      () => this.latestRunNgram,
+      (val: any) => (this.latestRunNgram = val),
+      'clusters.latestRunNgram'
+    )
   }
 
   @computed get ngramHistogramData() {

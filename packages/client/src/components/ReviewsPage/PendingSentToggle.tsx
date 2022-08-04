@@ -15,47 +15,46 @@ interface IProps {
 
 const PendingSentToggleEl = inject((stores: Stores) => ({
   getReviewsParams: stores.reviewStore.getReviewsParams,
-  setGetReviewsParams: stores.reviewStore.setGetReviewsParams
-}))
-(observer((props: IProps) => {
-  const {
-    className, getReviewsParams, setGetReviewsParams
-  } = props
-  function handleCheckSent(val: boolean) {
-    if (getReviewsParams!.pending) {
-      setGetReviewsParams!({ sent: val })
+  setGetReviewsParams: stores.reviewStore.setGetReviewsParams,
+}))(
+  observer((props: IProps) => {
+    const { className, getReviewsParams, setGetReviewsParams } = props
+    function handleCheckSent(val: boolean) {
+      if (getReviewsParams!.pending) {
+        setGetReviewsParams!({ sent: val })
+      }
     }
-  }
-  function handleCheckPending(val: boolean) {
-    if (getReviewsParams!.sent) {
-      setGetReviewsParams!({ pending: val })
+    function handleCheckPending(val: boolean) {
+      if (getReviewsParams!.sent) {
+        setGetReviewsParams!({ pending: val })
+      }
     }
-  }
-  return (
-    <Container className={className}>
-      <Row>
-        <CheckBoxText>Show SENT reviews</CheckBoxText>
-        <CheckBox
-          id="sent"
-          name="sent"
-          title="Check SENT reviews"
-          checked={getReviewsParams!.sent}
-          onChange={handleCheckSent}
-        />
-      </Row>
-      <Row>
-        <CheckBoxText>Show PENDING reviews</CheckBoxText>
-        <CheckBox
-          id="pending"
-          name="pending"
-          title="Check PENDING reviews"
-          checked={getReviewsParams!.pending}
-          onChange={handleCheckPending}
-        />
-      </Row>
-    </Container>
-  )
-}))
+    return (
+      <Container className={className}>
+        <Row>
+          <CheckBoxText>Show SENT reviews</CheckBoxText>
+          <CheckBox
+            id="sent"
+            name="sent"
+            title="Check SENT reviews"
+            checked={getReviewsParams!.sent}
+            onChange={handleCheckSent}
+          />
+        </Row>
+        <Row>
+          <CheckBoxText>Show PENDING reviews</CheckBoxText>
+          <CheckBox
+            id="pending"
+            name="pending"
+            title="Check PENDING reviews"
+            checked={getReviewsParams!.pending}
+            onChange={handleCheckPending}
+          />
+        </Row>
+      </Container>
+    )
+  })
+)
 
 const Container = styled.div`
   align-items: center;

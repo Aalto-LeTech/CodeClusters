@@ -5,10 +5,10 @@ export const breakpoints = {
   LARGE_DISPLAY_WIDTH: '1280px',
   DEFAULT_WIDTH: '980px',
   TABLET_WIDTH: '768px',
-  MOBILE_WIDTH: '480px'
+  MOBILE_WIDTH: '480px',
 }
 
-export const defaultTheme : ITheme = {
+export const defaultTheme: ITheme = {
   color: {
     bg: '#dcebfe',
     bgLight: '#f1f9ff',
@@ -38,14 +38,14 @@ export const defaultTheme : ITheme = {
     medium: '16px',
     large: '24px',
     xlarge: '40px',
-    largeIcon: '50px'
+    largeIcon: '50px',
   },
   font: {
-    header: '\'IBM Plex Mono\', monospace',
-    text: '\'Raleway\', sans-serif',
+    header: "'IBM Plex Mono', monospace",
+    text: "'Raleway', sans-serif",
   },
   transitions: {
     bezier: 'cubic-bezier(0.55, 0.085, 0.68, 0.53)',
   },
-  breakpoints
+  breakpoints,
 }

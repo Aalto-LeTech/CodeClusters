@@ -14,7 +14,17 @@ interface IProps {
 }
 
 const CheckBoxEl = forwardRef((props: IProps, ref?: any) => {
-  const { className, id, name, checked, disabled, required, type = 'checkbox', title, onChange } = props
+  const {
+    className,
+    id,
+    name,
+    checked,
+    disabled,
+    required,
+    type = 'checkbox',
+    title,
+    onChange,
+  } = props
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     !disabled && onChange && onChange(event.target.checked)
   }
@@ -30,8 +40,8 @@ const CheckBoxEl = forwardRef((props: IProps, ref?: any) => {
         required={required}
         onChange={handleChange}
       />
-      { type === 'toggle' && <Slider className="slider"></Slider> }
-      { type === 'checkbox' && <CheckMark className="checkmark" ></CheckMark>}
+      {type === 'toggle' && <Slider className="slider"></Slider>}
+      {type === 'checkbox' && <CheckMark className="checkmark"></CheckMark>}
     </Wrapper>
   )
 })
@@ -44,7 +54,7 @@ const CheckMark = styled.div`
   width: 25px;
   background-color: #ddd;
   &:after {
-    content: "";
+    content: '';
     position: absolute;
     display: none;
   }
@@ -67,17 +77,17 @@ const Slider = styled.div`
   bottom: 0;
   background-color: #ccc;
   border-radius: 34px;
-  transition: .4s;
+  transition: 0.4s;
   &:before {
     position: absolute;
-    content: "";
+    content: '';
     border-radius: 50%;
     height: 20px;
     width: 20px;
     left: 3px;
     bottom: 3px;
     background-color: white;
-    transition: .4s;
+    transition: 0.4s;
   }
 `
 const Wrapper = styled.label`
@@ -93,10 +103,10 @@ const Wrapper = styled.label`
       width: 0;
       height: 0;
       &:checked + ${Slider} {
-        background-color: #2196F3;
+        background-color: #2196f3;
       }
       &:focus + ${Slider} {
-        box-shadow: 0 0 1px #2196F3;
+        box-shadow: 0 0 1px #2196f3;
       }
       &:checked + ${Slider}:before {
         transform: translateX(70%);
@@ -111,8 +121,8 @@ const Wrapper = styled.label`
     &:hover input ~ ${CheckMark} {
       background-color: #bbb;
     }
-    & > input:checked ~ ${CheckMark}{
-      background-color: #2196F3;
+    & > input:checked ~ ${CheckMark} {
+      background-color: #2196f3;
       &:after {
         display: block;
       }
@@ -122,7 +132,7 @@ const Wrapper = styled.label`
       position: absolute;
       top: 0;
       left: 0;
-      opacity: 0!important;
+      opacity: 0 !important;
       outline: 0;
       z-index: -1;
       width: 17px;

@@ -1,10 +1,11 @@
-import { ISearchCodeParams, ISolrSearchCodeResponse, ISolrSearchAllCodeResponse, ISolrSearchAllIdsResponse } from '@codeclusters/types'
-
 import {
-  authenticatedHeaders,
-  get,
-  getWithQuery,
-} from './methods'
+  ISearchCodeParams,
+  ISolrSearchCodeResponse,
+  ISolrSearchAllCodeResponse,
+  ISolrSearchAllIdsResponse,
+} from '@codeclusters/types'
+
+import { authenticatedHeaders, get, getWithQuery } from './methods'
 
 export const search = (payload: ISearchCodeParams) =>
   getWithQuery<ISolrSearchCodeResponse>('search', payload, authenticatedHeaders())

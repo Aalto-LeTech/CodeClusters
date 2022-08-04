@@ -25,58 +25,71 @@ interface IProps {
   onModelSubmit?: (data: IModelParams) => Promise<any>
 }
 
-const SelectModelEl = observer(forwardRef((props: IProps, ref) => {
-  const {
-    className, id, models, selectedModel, initialModelData, setSelectedModel, onModelFormChange, onModelSubmit
-  } = props
-  const [modelOptions, setModelOptions] = useState(models!.map(m => ({ key: m.model_id, value: m.title })))
-
-  useEffect(() => {
-    setModelOptions(models!.map(m => ({ key: m.model_id, value: m.title })))
-  }, [models])
-
-  function handleSelectModel(option: { key: string, value: string }) {
-    setSelectedModel!(models?.find(m => m.title === option.value))
-  }
-  function handleModelTrashClick() {
-    setSelectedModel!()
-  }
-  function renderDropdownMenu(content: React.ReactNode) {
-    return (
-      <>
-        <Icon><MdKeyboardArrowRight size={24}/></Icon>
-        <DropdownText>{content}</DropdownText>
-      </>
+const SelectModelEl = observer(
+  forwardRef((props: IProps, ref) => {
+    const {
+      className,
+      id,
+      models,
+      selectedModel,
+      initialModelData,
+      setSelectedModel,
+      onModelFormChange,
+      onModelSubmit,
+    } = props
+    const [modelOptions, setModelOptions] = useState(
+      models!.map((m) => ({ key: m.model_id, value: m.title }))
     )
-  }
-  return (
-    <Container className={className} id={`${id}_select_model`}>
-      <InfoText>
-        Currently only N-gram model is supported.
-      </InfoText>
-      <DropdownField>
-        <SelectModelDropdown
-          selected={selectedModel?.model_id}
-          options={modelOptions}
-          placeholder="Select model"
-          fullWidth
-          renderMenu={renderDropdownMenu}
-          onSelect={handleSelectModel}
+
+    useEffect(() => {
+      setModelOptions(models!.map((m) => ({ key: m.model_id, value: m.title })))
+    }, [models])
+
+    function handleSelectModel(option: { key: string; value: string }) {
+      setSelectedModel!(models?.find((m) => m.title === option.value))
+    }
+    function handleModelTrashClick() {
+      setSelectedModel!()
+    }
+    function renderDropdownMenu(content: React.ReactNode) {
+      return (
+        <>
+          <Icon>
+            <MdKeyboardArrowRight size={24} />
+          </Icon>
+          <DropdownText>{content}</DropdownText>
+        </>
+      )
+    }
+    return (
+      <Container className={className} id={`${id}_select_model`}>
+        <InfoText>Currently only N-gram model is supported.</InfoText>
+        <DropdownField>
+          <SelectModelDropdown
+            selected={selectedModel?.model_id}
+            options={modelOptions}
+            placeholder="Select model"
+            fullWidth
+            renderMenu={renderDropdownMenu}
+            onSelect={handleSelectModel}
+          />
+          <Icon button onClick={handleModelTrashClick}>
+            <FiTrash size={18} />
+          </Icon>
+        </DropdownField>
+        <ModelDescription selectedModel={selectedModel} />
+        <ModelParameters
+          ref={ref}
+          id={id}
+          selectedModel={selectedModel}
+          initialModelData={initialModelData}
+          onModelFormChange={onModelFormChange}
+          onModelSubmit={onModelSubmit}
         />
-        <Icon button onClick={handleModelTrashClick}><FiTrash size={18}/></Icon>
-      </DropdownField>
-      <ModelDescription selectedModel={selectedModel}/>
-      <ModelParameters
-        ref={ref}
-        id={id}
-        selectedModel={selectedModel}
-        initialModelData={initialModelData}
-        onModelFormChange={onModelFormChange}
-        onModelSubmit={onModelSubmit}
-      />
-    </Container>
-  )
-}))
+      </Container>
+    )
+  })
+)
 
 const Container = styled.div`
   display: flex;

@@ -15,73 +15,85 @@ interface IProps {
   courseStore?: CourseStore
 }
 
-const SelectCourseExerciseEl = inject('courseStore')(observer((props: IProps) => {
-  const {
-    className, courseStore
-  } = props
-  const [loading, setLoading] = useState(false)
-  const courseOptions = useMemo(() =>
-    courseStore!.courses.map(c => ({ key: c.course_id, value: c.name }))
-    , [courseStore!.courses])
-  const exerciseOptions = useMemo(() =>
-    courseStore!.selectedCourse?.exercises?.map(e => ({ key: e.exercise_id, value: e.name })) || []
-    , [courseStore!.selectedCourse?.exercises])
-
-  useEffect(() => {
-    setLoading(true)
-    courseStore!.getCourses().then((courses) => {
-      setLoading(false)
-    })
-  }, [])
-
-  function handleSelectCourse(option: { key: number, value: string }) {
-    courseStore!.setSelectedCourse(option.value)
-  }
-  function handleSelectExercise(option: { key: number, value: string }) {
-    courseStore!.setSelectedExercise(option.value)
-  }
-  function handleCourseTrashClick() {
-    courseStore!.setSelectedCourse()
-  }
-  function handleExerciseTrashClick() {
-    courseStore!.setSelectedExercise()
-  }
-  function renderDropdownMenu(content: React.ReactNode) {
-    return (
-      <>
-        <Icon><MdKeyboardArrowRight size={24}/></Icon>
-        <DropdownText>{content}</DropdownText>
-      </>
+const SelectCourseExerciseEl = inject('courseStore')(
+  observer((props: IProps) => {
+    const { className, courseStore } = props
+    const [loading, setLoading] = useState(false)
+    const courseOptions = useMemo(
+      () => courseStore!.courses.map((c) => ({ key: c.course_id, value: c.name })),
+      [courseStore!.courses]
     )
-  }
+    const exerciseOptions = useMemo(
+      () =>
+        courseStore!.selectedCourse?.exercises?.map((e) => ({
+          key: e.exercise_id,
+          value: e.name,
+        })) || [],
+      [courseStore!.selectedCourse?.exercises]
+    )
 
-  return (
-    <Container className={className}>
-      <DropdownField>
-        <CustomDropdown
-          selected={courseStore!.selectedCourse?.course_id}
-          options={courseOptions}
-          placeholder="Select course"
-          fullWidth
-          renderMenu={renderDropdownMenu}
-          onSelect={handleSelectCourse}
-        />
-        <Icon button onClick={handleCourseTrashClick}><FiTrash size={18}/></Icon>
-      </DropdownField>
-      <DropdownField>
-        <CustomDropdown
-          selected={courseStore!.selectedExercise?.exercise_id}
-          options={exerciseOptions}
-          placeholder="Select exercise"
-          fullWidth
-          renderMenu={renderDropdownMenu}
-          onSelect={handleSelectExercise}
-        />
-        <Icon button onClick={handleExerciseTrashClick}><FiTrash size={18}/></Icon>
-      </DropdownField>
-    </Container>
-  )
-}))
+    useEffect(() => {
+      setLoading(true)
+      courseStore!.getCourses().then((courses) => {
+        setLoading(false)
+      })
+    }, [])
+
+    function handleSelectCourse(option: { key: number; value: string }) {
+      courseStore!.setSelectedCourse(option.value)
+    }
+    function handleSelectExercise(option: { key: number; value: string }) {
+      courseStore!.setSelectedExercise(option.value)
+    }
+    function handleCourseTrashClick() {
+      courseStore!.setSelectedCourse()
+    }
+    function handleExerciseTrashClick() {
+      courseStore!.setSelectedExercise()
+    }
+    function renderDropdownMenu(content: React.ReactNode) {
+      return (
+        <>
+          <Icon>
+            <MdKeyboardArrowRight size={24} />
+          </Icon>
+          <DropdownText>{content}</DropdownText>
+        </>
+      )
+    }
+
+    return (
+      <Container className={className}>
+        <DropdownField>
+          <CustomDropdown
+            selected={courseStore!.selectedCourse?.course_id}
+            options={courseOptions}
+            placeholder="Select course"
+            fullWidth
+            renderMenu={renderDropdownMenu}
+            onSelect={handleSelectCourse}
+          />
+          <Icon button onClick={handleCourseTrashClick}>
+            <FiTrash size={18} />
+          </Icon>
+        </DropdownField>
+        <DropdownField>
+          <CustomDropdown
+            selected={courseStore!.selectedExercise?.exercise_id}
+            options={exerciseOptions}
+            placeholder="Select exercise"
+            fullWidth
+            renderMenu={renderDropdownMenu}
+            onSelect={handleSelectExercise}
+          />
+          <Icon button onClick={handleExerciseTrashClick}>
+            <FiTrash size={18} />
+          </Icon>
+        </DropdownField>
+      </Container>
+    )
+  })
+)
 
 const Container = styled.section`
   align-items: center;

@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import {
-  ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, TooltipProps, Cell
+  ScatterChart,
+  Scatter,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  TooltipProps,
+  Cell,
 } from 'recharts'
 import { scaleSequential } from 'd3-scale'
 import { interpolateRdYlBu } from 'd3-scale-chromatic'
@@ -23,9 +30,13 @@ function CustomTooltip(props: TooltipProps) {
   if (active && payload && payload.length) {
     const data = payload[0] && payload[0].payload
     return (
-      <div style={{
-        backgroundColor: '#fff', border: '1px solid #999', margin: 0, padding: 10,
-      }}
+      <div
+        style={{
+          backgroundColor: '#fff',
+          border: '1px solid #999',
+          margin: 0,
+          padding: 10,
+        }}
       >
         <p>Cluster: {data.cluster}</p>
       </div>
@@ -63,17 +74,20 @@ function ClustersScatterPlotEl(props: IProps) {
       width={400}
       height={400}
       margin={{
-        top: 20, right: 20, bottom: 20, left: 20,
+        top: 20,
+        right: 20,
+        bottom: 20,
+        left: 20,
       }}
     >
       <CartesianGrid />
       <XAxis type="number" dataKey="x" name="x" />
       <YAxis type="number" dataKey="y" name="y" />
-      <Tooltip cursor={{ strokeDasharray: '3 3' }} content={CustomTooltip}/>
+      <Tooltip cursor={{ strokeDasharray: '3 3' }} content={CustomTooltip} />
       <Scatter name="Clusters" data={data} fill="#8884d8">
-      {
-        data.map((item, index) => <Cell key={`cell-${index}`} fill={colors[index]} />)
-      }
+        {data.map((item, index) => (
+          <Cell key={`cell-${index}`} fill={colors[index]} />
+        ))}
       </Scatter>
     </ScatterChart>
   )

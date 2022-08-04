@@ -20,9 +20,10 @@ const ReviewsViewEl = memo((props: IProps) => {
         <Header>
           <h1>Reviews</h1>
           <p>
-            Here you can see the sent and pending reviews for a given course and/or exercise. You may edit the reviews themselves,
-            the selections of the lines associated to submission's review or to which students they are given.
-            If everything looks fine you may then accept the reviews, only after which the reviews become visible to the student.
+            Here you can see the sent and pending reviews for a given course and/or exercise. You
+            may edit the reviews themselves, the selections of the lines associated to submission's
+            review or to which students they are given. If everything looks fine you may then accept
+            the reviews, only after which the reviews become visible to the student.
           </p>
         </Header>
         <MainInputs>

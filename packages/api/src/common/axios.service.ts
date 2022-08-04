@@ -5,7 +5,7 @@ import { config } from './config'
 
 export const defaultHeaders = {
   Accept: 'application/json',
-  'Content-Type': 'application/json'
+  'Content-Type': 'application/json',
 }
 
 /**
@@ -17,9 +17,9 @@ export const defaultHeaders = {
  * @param url - The path after the API_URL
  * @param options - Axios options object
  */
-const createRequest = <T>(url: string, options: any) : Promise<T> => {
+const createRequest = <T>(url: string, options: any): Promise<T> => {
   return axios(url, options)
-    .then(res => res.data)
+    .then((res) => res.data)
     .catch((err: AxiosError) => {
       if (err.response) {
         const data = err.response.data as any
@@ -43,8 +43,12 @@ const createRequest = <T>(url: string, options: any) : Promise<T> => {
 }
 
 export const axiosService = {
-  get: <T>(path: string, headers = defaultHeaders) => createRequest<T>(path, { headers, method: 'GET' }),
-  post: <T>(path: string, data: any, headers = defaultHeaders) => createRequest<T>(path, { headers, data, method: 'POST' }),
-  put: <T>(path: string, data: any, headers = defaultHeaders) => createRequest<T>(path, { headers, data, method: 'PUT' }),
-  del: <T>(path: string, headers = defaultHeaders) => createRequest<T>(path, { headers, method: 'DELETE' }),
+  get: <T>(path: string, headers = defaultHeaders) =>
+    createRequest<T>(path, { headers, method: 'GET' }),
+  post: <T>(path: string, data: any, headers = defaultHeaders) =>
+    createRequest<T>(path, { headers, data, method: 'POST' }),
+  put: <T>(path: string, data: any, headers = defaultHeaders) =>
+    createRequest<T>(path, { headers, data, method: 'PUT' }),
+  del: <T>(path: string, headers = defaultHeaders) =>
+    createRequest<T>(path, { headers, method: 'DELETE' }),
 }

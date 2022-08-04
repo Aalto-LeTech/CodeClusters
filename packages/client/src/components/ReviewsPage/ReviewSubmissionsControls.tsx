@@ -19,27 +19,30 @@ const ReviewSubmissionsControlsEl = inject((stores: Stores) => ({
   reviews: stores.reviewStore.reviews,
   acceptPendingReviews: stores.reviewStore.acceptPendingReviews,
   openModal: stores.modalStore.openModal,
-}))
-(observer((props: IProps) => {
-  const {
-    className, reviews, acceptPendingReviews, openModal
-  } = props
-  function handleClickAcceptAll() {
-    acceptPendingReviews!(reviews!.map(r => r.review_id))
-  }
-  function handleClickDeleteAll() {
-    openModal!(EModal.DELETE_REVIEWS, {
-      submit: () => Promise.resolve(),
-      count: reviews!.length
-    })
-  }
-  return (
-    <Container className={className}>
-      <Button intent="success" onClick={handleClickAcceptAll}>Accept all</Button>
-      <Button intent="danger" onClick={handleClickDeleteAll}>Delete all</Button>
-    </Container>
-  )
-}))
+}))(
+  observer((props: IProps) => {
+    const { className, reviews, acceptPendingReviews, openModal } = props
+    function handleClickAcceptAll() {
+      acceptPendingReviews!(reviews!.map((r) => r.review_id))
+    }
+    function handleClickDeleteAll() {
+      openModal!(EModal.DELETE_REVIEWS, {
+        submit: () => Promise.resolve(),
+        count: reviews!.length,
+      })
+    }
+    return (
+      <Container className={className}>
+        <Button intent="success" onClick={handleClickAcceptAll}>
+          Accept all
+        </Button>
+        <Button intent="danger" onClick={handleClickDeleteAll}>
+          Delete all
+        </Button>
+      </Container>
+    )
+  })
+)
 
 const Container = styled.div`
   display: flex;

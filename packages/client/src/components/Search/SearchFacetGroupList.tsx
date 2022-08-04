@@ -3,7 +3,7 @@ import { observer } from 'mobx-react'
 import styled from '../../theme/styled'
 
 import { SearchFacetGroupItem } from './SearchFacetGroupItem'
- 
+
 import { FacetItem } from '../../types/search'
 
 interface IProps {
@@ -14,20 +14,15 @@ interface IProps {
 }
 
 const SearchFacetGroupListEl = observer((props: IProps) => {
-  const {
-    className, visible, useRange, items,
-  } = props
+  const { className, visible, useRange, items } = props
   return (
     <Container className={className} visible={visible}>
       <FacetList>
-      { items.map(item =>
-        <FacetListItem key={`fli-${item.key}`}>
-          <SearchFacetGroupItem
-            useRange={useRange}
-            item={item}
-          />
-        </FacetListItem>
-      )}
+        {items.map((item) => (
+          <FacetListItem key={`fli-${item.key}`}>
+            <SearchFacetGroupItem useRange={useRange} item={item} />
+          </FacetListItem>
+        ))}
       </FacetList>
     </Container>
   )
@@ -35,8 +30,8 @@ const SearchFacetGroupListEl = observer((props: IProps) => {
 
 const Container = styled.fieldset<{ visible: boolean }>`
   background: #fff;
-  display: ${({ visible }) => visible ? 'block' : 'none'};
-  visibility: ${({ visible }) => visible ? 'visible' : 'hidden'};
+  display: ${({ visible }) => (visible ? 'block' : 'none')};
+  visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
 `
 const FacetList = styled.ul`
   display: flex;

@@ -3,7 +3,7 @@ import { dbService } from '../../db/db.service'
 import { ICourse } from '@codeclusters/types'
 
 export const courseService = {
-  getCourses: async () : Promise<ICourse[] | undefined> => {
+  getCourses: async (): Promise<ICourse[] | undefined> => {
     return await dbService.queryMany<ICourse>(`
       SELECT *
       FROM (

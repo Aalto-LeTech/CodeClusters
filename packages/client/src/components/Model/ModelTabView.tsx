@@ -6,9 +6,7 @@ import { SelectModel } from './SelectModel'
 import { ClusteringResults } from './ClusteringResults'
 import { LocalSearchForm } from '../Search/LocalSearchForm'
 
-import {
-  IModel, IModelId, IModelParams, INgramParams
-} from '@codeclusters/types'
+import { IModel, IModelId, IModelParams, INgramParams } from '@codeclusters/types'
 import { ModelFormParams } from '../../types/forms'
 import { Stores } from '../../stores/Stores'
 
@@ -34,50 +32,58 @@ const ModelTabViewEl = inject((stores: Stores) => ({
   setSelectedModel: stores.modelStore.setSelectedModel,
   updateModelFormData: stores.modelStore.updateModelFormData,
   runModel: stores.modelStore.runModel,
-}))
-(observer((props: IProps) => {
-  const {
-    className, visible, models, selectedModel, initialModelData,
-    getModels, setSelectedModel, updateModelFormData, runModel
-  } = props
-  const [loading, setLoading] = useState(false)
+}))(
+  observer((props: IProps) => {
+    const {
+      className,
+      visible,
+      models,
+      selectedModel,
+      initialModelData,
+      getModels,
+      setSelectedModel,
+      updateModelFormData,
+      runModel,
+    } = props
+    const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
-    setLoading(true)
-    getModels!().then((result) => {
-      setLoading(false)
-    })
-  }, [])
+    useEffect(() => {
+      setLoading(true)
+      getModels!().then((result) => {
+        setLoading(false)
+      })
+    }, [])
 
-  function handleModelFormDataChange(formData: ModelFormParams) {
-    updateModelFormData!(selectedModel?.model_id!, formData)
-  }
+    function handleModelFormDataChange(formData: ModelFormParams) {
+      updateModelFormData!(selectedModel?.model_id!, formData)
+    }
 
-  return (
-    <Container className={className} visible={visible}>
-      <Body>
-        <SelectModel
-          id="modeltab"
-          models={models}
-          selectedModel={selectedModel}
-          initialModelData={initialModelData!}
-          setSelectedModel={setSelectedModel}
-          onModelFormChange={handleModelFormDataChange}
-          onModelSubmit={runModel}
-        />
-        <ClusteringResults />
-      </Body>
-    </Container>
-  )
-}))
+    return (
+      <Container className={className} visible={visible}>
+        <Body>
+          <SelectModel
+            id="modeltab"
+            models={models}
+            selectedModel={selectedModel}
+            initialModelData={initialModelData!}
+            setSelectedModel={setSelectedModel}
+            onModelFormChange={handleModelFormDataChange}
+            onModelSubmit={runModel}
+          />
+          <ClusteringResults />
+        </Body>
+      </Container>
+    )
+  })
+)
 
-const Container = styled.section<{ visible: boolean}>`
+const Container = styled.section<{ visible: boolean }>`
   align-items: center;
-  display: ${({ visible }) => visible ? 'flex' : 'none'};
+  display: ${({ visible }) => (visible ? 'flex' : 'none')};
   flex-direction: column;
   margin: 1rem;
   margin-top: 0;
-  visibility: ${({ visible }) => visible ? 'initial' : 'hidden'};
+  visibility: ${({ visible }) => (visible ? 'initial' : 'hidden')};
 `
 const Body = styled.div`
   align-items: center;

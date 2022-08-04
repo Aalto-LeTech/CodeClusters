@@ -1,9 +1,10 @@
 import { RefObject, useEffect, useState } from 'react'
 
 const useClickOutside = (
-    ref : RefObject<HTMLElement | null>,
-    onClickOutside: (event: MouseEvent | TouchEvent) => void,
-    isActive: boolean) => {
+  ref: RefObject<HTMLElement | null>,
+  onClickOutside: (event: MouseEvent | TouchEvent) => void,
+  isActive: boolean
+) => {
   const [isListening, setListening] = useState(false)
   const handler = (event: MouseEvent | TouchEvent) => {
     const { current: el } = ref

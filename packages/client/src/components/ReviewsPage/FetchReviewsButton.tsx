@@ -20,44 +20,41 @@ const FetchReviewsButtonEl = inject((stores: Stores) => ({
   exerciseId: stores.courseStore.exerciseId,
   getPendingReviews: stores.reviewStore.getReviews,
   getSubmissions: stores.submissionStore.getSubmissions,
-}))
-(observer((props: IProps) => {
-  const {
-    className, courseId, exerciseId, getPendingReviews, getSubmissions
-  } = props
-  const [loading, setLoading] = useState(false)
-  useEffect(() => {
-    setLoading(true)
-    Promise.all([
-      getPendingReviews!(courseId, exerciseId),
-      getSubmissions!(courseId, exerciseId)
-    ])
-    .then(_ => {
-      setLoading(false)
-    })
-  }, [])
-  function handleClickFetch() {
-    setLoading(true)
-    Promise.all([
-      getPendingReviews!(courseId, exerciseId),
-      getSubmissions!(courseId, exerciseId)
-    ])
-    .then(_ => {
-      setLoading(false)
-    })
-  }
-  return (
-    <Container className={className}>
-      { courseId === undefined ?
-      <NoCourseText>You have to select at least course</NoCourseText>
-      :
-      <Button
-        loading={loading}
-        onClick={handleClickFetch}
-      >Get reviews</Button>}
-    </Container>
-  )
-}))
+}))(
+  observer((props: IProps) => {
+    const { className, courseId, exerciseId, getPendingReviews, getSubmissions } = props
+    const [loading, setLoading] = useState(false)
+    useEffect(() => {
+      setLoading(true)
+      Promise.all([
+        getPendingReviews!(courseId, exerciseId),
+        getSubmissions!(courseId, exerciseId),
+      ]).then((_) => {
+        setLoading(false)
+      })
+    }, [])
+    function handleClickFetch() {
+      setLoading(true)
+      Promise.all([
+        getPendingReviews!(courseId, exerciseId),
+        getSubmissions!(courseId, exerciseId),
+      ]).then((_) => {
+        setLoading(false)
+      })
+    }
+    return (
+      <Container className={className}>
+        {courseId === undefined ? (
+          <NoCourseText>You have to select at least course</NoCourseText>
+        ) : (
+          <Button loading={loading} onClick={handleClickFetch}>
+            Get reviews
+          </Button>
+        )}
+      </Container>
+    )
+  })
+)
 
 const Container = styled.div`
   align-items: center;

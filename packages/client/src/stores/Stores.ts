@@ -65,7 +65,7 @@ export class Stores {
       authStore: this.authStore,
       clustersStore: this.clustersStore,
       searchStore: this.searchStore,
-      modelStore: this.modelStore
+      modelStore: this.modelStore,
     })
   }
 

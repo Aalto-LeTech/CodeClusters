@@ -13,32 +13,35 @@ interface IProps {
 
 const ReindexEl = inject((stores: Stores) => ({
   reindexSubmissions: stores.indexStore.reindexSubmissions,
-}))
-(observer((props: IProps) => {
-  const { className, reindexSubmissions } = props
-  const [loading, setLoading] = useState(false)
-  function handleReindex() {
-    setLoading(true)
-    reindexSubmissions!().then(() => setLoading(false))
-  }
-  return (
-    <Container className={className}>
-      <Header>
-        <h2>Reindex</h2>
-        <Info>
-          <InfoText>
-            Reindex drops all the current submission-search documents from the index and reindexes them
-            from the Postgres database using dataimport.
-            <br />
-          </InfoText>
-        </Info>
-      </Header>
-      <SolrControls>
-        <Button loading={loading} onClick={handleReindex}>Reindex</Button>
-      </SolrControls>
-    </Container>
-  )
-}))
+}))(
+  observer((props: IProps) => {
+    const { className, reindexSubmissions } = props
+    const [loading, setLoading] = useState(false)
+    function handleReindex() {
+      setLoading(true)
+      reindexSubmissions!().then(() => setLoading(false))
+    }
+    return (
+      <Container className={className}>
+        <Header>
+          <h2>Reindex</h2>
+          <Info>
+            <InfoText>
+              Reindex drops all the current submission-search documents from the index and reindexes
+              them from the Postgres database using dataimport.
+              <br />
+            </InfoText>
+          </Info>
+        </Header>
+        <SolrControls>
+          <Button loading={loading} onClick={handleReindex}>
+            Reindex
+          </Button>
+        </SolrControls>
+      </Container>
+    )
+  })
+)
 
 const Container = styled.div`
   align-items: center;

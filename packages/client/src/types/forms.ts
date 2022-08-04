@@ -1,14 +1,23 @@
 import {
-  INgramParams, NgramModelId, IModelId, TokenSetType,
-  ClusteringAlgoType, IDBSCANParams, IHDBSCANParams, IOPTICSParams, IKMeansParams,
-  DimVisualizationType, ITSNEParams, IUMAPParams,
+  INgramParams,
+  NgramModelId,
+  IModelId,
+  TokenSetType,
+  ClusteringAlgoType,
+  IDBSCANParams,
+  IHDBSCANParams,
+  IOPTICSParams,
+  IKMeansParams,
+  DimVisualizationType,
+  ITSNEParams,
+  IUMAPParams,
 } from '@codeclusters/types'
 
 export interface IFormRefMethods<T> {
   executeSubmit: (defaultData?: any) => Promise<T>
   reset: (formData?: any) => void
 }
-export type ModelFormData = { 
+export type ModelFormData = {
   [NgramModelId]: INgramFormParams | undefined
 }
 export type ModelFormParams = INgramFormParams

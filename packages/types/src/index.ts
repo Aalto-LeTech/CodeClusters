@@ -4,5 +4,5 @@ export enum EReviewStatus {
 }
 export const NgramModelId = 'ngram'
 export enum EProgrammingLanguage {
-  JAVA = 'JAVA'
+  JAVA = 'JAVA',
 }

@@ -22,40 +22,50 @@ interface IProps {
 export const DeleteReviewsModal = inject((stores: Stores) => ({
   modal: stores.modalStore.modals[EModal.DELETE_REVIEWS],
   closeModal: stores.modalStore.closeModal,
-}))
-(observer((props: IProps) => {
-  const { className, modal, closeModal } = props
-  function handleClose() {
-    closeModal!(EModal.DELETE_REVIEWS)
-  }
-  function onAccept() {
-    modal!.params?.submit()
-    handleClose()
-  }
-  function onCancel() {
-    handleClose()
-  }
-  const ref = useRef(null)
-  useClickOutside(ref, (e) => handleClose(), modal!.isOpen)
-  useScrollLock(modal!.isOpen)
-  return (
-    <Modal className={className}
-      isOpen={modal!.isOpen}
-      body={
-        <Body ref={ref}>
-          <Header>
-            <TitleWrapper><h2>This will delete {modal!.params.count} reviews</h2></TitleWrapper>
-            <Icon button onClick={handleClose}><FiX size={24}/></Icon>
-          </Header>
-          <Buttons>
-            <Button intent="success" onClick={onAccept}>OK</Button>
-            <Button intent="transparent" onClick={onCancel}>Cancel</Button>
-          </Buttons>
-        </Body>
-      }
-    ></Modal>
-  )
-}))
+}))(
+  observer((props: IProps) => {
+    const { className, modal, closeModal } = props
+    function handleClose() {
+      closeModal!(EModal.DELETE_REVIEWS)
+    }
+    function onAccept() {
+      modal!.params?.submit()
+      handleClose()
+    }
+    function onCancel() {
+      handleClose()
+    }
+    const ref = useRef(null)
+    useClickOutside(ref, (e) => handleClose(), modal!.isOpen)
+    useScrollLock(modal!.isOpen)
+    return (
+      <Modal
+        className={className}
+        isOpen={modal!.isOpen}
+        body={
+          <Body ref={ref}>
+            <Header>
+              <TitleWrapper>
+                <h2>This will delete {modal!.params.count} reviews</h2>
+              </TitleWrapper>
+              <Icon button onClick={handleClose}>
+                <FiX size={24} />
+              </Icon>
+            </Header>
+            <Buttons>
+              <Button intent="success" onClick={onAccept}>
+                OK
+              </Button>
+              <Button intent="transparent" onClick={onCancel}>
+                Cancel
+              </Button>
+            </Buttons>
+          </Body>
+        }
+      ></Modal>
+    )
+  })
+)
 
 const Body = styled.div`
   align-items: center;

@@ -11,10 +11,14 @@
     "import/no-unresolved": 0,
     "import/order": 0,
     "import/prefer-default-export": 0,
-    "indent": [0, 2, {
-      "SwitchCase": 1,
-      "flatTernaryExpressions": true
-    }],
+    "indent": [
+      0,
+      2,
+      {
+        "SwitchCase": 1,
+        "flatTernaryExpressions": true
+      }
+    ],
     "lines-between-class-members": 0,
     "max-len": [1, 140],
     "no-confusing-arrow": 0,
@@ -24,11 +28,11 @@
     "quotes": [1, "single"],
     "semi": [2, "never"],
     "template-curly-spacing": 1,
-    "react/jsx-filename-extension": [1, {
-      "extensions": [
-        ".jsx",
-        ".tsx"
-      ]
-    }]
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [".jsx", ".tsx"]
+      }
+    ]
   }
 }

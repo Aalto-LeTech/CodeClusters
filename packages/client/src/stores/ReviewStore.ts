@@ -2,7 +2,12 @@ import { action, computed, runInAction, makeObservable, observable } from 'mobx'
 import * as reviewApi from '../api/review.api'
 
 import {
-  IReview, IReviewedSubmission, IReviewCreateFormParams, IReviewSelection, IReviewSubmission, EReviewStatus
+  IReview,
+  IReviewedSubmission,
+  IReviewCreateFormParams,
+  IReviewSelection,
+  IReviewSubmission,
+  EReviewStatus,
 } from '@codeclusters/types'
 import { IGetReviewsParams } from '../types/forms'
 import { ToastStore } from './ToastStore'
@@ -86,7 +91,8 @@ export class ReviewStore {
 
   @action toggleSelection = (submission_id: string, selection?: [number, number]) => {
     const oldSelection = this.selectedSubmissions[submission_id]?.selection
-    const notExistsOrSelectionChanged = oldSelection === undefined || (selection && !this.equalSelection(oldSelection, selection))
+    const notExistsOrSelectionChanged =
+      oldSelection === undefined || (selection && !this.equalSelection(oldSelection, selection))
     if (notExistsOrSelectionChanged && this.isMultiSelection && selection) {
       this.selectedSubmissions[submission_id] = {
         submission_id,
@@ -98,7 +104,7 @@ export class ReviewStore {
         [submission_id]: {
           submission_id,
           selection,
-        }
+        },
       }
       this.selectedId = submission_id
     } else if (!this.isMultiSelection) {
@@ -113,20 +119,23 @@ export class ReviewStore {
   @action toggleSelectShownSubmissions = () => {
     let ids: string[] = []
     if (this.localSearchStore.searchActive) {
-      ids = this.localSearchStore.shownSubmissions.map(s => s.id)
+      ids = this.localSearchStore.shownSubmissions.map((s) => s.id)
     } else {
-      ids = this.searchStore.selectedSearchResult.docs.map(s => s.id)
+      ids = this.searchStore.selectedSearchResult.docs.map((s) => s.id)
     }
-    const atLeastOneUnselected = ids.some(id => !(id in this.selectedSubmissions))
+    const atLeastOneUnselected = ids.some((id) => !(id in this.selectedSubmissions))
     let newSelections: { [id: string]: IReviewSelection } = {}
     if (atLeastOneUnselected) {
-      newSelections = ids.reduce((acc, id) => ({
-        ...acc,
-        [id]: {
-          submission_id: id,
-          selection: [0, 0]
-        }
-      }), { ...this.selectedSubmissions })
+      newSelections = ids.reduce(
+        (acc, id) => ({
+          ...acc,
+          [id]: {
+            submission_id: id,
+            selection: [0, 0],
+          },
+        }),
+        { ...this.selectedSubmissions }
+      )
     } else {
       newSelections = Object.keys(this.selectedSubmissions).reduce((acc, id) => {
         if (ids.includes(id)) {
@@ -134,7 +143,7 @@ export class ReviewStore {
         }
         return {
           ...acc,
-          [id]: this.selectedSubmissions[id]
+          [id]: this.selectedSubmissions[id],
         }
       }, {})
     }
@@ -145,17 +154,20 @@ export class ReviewStore {
   @action selectAllSubmissions = async () => {
     let ids: string[] = []
     if (this.localSearchStore.searchActive) {
-      ids = this.localSearchStore.selectedSubmissions.map(s => s.id)
+      ids = this.localSearchStore.selectedSubmissions.map((s) => s.id)
     } else {
       ids = await this.searchStore.searchIds()
     }
-    const newSelections: { [id: string]: IReviewSelection } = ids.reduce((acc, id) => ({
-      ...acc,
-      [id]: {
-        submission_id: id,
-        selection: [0, 0]
-      }
-    }), { ...this.selectedSubmissions })
+    const newSelections: { [id: string]: IReviewSelection } = ids.reduce(
+      (acc, id) => ({
+        ...acc,
+        [id]: {
+          submission_id: id,
+          selection: [0, 0],
+        },
+      }),
+      { ...this.selectedSubmissions }
+    )
     runInAction(() => {
       this.selectedSubmissions = newSelections
       this.isMultiSelection = true
@@ -207,7 +219,7 @@ export class ReviewStore {
     const result = await reviewApi.updateReview(reviewId, review)
     if (result) {
       runInAction(() => {
-        this.reviews = this.reviews.map(r => {
+        this.reviews = this.reviews.map((r) => {
           if (r.review_id === reviewId) {
             return { ...r, ...review }
           }
@@ -226,7 +238,7 @@ export class ReviewStore {
     if (result) {
       runInAction(() => {
         let found = false
-        this.reviewSubmissions = this.reviewSubmissions.map(r => {
+        this.reviewSubmissions = this.reviewSubmissions.map((r) => {
           if (r.review_id === review_id && r.submission_id === submission_id) {
             found = true
             return reviewSubmission
@@ -246,7 +258,9 @@ export class ReviewStore {
     const result = await reviewApi.deleteReviewSubmission(reviewId, submissionId)
     if (result) {
       runInAction(() => {
-        this.reviewSubmissions = this.reviewSubmissions.filter(r => r.review_id !== reviewId || r.submission_id !== submissionId)
+        this.reviewSubmissions = this.reviewSubmissions.filter(
+          (r) => r.review_id !== reviewId || r.submission_id !== submissionId
+        )
       })
       this.toastStore.createToast('Submission to review unlinked', 'danger')
     }
@@ -256,7 +270,7 @@ export class ReviewStore {
   @action deleteReview = async (reviewId: number) => {
     const result = await reviewApi.deleteReview(reviewId)
     if (result) {
-      this.reviews = this.reviews.filter(r => r.review_id !== reviewId)
+      this.reviews = this.reviews.filter((r) => r.review_id !== reviewId)
       this.toastStore.createToast('Review deleted', 'success')
     }
     return result
@@ -264,13 +278,15 @@ export class ReviewStore {
 
   @action acceptPendingReviews = async (reviewIds: number[]) => {
     const payload = {
-      reviewIds
+      reviewIds,
     }
     const result = await reviewApi.acceptPendingReviews(payload)
     if (result) {
       runInAction(() => {
-        this.reviews = this.reviews.filter(r => !reviewIds.includes(r.review_id))
-        this.reviewSubmissions = this.reviewSubmissions.filter(rs => !reviewIds.includes(rs.review_id))
+        this.reviews = this.reviews.filter((r) => !reviewIds.includes(r.review_id))
+        this.reviewSubmissions = this.reviewSubmissions.filter(
+          (rs) => !reviewIds.includes(rs.review_id)
+        )
         this.toastStore.createToast('Reviews accepted', 'success')
       })
     }

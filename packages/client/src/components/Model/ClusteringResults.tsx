@@ -32,36 +32,44 @@ const ClusteringResultsEl = inject((stores: Stores) => ({
   getNgramScatterData: stores.clustersStore.ngramScatterData,
   latestRunNgram: stores.clustersStore.latestRunNgram,
   setActiveCluster: stores.clustersStore.setActiveCluster,
-}))
-(observer((props: IProps) => {
-  const { className, activeCluster, getNgramHistogramData, getNgramScatterData, latestRunNgram, setActiveCluster } = props
-  const silhouette_score = latestRunNgram ? latestRunNgram.ngram.silhouette_score : undefined
-  const score = silhouette_score ? silhouette_score.toPrecision(3) : 'none'
+}))(
+  observer((props: IProps) => {
+    const {
+      className,
+      activeCluster,
+      getNgramHistogramData,
+      getNgramScatterData,
+      latestRunNgram,
+      setActiveCluster,
+    } = props
+    const silhouette_score = latestRunNgram ? latestRunNgram.ngram.silhouette_score : undefined
+    const score = silhouette_score ? silhouette_score.toPrecision(3) : 'none'
 
-  function handleClickBar(item: any) {
-    setActiveCluster!(item.cluster)
-  }
-  if (latestRunNgram === undefined) {
-    return <Container className={className}></Container>
-  }
-  return (
-    <Container className={className}>
-      <Title>Ngram clusters</Title>
-      <p>Silhouette score: {score}</p>
-      <Plots>
-        <ClustersHistogram
-          data={getNgramHistogramData || []}
-          activeCluster={activeCluster || ''}
-          onClickBar={handleClickBar}
-        />
-        <ClustersScatterPlot
-          data={getNgramScatterData || []}
-          clusters={getNgramHistogramData?.length || 0}
-        />
-      </Plots>
-    </Container>
-  )
-}))
+    function handleClickBar(item: any) {
+      setActiveCluster!(item.cluster)
+    }
+    if (latestRunNgram === undefined) {
+      return <Container className={className}></Container>
+    }
+    return (
+      <Container className={className}>
+        <Title>Ngram clusters</Title>
+        <p>Silhouette score: {score}</p>
+        <Plots>
+          <ClustersHistogram
+            data={getNgramHistogramData || []}
+            activeCluster={activeCluster || ''}
+            onClickBar={handleClickBar}
+          />
+          <ClustersScatterPlot
+            data={getNgramScatterData || []}
+            clusters={getNgramHistogramData?.length || 0}
+          />
+        </Plots>
+      </Container>
+    )
+  })
+)
 
 const Container = styled.div`
   align-items: center;

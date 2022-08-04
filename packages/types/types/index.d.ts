@@ -24,7 +24,7 @@ export interface IReview {
 }
 export enum EReviewStatus {
   PENDING = 'PENDING',
-  SENT = 'SENT'
+  SENT = 'SENT',
 }
 export interface IReviewWithSelection extends IReview {
   selection: [number, number]
@@ -108,7 +108,7 @@ export interface IReviewFlowRunParams {
 }
 // Programming language
 export enum EProgrammingLanguage {
-  JAVA = 'JAVA'
+  JAVA = 'JAVA',
 }
 export interface IProgrammingLanguageFacets {
   programming_language: EProgrammingLanguage
@@ -239,13 +239,13 @@ export interface INgramParams {
   random_seed?: number
 }
 export interface IRunNgramParams extends INgramParams {
-  submissions: { id: string, code: string }[]
+  submissions: { id: string; code: string }[]
 }
 export interface IRunNgramResponse {
   model_id: IModelId
   ngram: {
     clusters: { [id: string]: string[] }
-    '2d': { id: string, x: number, y: number, cluster: number }[]
+    '2d': { id: string; x: number; y: number; cluster: number }[]
     silhouette_score: number | null
   }
   // job_id: number
@@ -257,8 +257,7 @@ export interface IIndexMetricsParams {
   course_id: number
   exercise_id: number
 }
-export interface IIndexMetricsResponse {
-}
+export interface IIndexMetricsResponse {}
 // Search with Solr
 export interface ISearchCodeParams {
   q: string
@@ -287,7 +286,7 @@ export interface ISearchFacetRange {
   gap: number
 }
 export interface ISupplementaryData {
-  stats: { count: number, course_id: number, exercise_id: number }[]
+  stats: { count: number; course_id: number; exercise_id: number }[]
   facets: IProgrammingLanguageFacets[]
 }
 export interface ISolrResponseHeader {
@@ -334,9 +333,9 @@ export interface ISolrSearchAllCodeResponse {
   responseHeader: ISolrResponseHeader
   response: ISolrResponse<ISolrFullSubmission>
 }
-export interface ISolrSearchAllIdsResponse {	
-  responseHeader: ISolrResponseHeader	
-  response: ISolrResponse<ISolrSubmission>	
+export interface ISolrSearchAllIdsResponse {
+  responseHeader: ISolrResponseHeader
+  response: ISolrResponse<ISolrSubmission>
 }
 export interface ISolrSubmission {
   _version_: number

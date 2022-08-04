@@ -19,10 +19,10 @@ import { IModal, EModal } from '../stores/ModalStore'
 interface IProps {
   className?: string
   modal?: {
-    isOpen: false,
+    isOpen: false
     params: {
-      submission: ISubmission,
-      reviewsWithSelection: IReviewWithSelection[],
+      submission: ISubmission
+      reviewsWithSelection: IReviewWithSelection[]
     }
   }
   closeModal?: (modal: EModal) => void
@@ -33,77 +33,85 @@ const EMPTY_SELECTION = [-1, -1] as [number, number]
 export const SubmissionReviewsModal = inject((stores: Stores) => ({
   modal: stores.modalStore.modals[EModal.VIEW_SUBMISSION_REVIEWS],
   closeModal: stores.modalStore.closeModal,
-}))
-(observer((props: IProps) => {
-  const { className, modal, closeModal } = props
-  const [shownReviewIdx, setShownReviewIdx] = useState(-1)
-  const [rawCode, setRawCode] = useState('')
-  const [selection, setSelection] = useState(EMPTY_SELECTION)
+}))(
+  observer((props: IProps) => {
+    const { className, modal, closeModal } = props
+    const [shownReviewIdx, setShownReviewIdx] = useState(-1)
+    const [rawCode, setRawCode] = useState('')
+    const [selection, setSelection] = useState(EMPTY_SELECTION)
 
-  useEffect(() => {
-    const s = modal!.params.submission
-    if (s && s.code) {
-      setRawCode(s.code)
-    }
-  }, [modal!.params])
-
-  function handleReviewHover(idx: number) {
-    if (shownReviewIdx !== idx) {
-      setShownReviewIdx(idx)
-      setSelection(modal!.params?.reviewsWithSelection[idx]?.selection)
-    }
-  }
-  function handleReviewClick(idx: number) {
-    if (shownReviewIdx !== idx) {
-      setShownReviewIdx(idx)
-      setSelection(modal!.params?.reviewsWithSelection[idx]?.selection)
-    } else {
-      setShownReviewIdx(-1)
-      setSelection(EMPTY_SELECTION)
-    }
-  }
-  function handleClose() {
-    closeModal!(EModal.VIEW_SUBMISSION_REVIEWS)
-    setShownReviewIdx(-1)
-  }
-  const ref = useRef(null)
-  useClickOutside(ref, (e) => handleClose(), modal!.isOpen)
-  useScrollLock(modal!.isOpen)
-  return (
-    <Modal className={className}
-      isOpen={modal!.isOpen}
-      body={
-        <Body ref={ref}>
-          <Header>
-            <TitleWrapper><h2>View submission reviews</h2></TitleWrapper>
-            <Icon button onClick={handleClose}><FiX size={24}/></Icon>
-          </Header>
-          <Content>
-            <ReviewsListUl>
-              { modal!.params?.reviewsWithSelection.map((review: IReviewWithSelection, i: number) =>
-              <ReviewItem
-                key={`r-${review.review_id}`}
-                active={i === shownReviewIdx}
-                onClick={() => handleReviewClick(i)}
-                onMouseOver={() => handleReviewHover(i)}
-                tabIndex={0}
-              >
-                <ReviewCarouselItem review={review} />
-              </ReviewItem>
-              )}
-            </ReviewsListUl>
-            <CodeBlock
-              code={rawCode}
-              selectionStart={selection[0]}
-              selectionEnd={selection[1]}
-              onSelectCode={() => undefined}
-            />
-          </Content>
-        </Body>
+    useEffect(() => {
+      const s = modal!.params.submission
+      if (s && s.code) {
+        setRawCode(s.code)
       }
-    ></Modal>
-  )
-}))
+    }, [modal!.params])
+
+    function handleReviewHover(idx: number) {
+      if (shownReviewIdx !== idx) {
+        setShownReviewIdx(idx)
+        setSelection(modal!.params?.reviewsWithSelection[idx]?.selection)
+      }
+    }
+    function handleReviewClick(idx: number) {
+      if (shownReviewIdx !== idx) {
+        setShownReviewIdx(idx)
+        setSelection(modal!.params?.reviewsWithSelection[idx]?.selection)
+      } else {
+        setShownReviewIdx(-1)
+        setSelection(EMPTY_SELECTION)
+      }
+    }
+    function handleClose() {
+      closeModal!(EModal.VIEW_SUBMISSION_REVIEWS)
+      setShownReviewIdx(-1)
+    }
+    const ref = useRef(null)
+    useClickOutside(ref, (e) => handleClose(), modal!.isOpen)
+    useScrollLock(modal!.isOpen)
+    return (
+      <Modal
+        className={className}
+        isOpen={modal!.isOpen}
+        body={
+          <Body ref={ref}>
+            <Header>
+              <TitleWrapper>
+                <h2>View submission reviews</h2>
+              </TitleWrapper>
+              <Icon button onClick={handleClose}>
+                <FiX size={24} />
+              </Icon>
+            </Header>
+            <Content>
+              <ReviewsListUl>
+                {modal!.params?.reviewsWithSelection.map(
+                  (review: IReviewWithSelection, i: number) => (
+                    <ReviewItem
+                      key={`r-${review.review_id}`}
+                      active={i === shownReviewIdx}
+                      onClick={() => handleReviewClick(i)}
+                      onMouseOver={() => handleReviewHover(i)}
+                      tabIndex={0}
+                    >
+                      <ReviewCarouselItem review={review} />
+                    </ReviewItem>
+                  )
+                )}
+              </ReviewsListUl>
+              <CodeBlock
+                code={rawCode}
+                selectionStart={selection[0]}
+                selectionEnd={selection[1]}
+                onSelectCode={() => undefined}
+              />
+            </Content>
+          </Body>
+        }
+      ></Modal>
+    )
+  })
+)
 
 const Body = styled.div`
   align-items: center;
@@ -157,7 +165,7 @@ const ReviewsListUl = styled.ul`
   }
 `
 const ReviewItem = styled.li<{ active: boolean }>`
-  background: ${({ active, theme }) => active ? '#ff5d5d' : theme.color.white};
+  background: ${({ active, theme }) => (active ? '#ff5d5d' : theme.color.white)};
   border-radius: 4px;
   cursor: pointer;
   display: flex;

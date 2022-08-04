@@ -21,7 +21,7 @@ export const SUBMISSION_SCHEMA = Joi.object({
   course_id: Joi.number().integer().required(),
   exercise_id: Joi.number().integer().required(),
   code: Joi.string().min(1).max(102400).required(),
-  date: Joi.date().required()
+  date: Joi.date().required(),
 })
 
 export const SUBMISSION_LIST_QUERY_PARAMS = Joi.object({
@@ -35,14 +35,21 @@ export const getSubmissions = async (
   next: NextFunction
 ) => {
   try {
-    const submissions = await submissionService.getSubmissions(res.locals.queryParams.course_id, res.locals.queryParams.exercise_id)
+    const submissions = await submissionService.getSubmissions(
+      res.locals.queryParams.course_id,
+      res.locals.queryParams.exercise_id
+    )
     res.json({ submissions })
   } catch (err) {
     next(err)
   }
 }
 
-export const createSubmission = async (req: IAuthRequest<ISubmissionCreateParams>, res: Response, next: NextFunction) => {
+export const createSubmission = async (
+  req: IAuthRequest<ISubmissionCreateParams>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const submission = await submissionService.createSubmission(req.body)
     res.json({ submission })

@@ -16,17 +16,27 @@ const SelectItemEl = memo((props: IProps) => {
   const items = Array(itemsCount).fill(0)
   return (
     <MoreReviewsList className={className}>
-      { items.map((item, i) =>
-      <MoreReviewItem key={i} selected={i === currentItemIdx}>
-        <MoreReviewButton type="button" selected={i === currentItemIdx} onClick={() => onSelectItem(i)}>
-          {i + 1}
-        </MoreReviewButton>
-        <ReviewSelectedIcon className={i === currentItemIdx ? '' : 'hidden'}>
-          <MdKeyboardArrowUp size={24}/>
-        </ReviewSelectedIcon>
-      </MoreReviewItem>
+      {items.map((item, i) => (
+        <MoreReviewItem key={i} selected={i === currentItemIdx}>
+          <MoreReviewButton
+            type="button"
+            selected={i === currentItemIdx}
+            onClick={() => onSelectItem(i)}
+          >
+            {i + 1}
+          </MoreReviewButton>
+          <ReviewSelectedIcon className={i === currentItemIdx ? '' : 'hidden'}>
+            <MdKeyboardArrowUp size={24} />
+          </ReviewSelectedIcon>
+        </MoreReviewItem>
+      ))}
+      {onAddItem && (
+        <div>
+          <AddReviewButton type="button" onClick={onAddItem}>
+            New
+          </AddReviewButton>
+        </div>
       )}
-      { onAddItem && <div><AddReviewButton type="button" onClick={onAddItem}>New</AddReviewButton></div> }
     </MoreReviewsList>
   )
 })
@@ -36,7 +46,7 @@ const MoreReviewsList = styled.ul`
   list-style: none;
   padding: 0;
 `
-const MoreReviewItem = styled.li<{ selected: boolean }>`  
+const MoreReviewItem = styled.li<{ selected: boolean }>`
   align-items: center;
   display: flex;
   flex-direction: column;

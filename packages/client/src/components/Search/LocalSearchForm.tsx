@@ -21,85 +21,84 @@ interface IProps {
 const LocalSearchFormEl = inject((stores: Stores) => ({
   search: stores.localSearchStore.search,
   activateLocalSearch: stores.localSearchStore.setActive,
-}))
-(observer((props: IProps) => {
-  const {
-    className, search, activateLocalSearch
-  } = props
-  const { register, handleSubmit } = useForm({})
-  const submitButtonRef = useRef<HTMLButtonElement>(null)
-  const handleSearch = useCallback(() => {
-    activateLocalSearch!(true)
-    if (submitButtonRef && submitButtonRef.current) {
-      submitButtonRef.current.click()
-    }
-  }, [])
-  const debouncedSearch = useDebouncedCallback(handleSearch, 500)
-
-  function handleChange() {
-    debouncedSearch()
-    activateLocalSearch!(true)
-  }
-  const onSubmit = async (data: any, e?: React.BaseSyntheticEvent) => {
-    const payload = data
-    // Remove false, undefined and empty values since they are their default values
-    Object.keys(payload).forEach(key => {
-      if (key !== 'q' && (!payload[key] || payload[key] === '')) {
-        delete payload[key]
+}))(
+  observer((props: IProps) => {
+    const { className, search, activateLocalSearch } = props
+    const { register, handleSubmit } = useForm({})
+    const submitButtonRef = useRef<HTMLButtonElement>(null)
+    const handleSearch = useCallback(() => {
+      activateLocalSearch!(true)
+      if (submitButtonRef && submitButtonRef.current) {
+        submitButtonRef.current.click()
       }
-    })
-    const result = await search!(payload)
-  }
-  return (
-    <Container className={className}>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <TopRow>
-          <FormField>
-            <label htmlFor="local_num_results">Results per page</label>
-            <Input
-              fullWidth
-              type="number"
-              id="local_num_results"
-              name="num_results"
-              placeholder="50"
-              ref={register}
-              onChange={handleChange}
-            ></Input>
-          </FormField>
-          <FormField>
-            <label htmlFor="local_num_lines">Lines per result</label>
-            <Input
-              fullWidth
-              disabled
-              type="number"
-              id="local_num_lines"
-              name="num_lines"
-              placeholder="0 - return all the lines"
-              ref={register}
-              onChange={handleChange}
-            ></Input>
-          </FormField>
-        </TopRow>
-        <SearchRow>
-          <label htmlFor="local-search">Local search</label>
-          <SearchBar name="q" id="local-search" ref={register} onSearch={handleSearch}/>
-        </SearchRow>
-        <BottomRow>
-          <CheckBoxField>
-            <CheckBox
-              id="local_case_sensitive"
-              name="case_sensitive"
-              ref={register}
-              onChange={handleChange}
-            />
-            <CheckBoxText htmlFor="local_case_sensitive">Case sensitive</CheckBoxText>
-          </CheckBoxField>
-        </BottomRow>
-        <HiddenSubmitButton type="submit" ref={submitButtonRef}></HiddenSubmitButton>
-      </Form>
-    </Container>
-  )
-}))
+    }, [])
+    const debouncedSearch = useDebouncedCallback(handleSearch, 500)
+
+    function handleChange() {
+      debouncedSearch()
+      activateLocalSearch!(true)
+    }
+    const onSubmit = async (data: any, e?: React.BaseSyntheticEvent) => {
+      const payload = data
+      // Remove false, undefined and empty values since they are their default values
+      Object.keys(payload).forEach((key) => {
+        if (key !== 'q' && (!payload[key] || payload[key] === '')) {
+          delete payload[key]
+        }
+      })
+      const result = await search!(payload)
+    }
+    return (
+      <Container className={className}>
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <TopRow>
+            <FormField>
+              <label htmlFor="local_num_results">Results per page</label>
+              <Input
+                fullWidth
+                type="number"
+                id="local_num_results"
+                name="num_results"
+                placeholder="50"
+                ref={register}
+                onChange={handleChange}
+              ></Input>
+            </FormField>
+            <FormField>
+              <label htmlFor="local_num_lines">Lines per result</label>
+              <Input
+                fullWidth
+                disabled
+                type="number"
+                id="local_num_lines"
+                name="num_lines"
+                placeholder="0 - return all the lines"
+                ref={register}
+                onChange={handleChange}
+              ></Input>
+            </FormField>
+          </TopRow>
+          <SearchRow>
+            <label htmlFor="local-search">Local search</label>
+            <SearchBar name="q" id="local-search" ref={register} onSearch={handleSearch} />
+          </SearchRow>
+          <BottomRow>
+            <CheckBoxField>
+              <CheckBox
+                id="local_case_sensitive"
+                name="case_sensitive"
+                ref={register}
+                onChange={handleChange}
+              />
+              <CheckBoxText htmlFor="local_case_sensitive">Case sensitive</CheckBoxText>
+            </CheckBoxField>
+          </BottomRow>
+          <HiddenSubmitButton type="submit" ref={submitButtonRef}></HiddenSubmitButton>
+        </Form>
+      </Container>
+    )
+  })
+)
 
 const Container = styled.div`
   display: flex;
@@ -157,5 +156,4 @@ const HiddenSubmitButton = styled.button`
   visibility: none;
 `
 
-export const LocalSearchForm = styled(LocalSearchFormEl)`
-`
+export const LocalSearchForm = styled(LocalSearchFormEl)``

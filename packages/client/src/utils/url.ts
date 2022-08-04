@@ -51,7 +51,7 @@ const searchParamsSchema = Joi.object({
   whole_words: Joi.boolean(),
 })
 
-export function removeEmptyValues(obj: {[key: string]: any}) {
+export function removeEmptyValues(obj: { [key: string]: any }) {
   return Object.keys(obj).reduce((acc, key) => {
     const val = obj[key]
     if (!val || val === '' || val.length === 0) {
@@ -63,7 +63,7 @@ export function removeEmptyValues(obj: {[key: string]: any}) {
   }, {} as any)
 }
 
-export function createSearchQueryParams(obj: {[key: string]: any}) {
+export function createSearchQueryParams(obj: { [key: string]: any }) {
   const pruned = removeEmptyValues(obj)
   const { q, ...rest } = pruned
   if (q === undefined) return ''
@@ -97,7 +97,7 @@ export function parseSearchQueryParams(url: string) {
   parseAndAddJSONKey(parsed, 'facets')
   parseAndAddJSONKey(parsed, 'facet_filters')
   const { error, value: values } = searchParamsSchema.validate(parsed, {
-    abortEarly: false
+    abortEarly: false,
   })
   if (!error) {
     return values as unknown as ISearchCodeParams

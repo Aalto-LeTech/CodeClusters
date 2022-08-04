@@ -18,31 +18,33 @@ interface IProps {
 
 export const FrontPage = inject((stores: Stores) => ({
   getSearchSupplementaryData: stores.searchFacetsStore.getSearchSupplementaryData,
-}))
-(observer((props: IProps) => {
-  const { getSearchSupplementaryData } = props
-  useEffect(() => {
-    getSearchSupplementaryData!()
-  }, [])
-  return (
-    <Container>
-      <Header>
-        <a href="https://github.com/Aalto-LeTech/CodeClusters" target="_blank">
-          <h1>CodeClusters</h1>
-          <Icon><FaGithub size={20}/></Icon>
-        </a>
-      </Header>
-      <SearchView/>
-      <DeleteReviewSelectionModal />
-      <AddReviewModal />
-      <CreateReviewFlowModal />
-      <FloatingMenu />
-    </Container>
-  )
-}))
+}))(
+  observer((props: IProps) => {
+    const { getSearchSupplementaryData } = props
+    useEffect(() => {
+      getSearchSupplementaryData!()
+    }, [])
+    return (
+      <Container>
+        <Header>
+          <a href="https://github.com/Aalto-LeTech/CodeClusters" target="_blank">
+            <h1>CodeClusters</h1>
+            <Icon>
+              <FaGithub size={20} />
+            </Icon>
+          </a>
+        </Header>
+        <SearchView />
+        <DeleteReviewSelectionModal />
+        <AddReviewModal />
+        <CreateReviewFlowModal />
+        <FloatingMenu />
+      </Container>
+    )
+  })
+)
 
-const Container = styled.div`
-`
+const Container = styled.div``
 const Header = styled.header`
   display: flex;
   justify-content: center;

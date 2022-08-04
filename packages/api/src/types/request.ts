@@ -29,9 +29,9 @@ export type IAuthRequest2<
   Q extends Record<string, any> = {}
 > = Request<P, {}, B, {}, AuthLocals> & { query: Q }
 
-export type AuthResponse<
-  R = Record<string, never>,
-  Q extends Record<string, any> = {}
-> = Response<R, AuthLocals & { queryParams: Q }>
+export type AuthResponse<R = Record<string, never>, Q extends Record<string, any> = {}> = Response<
+  R,
+  AuthLocals & { queryParams: Q }
+>
 
 export type AnyRequest = IRequest | IAuthRequest

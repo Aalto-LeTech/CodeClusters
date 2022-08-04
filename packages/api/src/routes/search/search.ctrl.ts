@@ -53,7 +53,11 @@ export const SEARCH_QUERY_PARAMS = Joi.object({
   whole_words: Joi.boolean(),
 })
 
-export const getSearchSupplementaryData = async (req: IAuthRequest<{}>, res: Response, next: NextFunction) => {
+export const getSearchSupplementaryData = async (
+  req: IAuthRequest<{}>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const data = await searchService.getSearchSupplementaryData()
     res.json(data)

@@ -2,9 +2,7 @@ import { action, computed, runInAction, makeObservable, observable } from 'mobx'
 
 import { persist } from './persist'
 
-import {
-  ISearchCodeParams, ISolrFullSubmissionWithDate
-} from '@codeclusters/types'
+import { ISearchCodeParams, ISolrFullSubmissionWithDate } from '@codeclusters/types'
 import { ToastStore } from './ToastStore'
 
 const EMPTY_LOCAL_QUERY: ISearchCodeParams = {
@@ -28,21 +26,26 @@ export class LocalSearchStore {
   constructor(props: ToastStore) {
     makeObservable(this)
     this.toastStore = props
-    persist(() => this.submissions, (val: any) => {
-      // Parse dates since JSON.parse wont do it automatically
-      this.submissions = val.map((s: any) => ({ ...s, date: new Date(s.date) }))
-    }, 'localSearch.submissions')
+    persist(
+      () => this.submissions,
+      (val: any) => {
+        // Parse dates since JSON.parse wont do it automatically
+        this.submissions = val.map((s: any) => ({ ...s, date: new Date(s.date) }))
+      },
+      'localSearch.submissions'
+    )
     this.selectedSubmissionIndexes = this.submissions.map((_, i) => i)
     this.searchedSubmissionIndexes = this.submissions.map((_, i) => i)
   }
 
   @computed get shownSubmissions() {
-    return this.searchedSubmissionIndexes.slice(this.resultsStart, this.resultsStart + this.numResults)
-      .map(idx => this.submissions[idx])
+    return this.searchedSubmissionIndexes
+      .slice(this.resultsStart, this.resultsStart + this.numResults)
+      .map((idx) => this.submissions[idx])
   }
 
   @computed get selectedSubmissions() {
-    return this.searchedSubmissionIndexes.map(idx => this.submissions[idx])
+    return this.searchedSubmissionIndexes.map((idx) => this.submissions[idx])
   }
 
   @computed get numResults() {
@@ -79,10 +82,12 @@ export class LocalSearchStore {
   @action setSelectedSubmissions = (submissionIds: string[]) => {
     runInAction(() => {
       this.searchActive = true
-      this.selectedSubmissionIndexes = this.submissions.map((s, i) => {
-        if (submissionIds.includes(s.id)) return i
-        return -1
-      }).filter(n => n !== -1)
+      this.selectedSubmissionIndexes = this.submissions
+        .map((s, i) => {
+          if (submissionIds.includes(s.id)) return i
+          return -1
+        })
+        .filter((n) => n !== -1)
       this.searchedSubmissionIndexes = []
     })
   }
@@ -104,20 +109,25 @@ export class LocalSearchStore {
     runInAction(() => {
       this.searchActive = true
       this.searchParams = payload
-      this.searchedSubmissionIndexes = this.submissions.map((s, i) => {
-        if (this.selectedSubmissionIndexes.includes(i) && this.submissionContains(s, payload.q)) return i
-        return -1
-      }).filter(n => n !== -1)
+      this.searchedSubmissionIndexes = this.submissions
+        .map((s, i) => {
+          if (this.selectedSubmissionIndexes.includes(i) && this.submissionContains(s, payload.q))
+            return i
+          return -1
+        })
+        .filter((n) => n !== -1)
     })
   }
 
   @action searchByIds = (submissionIds: string[]) => {
     runInAction(() => {
       this.searchActive = true
-      this.searchedSubmissionIndexes = this.submissions.map((s, i) => {
-        if (this.selectedSubmissionIndexes.includes(i) && submissionIds.includes(s.id)) return i
-        return -1
-      }).filter(n => n !== -1)
+      this.searchedSubmissionIndexes = this.submissions
+        .map((s, i) => {
+          if (this.selectedSubmissionIndexes.includes(i) && submissionIds.includes(s.id)) return i
+          return -1
+        })
+        .filter((n) => n !== -1)
     })
   }
 }

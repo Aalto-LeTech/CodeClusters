@@ -4,7 +4,12 @@ import * as modelApi from '../api/model.api'
 // import { persist } from './persist'
 
 import {
-  IModel, IModelParams, IRunModelResponse, INgramParams, NgramModelId, IModelId
+  IModel,
+  IModelParams,
+  IRunModelResponse,
+  INgramParams,
+  NgramModelId,
+  IModelId,
 } from '@codeclusters/types'
 import { INgramFormParams, ModelFormParams } from '../types/forms'
 import { ToastStore } from './ToastStore'
@@ -23,12 +28,12 @@ export class ModelStore {
   @observable models: IModel[] = []
   @observable ranModels: IRunModelResponse[] = []
   @observable selectedModel?: IModel = undefined
-  @observable initialModelData: { 
+  @observable initialModelData: {
     [NgramModelId]: INgramParams | undefined
   } = {
     [NgramModelId]: undefined,
   }
-  @observable modelFormData: { 
+  @observable modelFormData: {
     [NgramModelId]: INgramFormParams | undefined
   } = {
     [NgramModelId]: undefined,
@@ -44,7 +49,7 @@ export class ModelStore {
     this.searchStore = props.searchStore
     this.localSearchStore = props.localSearchStore
     this.clustersStore = props.clustersStore
- }
+  }
 
   @action reset() {
     this.models = []
@@ -72,7 +77,7 @@ export class ModelStore {
     }
     const payload = {
       ...data,
-      submissions: submissions.map(s => ({ id: s.id, code: s.code[0] }))
+      submissions: submissions.map((s) => ({ id: s.id, code: s.code[0] })),
     }
     this.localSearchStore.setSubmissions(submissions)
     this.localSearchStore.setActive(true)

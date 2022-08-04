@@ -30,7 +30,14 @@ export interface IBreakpoints {
   MOBILE_WIDTH: string
 }
 
-export type Intent = 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'transparent'
+export type Intent =
+  | 'primary'
+  | 'secondary'
+  | 'success'
+  | 'danger'
+  | 'warning'
+  | 'info'
+  | 'transparent'
 
 export interface ITheme {
   color: IThemeColor

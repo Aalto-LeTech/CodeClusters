@@ -27,24 +27,37 @@ DropdownEl.defaultProps = {
 
 function DropdownEl<K extends KeyValue, V extends React.ReactNode>(props: IProps<K, V>) {
   const {
-    className, id, options, selected, disabled, placeholder, fullWidth, renderMenu, onSelect
+    className,
+    id,
+    options,
+    selected,
+    disabled,
+    placeholder,
+    fullWidth,
+    renderMenu,
+    onSelect,
   } = props
 
   function toggleMenu() {
-    !disabled && setMenuOpen(oldMenuOpen => !oldMenuOpen)
+    !disabled && setMenuOpen((oldMenuOpen) => !oldMenuOpen)
   }
   function isSelected(option: Option<K, V>) {
     return option.key === selected
   }
   function renderButtonContent() {
-    const content = (selected && options.length !== 0) ? options.find(o => o.key === selected)!.value : placeholder!
+    const content =
+      selected && options.length !== 0
+        ? options.find((o) => o.key === selected)!.value
+        : placeholder!
     if (renderMenu) {
       return renderMenu(content)
     }
     return (
       <>
-        {content} 
-        <SvgWrapper><FiChevronDown size={18}/></SvgWrapper>
+        {content}
+        <SvgWrapper>
+          <FiChevronDown size={18} />
+        </SvgWrapper>
       </>
     )
   }
@@ -62,19 +75,24 @@ function DropdownEl<K extends KeyValue, V extends React.ReactNode>(props: IProps
   useClickOutside(ref, closeMenu, menuOpen)
   return (
     <Container className={className} ref={ref} fullWidth={fullWidth}>
-      <Button onClick={toggleMenu} disabled={isDisabled} id={id} type="button" aria-haspopup aria-label="Dropdown menu">
+      <Button
+        onClick={toggleMenu}
+        disabled={isDisabled}
+        id={id}
+        type="button"
+        aria-haspopup
+        aria-label="Dropdown menu"
+      >
         {renderButtonContent()}
       </Button>
       <DropdownList open={menuOpen}>
-        { options.map(o =>
-        <OptionListItem key={o.key}>
-          <OptionButton
-            type="button"
-            onClick={selectOption(o)}
-            selected={isSelected(o)}
-          >{o.value}</OptionButton>
-        </OptionListItem>
-        )}
+        {options.map((o) => (
+          <OptionListItem key={o.key}>
+            <OptionButton type="button" onClick={selectOption(o)} selected={isSelected(o)}>
+              {o.value}
+            </OptionButton>
+          </OptionListItem>
+        ))}
       </DropdownList>
     </Container>
   )
@@ -86,7 +104,7 @@ const Container = styled.div<{ fullWidth?: boolean }>`
   display: inline-block;
   padding: 0;
   position: relative;
-  width: ${({ fullWidth }) => fullWidth ? '100%' : '180px'};
+  width: ${({ fullWidth }) => (fullWidth ? '100%' : '180px')};
 `
 const SvgWrapper = styled.span`
   display: flex;
@@ -96,7 +114,7 @@ const Button = styled.button<{ disabled: boolean }>`
   background: transparent;
   border: 1px solid ${({ theme }) => theme.color.textDark};
   border-radius: 26px;
-  cursor: ${({ disabled }) => disabled ? 'not-allowed' : 'pointer'};
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   display: flex;
   font-size: ${({ theme }) => theme.fontSize.medium};
   justify-content: center;
@@ -104,7 +122,7 @@ const Button = styled.button<{ disabled: boolean }>`
   position: relative;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   &:hover {
-    background-color: ${({ disabled }) => disabled ? '' : 'rgba(0, 0, 0, 0.08)'};
+    background-color: ${({ disabled }) => (disabled ? '' : 'rgba(0, 0, 0, 0.08)')};
   }
   & > ${SvgWrapper} {
     margin-left: 6px;
@@ -118,7 +136,7 @@ const DropdownList = styled.ul<{ open: boolean }>`
   border-width: 1px;
   box-shadow: 1px 1px #b5b5b570;
   color: ${({ theme }) => theme.color.textDark};
-  display: ${({ open }) => open ? 'block' : 'none'};
+  display: ${({ open }) => (open ? 'block' : 'none')};
   list-style: none;
   margin: 0;
   padding: 0;
@@ -127,7 +145,8 @@ const DropdownList = styled.ul<{ open: boolean }>`
   width: 100%;
   z-index: 10;
   transform: scale(1, 1) translateZ(0px);
-  transition: opacity 284ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, transform 189ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: opacity 284ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    transform 189ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   top: 0;
   transform-origin: 251px 0px;
 `
@@ -135,14 +154,14 @@ const OptionListItem = styled.li``
 const OptionButton = styled.button<{ selected: boolean }>`
   align-items: center;
   display: flex;
-  background-color: ${({ selected }) => selected ? 'rgba(0, 0, 0, 0.08)' : '#fff'};
+  background-color: ${({ selected }) => (selected ? 'rgba(0, 0, 0, 0.08)' : '#fff')};
   border: 0;
   border-bottom: 1px solid #e5e5e5;
   cursor: pointer;
   font-size: 1rem;
-  padding: .66rem 1rem;
+  padding: 0.66rem 1rem;
   transition: all 0.1s cubic-bezier(0.55, 0.085, 0.68, 0.53);
-  width: 100%;  
+  width: 100%;
   z-index: 10;
   &:hover {
     background-color: rgba(0, 0, 0, 0.08);

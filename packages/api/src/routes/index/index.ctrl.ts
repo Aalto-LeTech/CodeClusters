@@ -10,7 +10,11 @@ export const INDEX_METRICS_PARAMS = Joi.object({
   exercise_id: Joi.number().integer().required(),
 })
 
-export const runAndIndexMetrics = async (req: IAuthRequest<IIndexMetricsParams>, res: Response, next: NextFunction) => {
+export const runAndIndexMetrics = async (
+  req: IAuthRequest<IIndexMetricsParams>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const response = await indexService.indexMetrics(req.body)
     res.json(response)

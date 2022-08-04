@@ -15,11 +15,9 @@ interface IProps {
 export const NavBar = (props: IProps) => {
   const { className } = props
   const navigate = useNavigate()
-  const {
-    authStore,
-  } = stores
+  const { authStore } = stores
 
-  function handleLogout(e : React.MouseEvent<any>) {
+  function handleLogout(e: React.MouseEvent<any>) {
     authStore!.logout()
     navigate('/')
   }
@@ -28,12 +26,15 @@ export const NavBar = (props: IProps) => {
     <Container className={className}>
       <Nav>
         <MainLinks>
-          <NavLinks user={user}/>
+          <NavLinks user={user} />
         </MainLinks>
-        { isAuthenticated ?
-        <Link to="#" role="button" onClick={handleLogout}>Logout</Link> :
-        <Link to="/login">Login</Link>
-        }
+        {isAuthenticated ? (
+          <Link to="#" role="button" onClick={handleLogout}>
+            Logout
+          </Link>
+        ) : (
+          <Link to="/login">Login</Link>
+        )}
       </Nav>
     </Container>
   )
@@ -44,7 +45,9 @@ function NavLinks(props: { user?: IUser }) {
   if (!user) {
     return (
       <>
-        <Link to="/" className="frontpage">CodeClusters</Link>
+        <Link to="/" className="frontpage">
+          CodeClusters
+        </Link>
         <Link to="/manual">Manual</Link>
       </>
     )
@@ -53,14 +56,18 @@ function NavLinks(props: { user?: IUser }) {
     const reviewUrl = `/review/${user.student_id}`
     return (
       <>
-        <Link to="/" className="frontpage">CodeClusters</Link>
+        <Link to="/" className="frontpage">
+          CodeClusters
+        </Link>
         <Link to={reviewUrl}>My reviews</Link>
       </>
     )
   }
   return (
     <>
-      <Link to="/" className="frontpage">CodeClusters</Link>
+      <Link to="/" className="frontpage">
+        CodeClusters
+      </Link>
       <Link to="/reviews">Reviews</Link>
       <Link to="/solr">Solr</Link>
       <Link to="/manual">Manual</Link>
@@ -70,7 +77,7 @@ function NavLinks(props: { user?: IUser }) {
 
 const Container = styled.div`
   background: ${({ theme }) => theme.color.primaryDark};
-  box-shadow: 0 0 2px 2px rgba(0,0,0,0.18);
+  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.18);
   padding: 1rem;
 `
 const Nav = styled.nav`

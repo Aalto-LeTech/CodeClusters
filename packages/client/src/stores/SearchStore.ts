@@ -4,8 +4,11 @@ import * as searchApi from '../api/search.api'
 import { persist } from './persist'
 
 import {
-  ISearchCodeParams, ISearchCodeResult, ISolrSearchCodeResponse,
-  ISolrSubmissionWithDate, ISolrFullSubmissionWithDate
+  ISearchCodeParams,
+  ISearchCodeResult,
+  ISolrSearchCodeResponse,
+  ISolrSubmissionWithDate,
+  ISolrFullSubmissionWithDate,
 } from '@codeclusters/types'
 import { FacetField } from '../types/search'
 import { ToastStore } from './ToastStore'
@@ -39,7 +42,7 @@ export const EMPTY_QUERY: ISearchCodeParams = {
   results_start: 0,
   case_sensitive: false,
   regex: false,
-  whole_words: false
+  whole_words: false,
 }
 const EMPTY_RESULT: SearchResult = {
   numFound: undefined,
@@ -65,7 +68,11 @@ export class SearchStore {
     this.toastStore = props.toastStore
     this.localSearchStore = props.localSearchStore
     this.searchFacetsStore = props.searchFacetsStore
-    persist(() => this.searchResults, (val: any) => this.searchResults = val, 'search.searchResults')
+    persist(
+      () => this.searchResults,
+      (val: any) => (this.searchResults = val),
+      'search.searchResults'
+    )
   }
 
   @computed get searchResultsCount() {
@@ -128,12 +135,13 @@ export class SearchStore {
   }
 
   parseSearchResponse(result: ISolrSearchCodeResponse) {
-    const docs = result.response.docs.map(r => {
+    const docs = result.response.docs.map((r) => {
       const { code, ...rest } = r
       return {
         ...rest,
         date: new Date(r.timestamp),
-        highlighted: result.highlighting !== undefined ? result.highlighting[r.id].code : code as string[]
+        highlighted:
+          result.highlighting !== undefined ? result.highlighting[r.id].code : (code as string[]),
       }
     })
     const facetFields = this.searchFacetsStore.parseFacetFields(result.facet_counts?.facet_fields)
@@ -188,7 +196,7 @@ export class SearchStore {
     } catch (err) {
       return undefined
     }
-    const docs = result.response.docs.map(r => ({
+    const docs = result.response.docs.map((r) => ({
       ...r,
       date: new Date(r.timestamp),
     }))
@@ -203,7 +211,7 @@ export class SearchStore {
     payload.facet_filters = this.searchFacetsStore.createFiltersFromFacets()
     const result = await searchApi.searchIds(payload)
     if (result) {
-      return result.response.docs.map(r => r.id)
+      return result.response.docs.map((r) => r.id)
     }
     return []
   }

@@ -16,8 +16,13 @@ import { Button } from '../elements/Button'
 import { Icon } from '../elements/Icon'
 
 import {
-  IReviewFlowCreateParams, IReviewFlowCreateFormParams, ISearchCodeParams, IModel, IModelParams,
-  INgramParams, IReviewCreateFormParams
+  IReviewFlowCreateParams,
+  IReviewFlowCreateFormParams,
+  ISearchCodeParams,
+  IModel,
+  IModelParams,
+  INgramParams,
+  IReviewCreateFormParams,
 } from '@codeclusters/types'
 import { IFormRefMethods, INgramFormParams, ModelFormParams } from '../types/forms'
 import { Stores } from '../stores/Stores'
@@ -60,179 +65,209 @@ export const CreateReviewFlowModal = inject((stores: Stores) => ({
   runModel: stores.modelStore.runModel,
   addReviewFlow: stores.reviewFlowStore.addReviewFlow,
   closeModal: stores.modalStore.closeModal,
-}))
-(observer((props: IProps) => {
-  const {
-    className, courseId, exerciseId, userId, searchParameters, modal,
-    models, selectedModel, modelFormData, newReviewFlowSelectedModel, newReviewFlowInitialModelData,
-    setSelectedModel, runModel, addReviewFlow, closeModal
-  } = props
-  const [submitInProgress, setSubmitInProgress] = useState(false)
+}))(
+  observer((props: IProps) => {
+    const {
+      className,
+      courseId,
+      exerciseId,
+      userId,
+      searchParameters,
+      modal,
+      models,
+      selectedModel,
+      modelFormData,
+      newReviewFlowSelectedModel,
+      newReviewFlowInitialModelData,
+      setSelectedModel,
+      runModel,
+      addReviewFlow,
+      closeModal,
+    } = props
+    const [submitInProgress, setSubmitInProgress] = useState(false)
 
-  function onCancel() {
-    closeModal!(EModal.CREATE_REVIEW_FLOW)
-  }
-  function handleSearch(params: ISearchCodeParams) {
-    return Promise.resolve()
-  }
-  function handleUseCurrentSearch() {
-    searchFormRef?.current?.executeSubmit(searchParameters)
-  }
-  function handleUseCurrentModel() {
-    if (selectedModel) {
-      modelFormRef?.current?.reset(modelFormData![selectedModel?.model_id])
-      setSelectedModel!(selectedModel)
+    function onCancel() {
+      closeModal!(EModal.CREATE_REVIEW_FLOW)
     }
-  }
-  function resetSearch() {
-    searchFormRef?.current?.reset()
-  }
-  function resetModel() {
-    modelFormRef?.current?.reset()
-    setSelectedModel!()
-  }
-  function reset() {
-    reviewFlowFormRef?.current?.reset()
-    searchFormRef?.current?.reset()
-    modelFormRef?.current?.reset()
-    reviewFormRef?.current?.reset()
-    setSelectedModel!()
-  }
-  async function handleReviewFlowSubmit() {
-    try {
-      const reviewFlowForm = await reviewFlowFormRef?.current?.executeSubmit()
-      const searchFormData = await searchFormRef?.current?.executeSubmit()
-      // Conditional incase no model selected, thus no validation/submit needed
-      const modelFormData = newReviewFlowSelectedModel ? await modelFormRef?.current?.executeSubmit() : undefined
-      const reviewFormData = await reviewFormRef?.current?.executeSubmit()
-      if (reviewFlowForm && searchFormData && reviewFormData) {
-        const payload: IReviewFlowCreateParams = {
-          ...reviewFlowForm,
-          course_id: courseId,
-          exercise_id: exerciseId,
-          user_id: userId!,
-          steps: [{
-            index: 0,
-            action: 'Search',
-            data: searchFormData
-          }]
-        }
-        if (modelFormData) {
+    function handleSearch(params: ISearchCodeParams) {
+      return Promise.resolve()
+    }
+    function handleUseCurrentSearch() {
+      searchFormRef?.current?.executeSubmit(searchParameters)
+    }
+    function handleUseCurrentModel() {
+      if (selectedModel) {
+        modelFormRef?.current?.reset(modelFormData![selectedModel?.model_id])
+        setSelectedModel!(selectedModel)
+      }
+    }
+    function resetSearch() {
+      searchFormRef?.current?.reset()
+    }
+    function resetModel() {
+      modelFormRef?.current?.reset()
+      setSelectedModel!()
+    }
+    function reset() {
+      reviewFlowFormRef?.current?.reset()
+      searchFormRef?.current?.reset()
+      modelFormRef?.current?.reset()
+      reviewFormRef?.current?.reset()
+      setSelectedModel!()
+    }
+    async function handleReviewFlowSubmit() {
+      try {
+        const reviewFlowForm = await reviewFlowFormRef?.current?.executeSubmit()
+        const searchFormData = await searchFormRef?.current?.executeSubmit()
+        // Conditional incase no model selected, thus no validation/submit needed
+        const modelFormData = newReviewFlowSelectedModel
+          ? await modelFormRef?.current?.executeSubmit()
+          : undefined
+        const reviewFormData = await reviewFormRef?.current?.executeSubmit()
+        if (reviewFlowForm && searchFormData && reviewFormData) {
+          const payload: IReviewFlowCreateParams = {
+            ...reviewFlowForm,
+            course_id: courseId,
+            exercise_id: exerciseId,
+            user_id: userId!,
+            steps: [
+              {
+                index: 0,
+                action: 'Search',
+                data: searchFormData,
+              },
+            ],
+          }
+          if (modelFormData) {
+            payload.steps.push({
+              index: payload.steps.length,
+              action: 'Model',
+              data: modelFormData,
+            })
+          }
           payload.steps.push({
             index: payload.steps.length,
-            action: 'Model',
-            data: modelFormData
+            action: 'Review',
+            data: reviewFormData,
           })
+          setSubmitInProgress(true)
+          const result = await addReviewFlow!(payload)
+          if (result) {
+            reset()
+            setSubmitInProgress(false)
+            handleClose()
+          } else {
+            setSubmitInProgress(false)
+          }
         }
-        payload.steps.push({
-          index: payload.steps.length,
-          action: 'Review',
-          data: reviewFormData
-        })
-        setSubmitInProgress(true)
-        const result = await addReviewFlow!(payload)
-        if (result) {
-          reset()
-          setSubmitInProgress(false)
-          handleClose()
-        } else {
-          setSubmitInProgress(false)
-        }
+      } catch (err) {
+        setSubmitInProgress(false)
       }
-    } catch (err) {
-      setSubmitInProgress(false)
     }
-  }
-  const reviewFlowFormRef = useRef<IFormRefMethods<IReviewFlowCreateFormParams>>(null)
-  const searchFormRef = useRef<IFormRefMethods<ISearchCodeParams>>(null)
-  const modelFormRef = useRef<IFormRefMethods<IModelParams>>(null)
-  const reviewFormRef = useRef<IFormRefMethods<IReviewCreateFormParams>>(null)
-  const ref = useRef(null)
-  const handleClose = useCallback(() => {
-    closeModal!(EModal.CREATE_REVIEW_FLOW)
-  }, [])
-  useClickOutside(ref, handleClose, modal!.isOpen)
-  useScrollLock(modal!.isOpen)
-  return (
-    <Modal className={className}
-      isOpen={modal!.isOpen}
-      body={
-        <Body ref={ref}>
-          <Header>
-            <ModalTitleWrapper><h2>Create new review flow</h2></ModalTitleWrapper>
-            <Icon button onClick={handleClose}><FiX size={24}/></Icon>
-          </Header>
-          <ReviewFlowParams>
-            <CreateReviewFlowForm ref={reviewFlowFormRef}/>
-          </ReviewFlowParams>
-          <Divider />
-          <SelectCourseExerciseContainer>
-            <ParamsHeader>
-              <Title>Select optional course and exercise</Title>
-              <div></div>
-            </ParamsHeader>
-            <p>Select optional course and exercise for which this flow is intended.</p>
-            <SelectCourseExercise />
-          </SelectCourseExerciseContainer>
-          <Divider />
-          <SearchParams>
-            <SearchHeader>
-              <Title>Search</Title>
-              <ParamsHeaderButtons>
-                <Button onClick={handleUseCurrentSearch}>Use current search</Button>
-                <Button intent="transparent" onClick={resetSearch}>Reset</Button>
-              </ParamsHeaderButtons>
-            </SearchHeader>
-            <SearchForm
-              ref={searchFormRef}
-              id="reviewflow_search"
-              courseId={courseId}
-              exerciseId={exerciseId}
-              onSearch={handleSearch}
-            />
-          </SearchParams>
-          <Divider />
-          <ModelParams>
-            <ModelHeader>
-              <Title>Model</Title>
-              <ParamsHeaderButtons>
-                <Button onClick={handleUseCurrentModel}>Use current model</Button>
-                <Button intent="transparent" onClick={resetModel}>Reset</Button>
-              </ParamsHeaderButtons>
-            </ModelHeader>
-            <SelectModel
-              ref={modelFormRef}
-              id="new_reviewflow"
-              models={models}
-              selectedModel={newReviewFlowSelectedModel}
-              initialModelData={newReviewFlowInitialModelData!}
-              setSelectedModel={setSelectedModel}
-            />
-          </ModelParams>
-          <Divider />
-          <ReviewParams>
-            <ParamsHeader>
-              <Title>Review</Title>
-              <div></div>
-            </ParamsHeader>
-            <AddReviewForm id="create-review-flow" ref={reviewFormRef}/>
-          </ReviewParams>
-          <ButtonControls>
-            <Button
-              type="submit"
-              intent="success"
-              disabled={submitInProgress}
-              loading={submitInProgress}
-              onClick={handleReviewFlowSubmit}
-            >Submit</Button>
-            <Button intent="info">Test flow</Button>
-            <Button intent="transparent" onClick={onCancel}>Cancel</Button>
-          </ButtonControls>
-        </Body>
-      }
-    ></Modal>
-  )
-}))
+    const reviewFlowFormRef = useRef<IFormRefMethods<IReviewFlowCreateFormParams>>(null)
+    const searchFormRef = useRef<IFormRefMethods<ISearchCodeParams>>(null)
+    const modelFormRef = useRef<IFormRefMethods<IModelParams>>(null)
+    const reviewFormRef = useRef<IFormRefMethods<IReviewCreateFormParams>>(null)
+    const ref = useRef(null)
+    const handleClose = useCallback(() => {
+      closeModal!(EModal.CREATE_REVIEW_FLOW)
+    }, [])
+    useClickOutside(ref, handleClose, modal!.isOpen)
+    useScrollLock(modal!.isOpen)
+    return (
+      <Modal
+        className={className}
+        isOpen={modal!.isOpen}
+        body={
+          <Body ref={ref}>
+            <Header>
+              <ModalTitleWrapper>
+                <h2>Create new review flow</h2>
+              </ModalTitleWrapper>
+              <Icon button onClick={handleClose}>
+                <FiX size={24} />
+              </Icon>
+            </Header>
+            <ReviewFlowParams>
+              <CreateReviewFlowForm ref={reviewFlowFormRef} />
+            </ReviewFlowParams>
+            <Divider />
+            <SelectCourseExerciseContainer>
+              <ParamsHeader>
+                <Title>Select optional course and exercise</Title>
+                <div></div>
+              </ParamsHeader>
+              <p>Select optional course and exercise for which this flow is intended.</p>
+              <SelectCourseExercise />
+            </SelectCourseExerciseContainer>
+            <Divider />
+            <SearchParams>
+              <SearchHeader>
+                <Title>Search</Title>
+                <ParamsHeaderButtons>
+                  <Button onClick={handleUseCurrentSearch}>Use current search</Button>
+                  <Button intent="transparent" onClick={resetSearch}>
+                    Reset
+                  </Button>
+                </ParamsHeaderButtons>
+              </SearchHeader>
+              <SearchForm
+                ref={searchFormRef}
+                id="reviewflow_search"
+                courseId={courseId}
+                exerciseId={exerciseId}
+                onSearch={handleSearch}
+              />
+            </SearchParams>
+            <Divider />
+            <ModelParams>
+              <ModelHeader>
+                <Title>Model</Title>
+                <ParamsHeaderButtons>
+                  <Button onClick={handleUseCurrentModel}>Use current model</Button>
+                  <Button intent="transparent" onClick={resetModel}>
+                    Reset
+                  </Button>
+                </ParamsHeaderButtons>
+              </ModelHeader>
+              <SelectModel
+                ref={modelFormRef}
+                id="new_reviewflow"
+                models={models}
+                selectedModel={newReviewFlowSelectedModel}
+                initialModelData={newReviewFlowInitialModelData!}
+                setSelectedModel={setSelectedModel}
+              />
+            </ModelParams>
+            <Divider />
+            <ReviewParams>
+              <ParamsHeader>
+                <Title>Review</Title>
+                <div></div>
+              </ParamsHeader>
+              <AddReviewForm id="create-review-flow" ref={reviewFormRef} />
+            </ReviewParams>
+            <ButtonControls>
+              <Button
+                type="submit"
+                intent="success"
+                disabled={submitInProgress}
+                loading={submitInProgress}
+                onClick={handleReviewFlowSubmit}
+              >
+                Submit
+              </Button>
+              <Button intent="info">Test flow</Button>
+              <Button intent="transparent" onClick={onCancel}>
+                Cancel
+              </Button>
+            </ButtonControls>
+          </Body>
+        }
+      ></Modal>
+    )
+  })
+)
 
 const Body = styled.div`
   align-items: center;

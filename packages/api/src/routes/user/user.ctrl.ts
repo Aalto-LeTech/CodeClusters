@@ -34,12 +34,16 @@ function createLoginResponse(user: IUser) {
     user,
     jwt: {
       expires,
-      token: jwtService.createSessionToken(user, expires)
-    }
+      token: jwtService.createSessionToken(user, expires),
+    },
   } as ILoginResponse
 }
 
-export const loginUser = async (req: Request<ILoginCredentials>, res: Response, next: NextFunction) => {
+export const loginUser = async (
+  req: Request<ILoginCredentials>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const user = await userService.loginUser(req.body)
     if (!user) {
@@ -60,7 +64,11 @@ export const getUsers = async (req: IAuthRequest<{}>, res: Response, next: NextF
   }
 }
 
-export const createUser = async (req: IAuthRequest<IUserCreateParams>, res: Response, next: NextFunction) => {
+export const createUser = async (
+  req: IAuthRequest<IUserCreateParams>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const user = await userService.createUser(req.body)
     res.json({ user })

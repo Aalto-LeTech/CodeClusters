@@ -9,7 +9,10 @@ interface IProps {
 }
 
 function createCodeHTML(code: string, selection: [number, number]) {
-  return `${code.substring(0, selection[0])}<mark>${code.substring(selection[0], selection[1])}</mark>${code.substring(selection[1])}`
+  return `${code.substring(0, selection[0])}<mark>${code.substring(
+    selection[0],
+    selection[1]
+  )}</mark>${code.substring(selection[1])}`
 }
 
 function ReviewsListEl(props: IProps) {
@@ -22,14 +25,18 @@ function ReviewsListEl(props: IProps) {
   }
   return (
     <Container>
-      <Code dangerouslySetInnerHTML={{__html: codeHTML }} />
+      <Code dangerouslySetInnerHTML={{ __html: codeHTML }} />
       <ReviewsListUl className={className}>
-        { submission.reviews.map((review: IReviewBody, i: number) =>
-        <ReviewItem key={`r-${i}`} active={i === shownReview} onClick={() => handleReviewClick(review, i)}>
-          <p className="message">{review.message}</p>
-          { review.metadata && <Code>{review.metadata}</Code> }
-        </ReviewItem>
-        )}
+        {submission.reviews.map((review: IReviewBody, i: number) => (
+          <ReviewItem
+            key={`r-${i}`}
+            active={i === shownReview}
+            onClick={() => handleReviewClick(review, i)}
+          >
+            <p className="message">{review.message}</p>
+            {review.metadata && <Code>{review.metadata}</Code>}
+          </ReviewItem>
+        ))}
       </ReviewsListUl>
     </Container>
   )
@@ -39,10 +46,9 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
 `
-const ReviewsListUl = styled.ul`
-`
-const ReviewItem = styled.li<{ active: boolean}>`
-  background: ${({ active, theme }) => active ? 'red' : '#ededed'};
+const ReviewsListUl = styled.ul``
+const ReviewItem = styled.li<{ active: boolean }>`
+  background: ${({ active, theme }) => (active ? 'red' : '#ededed')};
   border-radius: 4px;
   display: flex;
   flex-direction: column;

@@ -30,8 +30,23 @@ MultiInputEl.defaultProps = {
 
 function MultiInputEl(props: IProps) {
   const {
-    className, value, items, type, id, name, autocomplete, icon, iconPadding, placeholder, disabled,
-    fullWidth, onFocus, onBlur, onChange, onAddItem, onRemoveItem
+    className,
+    value,
+    items,
+    type,
+    id,
+    name,
+    autocomplete,
+    icon,
+    iconPadding,
+    placeholder,
+    disabled,
+    fullWidth,
+    onFocus,
+    onBlur,
+    onChange,
+    onAddItem,
+    onRemoveItem,
   } = props
   function handleClickX(item: string) {
     !disabled && onRemoveItem(item)
@@ -57,13 +72,15 @@ function MultiInputEl(props: IProps) {
   }
   return (
     <Container className={className} fullWidth={fullWidth}>
-      { icon }
-      { items.map((item, index) =>
-      <Item key={`mi_${index}_${item}`}>
-        <ItemText>{item}</ItemText>
-        <SvgWrapper onClick={() => handleClickX(item)}><FiX size={20}/></SvgWrapper>
-      </Item>
-      )}
+      {icon}
+      {items.map((item, index) => (
+        <Item key={`mi_${index}_${item}`}>
+          <ItemText>{item}</ItemText>
+          <SvgWrapper onClick={() => handleClickX(item)}>
+            <FiX size={20} />
+          </SvgWrapper>
+        </Item>
+      ))}
       <StyledInput
         value={value}
         type={type}
@@ -102,9 +119,9 @@ const Container = styled.div<ContainerProps>`
   flex-wrap: wrap;
   margin-top: 6px;
   position: relative;
-  width: ${({ fullWidth }) => fullWidth ? '100%' : '180px'};
+  width: ${({ fullWidth }) => (fullWidth ? '100%' : '180px')};
   &:focus {
-    background-image: linear-gradient(to right, #cefff8, #729EE74D);
+    background-image: linear-gradient(to right, #cefff8, #729ee74d);
     color: ${({ theme }) => theme.color.textDark};
     outline: auto 5px;
   }
@@ -148,7 +165,7 @@ const StyledInput = styled.input<InputProps>`
   transition: 0.1s all;
   width: 100%;
   &:focus {
-    background-image: linear-gradient(to right,#fcffff,#e6f8ff4d);
+    background-image: linear-gradient(to right, #fcffff, #e6f8ff4d);
     color: ${({ theme }) => theme.color.textDark};
   }
 `

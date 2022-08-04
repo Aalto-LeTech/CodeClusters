@@ -33,49 +33,78 @@ export const FloatingMenu = inject((stores: Stores) => ({
   toggleSelectShownSubmissions: stores.reviewStore.toggleSelectShownSubmissions,
   selectAllSubmissions: stores.reviewStore.selectAllSubmissions,
   resetSelections: stores.reviewStore.resetSelections,
-}))
-(observer((props: IProps) => {
-  const {
-    className, currentSelectionCount, searchResultsCount, searchInProgress,
-    openModal, toggleSelectShownSubmissions, selectAllSubmissions, resetSelections
-  } = props
-  function handleReviewClick() {
-    openModal!(EModal.REVIEW_SUBMISSIONS)
-  }
-  function handleToggleShownClick() {
-    toggleSelectShownSubmissions!()
-  }
-  function handleAddAllClick() {
-    selectAllSubmissions!()
-  }
-  function handleTrashClick() {
-    resetSelections!()
-  }
-  return (
-    <Wrapper className={className}>
-      <Container>
-        <Header>
-          { searchInProgress ? <Spinner /> : null }
-          <Title>Selected: {currentSelectionCount}/{searchResultsCount}</Title>
-        </Header>
-        <Body>
-          <Icon button onClick={handleReviewClick} title="Review selected" disabled={currentSelectionCount === 0}>
-            <FiCheck size={18}/>
-          </Icon>
-          <Icon button onClick={handleToggleShownClick} title="Toggle all shown" disabled={searchResultsCount === 0}>
-            <FiPlusSquare size={18}/>
-          </Icon>
-          <Icon button onClick={handleAddAllClick} title="Select all found" disabled={searchResultsCount === 0}>
-            <FiFolderPlus size={18}/>
-          </Icon>
-          <Icon button onClick={handleTrashClick} title="Unselect all" disabled={currentSelectionCount === 0}>
-            <FiTrash size={18}/>
-          </Icon>
-        </Body>
-      </Container>
-    </Wrapper>
-  )
-}))
+}))(
+  observer((props: IProps) => {
+    const {
+      className,
+      currentSelectionCount,
+      searchResultsCount,
+      searchInProgress,
+      openModal,
+      toggleSelectShownSubmissions,
+      selectAllSubmissions,
+      resetSelections,
+    } = props
+    function handleReviewClick() {
+      openModal!(EModal.REVIEW_SUBMISSIONS)
+    }
+    function handleToggleShownClick() {
+      toggleSelectShownSubmissions!()
+    }
+    function handleAddAllClick() {
+      selectAllSubmissions!()
+    }
+    function handleTrashClick() {
+      resetSelections!()
+    }
+    return (
+      <Wrapper className={className}>
+        <Container>
+          <Header>
+            {searchInProgress ? <Spinner /> : null}
+            <Title>
+              Selected: {currentSelectionCount}/{searchResultsCount}
+            </Title>
+          </Header>
+          <Body>
+            <Icon
+              button
+              onClick={handleReviewClick}
+              title="Review selected"
+              disabled={currentSelectionCount === 0}
+            >
+              <FiCheck size={18} />
+            </Icon>
+            <Icon
+              button
+              onClick={handleToggleShownClick}
+              title="Toggle all shown"
+              disabled={searchResultsCount === 0}
+            >
+              <FiPlusSquare size={18} />
+            </Icon>
+            <Icon
+              button
+              onClick={handleAddAllClick}
+              title="Select all found"
+              disabled={searchResultsCount === 0}
+            >
+              <FiFolderPlus size={18} />
+            </Icon>
+            <Icon
+              button
+              onClick={handleTrashClick}
+              title="Unselect all"
+              disabled={currentSelectionCount === 0}
+            >
+              <FiTrash size={18} />
+            </Icon>
+          </Body>
+        </Container>
+      </Wrapper>
+    )
+  })
+)
 
 const Header = styled.div`
   align-items: center;
@@ -101,7 +130,7 @@ const Container = styled.div`
   background: #fff;
   border: 1px solid #222;
   border-radius: 4px;
-  box-shadow: 0 0 2px 2px rgba(0,0,0,0.18);
+  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.18);
   color: #222;
   display: flex;
   flex-direction: column;
@@ -114,6 +143,6 @@ const Body = styled.div`
   margin-top: 0.5rem;
   width: 100%;
   & > ${Icon}:not(:first-child) {
-    margin-left: 0.5rem
+    margin-left: 0.5rem;
   }
 `

@@ -19,7 +19,8 @@ function SolrViewEl(props: IProps) {
             The search of CodeClusters is powered by Apache Solr.
             <br />
             <br></br>
-            Here you can reset and index the data to the Solr as necessary instead of having to do it manually by ssh'ing into the server.
+            Here you can reset and index the data to the Solr as necessary instead of having to do
+            it manually by ssh'ing into the server.
           </InfoText>
         </Info>
       </Header>

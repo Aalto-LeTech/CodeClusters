@@ -18,16 +18,20 @@ const ReviewEl = observer((props: IProps) => {
         <label>Message</label>
         <ReviewMessage>{review.message}</ReviewMessage>
       </Field>
-      { review.metadata && <Field>
-        <label>Metadata</label>
-        <ReviewMetadata>{review.metadata}</ReviewMetadata>
-      </Field>}
+      {review.metadata && (
+        <Field>
+          <label>Metadata</label>
+          <ReviewMetadata>{review.metadata}</ReviewMetadata>
+        </Field>
+      )}
       <Field>
         <label>Tags</label>
         <Tags>
-          { review.tags.map((t, i) =>
-          <Tag key={`rt-${t}-${i}`}><TagText>{t}</TagText></Tag>  
-          )}
+          {review.tags.map((t, i) => (
+            <Tag key={`rt-${t}-${i}`}>
+              <TagText>{t}</TagText>
+            </Tag>
+          ))}
         </Tags>
       </Field>
     </Container>

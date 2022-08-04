@@ -1,9 +1,10 @@
 import { RefObject, useEffect, useState } from 'react'
 
 const useHover = (
-    ref : RefObject<HTMLElement | null>,
-    onHover: (event: MouseEvent) => void,
-    isActive: boolean) => {
+  ref: RefObject<HTMLElement | null>,
+  onHover: (event: MouseEvent) => void,
+  isActive: boolean
+) => {
   const [isListening, setListening] = useState(false)
 
   function addHandlers(el: HTMLElement) {

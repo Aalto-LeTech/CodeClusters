@@ -6,7 +6,7 @@ export function persist(fn: () => any, setter: (val: any) => void, id: string) {
     let stored = JSON.parse(existing)
     setter(stored)
   }
-  return reaction(fn, val => {
+  return reaction(fn, (val) => {
     localStorage.setItem(id, JSON.stringify(val || ''))
   })
 }

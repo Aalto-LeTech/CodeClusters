@@ -13,7 +13,7 @@ export enum EModal {
   EDIT_SUBMISSION_REVIEW = 'EDIT_SUBMISSION_REVIEW',
   REVIEW_SUBMISSIONS = 'REVIEW_SUBMISSIONS',
   VIEW_SUBMISSION_REVIEWS = 'VIEW_SUBMISSION_REVIEWS',
-  CREATE_REVIEW_FLOW = 'CREATE_REVIEW_FLOW'
+  CREATE_REVIEW_FLOW = 'CREATE_REVIEW_FLOW',
 }
 
 export class ModalStore {
@@ -21,22 +21,22 @@ export class ModalStore {
     [EModal.ACCEPT_EDIT_REVIEW]: {
       isOpen: false,
       params: {
-        review: undefined
-      }
+        review: undefined,
+      },
     },
     [EModal.DELETE_REVIEW_SELECTION]: {
       isOpen: false,
       params: {
         submit: () => undefined,
-        count: 0
-      }
+        count: 0,
+      },
     },
     [EModal.DELETE_REVIEWS]: {
       isOpen: false,
       params: {
         submit: () => undefined,
-        count: 0
-      }
+        count: 0,
+      },
     },
     [EModal.EDIT_SUBMISSION_REVIEW]: {
       isOpen: false,
@@ -44,26 +44,25 @@ export class ModalStore {
         submission: undefined,
         review: undefined,
         reviewSubmission: undefined,
-      }
+      },
     },
     [EModal.REVIEW_SUBMISSIONS]: {
       isOpen: false,
       params: {
         submit: () => undefined,
-        count: 0
-      }
+        count: 0,
+      },
     },
     [EModal.VIEW_SUBMISSION_REVIEWS]: {
       isOpen: false,
       params: {
         submission: {},
         reviewsWithSelection: [],
-      }
+      },
     },
     [EModal.CREATE_REVIEW_FLOW]: {
       isOpen: false,
-      params: {
-      }
+      params: {},
     },
   }
   toastStore: ToastStore
@@ -80,7 +79,7 @@ export class ModalStore {
     this.modals[name].params = params
     this.toastStore.setToasterLocation(true)
   }
- 
+
   @action closeModal = (name: EModal) => {
     this.modals[name].isOpen = false
     this.toastStore.setToasterLocation(false)

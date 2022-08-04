@@ -22,12 +22,16 @@ function TooltipEl(props: IProps) {
   }
   return (
     <Wrapper className={className}>
-      <Icon button onClick={openTooltip}><FiHelpCircle size={size} /></Icon>
+      <Icon button onClick={openTooltip}>
+        <FiHelpCircle size={size} />
+      </Icon>
       <TooltipWrapper visible={visible}>
         <TooltipContainer>
           <TooltipHeader>
             <TooltipTitle>{title}</TooltipTitle>
-            <Icon button onClick={closeTooltip}><FiX size={16}/></Icon>
+            <Icon button onClick={closeTooltip}>
+              <FiX size={16} />
+            </Icon>
           </TooltipHeader>
           {children}
         </TooltipContainer>
@@ -38,10 +42,10 @@ function TooltipEl(props: IProps) {
 
 const Wrapper = styled.div``
 const TooltipWrapper = styled.div<{ visible: boolean }>`
-  display: ${({ visible }) => visible ? 'block' : 'none'};
+  display: ${({ visible }) => (visible ? 'block' : 'none')};
   font-size: ${({ theme }) => theme.fontSize.medium};
   position: relative;
-  visibility: ${({ visible }) => visible ? 'visible' : 'hidden'};
+  visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
 `
 const TooltipContainer = styled.div`
   background: ${({ theme }) => theme.color.white};

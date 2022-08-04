@@ -15,14 +15,19 @@ export const solrService = {
   deleteIndexedSubmissions: () => {
     const data = {
       delete: {
-        query: '*:*'
-      }
+        query: '*:*',
+      },
     }
     const query = 'commit=true'
-    return axiosService.post<ISolrResponse | undefined>(url(`solr/submission-search/update?${query}`), data)
+    return axiosService.post<ISolrResponse | undefined>(
+      url(`solr/submission-search/update?${query}`),
+      data
+    )
   },
   reindexSubmissions: () => {
     const query = 'command=full-import&entity=submission'
-    return axiosService.get<ISolrResponse | undefined>(url(`solr/submission-search/dataimport?${query}`))
-  }
+    return axiosService.get<ISolrResponse | undefined>(
+      url(`solr/submission-search/dataimport?${query}`)
+    )
+  },
 }

@@ -30,47 +30,59 @@ export const AddReviewModal = inject((stores: Stores) => ({
   closeModal: stores.modalStore.closeModal,
   addReview: stores.reviewStore.addReview,
   resetSelections: stores.reviewStore.resetSelections,
-}))
-(observer((props: IProps) => {
-  const { className, currentSelectionCount, modal, closeModal, addReview, resetSelections } = props
-  function handleClose() {
-    closeModal!(EModal.REVIEW_SUBMISSIONS)
-  }
-  async function handleReviewSubmit(payload: IReviewCreateFormParams, onSuccess: () => void, onError: () => void) {
-    const result = await addReview!(payload)
-    if (result) {
-      onSuccess()
-      resetSelections!()
-      handleClose()
-    } else {
-      onError()
+}))(
+  observer((props: IProps) => {
+    const { className, currentSelectionCount, modal, closeModal, addReview, resetSelections } =
+      props
+    function handleClose() {
+      closeModal!(EModal.REVIEW_SUBMISSIONS)
     }
-  }
-  const ref = useRef(null)
-  useClickOutside(ref, (e) => handleClose(), modal!.isOpen)
-  useScrollLock(modal!.isOpen)
-  return (
-    <Modal className={className}
-      isOpen={modal!.isOpen}
-      body={
-        <Body ref={ref}>
-          <Header>
-            <TitleWrapper><h2>Add review to {currentSelectionCount} submissions</h2></TitleWrapper>
-            <Icon button onClick={handleClose}><FiX size={24}/></Icon>
-          </Header>
-          <Info>
-            This will create one new pending review that has to be accepted before being visible to students.
-          </Info>
-          <AddReviewForm
-            id="review-submissions"
-            onSubmit={handleReviewSubmit}
-            onCancel={handleClose}
-          />
-        </Body>
+    async function handleReviewSubmit(
+      payload: IReviewCreateFormParams,
+      onSuccess: () => void,
+      onError: () => void
+    ) {
+      const result = await addReview!(payload)
+      if (result) {
+        onSuccess()
+        resetSelections!()
+        handleClose()
+      } else {
+        onError()
       }
-    ></Modal>
-  )
-}))
+    }
+    const ref = useRef(null)
+    useClickOutside(ref, (e) => handleClose(), modal!.isOpen)
+    useScrollLock(modal!.isOpen)
+    return (
+      <Modal
+        className={className}
+        isOpen={modal!.isOpen}
+        body={
+          <Body ref={ref}>
+            <Header>
+              <TitleWrapper>
+                <h2>Add review to {currentSelectionCount} submissions</h2>
+              </TitleWrapper>
+              <Icon button onClick={handleClose}>
+                <FiX size={24} />
+              </Icon>
+            </Header>
+            <Info>
+              This will create one new pending review that has to be accepted before being visible
+              to students.
+            </Info>
+            <AddReviewForm
+              id="review-submissions"
+              onSubmit={handleReviewSubmit}
+              onCancel={handleClose}
+            />
+          </Body>
+        }
+      ></Modal>
+    )
+  })
+)
 
 const Body = styled.div`
   align-items: center;

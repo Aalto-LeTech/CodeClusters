@@ -21,35 +21,40 @@ function parseArrayItem(item: string | Query) {
   return item
 }
 
-export const parseQueryParams = (schema: ObjectSchema) => (req: Request, res: Response, next: NextFunction) => {
-  const { query } = req
-  let parsed
-  // Parse JSON objects from query params (used with facets eg facets={"NCSS_method_metric":true})
-  // Since there wasn't really any other reasonable way (other than changing to POST requests which would have made the use of
-  // copy-pasteable search URLs impossible)
-  try {
-    parsed = Object.keys(query).reduce((acc, cur) => {
-      const val = query[cur]
-      if (typeof val === 'string' && val.charAt(0) === '{' && val.charAt(val.length - 1) === '}') {
-        acc[cur] = JSON.parse(val as string)
-      } else if (Array.isArray(val)) {
-        acc[cur] = val.map(v => parseArrayItem(v))
-      } else {
-        acc[cur] = val
-      }
-      return acc
-    }, {} as { [key: string]: any })
-  } catch (err) {
-    next(new ValidationError('Invalid JSON object in query parameters'))
-  }
+export const parseQueryParams =
+  (schema: ObjectSchema) => (req: Request, res: Response, next: NextFunction) => {
+    const { query } = req
+    let parsed
+    // Parse JSON objects from query params (used with facets eg facets={"NCSS_method_metric":true})
+    // Since there wasn't really any other reasonable way (other than changing to POST requests which would have made the use of
+    // copy-pasteable search URLs impossible)
+    try {
+      parsed = Object.keys(query).reduce((acc, cur) => {
+        const val = query[cur]
+        if (
+          typeof val === 'string' &&
+          val.charAt(0) === '{' &&
+          val.charAt(val.length - 1) === '}'
+        ) {
+          acc[cur] = JSON.parse(val as string)
+        } else if (Array.isArray(val)) {
+          acc[cur] = val.map((v) => parseArrayItem(v))
+        } else {
+          acc[cur] = val
+        }
+        return acc
+      }, {} as { [key: string]: any })
+    } catch (err) {
+      next(new ValidationError('Invalid JSON object in query parameters'))
+    }
 
-  const result = schema.validate(parsed)
+    const result = schema.validate(parsed)
 
-  if (result.error) {
-    next(new ValidationError(result.error.message))
-  } else {
-    // req.query = result.value
-    res.locals.queryParams = result.value
-    next()
+    if (result.error) {
+      next(new ValidationError(result.error.message))
+    } else {
+      // req.query = result.value
+      res.locals.queryParams = result.value
+      next()
+    }
   }
-}

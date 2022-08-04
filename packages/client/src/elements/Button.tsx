@@ -25,24 +25,15 @@ function ButtonEl(props: IProps) {
   }
   return (
     <>
-    { type === 'link' ?
-      <a
-        className={className}
-        onClick={onClick}
-        type={type}
-        href={href}
-      >
-        { loading ? <Spinner /> : children }
-      </a> :
-      <button
-        className={className}
-        onClick={handleClick}
-        type={type}
-        disabled={disabled}
-      >
-        { loading ? <Spinner /> : children }
-      </button>
-    }
+      {type === 'link' ? (
+        <a className={className} onClick={onClick} type={type} href={href}>
+          {loading ? <Spinner /> : children}
+        </a>
+      ) : (
+        <button className={className} onClick={handleClick} type={type} disabled={disabled}>
+          {loading ? <Spinner /> : children}
+        </button>
+      )}
     </>
   )
 }
@@ -50,7 +41,8 @@ function ButtonEl(props: IProps) {
 export const Button = styled(ButtonEl)<IProps>`
   align-items: center;
   background-color: ${({ theme, intent }) => getIntentColor(theme, intent)};
-  border: 1px solid ${({ theme, intent }) => intent !== 'transparent' ? theme.color.textDark : 'transparent'};
+  border: 1px solid
+    ${({ theme, intent }) => (intent !== 'transparent' ? theme.color.textDark : 'transparent')};
   border-radius: 4px;
   color: ${({ intent, theme }) => getIntentTextColor(theme, intent)};
   cursor: pointer;
@@ -63,7 +55,7 @@ export const Button = styled(ButtonEl)<IProps>`
   padding: 0.5rem 1.5rem;
   text-decoration: none;
   transition: 0.2s all;
-  width: ${({ fullWidth }) => fullWidth ? '100%' : ''};
+  width: ${({ fullWidth }) => (fullWidth ? '100%' : '')};
   &:hover {
     background: ${({ theme, intent }) => intent === 'transparent' && theme.color.gray.lightest};
     box-shadow: ${({ intent }) => intent !== 'transparent' && '0 0 2px 2px #039be569'};

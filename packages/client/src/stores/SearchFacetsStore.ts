@@ -1,11 +1,24 @@
-import { autorun, action, computed, extendObservable, runInAction, makeObservable, observable } from 'mobx'
+import {
+  autorun,
+  action,
+  computed,
+  extendObservable,
+  runInAction,
+  makeObservable,
+  observable,
+} from 'mobx'
 import * as searchApi from '../api/search.api'
 
 import { persist } from './persist'
 
 import {
-  ISearchFacetParams, ISearchFacetRange, ISupplementaryData, IProgrammingLanguageFacets,
-  EProgrammingLanguage, ICourse, IExercise
+  ISearchFacetParams,
+  ISearchFacetRange,
+  ISupplementaryData,
+  IProgrammingLanguageFacets,
+  EProgrammingLanguage,
+  ICourse,
+  IExercise,
 } from '@codeclusters/types'
 import { FacetItem, FacetField } from '../types/search'
 import { ToastStore } from './ToastStore'
@@ -29,7 +42,7 @@ type ToggledFacetFields = {
 
 const EMPTY_SUPPLEMENTARY_DATA = {
   stats: [],
-  facets: []
+  facets: [],
 }
 const EMPTY_FACETS: IProgrammingLanguageFacets = {
   programming_language: EProgrammingLanguage.JAVA,
@@ -55,7 +68,7 @@ export class SearchFacetsStore {
   @observable supplementaryData: ISupplementaryData = EMPTY_SUPPLEMENTARY_DATA
   @observable currentSearchFacets: IProgrammingLanguageFacets = EMPTY_FACETS
   @observable facetParams: SearchFacetParams = {
-    JAVA: {}
+    JAVA: {},
   }
   @observable toggledFacetFields: ToggledFacetFields = {}
   toastStore: ToastStore
@@ -65,14 +78,26 @@ export class SearchFacetsStore {
     makeObservable(this)
     this.toastStore = props.toastStore
     this.courseStore = props.courseStore
-    persist(() => this.supplementaryData, (val: any) => this.supplementaryData = val, 'search.supplementaryData')
-    persist(() => this.currentSearchFacets, (val: any) => this.currentSearchFacets = val, 'search.currentSearchFacets')
+    persist(
+      () => this.supplementaryData,
+      (val: any) => (this.supplementaryData = val),
+      'search.supplementaryData'
+    )
+    persist(
+      () => this.currentSearchFacets,
+      (val: any) => (this.currentSearchFacets = val),
+      'search.currentSearchFacets'
+    )
     this.watchSelectedCourseExercise()
   }
 
   watchSelectedCourseExercise = () => {
     autorun(() => {
-      this.setCurrentSearchFacets(this.supplementaryData, this.courseStore.selectedCourse, this.courseStore.selectedExercise)
+      this.setCurrentSearchFacets(
+        this.supplementaryData,
+        this.courseStore.selectedCourse,
+        this.courseStore.selectedExercise
+      )
     })
   }
 
@@ -80,15 +105,15 @@ export class SearchFacetsStore {
     return this.facetParams[this.currentSearchFacets.programming_language]
   }
 
-  @computed get currentMetricsFacets() : FacetItem[] {
-    return this.currentSearchFacets.metrics.map(m => ({
+  @computed get currentMetricsFacets(): FacetItem[] {
+    return this.currentSearchFacets.metrics.map((m) => ({
       key: FACETS_MAPPING[m],
       value: m,
     }))
   }
 
-  @computed get currentTokensFacets() : FacetItem[] {
-    return this.currentSearchFacets.tokens.map(m => ({
+  @computed get currentTokensFacets(): FacetItem[] {
+    return this.currentSearchFacets.tokens.map((m) => ({
       key: FACETS_MAPPING[m],
       value: m,
     }))
@@ -101,7 +126,7 @@ export class SearchFacetsStore {
 
   @action resetFacets = (type: 'metrics' | 'tokens') => {
     const { programming_language } = this.currentSearchFacets
-    Object.keys(this.facetParams[programming_language]).forEach(facet => {
+    Object.keys(this.facetParams[programming_language]).forEach((facet) => {
       if (type === 'metrics' && this.currentMetricsFacets.find((f) => f.key === facet)) {
         delete this.facetParams[programming_language][facet]
         this.toggledFacetFields[facet] = {}
@@ -112,12 +137,20 @@ export class SearchFacetsStore {
     })
   }
 
-  @action setCurrentSearchFacets = (supplementaryData: ISupplementaryData, course?: ICourse, exercise?: IExercise) => {
+  @action setCurrentSearchFacets = (
+    supplementaryData: ISupplementaryData,
+    course?: ICourse,
+    exercise?: IExercise
+  ) => {
     let found
     if (exercise) {
-      found = supplementaryData.facets.find(f => f.programming_language === exercise.programming_language)
+      found = supplementaryData.facets.find(
+        (f) => f.programming_language === exercise.programming_language
+      )
     } else if (course) {
-      found = supplementaryData.facets.find(f => f.programming_language === course.default_programming_language)
+      found = supplementaryData.facets.find(
+        (f) => f.programming_language === course.default_programming_language
+      )
     }
     this.currentSearchFacets = found || EMPTY_FACETS
   }
@@ -148,7 +181,7 @@ export class SearchFacetsStore {
 
   /**
    * Toggles a facet's facet field value to either true or false
-   * 
+   *
    * The nasty logic here is for extending the observability of the object for nested values since mobx does not do that by default.
    * @param item The key-value pair of a facet
    * @param field The bucket with name, data and count
@@ -167,7 +200,9 @@ export class SearchFacetsStore {
 
   joinAdjacentFacetFilters(field: string, filters: string[]) {
     const previous = filters[filters.length - 1]
-    const previousRangeEnd = previous.substr(previous.indexOf(RANGE_DELIMITER) + RANGE_DELIMITER.length)
+    const previousRangeEnd = previous.substr(
+      previous.indexOf(RANGE_DELIMITER) + RANGE_DELIMITER.length
+    )
     const currentRangeStart = field.substr(0, field.indexOf(RANGE_DELIMITER))
     if (previousRangeEnd === currentRangeStart) {
       const previousRangeStart = previous.substr(0, previous.indexOf(RANGE_DELIMITER))
@@ -182,8 +217,8 @@ export class SearchFacetsStore {
     // Generate an object with the checked facet fields as lists eg { LOC_metric: ["27", "29", "30"] }
     // Or if range: { LOC_metric: ["27 - 29", "31 - 35"] }
     const result = {}
-    Object.keys(this.toggledFacetFields).forEach(facet => {
-      Object.keys(this.toggledFacetFields[facet]).forEach(facetField => {
+    Object.keys(this.toggledFacetFields).forEach((facet) => {
+      Object.keys(this.toggledFacetFields[facet]).forEach((facetField) => {
         const checked = this.toggledFacetFields[facet][facetField]
         const isRange = facetField.includes(RANGE_DELIMITER)
         // First checked value for a facet -> no previous ranges to join
@@ -198,7 +233,7 @@ export class SearchFacetsStore {
           } else {
             result[facet].push(facetField)
           }
-        // Just regular single value eg "42"
+          // Just regular single value eg "42"
         } else if (checked) {
           result[facet].push(facetField)
         }
@@ -225,14 +260,16 @@ export class SearchFacetsStore {
     }, {})
   }
 
-  parseFacetRanges(facetRanges: {
-    [facet: string]: {
-      counts: (string | number)[]
-      start: number
-      end: number
-      gap: number
-    }
-  } = {}) {
+  parseFacetRanges(
+    facetRanges: {
+      [facet: string]: {
+        counts: (string | number)[]
+        start: number
+        end: number
+        gap: number
+      }
+    } = {}
+  ) {
     // Similar to parseFacetFields, except now the counts are within the range eg
     // "LOC_metric": { "start":28, "end":34, "gap":2, "counts": ["28",39,"30",28,"32",11] }
     return Object.keys(facetRanges).reduce((acc, facet) => {

@@ -25,98 +25,115 @@ const SubmissionsReviewsGridEl = inject((stores: Stores) => ({
   reviewSubmissions: stores.reviewStore.reviewSubmissions,
   submissions: stores.submissionStore.submissions,
   openModal: stores.modalStore.openModal,
-}))
-(observer((props: IProps) => {
-  const {
-    className, reviews, reviewSubmissions, submissions, openModal
-  } = props
-  const [submissionReviewsRows, setSubmissionReviewsRows] = useState([] as (IReviewSubmission | undefined)[][])
-  const [editedReviewId, setEditedReviewId] = useState(-1)
+}))(
+  observer((props: IProps) => {
+    const { className, reviews, reviewSubmissions, submissions, openModal } = props
+    const [submissionReviewsRows, setSubmissionReviewsRows] = useState(
+      [] as (IReviewSubmission | undefined)[][]
+    )
+    const [editedReviewId, setEditedReviewId] = useState(-1)
 
-  useEffect(() => {
-    if (reviews!.length > 0 && reviewSubmissions!.length > 0 && submissions!.length > 0) {
-      const mat = Array(submissions!.length).fill(undefined).map(_ => Array(reviews!.length).fill(undefined))
-      for (let i = 0; i < submissions!.length; i += 1) {
-        for (let j = 0; j < reviews!.length; j += 1) {
-          const s = submissions![i]
-          const r = reviews![j]
-          const found = reviewSubmissions!.find(rs => rs.review_id === r.review_id && rs.submission_id === s.submission_id)
-          mat[i][j] = found
+    useEffect(() => {
+      if (reviews!.length > 0 && reviewSubmissions!.length > 0 && submissions!.length > 0) {
+        const mat = Array(submissions!.length)
+          .fill(undefined)
+          .map((_) => Array(reviews!.length).fill(undefined))
+        for (let i = 0; i < submissions!.length; i += 1) {
+          for (let j = 0; j < reviews!.length; j += 1) {
+            const s = submissions![i]
+            const r = reviews![j]
+            const found = reviewSubmissions!.find(
+              (rs) => rs.review_id === r.review_id && rs.submission_id === s.submission_id
+            )
+            mat[i][j] = found
+          }
         }
+        setSubmissionReviewsRows(mat)
+      } else {
+        setSubmissionReviewsRows([])
       }
-      setSubmissionReviewsRows(mat)
-    } else {
-      setSubmissionReviewsRows([])
-    }
-  }, [reviews, reviewSubmissions, submissions])
-  const ref = useRef(null)
-  useHover(ref, (e: MouseEvent) => handleHover(e), true)
+    }, [reviews, reviewSubmissions, submissions])
+    const ref = useRef(null)
+    useHover(ref, (e: MouseEvent) => handleHover(e), true)
 
-  function openEditSubmissionReviewModal(params: any) {
-    openModal!(EModal.EDIT_SUBMISSION_REVIEW, params)
-  }
-  function openViewSubmissionReviewsModal(params: any) {
-    openModal!(EModal.VIEW_SUBMISSION_REVIEWS, params)
-  }
-  function openAcceptEditReviewModal(review: IReview) {
-    openModal!(EModal.ACCEPT_EDIT_REVIEW, { review })
-  }
-  function handleHover(e: MouseEvent) {
-    // console.log(e)
-  }
-  function handleSubmissionThClick(submission: ISubmission) {
-    const foundReviewSubmissions = reviewSubmissions!.filter(rs => rs.submission_id === submission.submission_id)
-    const reviewSubmissionReviewIds = foundReviewSubmissions.map(rs => rs.review_id)
-    const foundReviews = reviews!.filter(r => reviewSubmissionReviewIds.includes(r.review_id))
-    const reviewsWithSelection = foundReviews.map(r => (
-      { ...r, selection: foundReviewSubmissions.find(rs => rs.review_id === r.review_id)?.selection }
-    ))
-    openViewSubmissionReviewsModal!({
-      submission,
-      reviewsWithSelection: reviewsWithSelection
-    })
-  }
-  function handleSubmissionCellClick(submission: ISubmission, colIdx: number, reviewSubmission?: IReviewSubmission) {
-    openEditSubmissionReviewModal!({
-      submission,
-      review: reviews![colIdx],
-      reviewSubmission,
-    })
-  }
-  return (
-    <ReviewsTable className={className} cellPadding="0" cellSpacing="0">
-      <THead>
-        <tr>
-          <Th>Submission</Th>
-          <Th>Length</Th>
-          { reviews!.map(r =>
-          <ReviewTh
-            key={`rth-${r.review_id}`}
-            review={r}
-            onClick={() => openAcceptEditReviewModal(r)}
-          />)}
-        </tr>
-      </THead>
-      <TBody ref={ref}>
-        { submissions!.map((s, i) =>
-        <SubmissionRow
-          key={`row-${s.submission_id}`}
-          submission={s}
-          submissionReviews={submissionReviewsRows[i]}
-          onSubmissionThClick={handleSubmissionThClick}
-          onCellClick={handleSubmissionCellClick}
-        />
-        )}
-      </TBody>
-    </ReviewsTable>
-  )
-}))
+    function openEditSubmissionReviewModal(params: any) {
+      openModal!(EModal.EDIT_SUBMISSION_REVIEW, params)
+    }
+    function openViewSubmissionReviewsModal(params: any) {
+      openModal!(EModal.VIEW_SUBMISSION_REVIEWS, params)
+    }
+    function openAcceptEditReviewModal(review: IReview) {
+      openModal!(EModal.ACCEPT_EDIT_REVIEW, { review })
+    }
+    function handleHover(e: MouseEvent) {
+      // console.log(e)
+    }
+    function handleSubmissionThClick(submission: ISubmission) {
+      const foundReviewSubmissions = reviewSubmissions!.filter(
+        (rs) => rs.submission_id === submission.submission_id
+      )
+      const reviewSubmissionReviewIds = foundReviewSubmissions.map((rs) => rs.review_id)
+      const foundReviews = reviews!.filter((r) => reviewSubmissionReviewIds.includes(r.review_id))
+      const reviewsWithSelection = foundReviews.map((r) => ({
+        ...r,
+        selection: foundReviewSubmissions.find((rs) => rs.review_id === r.review_id)?.selection,
+      }))
+      openViewSubmissionReviewsModal!({
+        submission,
+        reviewsWithSelection: reviewsWithSelection,
+      })
+    }
+    function handleSubmissionCellClick(
+      submission: ISubmission,
+      colIdx: number,
+      reviewSubmission?: IReviewSubmission
+    ) {
+      openEditSubmissionReviewModal!({
+        submission,
+        review: reviews![colIdx],
+        reviewSubmission,
+      })
+    }
+    return (
+      <ReviewsTable className={className} cellPadding="0" cellSpacing="0">
+        <THead>
+          <tr>
+            <Th>Submission</Th>
+            <Th>Length</Th>
+            {reviews!.map((r) => (
+              <ReviewTh
+                key={`rth-${r.review_id}`}
+                review={r}
+                onClick={() => openAcceptEditReviewModal(r)}
+              />
+            ))}
+          </tr>
+        </THead>
+        <TBody ref={ref}>
+          {submissions!.map((s, i) => (
+            <SubmissionRow
+              key={`row-${s.submission_id}`}
+              submission={s}
+              submissionReviews={submissionReviewsRows[i]}
+              onSubmissionThClick={handleSubmissionThClick}
+              onCellClick={handleSubmissionCellClick}
+            />
+          ))}
+        </TBody>
+      </ReviewsTable>
+    )
+  })
+)
 
 interface ISubmissionRowProps {
   submission: ISubmission
   submissionReviews: (IReviewSubmission | undefined)[]
   onSubmissionThClick: (submission: ISubmission) => void
-  onCellClick: (submission: ISubmission, colIdx: number, reviewSubmission?: IReviewSubmission) => void
+  onCellClick: (
+    submission: ISubmission,
+    colIdx: number,
+    reviewSubmission?: IReviewSubmission
+  ) => void
 }
 function SubmissionRow(props: ISubmissionRowProps) {
   const { submission, submissionReviews = [], onSubmissionThClick, onCellClick } = props
@@ -126,13 +143,13 @@ function SubmissionRow(props: ISubmissionRowProps) {
         {submission.submission_id.substring(0, 5)}
       </SubmissionTh>
       <th>{submission.code.length}</th>
-      { submissionReviews.map((sr, j) =>
+      {submissionReviews.map((sr, j) => (
         <SubmissionColumn
           key={`row-${submission.submission_id}-col-${j}`}
           reviewSubmission={sr}
           onCellClick={() => onCellClick(submission, j, sr)}
         />
-      )}
+      ))}
     </SubmissionTr>
   )
 }
@@ -148,14 +165,12 @@ function SubmissionColumn(props: ISubmissionColumnProps) {
   }
   const hasSelection = !reviewSubmission!.selection.every((e: number) => e === 0)
   return (
-    <td
-      className={'selected'}
-      onClick={onCellClick}
-    >
-      { hasSelection ?
-      <Icon><FiAlignLeft size={14} /></Icon> :
-      null
-      }
+    <td className={'selected'} onClick={onCellClick}>
+      {hasSelection ? (
+        <Icon>
+          <FiAlignLeft size={14} />
+        </Icon>
+      ) : null}
     </td>
   )
 }

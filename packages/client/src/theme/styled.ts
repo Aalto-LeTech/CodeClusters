@@ -7,7 +7,7 @@ const {
   css,
   createGlobalStyle,
   keyframes,
-  ThemeProvider
+  ThemeProvider,
 } = styledComponents as styledComponents.ThemedStyledComponentsModule<ITheme>
 
 function getIntentColor(theme: ITheme, intent?: Intent) {
@@ -41,12 +41,5 @@ function getIntentTextColor(theme: ITheme, intent?: Intent) {
   }
 }
 
-export {
-  css,
-  createGlobalStyle,
-  keyframes,
-  getIntentColor,
-  getIntentTextColor,
-  ThemeProvider
-}
+export { css, createGlobalStyle, keyframes, getIntentColor, getIntentTextColor, ThemeProvider }
 export default styled

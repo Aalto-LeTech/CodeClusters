@@ -24,9 +24,24 @@ interface IProps {
 
 const InputEl = forwardRef((props: IProps, ref?: React.Ref<any>) => {
   const {
-    className, value, type, id, name, autocomplete, step, icon, iconPadding, placeholder, disabled, required,
-    title, fullWidth,
-    onChange, onFocus, onBlur, onKeyPress
+    className,
+    value,
+    type,
+    id,
+    name,
+    autocomplete,
+    step,
+    icon,
+    iconPadding,
+    placeholder,
+    disabled,
+    required,
+    title,
+    fullWidth,
+    onChange,
+    onFocus,
+    onBlur,
+    onKeyPress,
   } = props
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -36,8 +51,8 @@ const InputEl = forwardRef((props: IProps, ref?: React.Ref<any>) => {
   }
   return (
     <Container className={className} fullWidth={fullWidth}>
-      { icon }
-      { type === 'textarea' ?
+      {icon}
+      {type === 'textarea' ? (
         <StyledTextarea
           ref={ref}
           value={value}
@@ -52,7 +67,7 @@ const InputEl = forwardRef((props: IProps, ref?: React.Ref<any>) => {
           onBlur={onBlur}
           onKeyPress={onKeyPress}
         />
-        :
+      ) : (
         <StyledInput
           ref={ref}
           value={value}
@@ -71,7 +86,7 @@ const InputEl = forwardRef((props: IProps, ref?: React.Ref<any>) => {
           onBlur={onBlur}
           onKeyPress={onKeyPress}
         />
-      }
+      )}
     </Container>
   )
 })
@@ -90,9 +105,9 @@ const Container = styled.div<ContainerProps>`
   border-radius: 4px;
   display: flex;
   position: relative;
-  width: ${({ fullWidth }) => fullWidth ? '100%' : '180px'};
+  width: ${({ fullWidth }) => (fullWidth ? '100%' : '180px')};
   &:focus {
-    background-image: linear-gradient(to right, #cefff8, #729EE74D);
+    background-image: linear-gradient(to right, #cefff8, #729ee74d);
     color: ${({ theme }) => theme.color.textDark};
     outline: auto 5px;
   }
@@ -110,7 +125,7 @@ const StyledTextarea = styled.textarea`
   padding: 0.5rem;
   width: 100%;
 `
-const StyledInput = styled.input<{ autocomplete?: string, iconPadding?: string }>`
+const StyledInput = styled.input<{ autocomplete?: string; iconPadding?: string }>`
   background-color: ${({ theme }) => theme.color.white};
   border: 0;
   border-radius: 4px;
@@ -122,7 +137,7 @@ const StyledInput = styled.input<{ autocomplete?: string, iconPadding?: string }
   transition: 0.1s all;
   width: 100%;
   &:focus {
-    background-image: linear-gradient(to right,#fcffff,#e6f8ff4d);
+    background-image: linear-gradient(to right, #fcffff, #e6f8ff4d);
     color: ${({ theme }) => theme.color.textDark};
   }
 `

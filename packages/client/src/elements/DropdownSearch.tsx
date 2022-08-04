@@ -25,9 +25,17 @@ interface IProps {
 
 const DropdownSearchEl = memo((props: IProps) => {
   const {
-    className, value, options, selected, disabled, placeholder = 'Search', fullWidth, onChange, onSelect
+    className,
+    value,
+    options,
+    selected,
+    disabled,
+    placeholder = 'Search',
+    fullWidth,
+    onChange,
+    onSelect,
   } = props
-  const [shownItems, setShownItems] = useState(options.map(o => true))
+  const [shownItems, setShownItems] = useState(options.map((o) => true))
   const ref = useRef(null)
   const [menuOpen, setMenuOpen] = useState(false)
   useClickOutside(ref, (e) => closeMenu(), menuOpen)
@@ -40,22 +48,22 @@ const DropdownSearchEl = memo((props: IProps) => {
   }
   function toggleMenu() {
     if (!disabled) {
-      setMenuOpen(oldMenuOpen => !oldMenuOpen)
-      setShownItems(options.map(o => true))
+      setMenuOpen((oldMenuOpen) => !oldMenuOpen)
+      setShownItems(options.map((o) => true))
     }
   }
   function handleSearchChange(val: string) {
     onChange(val)
     const l = val.toLowerCase()
-    setShownItems(options.map(o => o.value.toString().toLowerCase().includes(l)))
+    setShownItems(options.map((o) => o.value.toString().toLowerCase().includes(l)))
   }
   function handleSearchFocus() {
     setMenuOpen(true)
-    setShownItems(options.map(o => true))
+    setShownItems(options.map((o) => true))
   }
   function handleSearchKeyPress(event: React.KeyboardEvent) {
     if (event.key === 'Enter') {
-      const firstItemIndex = shownItems.findIndex(s => s === true)
+      const firstItemIndex = shownItems.findIndex((s) => s === true)
       if (firstItemIndex !== -1) {
         const item = options[firstItemIndex]
         onSelect(item)
@@ -82,21 +90,17 @@ const DropdownSearchEl = memo((props: IProps) => {
           onKeyPress={handleSearchKeyPress}
         />
         <MenuButton type="button" aria-haspopup aria-label="Dropdown menu" onClick={toggleMenu}>
-          <Icon>
-            { menuOpen ? <FiChevronUp size={18}/> : <FiChevronDown size={18}/>}
-          </Icon>
+          <Icon>{menuOpen ? <FiChevronUp size={18} /> : <FiChevronDown size={18} />}</Icon>
         </MenuButton>
       </InputWrapper>
       <DropdownList open={menuOpen}>
-        { options.map((o, i) =>
-        <OptionItem key={`ds_${o.key}_${i}`} visible={shownItems[i]}>
-          <OptionButton
-            type="button"
-            onClick={selectOption(o)}
-            selected={isSelected(o)}
-          >{o.value}</OptionButton>
-        </OptionItem>
-        )}
+        {options.map((o, i) => (
+          <OptionItem key={`ds_${o.key}_${i}`} visible={shownItems[i]}>
+            <OptionButton type="button" onClick={selectOption(o)} selected={isSelected(o)}>
+              {o.value}
+            </OptionButton>
+          </OptionItem>
+        ))}
       </DropdownList>
     </Container>
   )
@@ -108,7 +112,7 @@ const Container = styled.div<{ fullWidth?: boolean }>`
   display: inline-block;
   padding: 0;
   position: relative;
-  width: ${({ fullWidth }) => fullWidth ? '100%' : '180px'};
+  width: ${({ fullWidth }) => (fullWidth ? '100%' : '180px')};
 `
 const MenuButton = styled.button`
   align-items: center;
@@ -157,7 +161,7 @@ const DropdownList = styled.ul<DropdownProps>`
   border-width: 1px;
   box-shadow: 1px 1px #b5b5b570;
   color: ${({ theme }) => theme.color.textDark};
-  display: ${({ open }) => open ? 'block' : 'none'};
+  display: ${({ open }) => (open ? 'block' : 'none')};
   list-style: none;
   margin: 0;
   padding: 0;
@@ -166,26 +170,27 @@ const DropdownList = styled.ul<DropdownProps>`
   width: 100%;
   z-index: 100;
   transform: scale(1, 1) translateZ(0px);
-  transition: opacity 284ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, transform 189ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: opacity 284ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    transform 189ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   top: 36px;
   transform-origin: 251px 0px;
 `
 const OptionItem = styled.li<{ visible: boolean }>`
-  display: ${({ visible }) => visible ? 'initial' : 'none'};
-  visibility: ${({ visible }) => visible ? 'visible' : 'hidden'};
+  display: ${({ visible }) => (visible ? 'initial' : 'none')};
+  visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
 `
 type OptionButtonProps = { selected: boolean }
 const OptionButton = styled.button<OptionButtonProps>`
   align-items: center;
   display: flex;
-  background-color: ${({ selected }) => selected ? 'rgba(0, 0, 0, 0.08)' : '#fff'};
+  background-color: ${({ selected }) => (selected ? 'rgba(0, 0, 0, 0.08)' : '#fff')};
   border: 0;
   border-bottom: 1px solid #e5e5e5;
   cursor: pointer;
   font-size: 1rem;
-  padding: .66rem 1rem;
+  padding: 0.66rem 1rem;
   transition: all 0.1s cubic-bezier(0.55, 0.085, 0.68, 0.53);
-  width: 100%;  
+  width: 100%;
   z-index: 10;
   &:hover {
     background-color: rgba(0, 0, 0, 0.08);

@@ -7,7 +7,7 @@ import { IUser, ILoginCredentials, IJwt } from '@codeclusters/types'
 
 const EMPTY_JWT = {
   expires: -1,
-  token: ''
+  token: '',
 }
 
 export class AuthStore {
@@ -18,8 +18,16 @@ export class AuthStore {
   constructor(resetFn: () => void) {
     makeObservable(this)
     this.resetAllStores = resetFn
-    persist(() => this.user, (val: any) => this.user = val, 'auth.user')
-    persist(() => this.jwt, (val: any) => this.jwt = val, 'auth.jwt')
+    persist(
+      () => this.user,
+      (val: any) => (this.user = val),
+      'auth.user'
+    )
+    persist(
+      () => this.jwt,
+      (val: any) => (this.jwt = val),
+      'auth.jwt'
+    )
   }
 
   @computed get isAuthenticated() {

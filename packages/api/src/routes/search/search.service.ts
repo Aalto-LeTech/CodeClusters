@@ -5,8 +5,12 @@ import { config, axiosService } from '../../common'
 import { dbService } from '../../db/db.service'
 
 import {
-  ISearchCodeParams, ISolrSearchCodeResponse, ISolrSearchAllCodeResponse, ISolrSearchAllIdsResponse,
-  IProgrammingLanguageFacets, ISearchFacetParams
+  ISearchCodeParams,
+  ISolrSearchCodeResponse,
+  ISolrSearchAllCodeResponse,
+  ISolrSearchAllIdsResponse,
+  IProgrammingLanguageFacets,
+  ISearchFacetParams,
 } from '@codeclusters/types'
 
 function solrUrl(path: string) {
@@ -77,7 +81,7 @@ export const searchService = {
     `)
     return { stats, facets }
   },
-  searchSubmissions: (params: ISearchCodeParams) : Promise<ISolrSearchCodeResponse | undefined> => {
+  searchSubmissions: (params: ISearchCodeParams): Promise<ISolrSearchCodeResponse | undefined> => {
     const {
       q,
       course_id,
@@ -111,9 +115,13 @@ export const searchService = {
       hlfields = `&hl=on&hl.fl=code&hl.simple.pre=<mark>&hl.simple.post=</mark>&hl.fragsize=${num_lines}&hl.method=unified`
     }
     const query = `${general}${filters}${facetFilters}${facetsString}${fields}${hlfields}`
-    return axiosService.get<ISolrSearchCodeResponse>(solrUrl(`solr/submission-search/select?${query}`))
+    return axiosService.get<ISolrSearchCodeResponse>(
+      solrUrl(`solr/submission-search/select?${query}`)
+    )
   },
-  searchAllSubmissions: (params: ISearchCodeParams) : Promise<ISolrSearchAllCodeResponse | undefined> => {
+  searchAllSubmissions: (
+    params: ISearchCodeParams
+  ): Promise<ISolrSearchAllCodeResponse | undefined> => {
     const {
       q,
       course_id,
@@ -140,9 +148,13 @@ export const searchService = {
     // Selections of facets used as filters eg fq=LOC_metric:(30 OR 29 OR 28)
     const facetFilters = createFacetFilters(facet_filters)
     const query = `${general}${filters}${facetFilters}${facetsString}${fields}`
-    return axiosService.get<ISolrSearchAllCodeResponse>(solrUrl(`solr/submission-search/select?${query}`))
+    return axiosService.get<ISolrSearchAllCodeResponse>(
+      solrUrl(`solr/submission-search/select?${query}`)
+    )
   },
-  searchAllSubmissionIds: (params: ISearchCodeParams) : Promise<ISolrSearchAllIdsResponse | undefined> => {
+  searchAllSubmissionIds: (
+    params: ISearchCodeParams
+  ): Promise<ISolrSearchAllIdsResponse | undefined> => {
     const {
       q,
       course_id,
@@ -169,6 +181,8 @@ export const searchService = {
     // Selections of facets used as filters eg fq=LOC_metric:(30 OR 29 OR 28)
     const facetFilters = createFacetFilters(facet_filters)
     const query = `${general}${filters}${facetFilters}${facetsString}${fields}`
-    return axiosService.get<ISolrSearchAllIdsResponse>(solrUrl(`solr/submission-search/select?${query}`))
-  }
+    return axiosService.get<ISolrSearchAllIdsResponse>(
+      solrUrl(`solr/submission-search/select?${query}`)
+    )
+  },
 }

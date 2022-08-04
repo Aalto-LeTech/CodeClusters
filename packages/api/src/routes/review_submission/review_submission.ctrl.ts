@@ -20,11 +20,15 @@ export const upsertReviewSubmission = async (
   req: IAuthRequest<IReviewSubmissionPutParams, IReviewSubmissionRouteParams>,
   res: Response,
   next: NextFunction
-  ) => {
+) => {
   try {
     const { review_id, submission_id } = req.params
     const { selection } = req.body
-    const result = await reviewSubmissionService.upsertReviewSubmission(review_id, submission_id, selection)
+    const result = await reviewSubmissionService.upsertReviewSubmission(
+      review_id,
+      submission_id,
+      selection
+    )
     res.json({ result })
   } catch (err) {
     next(err)
@@ -35,7 +39,7 @@ export const deleteReviewSubmission = async (
   req: IAuthRequest<{}, IReviewSubmissionRouteParams>,
   res: Response,
   next: NextFunction
-  ) => {
+) => {
   try {
     const { review_id, submission_id } = req.params
     const result = await reviewSubmissionService.deleteReviewSubmission(review_id, submission_id)
