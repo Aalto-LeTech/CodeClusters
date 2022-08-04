@@ -7,15 +7,15 @@ services:
     ports:
       - 9080:80
     restart: always
-  frontend:
+  client:
     build:
       context: .
-      dockerfile: frontend/Dockerfile
+      dockerfile: packages/client/Dockerfile
     restart: always
-  backend:
+  api:
     build:
       context: .
-      dockerfile: backend/Dockerfile
+      dockerfile: packages/api/Dockerfile
     ports:
       - 9600:8600
     environment:

@@ -1,55 +1,38 @@
 #####################
-# The builder image #
+# The Node.js image #
 #####################
-FROM node:16.10.0-alpine3.11 as builder
+# Not using builder image since it's quite tedious to copy / install everything all over
+FROM node:16.10.0-alpine3.11
 
 # Set NODE_ENV to build so that all devDependencies are fetched and tslint won't fail
 ENV NODE_ENV build
 # Interesting read about where to install your program in UNIX filesystem
 # https://askubuntu.com/questions/130186/what-is-the-rationale-for-the-usr-directory
-ENV INSTALL_PATH /opt/codeclusters-backend
+ENV INSTALL_PATH /usr/local/codeclusters_api
 
 WORKDIR ${INSTALL_PATH}
 
-COPY shared ./shared
-WORKDIR ./shared 
-RUN yarn link
+RUN npm install -g pnpm@7
 
-WORKDIR ${INSTALL_PATH}
-COPY ./backend/package.json ./backend/yarn.lock ./backend/tsconfig.json ./backend/tslint.json ./backend/start.sh ./
-RUN yarn link shared
-RUN yarn
+COPY package.json tsconfig.json pnpm-lock.yaml pnpm-workspace.yaml ./
+# Copy package.jsons first to cache pnpm install to run only if they were changed, not on source file changes
+COPY packages/api/package.json ./packages/api/package.json
+COPY packages/types/package.json ./packages/types/package.json
 
-COPY ./backend/src ./src
+RUN pnpm i --frozen-lockfile --filter @codeclusters/api \
+  --filter @codeclusters/types
 
-# Set NODE_ENV to production so that all optimizations are enabled
+COPY packages/types ./packages/types
+RUN pnpm --filter @codeclusters/types build
+
+COPY packages/api ./packages/api
+# RUN pnpm test --filter @codeclusters/api test
+RUN pnpm --filter @codeclusters/api build
+
+# RUN pnpm prune
+
 ENV NODE_ENV production
-RUN yarn ts
-
-############################
-# The server Node.js image #
-############################
-FROM node:16.10.0-alpine3.11
-
-ENV PORT 8600
-ENV INSTALL_PATH /opt/codeclusters-backend
-ENV CORS_SAME_ORIGIN true
-# the ENVs are not shared so NODE_ENV needs to be set again
-ENV NODE_ENV production
-
-WORKDIR ${INSTALL_PATH}
-
-COPY --from=builder ${INSTALL_PATH}/dist ./dist
-COPY --from=builder ${INSTALL_PATH}/shared ./shared
-COPY --from=builder ${INSTALL_PATH}/package.json ${INSTALL_PATH}/yarn.lock ${INSTALL_PATH}/start.sh ./
-
-WORKDIR ./shared
-RUN yarn link
-
-WORKDIR ${INSTALL_PATH}
-RUN yarn link shared
-RUN yarn install --production
 
 EXPOSE ${PORT}
 
-CMD ["./start.sh"]
+CMD node ./packages/api/dist/index.js

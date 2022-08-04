@@ -49,7 +49,7 @@ services:
     ports:
       - 5442:5432
     volumes:
-      - ./db/data:/var/lib/postgresql/data
+      - ./vol/postgres:/var/lib/postgresql/data
     env_file:
       - .db.env
   solr:

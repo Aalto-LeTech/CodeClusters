@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build": "vite build",
     "dev": "vite",
     "format": "prettier --write \"*.+(js|json|yml|yaml|ts|md|graphql|mdx)\" src/",
     "lint": "eslint --cache --ext .js,.ts,.tsx ./src",
