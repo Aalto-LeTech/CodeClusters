@@ -61,7 +61,7 @@ const SearchFacetsEl = inject((stores: Stores) => ({
                     <a
                       href="https://lucene.apache.org/solr/guide/8_6/faceting.html"
                       target="_blank"
-                      rel="noopener"
+                      rel="noopener noreferrer"
                     >
                       Solr 8.6 docs
                     </a>

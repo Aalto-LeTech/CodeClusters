@@ -199,7 +199,7 @@ const SearchFormEl = observer(
                     <a
                       href="https://lucene.apache.org/solr/guide/8_6/the-standard-query-parser.html"
                       target="_blank"
-                      rel="noopener"
+                      rel="noopener noreferrer"
                     >
                       Solr 8.6 docs
                     </a>
@@ -244,7 +244,7 @@ const SearchFormEl = observer(
                   <a
                     href="https://lucene.apache.org/solr/guide/8_6/the-standard-query-parser.html"
                     target="_blank"
-                    rel="noopener"
+                    rel="noopener noreferrer"
                   >
                     Solr 8.6 docs
                   </a>

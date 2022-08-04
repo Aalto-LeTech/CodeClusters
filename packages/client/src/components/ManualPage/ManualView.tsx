@@ -11,7 +11,7 @@ function ManualViewEl(props: IProps) {
     <Wrapper className={className}>
       <Container>
         <Header>
-          <a href="https://github.com/Aalto-LeTech/CodeClusters" target="_blank">
+          <a href="https://github.com/Aalto-LeTech/CodeClusters" target="_blank" rel="noreferrer">
             <h1>CodeClusters</h1>
           </a>
           <p>

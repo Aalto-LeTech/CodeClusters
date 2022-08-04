@@ -41,8 +41,8 @@ export const defaultTheme: ITheme = {
     largeIcon: '50px',
   },
   font: {
-    header: "'IBM Plex Mono', monospace",
-    text: "'Raleway', sans-serif",
+    header: '\'IBM Plex Mono\', monospace',
+    text: '\'Raleway\', sans-serif',
   },
   transitions: {
     bezier: 'cubic-bezier(0.55, 0.085, 0.68, 0.53)',

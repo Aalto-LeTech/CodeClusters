@@ -7,21 +7,21 @@ import type { ParamsDictionary } from 'express-serve-static-core'
 //   P extends ParamsDictionary = Record<string, any>,
 //   Q extends Record<string, any> = {}
 // > = Request<P, {}, B, {}> & { query: Q }
-export interface IRequest<
+export type IRequest<
   B extends Record<string, any> = {},
   P extends ParamsDictionary = {},
   Q extends Record<string, any> = {}
-> extends Request<P, {}, B, {}, { queryParams: Q }> {}
+> = Request<P, {}, B, {}, { queryParams: Q }>
 
 type AuthLocals = {
   user: IUser
 }
 
-export interface IAuthRequest<
+export type IAuthRequest<
   B extends Record<string, any> = {},
   P extends ParamsDictionary = {},
   Q extends Record<string, any> = {}
-> extends Request<P, {}, B, {}, AuthLocals & { queryParams: Q }> {}
+> = Request<P, {}, B, {}, AuthLocals & { queryParams: Q }>
 
 export type IAuthRequest2<
   B extends Record<string, any> = {},

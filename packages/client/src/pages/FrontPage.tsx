@@ -27,7 +27,7 @@ export const FrontPage = inject((stores: Stores) => ({
     return (
       <Container>
         <Header>
-          <a href="https://github.com/Aalto-LeTech/CodeClusters" target="_blank">
+          <a href="https://github.com/Aalto-LeTech/CodeClusters" target="_blank" rel="noreferrer">
             <h1>CodeClusters</h1>
             <Icon>
               <FaGithub size={20} />
