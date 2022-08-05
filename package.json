@@ -15,6 +15,7 @@
     "api": "concurrently --kill-others 'pnpm --filter @codeclusters/api watch' 'pnpm --filter @codeclusters/api dev'",
     "client": "concurrently --kill-others 'pnpm --filter @codeclusters/client dev'",
     "utils": "concurrently --kill-others 'pnpm --filter @codeclusters/types watch'",
+    "seed": "pnpm --filter @codeclusters/db seed",
     "start": "concurrently --kill-others 'pnpm utils' 'pnpm api' 'pnpm client'"
   },
   "engines": {

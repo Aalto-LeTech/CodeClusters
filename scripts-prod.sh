@@ -64,7 +64,7 @@ case "$1" in
     SERVICE=$2
 
     if [ -z "$SERVICE" ]; then
-      echo "Missing second argument SERVICE. It should be the Docker service to update eg frontend."
+      echo "Missing second argument SERVICE. It should be the Docker service to update eg client."
       exit 0
     fi
 

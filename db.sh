@@ -29,7 +29,7 @@ EOF
     docker-compose stop postgres
     ;;
   testdata)
-    cd ./db/generator && npm start
+    cd pnpm seed
     ;;
   *)
     echo $"Usage: $0 connect|logs|migrate|reset|start|stop|testdata"

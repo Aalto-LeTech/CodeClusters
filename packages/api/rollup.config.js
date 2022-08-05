@@ -18,15 +18,14 @@ export default {
     alias({
       entries: [
         { find: '$common', replacement: path.resolve(__dirname, 'src/common') },
-        { find: '$mail', replacement: path.resolve(__dirname, 'src/mail') },
         {
           find: '$middlewares',
           replacement: path.resolve(__dirname, 'src/middlewares'),
         },
         { find: '$routes', replacement: path.resolve(__dirname, 'src/routes') },
         {
-          find: '$typings',
-          replacement: path.resolve(__dirname, 'src/typings'),
+          find: '$types',
+          replacement: path.resolve(__dirname, 'src/types'),
         },
       ],
     }),

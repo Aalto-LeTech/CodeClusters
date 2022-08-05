@@ -3,8 +3,8 @@ version: '3.7'
 services:
   test_data:
     build:
-      context: ./db
-      dockerfile: ./generator/Dockerfile
+      context: ./packages/db
+      dockerfile: ./packages/db/Dockerfile
     container_name: test_data
     env_file:
       - .test_data.env
@@ -13,8 +13,8 @@ services:
     container_name: flyway_migration
     entrypoint: ['sh', '-c', '/flyway/wait-for-it.sh postgres:5432 -- /flyway/flyway migrate']
     volumes:
-      - ./db/migrations:/flyway/sql
-      - ./db/scripts/wait-for-it.sh:/flyway/wait-for-it.sh
+      - ./packages/db/flyway/migrations:/flyway/sql
+      - ./packages/db/flyway/wait-for-it.sh:/flyway/wait-for-it.sh
     env_file:
       - .flyway.env
   flyway_seed:
@@ -22,8 +22,8 @@ services:
     container_name: flyway_seed
     entrypoint: ['sh', '-c', '/flyway/wait-for-it.sh postgres:5432 -- /flyway/flyway migrate']
     volumes:
-      - ./db/seed/afterMigrate.sql:/flyway/sql/afterMigrate.sql
-      - ./db/scripts/wait-for-it.sh:/flyway/wait-for-it.sh
+      - ./packages/db/flyway/afterMigrate.sql:/flyway/sql/afterMigrate.sql
+      - ./packages/db/flyway/wait-for-it.sh:/flyway/wait-for-it.sh
     env_file:
       - .flyway.env
 
