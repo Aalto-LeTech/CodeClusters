@@ -59,7 +59,7 @@ const createRequest = <T>(path: string, options: any): Promise<Maybe<T>> => {
             )
             return undefined
           case 500:
-            stores.toastStore!.createToast('500 The backend had a bug, whops', 'danger')
+            stores.toastStore!.createToast('500 Internal server error', 'danger')
             return undefined
         }
         throw new Error(err.response.data.message || err.response.data)
