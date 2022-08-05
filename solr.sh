@@ -28,7 +28,7 @@ case "$1" in
     docker-compose stop solr
     ;;
   delete)
-    docker-compose stop solr && docker-compose rm solr && rm -r ./solr/data/*
+    docker-compose stop solr && docker-compose rm solr && rm -r ./vol/solr/*
     ;;
   logs)
     docker-compose logs -f solr

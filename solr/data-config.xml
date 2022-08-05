@@ -3,7 +3,7 @@
     type="JdbcDataSource"
     name="postgres-submissions"
     driver="org.postgresql.Driver"
-    url="jdbc:postgresql://host.docker.internal:5600/my_postgres_db" 
+    url="jdbc:postgresql://host.docker.internal:5442/my_postgres_db" 
     user="pg-user" 
     password="my-pg-password"
   />

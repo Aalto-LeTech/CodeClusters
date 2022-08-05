@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "target": "es2018",
+    "lib": ["es2019", "dom", "dom.iterable"],
+    "experimentalDecorators": true,
+    "baseUrl": "src",
+    "noEmit": true,
+    "jsx": "react-jsx"
+  },
+  "include": ["src"]
+}

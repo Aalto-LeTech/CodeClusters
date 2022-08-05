@@ -7,15 +7,15 @@ services:
     ports:
       - 9080:80
     restart: always
-  frontend:
+  client:
     build:
       context: .
-      dockerfile: frontend/Dockerfile
+      dockerfile: packages/client/Dockerfile
     restart: always
-  backend:
+  api:
     build:
       context: .
-      dockerfile: backend/Dockerfile
+      dockerfile: packages/api/Dockerfile
     ports:
       - 9600:8600
     environment:
@@ -24,7 +24,7 @@ services:
       LOG_LEVEL: info
       JWT_SECRET: verylongrandomstring
       DB_HOST: host.docker.internal
-      DB_PORT: 5600
+      DB_PORT: 5442
       DB_USER: pg-user
       DB_PASSWORD: my-pg-password
       DB_NAME: my_postgres_db
@@ -33,11 +33,11 @@ services:
     restart: always
   flyway_migration:
     image: flyway/flyway:9.0.4-alpine
-    entrypoint: ["sh", "-c", "/flyway/wait-for-it.sh postgres:5432 -- /flyway/flyway migrate"]
+    entrypoint: ['sh', '-c', '/flyway/wait-for-it.sh postgres:5432 -- /flyway/flyway migrate']
     volumes:
-      - ./db/migrations:/flyway/sql
-      - ./db/seed/afterMigrate.sql:/flyway/sql/afterMigrate.sql # Should I do this automatically or as another docker job?
-      - ./db/scripts/wait-for-it.sh:/flyway/wait-for-it.sh
+      - ./packages/db/flyway/migrations:/flyway/sql
+      - ./packages/db/flyway/afterMigrate.sql:/flyway/sql/afterMigrate.sql # Should I do this automatically or as another docker job?
+      - ./packages/db/flyway/wait-for-it.sh:/flyway/wait-for-it.sh
     environment:
       FLYWAY_PASSWORD: my-pg-password
       FLYWAY_USER: pg-user
@@ -46,13 +46,13 @@ services:
   postgres:
     image: postgres:13.4-alpine
     ports:
-      - 5600:5432
+      - 5442:5432
     environment:
       POSTGRES_PASSWORD: my-pg-password
       POSTGRES_USER: pg-user
       POSTGRES_DB: my_postgres_db
     volumes:
-      - ./db/data:/var/lib/postgresql/data
+      - ./vol/postgres:/var/lib/postgresql/data
     restart: always
   solr:
     build:
@@ -60,8 +60,8 @@ services:
     ports:
       - 8983:8983
     volumes:
-      - ./solr/data:/var/solr
-    command: ["solr-precreate", "submission-search", "/opt/solr-8.6.1/config"]
+      - ./vol/solr:/var/solr
+    command: ['solr-precreate', 'submission-search', '/opt/solr-8.6.1/config']
 
 networks:
   default:

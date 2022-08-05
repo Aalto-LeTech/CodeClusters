@@ -1,4 +1,8 @@
-db/data/
-solr/data
-backend/node_modules
-frontend/node_modules
+vol/solr
+vol/postgres
+**node_modules
+**dist
+**tmp
+**build
+**Dockerfile
+**.env

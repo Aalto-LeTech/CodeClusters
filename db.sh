@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 DB_HOST=localhost
-DB_PORT=5600
+DB_PORT=5442
 DB_USER=pg-user
 DB_PASSWORD=my-pg-password
 DB_NAME=my_postgres_db

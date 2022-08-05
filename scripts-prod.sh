@@ -53,7 +53,7 @@ case "$1" in
     ;;
   solr-recreate)
     sudo docker-compose -f prod-docker-compose.yml stop solr
-    sudo rm -rf ./solr/data/*
+    sudo rm -rf ./vol/solr/*
     sudo docker-compose -f prod-docker-compose.yml build solr
     sudo docker-compose -f prod-docker-compose.yml up -d --force-recreate solr
     ;;

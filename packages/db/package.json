@@ -1,0 +1,12 @@
+{
+  "name": "@codeclusters/db",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "seed": "EMAIL=admin@asdf.fi PASSWORD=asdfasdf API_URL=http://localhost:8600/api node src/seed.js"
+  },
+  "dependencies": {
+    "axios": "^0.27.2"
+  }
+}
